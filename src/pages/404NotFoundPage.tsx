@@ -1,9 +1,11 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
+import PageTitle from '../components/PageTitle';
 
 export default function NotFoundPage() {
   return (
     <div className="position-absolute h-100 w-100 d-flex justify-content-center align-items-center">
+      <PageTitle title="404 Not Found" />
       <div className="d-flex justify-content-center align-items-center flex-column">
         <h1>
           <strong className="text-danger">

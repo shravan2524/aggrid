@@ -1,5 +1,11 @@
 import React from 'react';
+import PageTitle from '../../../components/PageTitle';
 
 export default function HomeZAPage() {
-  return (<h1>Home ZA Page</h1>);
+  return (
+    <>
+      <PageTitle title="Home ZA" />
+      <h1>Home ZA Page</h1>
+    </>
+  );
 }

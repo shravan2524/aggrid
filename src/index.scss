@@ -4,11 +4,20 @@
 // Include any default variable overrides here (though functions won't be available)
 
 
-
 @import "../node_modules/bootstrap/scss/bootstrap";
 
 // Then add additional custom code here
 
 body{
-  margin-top: 4rem;
+  margin-top:  6rem;
+}
+
+.bg-color-purple {
+  background-color: #2e2e52;
+}
+.bg-color-purple-dark {
+  background-color: #282952;
+}
+.bg-color-purple-light {
+  background-color: #444885;
 }

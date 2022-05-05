@@ -1,5 +1,11 @@
 import React from 'react';
+import PageTitle from 'components/PageTitle';
 
 export default function NotificationsPage() {
-  return (<h1>Notifications Page</h1>);
+  return (
+    <>
+      <PageTitle title="Notifications" />
+      <h1>Notifications Page</h1>
+    </>
+  );
 }
