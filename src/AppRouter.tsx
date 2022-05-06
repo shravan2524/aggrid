@@ -9,12 +9,14 @@ import Loader from './components/Loader';
 import NotFoundPage from './pages/404NotFoundPage';
 
 const CustomerLayout = React.lazy(() => import('parts/layout/CustomerLayout'));
+const PublicLayout = React.lazy(() => import('parts/layout/PublicLayout'));
 
 const CustomerHomeIndexPage = React.lazy(() => import('./pages/customer/za/HomeZAPage'));
 const ReconciliationIndexPage = React.lazy(() => import('./pages/customer/reconciliation/ReconciliationPage'));
 const AdminIndexPage = React.lazy(() => import('./pages/customer/admin/AdminPage'));
 const NotificationsIndexPage = React.lazy(() => import('./pages/customer/notifications/NotificationsPage'));
 const ProfileIndexPage = React.lazy(() => import('./pages/customer/profile/ProfilePage'));
+const SignInIndexPage = React.lazy(() => import('./pages/public/auth/SignInPage'));
 
 function AppRouter() {
   return (
@@ -22,8 +24,8 @@ function AppRouter() {
       <Routes>
 
         {/* Supposed public routes .... */}
-        <Route path="/">
-          <Route index element={<Navigate to="/customer/dashboard" />} />
+        <Route path="/" element={(<Suspense fallback={<Loader />}><PublicLayout /></Suspense>)}>
+          <Route index element={(<Suspense fallback={<Loader />}><SignInIndexPage /></Suspense>)} />
         </Route>
 
         {/* Supposed protected customer routes .... */}
