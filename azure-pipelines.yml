@@ -21,7 +21,7 @@ stages:
 
           - script: "yarn install"
 
-          - script: "yarn test"
+          # - script: "yarn test"
 
           - script: "yarn build"
 
