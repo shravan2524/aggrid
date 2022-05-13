@@ -41,3 +41,4 @@ stages:
               skip_app_build: true
               output_location: "$(Pipeline.Workspace)/reactapp"
               azure_static_web_apps_api_token: '14184dd039707e3098940a7bef1c1367a6b08376fd51300ac34d70be3007837e1-1d64242d-b2f6-42c3-8c35-9b3dc447c3fb00388840'
+              app_location: "/" 
