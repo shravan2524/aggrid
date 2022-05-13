@@ -41,4 +41,6 @@ stages:
               WebAppName: $(webappname)
               azureSubscription: $(azSub)
               packageForLinux: "$(Pipeline.Workspace)/reactapp"
-              DeploymentType: webDeploy
+              DeploymentType: zipDeploy
+              RemoveAdditionalFilesFlag: true
+
