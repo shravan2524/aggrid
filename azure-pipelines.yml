@@ -1,0 +1,42 @@
+trigger:
+  - development
+
+pool:
+  vmImage: ubuntu-latest
+
+variables:
+  - name: webappname
+    value: finkraft-client
+  - name: azSub
+    value: "3a02d4a0-ea7b-40e2-b5ec-103f9f9fcb03"
+
+stages:
+  - stage: Build
+    jobs:
+      - job: Build
+        steps:
+          - task: UseNode@1
+            inputs:
+              version: "16.x"
+
+          - script: "yarn install"
+
+          - script: "yarn build"
+
+          - publish: "build"
+            artifact: "reactapp"
+
+  - stage: Development
+    jobs:
+      - job: Deploy
+        steps:
+          - download: current
+            artifact: "reactapp"
+
+          - task: AzureRmWebAppDeployment@4
+            inputs:
+              WebAppName: $(webappname)
+              azureSubscription: $(azSub)
+              packageForLinux: "$(Pipeline.Workspace)/reactapp"
+              DeploymentType: webDeploy
+              RemoveAdditionalFilesFlag: true
