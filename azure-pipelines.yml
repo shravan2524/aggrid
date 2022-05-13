@@ -21,7 +21,7 @@ stages:
 
           - script: "yarn install"
 
-          # - script: "yarn test"
+     #     - script: "yarn test"
 
           - script: "yarn build"
 
@@ -42,4 +42,3 @@ stages:
               azureSubscription: $(azSub)
               packageForLinux: "$(Pipeline.Workspace)/reactapp"
               DeploymentType: webDeploy
-              RemoveAdditionalFilesFlag: true
