@@ -17,9 +17,11 @@ stages:
         steps:
           - task: UseNode@1
             inputs:
-              version: "16.x"
+              version: '16.x'
 
           - script: "yarn install"
+
+          - script: "yarn test"
 
           - script: "yarn build"
 
@@ -27,6 +29,7 @@ stages:
             artifact: "reactapp"
 
   - stage: Development
+    dependsOn: Build
     jobs:
       - job: Deploy
         steps:
