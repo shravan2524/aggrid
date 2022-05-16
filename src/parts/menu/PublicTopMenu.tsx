@@ -1,8 +1,22 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { NavLink } from 'react-router-dom';
+import Cookies from 'js-cookie';
+import { BACKEND_API } from 'app/config';
 import logo from '../../logo-white.svg';
 
 export function PublicTopMenu() {
+  // TODO: Remove this code is just for testing purpose
+  /*
+  useEffect(() => {
+    fetch(`${BACKEND_API}/v1/api/me`, {
+      method: 'GET',
+      credentials: 'include',
+    })
+      .then((response) => response.json())
+      .then((data) => console.log(data));
+
+  }, []); */
+
   return (
     <nav className="navbar navbar-expand-md fixed-top navbar-dark bg-color-purple-dark">
       <div className="container">
@@ -33,9 +47,15 @@ export function PublicTopMenu() {
           <ul className="navbar-nav ms-auto mb-2 mb-md-0">
             <li className="nav-item">
               <NavLink to="/customer/dashboard" className="nav-link">
-                Dashboard
+                Login
               </NavLink>
             </li>
+
+            {/*        <li className="nav-item">
+              <NavLink to="/customer/dashboard" className="nav-link">
+                Dashboard
+              </NavLink>
+            </li> */}
 
           </ul>
         </div>
