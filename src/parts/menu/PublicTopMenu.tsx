@@ -1,22 +1,11 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { NavLink } from 'react-router-dom';
-import Cookies from 'js-cookie';
 import { BACKEND_API } from 'app/config';
-import logo from '../../logo-white.svg';
+import logo from 'logo-white.svg';
+import ShowOnAuth from 'components/ShowOnAuth';
+import HideOnAuth from 'components/HideOnAuth';
 
 export function PublicTopMenu() {
-  // TODO: Remove this code is just for testing purpose
-  /*
-  useEffect(() => {
-    fetch(`${BACKEND_API}/v1/api/me`, {
-      method: 'GET',
-      credentials: 'include',
-    })
-      .then((response) => response.json())
-      .then((data) => console.log(data));
-
-  }, []); */
-
   return (
     <nav className="navbar navbar-expand-md fixed-top navbar-dark bg-color-purple-dark">
       <div className="container">
@@ -45,17 +34,30 @@ export function PublicTopMenu() {
           </ul>
 
           <ul className="navbar-nav ms-auto mb-2 mb-md-0">
-            <li className="nav-item">
-              <NavLink to="/customer/dashboard" className="nav-link">
-                Login
-              </NavLink>
-            </li>
 
-            {/*        <li className="nav-item">
-              <NavLink to="/customer/dashboard" className="nav-link">
-                Dashboard
-              </NavLink>
-            </li> */}
+            <ShowOnAuth>
+              <li className="nav-item">
+                <NavLink to="/customer/dashboard" className="nav-link">
+                  Dashboard
+                </NavLink>
+              </li>
+            </ShowOnAuth>
+
+            <HideOnAuth>
+              <li className="nav-item">
+                <a href={`${BACKEND_API}/api/v1/login`} className="nav-link">
+                  Login
+                </a>
+              </li>
+            </HideOnAuth>
+
+            <ShowOnAuth>
+              <li className="nav-item">
+                <NavLink to="/auth/logout" className="nav-link">
+                  Logout
+                </NavLink>
+              </li>
+            </ShowOnAuth>
 
           </ul>
         </div>
