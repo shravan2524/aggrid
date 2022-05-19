@@ -1,6 +1,7 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
 import logo from '../../logo-white.svg';
+import { UserFullNameMenuItem } from './UserFullNameMenuItem';
 
 export function CustomerTopMenu() {
   return (
@@ -41,26 +42,41 @@ export function CustomerTopMenu() {
 
           <ul className="navbar-nav ms-auto mb-2 mb-md-0">
 
-            {/*   <li className="d-flex justify-content-between align-items-center m-1">
+            <li className="d-flex justify-content-between align-items-center">
               <NavLink to="/customer/notifications" className="p-1 m-0 btn btn-primary bg-color-purple-dark border-4 border-white position-relative rounded-pill ">
                 <i className="fa-solid fa-bell m-1" />
                 <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                  3
+                  0
                   <span className="visually-hidden">unread messages</span>
                 </span>
               </NavLink>
             </li>
-*/}
-            <li className="nav-item">
-              <NavLink to="/customer/notifications" className="nav-link">
-                Notifications
-              </NavLink>
+
+            <li className="nav-item dropdown">
+
+              <UserFullNameMenuItem />
+              <ul className="dropdown-menu" aria-labelledby="dropdown05">
+                <li>
+                  <NavLink to="/customer/profile" className="dropdown-item">
+                    <i className="fa-solid fa-user" />
+                    {' '}
+                    Profile
+                  </NavLink>
+                </li>
+                <li>
+                  <hr className="dropdown-divider" />
+                </li>
+                <li>
+                  <NavLink to="/auth/logout" className="dropdown-item">
+                    <i className="fa-solid fa-right-from-bracket" />
+                    {' '}
+                    Logout
+                  </NavLink>
+                </li>
+              </ul>
+
             </li>
-            <li className="nav-item">
-              <NavLink to="/customer/profile" className="nav-link">
-                Profile
-              </NavLink>
-            </li>
+
           </ul>
         </div>
       </div>
