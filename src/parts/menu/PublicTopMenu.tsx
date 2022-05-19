@@ -1,11 +1,15 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { NavLink } from 'react-router-dom';
 import { BACKEND_API } from 'app/config';
 import logo from 'logo-white.svg';
 import ShowOnAuth from 'components/ShowOnAuth';
 import HideOnAuth from 'components/HideOnAuth';
+import { getAuthFullNameFromLocal } from '../../services/authService';
+import { UserFullNameMenuItem } from './UserFullNameMenuItem';
 
 export function PublicTopMenu() {
+  const userFullName = useMemo(() => getAuthFullNameFromLocal(), []);
+
   return (
     <nav className="navbar navbar-expand-md fixed-top navbar-dark bg-color-purple-dark">
       <div className="container">
@@ -33,33 +37,45 @@ export function PublicTopMenu() {
 
           </ul>
 
-          <ul className="navbar-nav ms-auto mb-2 mb-md-0">
+          <ShowOnAuth>
+            <ul className="navbar-nav ms-auto mb-2 mb-md-0">
 
-            <ShowOnAuth>
-              <li className="nav-item">
-                <NavLink to="/customer/dashboard" className="nav-link">
-                  Dashboard
-                </NavLink>
+              <li className="nav-item dropdown">
+                <UserFullNameMenuItem />
+                <ul className="dropdown-menu" aria-labelledby="dropdown05">
+                  <li>
+                    <NavLink to="/customer/dashboard" className="dropdown-item">
+                      <i className="fa-solid fa-gauge" />
+                      {' '}
+                      Dashboard
+                    </NavLink>
+                  </li>
+                  <li>
+                    <hr className="dropdown-divider" />
+                  </li>
+                  <li>
+                    <NavLink to="/auth/logout" className="dropdown-item">
+                      <i className="fa-solid fa-right-from-bracket" />
+                      {' '}
+                      Logout
+                    </NavLink>
+                  </li>
+                </ul>
               </li>
-            </ShowOnAuth>
 
-            <HideOnAuth>
-              <li className="nav-item">
-                <a href={`${BACKEND_API}/api/v1/login`} className="nav-link">
-                  Login
-                </a>
-              </li>
-            </HideOnAuth>
+            </ul>
+          </ShowOnAuth>
 
-            <ShowOnAuth>
-              <li className="nav-item">
-                <NavLink to="/auth/logout" className="nav-link">
-                  Logout
-                </NavLink>
-              </li>
-            </ShowOnAuth>
+          <HideOnAuth>
+            <div className="text-end ms-auto mb-2 mb-md-0">
+              <a href={`${BACKEND_API}/api/v1/login`} role="button" className="btn btn-warning me-2">
+                <i className="fa-solid fa-right-to-bracket" />
+                {' '}
+                Login
+              </a>
+            </div>
+          </HideOnAuth>
 
-          </ul>
         </div>
       </div>
     </nav>

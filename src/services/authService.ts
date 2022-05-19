@@ -25,3 +25,19 @@ export function clearAllTokens() {
 export function logOut() {
   clearAllTokens();
 }
+
+export function getAuthUSerDetailsFromLocal() {
+  const userDetails = localStorage.getItem('userDetails');
+
+  return userDetails !== null ? JSON.parse(userDetails) : null;
+}
+
+export function getAuthFullNameFromLocal() : string | null {
+  const userDetails = getAuthUSerDetailsFromLocal();
+
+  if (!userDetails) {
+    return null;
+  }
+
+  return userDetails.given_name || ' Unkown ';
+}
