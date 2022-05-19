@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React from 'react';
 import { NavLink } from 'react-router-dom';
 import { BACKEND_API } from 'app/config';
 import logo from 'logo-white.svg';
