@@ -4,12 +4,9 @@ import { BACKEND_API } from 'app/config';
 import logo from 'logo-white.svg';
 import ShowOnAuth from 'components/ShowOnAuth';
 import HideOnAuth from 'components/HideOnAuth';
-import { getAuthFullNameFromLocal } from '../../services/authService';
 import { UserFullNameMenuItem } from './UserFullNameMenuItem';
 
 export function PublicTopMenu() {
-  const userFullName = useMemo(() => getAuthFullNameFromLocal(), []);
-
   return (
     <nav className="navbar navbar-expand-md fixed-top navbar-dark bg-color-purple-dark">
       <div className="container">
