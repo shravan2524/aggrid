@@ -1,1 +1,2 @@
 export const BACKEND_API = process.env.REACT_APP_BACKEND_API;
+export const DROMO_FRONTEND_API_KEY = process.env.REACT_APP_DROMO_FRONTEND_API_KEY;
