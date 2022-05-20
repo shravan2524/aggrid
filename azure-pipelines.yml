@@ -10,6 +10,8 @@ variables:
     value: finkraft-client
   - name: azSub
     value: "3a02d4a0-ea7b-40e2-b5ec-103f9f9fcb03"
+  - name: resourceGroupName
+    value: MVP
 
 stages:
   - stage: Build
