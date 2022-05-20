@@ -2,6 +2,7 @@ import { Navigate } from 'react-router-dom';
 import React, { Suspense } from 'react';
 import Loader from 'components/Loader';
 import NotFoundPage from 'pages/404NotFoundPage';
+import WithSubMenu from '../components/WithSubMenu';
 
 const CustomerLayout = React.lazy(() => import('parts/layout/CustomerLayout'));
 const PublicLayout = React.lazy(() => import('parts/layout/PublicLayout'));
@@ -9,6 +10,9 @@ const ProtectedRoute = React.lazy(() => import('components/ProtectedRoute'));
 
 const CustomerHomeIndexPage = React.lazy(() => import('pages/customer/za/HomeZAPage'));
 const ReconciliationIndexPage = React.lazy(() => import('pages/customer/reconciliation/ReconciliationPage'));
+const Reconciliation2AIndexPage = React.lazy(() => import('pages/customer/reconciliation/2a/Reconciliation2APage'));
+const ReconciliationQrIndexPage = React.lazy(() => import('pages/customer/reconciliation/qr/ReconciliationQrPage'));
+const ReconciliationPrIndexPage = React.lazy(() => import('pages/customer/reconciliation/pr/ReconciliationPrPage'));
 const AdminIndexPage = React.lazy(() => import('pages/customer/admin/AdminPage'));
 const NotificationsIndexPage = React.lazy(() => import('pages/customer/notifications/NotificationsPage'));
 const ProfileIndexPage = React.lazy(() => import('pages/customer/profile/ProfilePage'));
@@ -64,7 +68,39 @@ const routes: any = [
           },
           {
             path: 'reconciliation',
-            element: <Suspense fallback={<Loader />}><ReconciliationIndexPage /></Suspense>,
+            element: <WithSubMenu subMenuItems={[
+              {
+                path: '/customer/reconciliation/2a',
+                text: '2A',
+              },
+              {
+                path: '/customer/reconciliation/qr',
+                text: 'QR',
+              },
+              {
+                path: '/customer/reconciliation/pr',
+                text: 'PR',
+              },
+            ]}
+            />,
+            children: [
+              {
+                path: '',
+                element: <Suspense fallback={<Loader />}><ReconciliationIndexPage /></Suspense>,
+              },
+              {
+                path: '2a',
+                element: <Suspense fallback={<Loader />}><Reconciliation2AIndexPage /></Suspense>,
+              },
+              {
+                path: 'qr',
+                element: <Suspense fallback={<Loader />}><ReconciliationQrIndexPage /></Suspense>,
+              },
+              {
+                path: 'pr',
+                element: <Suspense fallback={<Loader />}><ReconciliationPrIndexPage /></Suspense>,
+              },
+            ],
           },
           {
             path: 'admin',
