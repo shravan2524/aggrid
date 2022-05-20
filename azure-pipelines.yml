@@ -5,6 +5,7 @@ pool:
   vmImage: ubuntu-latest
 
 variables:
+  - group: "Dev Env"
   - name: webappname
     value: finkraft-client
   - name: azSub
@@ -36,6 +37,30 @@ stages:
           - download: current
             artifact: "reactapp"
 
+          - task: AzureAppServiceSettings@1
+            inputs:
+              appName: $(webappname)
+              resourceGroupName: $(resourceGroupName)
+              azureSubscription: $(azSub)
+              appSettings: |
+                [
+                  {
+                    "name": "REACT_APP_AG_GRID_LICENCE_KEY",
+                    "value": "$(REACT_APP_AG_GRID_LICENCE_KEY)",
+                    "slotSetting": false
+                  },
+                  {
+                    "name": "REACT_APP_BACKEND_API",
+                    "value": "$(REACT_APP_BACKEND_API)",
+                    "slotSetting": false
+                  },
+                  {
+                    "name": "REACT_APP_DROMO_FRONTEND_API_KEY",
+                    "value": "$(REACT_APP_DROMO_FRONTEND_API_KEY)",
+                    "slotSetting": false
+                  }
+                ]
+
           - task: AzureRmWebAppDeployment@4
             inputs:
               WebAppName: $(webappname)
@@ -44,4 +69,5 @@ stages:
               DeploymentType: zipDeploy
               RemoveAdditionalFilesFlag: true
               StartupCommand: "pm2 serve /home/site/wwwroot --no-daemon --spa"
+          
 
