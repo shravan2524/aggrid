@@ -11,9 +11,7 @@ export default function PublicLayout() {
         <PublicTopMenu />
       </header>
       <main>
-        <div className="container">
-          <Outlet />
-        </div>
+        <Outlet />
       </main>
       <div className="b-example-divider" />
       <div className="container">

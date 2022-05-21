@@ -26,18 +26,14 @@ const routes: any = [
   {
     element: (<Suspense fallback={<Loader />}><PublicLayout /></Suspense>),
     path: 'auth',
-    children: [
-      {
-        path: 'handler',
-        element: <Suspense fallback={<Loader />}><AuthHandlerProcessorIndexPage /></Suspense>,
-      },
-
-      {
-        path: 'logout',
-        element: <Suspense fallback={<Loader />}><AuthLogoutProcessorIndexPage /></Suspense>,
-      },
-
-    ],
+  },
+  {
+    path: '/auth/handler',
+    element: <Suspense fallback={<Loader />}><AuthHandlerProcessorIndexPage /></Suspense>,
+  },
+  {
+    path: '/auth/logout',
+    element: <Suspense fallback={<Loader />}><AuthLogoutProcessorIndexPage /></Suspense>,
   },
 
   // Supposed public routes ....
