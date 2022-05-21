@@ -39,5 +39,5 @@ export function getAuthFullNameFromLocal() : string | null {
     return null;
   }
 
-  return userDetails.given_name || ' Unkown ';
+  return userDetails.nickname || ' Unkown ';
 }
