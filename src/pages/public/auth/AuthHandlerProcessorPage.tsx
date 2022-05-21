@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import Loader from 'components/Loader';
 import { setAccessToken, setUserDetailsToLocal } from 'services/authService';
-import { Navigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { fetchUserMeData } from 'services/userAPIService';
 import { toast } from 'react-hot-toast';
 
 export default function AuthHandlerProcessorPage() {
   const [redirectTo, setRedirectTo] = useState<string | null>(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchUserMeData().then((data) => {
@@ -19,9 +20,11 @@ export default function AuthHandlerProcessorPage() {
     });
   }, []);
 
-  if (redirectTo) {
-    return <Navigate to={redirectTo} replace />;
-  }
+  useEffect(() => {
+    if (redirectTo) {
+      navigate(redirectTo);
+    }
+  }, [redirectTo]);
 
   return (<Loader />);
 }

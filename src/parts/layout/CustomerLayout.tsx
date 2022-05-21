@@ -13,7 +13,7 @@ export default function CustomerLayout() {
         <CustomerTopMenu />
       </header>
       <main>
-        <div className="container customer-container">
+        <div className="customer-container">
           <Outlet />
         </div>
       </main>
