@@ -53,7 +53,7 @@ export async function fetchQRData() :Promise<QRType[] | null | Error> {
     credentials: 'include',
   };
 
-  const apiUrl = `${BACKEND_API}/api/v1/qr`;
+  const apiUrl = `${BACKEND_API}/qr`;
   const response = await fetch(apiUrl, options);
 
   if (!response.ok) {

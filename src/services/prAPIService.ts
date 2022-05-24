@@ -59,7 +59,7 @@ export async function fetchPRData() :Promise<PRType[] | null | Error> {
     credentials: 'include',
   };
 
-  const apiUrl = `${BACKEND_API}/api/v1/pr`;
+  const apiUrl = `${BACKEND_API}/pr`;
   const response = await fetch(apiUrl, options);
 
   if (!response.ok) {
