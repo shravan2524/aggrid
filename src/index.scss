@@ -8,6 +8,8 @@
 
 // Then add additional custom code here
 
+$color-dark-purple:#282952;
+
 body{
   margin-top:  6rem;
 }
@@ -16,8 +18,23 @@ body{
   background-color: #2e2e52;
 }
 .bg-color-purple-dark {
-  background-color: #282952;
+  background-color: $color-dark-purple;
 }
+
+.text-purple-dark {
+  color: $color-dark-purple;
+}
+
 .bg-color-purple-light {
   background-color: #444885;
+}
+
+.grid-container-style{
+  height: 100%;
+  bottom: 1rem;
+  padding-top: 10rem;
+  left: 0;
+  right: 0;
+  position: absolute;
+  width: 100%;
 }
