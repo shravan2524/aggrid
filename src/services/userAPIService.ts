@@ -6,7 +6,7 @@ export async function fetchUserMeData() {
     credentials: 'include',
   };
 
-  const response = await fetch(`${BACKEND_API}/me`, options);
+  const response = await fetch(`${BACKEND_API}/api/v1/me`, options);
 
   if (!response.ok) {
     const message = `An error has occurred: ${response.status}`;

@@ -25,7 +25,7 @@ export async function fetchCompaniesData() :Promise<CompaniesType[] | null | Err
     credentials: 'include',
   };
 
-  const apiUrl = `${BACKEND_API}/companies`;
+  const apiUrl = `${BACKEND_API}/api/v1/companies`;
   const response = await fetch(apiUrl, options);
 
   if (!response.ok) {
