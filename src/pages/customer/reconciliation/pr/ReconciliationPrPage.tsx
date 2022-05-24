@@ -209,7 +209,7 @@ export default function ReconciliationPrPage() {
 
   return (
     <div className="container-fluid ag-theme-alpine grid-container-style">
-      <PageTitle title="2A" />
+      <PageTitle title="PR" />
       <AgGridReact
         ref={gridRef}
         rowData={rowData}
