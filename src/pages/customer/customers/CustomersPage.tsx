@@ -1,22 +1,130 @@
-import React, { useEffect, useState } from 'react';
+import React, {
+  useCallback, useMemo, useRef, useState,
+} from 'react';
 import PageTitle from 'components/PageTitle';
 import { fetchCustomersData } from 'services/customersAPIService';
+import { AgGridReact } from 'ag-grid-react';
+import { agGridRowDrag } from 'app/utils/Helpers';
 
 export default function CustomersPage() {
-  const [data, setData] = useState<any>(null);
+  const gridRef = useRef<any>();
 
-  useEffect(() => {
-    fetchCustomersData().then((customersData) => {
-      console.log(customersData);
+  const [rowData, setRowData] = useState<any>();
+  const gridStyle = useMemo(() => ({ height: '100%', width: '100%' }), []);
 
-      setData(customersData);
+  const [columnDefs, setColumnDefs] = useState([
+    {
+      headerName: 'Customer Details',
+      children: [
+        {
+          field: 'Id',
+          agGridRowDrag,
+          filter: 'agNumberColumnFilter',
+          chartDataType: 'category',
+        },
+        {
+          field: 'Uuid',
+          agGridRowDrag,
+          filter: 'agTextColumnFilter',
+          chartDataType: 'category',
+        },
+        {
+          field: 'Title',
+          agGridRowDrag,
+          filter: 'agTextColumnFilter',
+          chartDataType: 'category',
+        },
+        {
+          field: 'Parent',
+          agGridRowDrag,
+          filter: 'agNumberColumnFilter',
+          chartDataType: 'category',
+        },
+      ],
+    },
+  ]);
+
+  const sideBar = useMemo(() => ({
+    toolPanels: [
+      {
+        id: 'columns',
+        labelDefault: 'Columns',
+        labelKey: 'columns',
+        iconKey: 'columns',
+        toolPanel: 'agColumnsToolPanel',
+      },
+      {
+        id: 'filters',
+        labelDefault: 'Filters',
+        labelKey: 'filters',
+        iconKey: 'filter',
+        toolPanel: 'agFiltersToolPanel',
+      },
+    ],
+    defaultToolPanel: 'customStats',
+  }), []);
+
+  const defaultColDef = useMemo(() => ({
+    sortable: true,
+    filter: true,
+    resizable: true,
+    floatingFilter: true,
+    enableRowGroup: true,
+    editable: true,
+    enablePivot: true,
+    enableValue: true,
+  }), []);
+
+  const onFirstDataRendered = useCallback(() => {
+    gridRef.current?.api.sizeColumnsToFit();
+  }, []);
+
+  const statusBar = useMemo(() => ({
+    statusPanels: [
+      {
+        statusPanel: 'agAggregationComponent',
+        statusPanelParams: {
+          aggFuncs: ['count', 'sum'],
+        },
+      },
+    ],
+  }), []);
+
+  const onGridReady = useCallback((params) => {
+    fetchCustomersData().then((twoAData) => {
+      console.log(twoAData);
+      setRowData(twoAData);
+      gridRef.current?.api.sizeColumnsToFit();
     });
   }, []);
 
   return (
-    <div className="container">
-      <PageTitle title="Customers" />
-      <h1>Customers Page</h1>
+    <div className="container-fluid ag-theme-alpine grid-container-style">
+      <PageTitle title="PR" />
+      <div style={gridStyle} className="ag-theme-alpine">
+        <AgGridReact
+          ref={gridRef}
+          rowData={rowData}
+          columnDefs={columnDefs}
+          sideBar={sideBar}
+          rowSelection="multiple"
+          rowDragManaged
+          rowDragMultiRow
+          rowGroupPanelShow="always"
+          defaultColDef={defaultColDef}
+          enableCharts
+          groupDisplayType="multipleColumns"
+          animateRows
+          onGridReady={onGridReady}
+          pagination
+          onFirstDataRendered={onFirstDataRendered}
+          groupIncludeFooter
+          groupIncludeTotalFooter
+          enableRangeSelection
+          statusBar={statusBar}
+          masterDetail
+        />
+      </div>
     </div>
   );
 }

@@ -14,7 +14,7 @@ export default function ReconciliationPrPage() {
 
   const [columnDefs, setColumnDefs] = useState([
     {
-      headerName: '2A Details',
+      headerName: 'PR Details',
       children: [
         {
           field: 'Id',
