@@ -87,6 +87,13 @@ export default function CustomerTopMenu() {
                     </NavLink>
                   </li>
                   <li>
+                    <NavLink to="/customer/customers" className="dropdown-item">
+                      <i className="fa-solid fa-users" />
+                      {' '}
+                      Customers
+                    </NavLink>
+                  </li>
+                  <li>
                     <NavLink to="/customer/companies" className="dropdown-item">
                       <i className="fa-solid fa-building" />
                       {' '}
