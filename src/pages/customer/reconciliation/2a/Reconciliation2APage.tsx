@@ -203,12 +203,7 @@ export default function Reconciliation2APage() {
 
   return (
     <div className="container-fluid ag-theme-alpine grid-container-style">
-      <PageTitle title="Reconciliation" />
-      <h4 className="py-2 text-capitalize text-purple-dark ">
-        <i className="fa-solid fa-circle-dot" />
-        {' '}
-        Reconciliation 2A Page
-      </h4>
+      <PageTitle title="2A" />
       <AgGridReact
         ref={gridRef}
         rowData={rowData}
