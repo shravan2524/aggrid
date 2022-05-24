@@ -16,6 +16,7 @@ const ReconciliationPrIndexPage = React.lazy(() => import('pages/customer/reconc
 const AdminIndexPage = React.lazy(() => import('pages/customer/admin/AdminPage'));
 const NotificationsIndexPage = React.lazy(() => import('pages/customer/notifications/NotificationsPage'));
 const ProfileIndexPage = React.lazy(() => import('pages/customer/profile/ProfilePage'));
+const CompaniesIndexPage = React.lazy(() => import('pages/customer/companies/CompaniesPage'));
 const SignInIndexPage = React.lazy(() => import('pages/public/auth/SignInPage'));
 const AuthHandlerProcessorIndexPage = React.lazy(() => import('pages/public/auth/AuthHandlerProcessorPage'));
 const AuthLogoutProcessorIndexPage = React.lazy(() => import('pages/public/auth/AuthLogoutProcessorPage'));
@@ -109,6 +110,10 @@ const routes: any = [
           {
             path: 'profile',
             element: <Suspense fallback={<Loader />}><ProfileIndexPage /></Suspense>,
+          },
+          {
+            path: 'companies',
+            element: <Suspense fallback={<Loader />}><CompaniesIndexPage /></Suspense>,
           },
         ],
       },

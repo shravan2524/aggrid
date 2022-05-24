@@ -6,10 +6,10 @@ export default function Reconciliation2APage() {
   const [data, setData] = useState<any>(null);
 
   useEffect(() => {
-    fetch2AData().then((qrData) => {
-      console.log(qrData);
+    fetch2AData().then((twoAData) => {
+      console.log(twoAData);
 
-      setData(qrData);
+      setData(twoAData);
     });
   }, []);
 
