@@ -10,7 +10,6 @@ export default function CustomersPage() {
   const gridRef = useRef<any>();
 
   const [rowData, setRowData] = useState<any>();
-  const gridStyle = useMemo(() => ({ height: '100%', width: '100%' }), []);
 
   const [columnDefs, setColumnDefs] = useState([
     {
@@ -100,31 +99,29 @@ export default function CustomersPage() {
 
   return (
     <div className="container-fluid ag-theme-alpine grid-container-style">
-      <PageTitle title="PR" />
-      <div style={gridStyle} className="ag-theme-alpine">
-        <AgGridReact
-          ref={gridRef}
-          rowData={rowData}
-          columnDefs={columnDefs}
-          sideBar={sideBar}
-          rowSelection="multiple"
-          rowDragManaged
-          rowDragMultiRow
-          rowGroupPanelShow="always"
-          defaultColDef={defaultColDef}
-          enableCharts
-          groupDisplayType="multipleColumns"
-          animateRows
-          onGridReady={onGridReady}
-          pagination
-          onFirstDataRendered={onFirstDataRendered}
-          groupIncludeFooter
-          groupIncludeTotalFooter
-          enableRangeSelection
-          statusBar={statusBar}
-          masterDetail
-        />
-      </div>
+      <PageTitle title="Customers" />
+      <AgGridReact
+        ref={gridRef}
+        rowData={rowData}
+        columnDefs={columnDefs}
+        sideBar={sideBar}
+        rowSelection="multiple"
+        rowDragManaged
+        rowDragMultiRow
+        rowGroupPanelShow="always"
+        defaultColDef={defaultColDef}
+        enableCharts
+        groupDisplayType="multipleColumns"
+        animateRows
+        onGridReady={onGridReady}
+        pagination
+        onFirstDataRendered={onFirstDataRendered}
+        groupIncludeFooter
+        groupIncludeTotalFooter
+        enableRangeSelection
+        statusBar={statusBar}
+        masterDetail
+      />
     </div>
   );
 }
