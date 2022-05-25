@@ -16,25 +16,25 @@ export default function CustomersPage() {
       headerName: 'Customer Details',
       children: [
         {
-          field: 'Id',
+          field: 'id',
           agGridRowDrag,
           filter: 'agNumberColumnFilter',
           chartDataType: 'category',
         },
         {
-          field: 'Uuid',
+          field: 'uuid',
           agGridRowDrag,
           filter: 'agTextColumnFilter',
           chartDataType: 'category',
         },
         {
-          field: 'Title',
+          field: 'title',
           agGridRowDrag,
           filter: 'agTextColumnFilter',
           chartDataType: 'category',
         },
         {
-          field: 'Parent',
+          field: 'parent',
           agGridRowDrag,
           filter: 'agNumberColumnFilter',
           chartDataType: 'category',
