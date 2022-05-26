@@ -1,11 +1,10 @@
 import React from 'react';
-import PageTitle from 'components/PageTitle';
+import PageWrapper from 'components/PageWrapper';
 
 export default function SignInPage() {
   return (
-    <div className="container">
-      <PageTitle title="Sign  In" />
-      <h1>Sign In Page</h1>
-    </div>
+    <PageWrapper pageTitle="Sign  In">
+      <h3>Coming Soon !</h3>
+    </PageWrapper>
   );
 }

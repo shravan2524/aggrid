@@ -19,7 +19,7 @@ export interface CompaniesType {
   customer_id: number,
 }
 
-export async function fetchCompaniesData() :Promise<CompaniesType[] | null | Error> {
+export async function fetchCompaniesData() :Promise<CompaniesType[]> {
   const options: RequestInit = {
     method: 'GET',
     credentials: 'include',

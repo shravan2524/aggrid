@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import logo from 'logo-white.svg';
@@ -6,16 +6,33 @@ import { selectSecondaryMenuItems } from 'state/settings/settingsSlice';
 
 import './CustomerTopMenu.scss';
 import { getAuthFullNameFromLocal } from 'services/authService';
+import { useAppDispatch } from 'app/hooks';
+import { fetchCompanies, setSelectedCompany } from 'state/companies/companiesActions';
+import { getCompaniesSelector } from 'state/companies/companiesSelectors';
+import { CompaniesType } from 'services/companiesAPIService';
 import CustomerTopMenuDropDown from './CustomerTopMenuDropDown';
 
 function CustomerTopMenuCompaniesItem() {
-  const [companies, setCompanies] = useState<any>(null);
-  const companiesSelector = [];
-  const selectedCompany = null;
-
+  const [companies, setCompanies] = useState<CompaniesType[]>([]);
+  const companiesSelector = useSelector(getCompaniesSelector);
+  const dispatch = useAppDispatch();
   const setSelectedCompanyOption = (e) => {
     const companyId = e.currentTarget.value;
+    const selectedCompanyObject = companies.find((c) => c.id === Number(companyId));
+    if (selectedCompanyObject) {
+      dispatch(setSelectedCompany(selectedCompanyObject));
+    }
   };
+
+  useEffect(() => {
+    dispatch(fetchCompanies());
+  }, [dispatch]);
+
+  useEffect(() => {
+    if (companiesSelector) {
+      setCompanies(companiesSelector);
+    }
+  }, [companiesSelector]);
 
   return (
     <li className="nav-item dropdown mx-2  my-2">
@@ -28,14 +45,11 @@ function CustomerTopMenuCompaniesItem() {
           className="form-select m-0 pt-1 pb-1 pl-0 pr-3 border-0 rounded-pill companies"
           aria-label="Default select example"
         >
-          {!companies && (<option>No available Company</option>)}
-          {companies && companies.map((c) => (<option key={c._id} value={c._id}>{c.title}</option>))}
+          {!companies.length && (<option>No available Company</option>)}
+          {companies.length && companies.map((c) => (<option key={c.id} value={c.id}>{c.name}</option>))}
         </select>
         <strong className="rounded-circle p-1">
-          <button
-            type="button"
-            className="btn btn-sm btn-light bg-white border-0 rounded text-dark"
-          >
+          <button type="button" className="btn btn-sm btn-light bg-white border-0 rounded text-dark">
             <i className="fa-solid fa-circle-plus" />
           </button>
         </strong>
