@@ -4,8 +4,6 @@ import { Toaster } from 'react-hot-toast';
 import CustomerTopMenu from 'parts/menu/CustomerTopMenu';
 import BaseFooter from 'parts/footer/BaseFooter';
 
-import './CustomerLayout.scss';
-
 export default function CustomerLayout() {
   return (
     <>
@@ -13,12 +11,10 @@ export default function CustomerLayout() {
         <CustomerTopMenu />
       </header>
       <main>
-        <div className="customer-container">
-          <Outlet />
-        </div>
+        <Outlet />
       </main>
       <div className="b-example-divider" />
-      <div className="container">
+      <div className="container-fluid m-0 p-0">
         <BaseFooter />
       </div>
       <Toaster position="bottom-left" reverseOrder={false} />

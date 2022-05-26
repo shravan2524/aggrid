@@ -1,11 +1,10 @@
 import React from 'react';
-import PageTitle from 'components/PageTitle';
+import PageWrapper from 'components/PageWrapper';
 
 export default function NotificationsPage() {
   return (
-    <div className="container">
-      <PageTitle title="Notifications" />
-      <h1>Notifications Page</h1>
-    </div>
+    <PageWrapper pageTitle="Notifications">
+      <h3>Coming Soon !</h3>
+    </PageWrapper>
   );
 }

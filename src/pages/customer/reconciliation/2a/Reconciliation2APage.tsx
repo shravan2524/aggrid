@@ -1,15 +1,19 @@
 import React, {
-  useCallback, useEffect, useState, useRef, useMemo,
+  useCallback, useState, useRef, useMemo,
 } from 'react';
 
 import { AgGridReact } from 'ag-grid-react';
 
-import PageTitle from 'components/PageTitle';
 import { fetch2AData } from 'services/2AAPIService';
 import { agGridRowDrag } from 'app/utils/Helpers';
+import PageWrapper from 'components/PageWrapper';
+import { useWindowDimensions } from 'app/hooks';
 
 export default function Reconciliation2APage() {
   const gridRef = useRef<any>();
+  const { height } = useWindowDimensions();
+
+  const containerStyle = useMemo(() => ({ width: '100%', height: `${(height)}px`, minHeight: '600px' }), [height]);
 
   const [rowData, setRowData] = useState<any>();
 
@@ -223,30 +227,32 @@ export default function Reconciliation2APage() {
   }, []);
 
   return (
-    <div className="container-fluid ag-theme-alpine grid-container-style">
-      <PageTitle title="2A" />
-      <AgGridReact
-        ref={gridRef}
-        rowData={rowData}
-        columnDefs={columnDefs}
-        sideBar={sideBar}
-        rowSelection="multiple"
-        rowDragManaged
-        rowDragMultiRow
-        rowGroupPanelShow="always"
-        defaultColDef={defaultColDef}
-        enableCharts
-        groupDisplayType="multipleColumns"
-        animateRows
-        onGridReady={onGridReady}
-        pagination
-        onFirstDataRendered={onFirstDataRendered}
-        groupIncludeFooter
-        groupIncludeTotalFooter
-        enableRangeSelection
-        statusBar={statusBar}
-        masterDetail
-      />
-    </div>
+    <PageWrapper pageTitle="2A">
+      <div className="ag-theme-alpine grid-container-style">
+        <AgGridReact
+          containerStyle={containerStyle}
+          ref={gridRef}
+          rowData={rowData}
+          columnDefs={columnDefs}
+          sideBar={sideBar}
+          rowSelection="multiple"
+          rowDragManaged
+          rowDragMultiRow
+          rowGroupPanelShow="always"
+          defaultColDef={defaultColDef}
+          enableCharts
+          groupDisplayType="multipleColumns"
+          animateRows
+          onGridReady={onGridReady}
+          pagination
+          onFirstDataRendered={onFirstDataRendered}
+          groupIncludeFooter
+          groupIncludeTotalFooter
+          enableRangeSelection
+          statusBar={statusBar}
+          masterDetail
+        />
+      </div>
+    </PageWrapper>
   );
 }

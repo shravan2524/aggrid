@@ -1,14 +1,19 @@
 // Custom.scss
 // Option A: Include all of Bootstrap
 
-// Include any default variable overrides here (though functions won't be available)
+$color-dark-purple:#282952;
 
+// Include any default variable overrides here (though functions won't be available)
+// Default variable overrides
+$component-active-bg: $color-dark-purple;
+
+$dropdown-link-active-bg: $color-dark-purple;
 
 @import "../node_modules/bootstrap/scss/bootstrap";
 
 // Then add additional custom code here
 
-$color-dark-purple:#282952;
+
 
 body{
   margin-top:  6rem;
@@ -22,7 +27,7 @@ body{
 }
 
 .text-purple-dark {
-  color: $color-dark-purple;
+  color: $color-dark-purple !important;
 }
 
 .bg-color-purple-light {
@@ -31,10 +36,21 @@ body{
 
 .grid-container-style{
   height: 100%;
-  bottom: 1rem;
-  padding-top: 10rem;
-  left: 0;
-  right: 0;
-  position: absolute;
+  //bottom: 1rem;
+  //padding-top: 10rem;
+  //left: 0;
+  //right: 0;
+ // position: absolute;
   width: 100%;
+
+  .ag-root-wrapper{
+    min-height: 600px;
+  }
 }
+
+.dropdown-item{
+  .active{
+    background-color: $color-dark-purple !important;
+  }
+}
+

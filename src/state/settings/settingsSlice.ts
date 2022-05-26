@@ -32,3 +32,4 @@ export const { setSecondaryMenuItems } = settingsSlice.actions;
 
 // Selectors ...
 export const selectSecondaryMenuItems = (state: RootState):SecondaryMenuItemType[] => state.settings.secondaryMenuItems;
+export const isSecondaryMenuItemVisible = (state: RootState):boolean => (!!state.settings.secondaryMenuItems.length);

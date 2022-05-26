@@ -1,11 +1,10 @@
 import React from 'react';
-import PageTitle from 'components/PageTitle';
+import PageWrapper from 'components/PageWrapper';
 
 export default function AdminPage() {
   return (
-    <div className="container">
-      <PageTitle title="Admin" />
-      <h1>Admin Page</h1>
-    </div>
+    <PageWrapper pageTitle="Admin">
+      <h3>Coming Soon !</h3>
+    </PageWrapper>
   );
 }

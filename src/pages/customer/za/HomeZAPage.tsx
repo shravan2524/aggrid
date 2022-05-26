@@ -1,11 +1,10 @@
 import React from 'react';
-import PageTitle from 'components/PageTitle';
+import PageWrapper from 'components/PageWrapper';
 
 export default function HomeZAPage() {
   return (
-    <div className="container">
-      <PageTitle title="Home ZA" />
-      <h1>Home ZA Page</h1>
-    </div>
+    <PageWrapper pageTitle="Home ZA">
+      <h3>Coming Soon !</h3>
+    </PageWrapper>
   );
 }

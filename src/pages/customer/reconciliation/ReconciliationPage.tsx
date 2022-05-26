@@ -1,11 +1,10 @@
 import React from 'react';
-import PageTitle from 'components/PageTitle';
+import PageWrapper from 'components/PageWrapper';
 
 export default function ReconciliationPage() {
   return (
-    <div className="container">
-      <PageTitle title="Reconciliation" />
-      <h1>Reconciliation Page</h1>
-    </div>
+    <PageWrapper pageTitle="Reconciliation">
+      <h3>Coming Soon !</h3>
+    </PageWrapper>
   );
 }

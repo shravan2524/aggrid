@@ -15,7 +15,7 @@ export default function PageTitle({ title }:PageTitleProps) {
           {title}
         </title>
       </Helmet>
-      <h4 className="py-2 text-capitalize text-purple-dark ">
+      <h4 className="pb-2 text-capitalize text-purple-dark">
         <i className="fa-solid fa-circle-dot" />
         {' '}
         {title}

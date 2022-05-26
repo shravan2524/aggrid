@@ -1,15 +1,32 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { NavLink } from 'react-router-dom';
 import { BACKEND_API } from 'app/config';
 import logo from 'logo-white.svg';
 import ShowOnAuth from 'components/ShowOnAuth';
 import HideOnAuth from 'components/HideOnAuth';
-import { UserFullNameMenuItem } from './UserFullNameMenuItem';
+import { getAuthFullNameFromLocal } from 'services/authService';
+import CustomerTopMenuDropDown from './CustomerTopMenuDropDown';
 
 export function PublicTopMenu() {
+  const userFullName = useMemo(() => getAuthFullNameFromLocal(), []);
+  const profileItems = useMemo(() => [
+    {
+      itemTitle: 'Dashboard',
+      itemPath: '/customer/dashboard',
+      icon: 'fa-solid fa-gauge',
+    },
+    {
+      divider: true,
+    },
+    {
+      itemTitle: 'Logout',
+      itemPath: '/auth/logout',
+      icon: 'fa-solid fa-right-from-bracket',
+    },
+  ], []);
   return (
     <nav className="navbar navbar-expand-md fixed-top navbar-dark bg-color-purple-dark">
-      <div className="container">
+      <div className="container-fluid">
         <NavLink to="/" className="navbar-brand">
           <img src={logo} alt="Finkraft" width={90} />
         </NavLink>
@@ -36,30 +53,11 @@ export function PublicTopMenu() {
 
           <ShowOnAuth>
             <ul className="navbar-nav ms-auto mb-2 mb-md-0">
-
-              <li className="nav-item dropdown">
-                <UserFullNameMenuItem />
-                <ul className="dropdown-menu" aria-labelledby="dropdown05">
-                  <li>
-                    <NavLink to="/customer/dashboard" className="dropdown-item">
-                      <i className="fa-solid fa-gauge" />
-                      {' '}
-                      Dashboard
-                    </NavLink>
-                  </li>
-                  <li>
-                    <hr className="dropdown-divider" />
-                  </li>
-                  <li>
-                    <NavLink to="/auth/logout" className="dropdown-item">
-                      <i className="fa-solid fa-right-from-bracket" />
-                      {' '}
-                      Logout
-                    </NavLink>
-                  </li>
-                </ul>
-              </li>
-
+              <CustomerTopMenuDropDown
+                id="dropdown06"
+                title={userFullName ?? ''}
+                items={profileItems}
+              />
             </ul>
           </ShowOnAuth>
 

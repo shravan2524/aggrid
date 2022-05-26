@@ -1,46 +1,55 @@
 import React, {
-  useCallback, useMemo, useRef, useState,
+  useCallback, useEffect, useMemo, useRef, useState,
 } from 'react';
 import PageTitle from 'components/PageTitle';
 import { fetchCompaniesData } from 'services/companiesAPIService';
 import { AgGridReact } from 'ag-grid-react';
 import { agGridRowDrag } from 'app/utils/Helpers';
+import { useWindowDimensions } from 'app/hooks';
 
 export default function CompaniesPage() {
   const gridRef = useRef<any>();
+  const { height, width } = useWindowDimensions();
 
   const [rowData, setRowData] = useState<any>();
+
+  const containerStyle = useMemo(() => ({ width: '100%', height: `${(height)}px`, minHeight: '600px' }), [height, width]);
 
   const [columnDefs, setColumnDefs] = useState([
     {
       headerName: 'Companies Details',
       children: [
         {
-          field: 'Id',
+          headerName: 'ID',
+          field: 'id',
           agGridRowDrag,
           filter: 'agNumberColumnFilter',
           chartDataType: 'category',
         },
         {
-          field: 'Sys Company Id',
+          headerName: 'Sys Company ID',
+          field: 'sys_company_id',
           agGridRowDrag,
           filter: 'agNumberColumnFilter',
           chartDataType: 'category',
         },
         {
-          field: 'Name',
+          headerName: 'Name',
+          field: 'name',
           agGridRowDrag,
           filter: 'agTextColumnFilter',
           chartDataType: 'category',
         },
         {
-          field: 'Parent',
+          headerName: 'Parent',
+          field: 'parent',
           agGridRowDrag,
           filter: 'agNumberColumnFilter',
           chartDataType: 'category',
         },
         {
-          field: 'Customer Id',
+          headerName: 'Customer Id',
+          field: 'customer_id',
           agGridRowDrag,
           filter: 'agNumberColumnFilter',
           chartDataType: 'category',
@@ -103,10 +112,17 @@ export default function CompaniesPage() {
     });
   }, []);
 
+  useEffect(() => {
+    if (gridRef.current?.api) {
+      gridRef.current?.api.sizeColumnsToFit();
+    }
+  }, [width]);
+
   return (
     <div className="container-fluid ag-theme-alpine grid-container-style">
       <PageTitle title="Companies" />
       <AgGridReact
+        containerStyle={containerStyle}
         ref={gridRef}
         rowData={rowData}
         columnDefs={columnDefs}
