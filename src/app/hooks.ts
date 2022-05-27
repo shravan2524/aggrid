@@ -52,3 +52,19 @@ export const useWindowDimensions = () => {
 
   return windowDimensions;
 };
+
+export const useCustomerTopMenuHeightDimension = () => {
+  const [menuHeight, setMenuHeight] = useState<number>(0);
+  const { width, height } = useWindowDimensions();
+
+  useEffect(() => {
+    const h = document.getElementById('customer-top-menu')?.clientHeight;
+    if (h) {
+      setMenuHeight(h);
+    } else {
+      setMenuHeight(0);
+    }
+  }, [width, height]);
+
+  return menuHeight;
+};

@@ -1,7 +1,7 @@
 // Custom.scss
 // Option A: Include all of Bootstrap
 
-$color-dark-purple:#282952;
+$color-dark-purple: #282952;
 
 // Include any default variable overrides here (though functions won't be available)
 // Default variable overrides
@@ -14,14 +14,18 @@ $dropdown-link-active-bg: $color-dark-purple;
 // Then add additional custom code here
 
 
+body {
+  margin-top: 6rem;
 
-body{
-  margin-top:  6rem;
+  /* @media only screen and (max-width: 1025px) {
+     margin-top:  15rem;
+   }*/
 }
 
 .bg-color-purple {
   background-color: #2e2e52;
 }
+
 .bg-color-purple-dark {
   background-color: $color-dark-purple;
 }
@@ -34,23 +38,31 @@ body{
   background-color: #444885;
 }
 
-.grid-container-style{
+.grid-container-style {
   height: 100%;
   //bottom: 1rem;
   //padding-top: 10rem;
   //left: 0;
   //right: 0;
- // position: absolute;
+  // position: absolute;
   width: 100%;
 
-  .ag-root-wrapper{
+  .ag-root-wrapper {
     min-height: 600px;
   }
 }
 
-.dropdown-item{
-  .active{
+.dropdown-item {
+  .active {
     background-color: $color-dark-purple !important;
   }
 }
 
+
+.top-menu-responsive-1 {
+  margin-top: 8rem;
+}
+
+.top-menu-responsive-2 {
+  margin-top: 11rem;
+}
