@@ -71,7 +71,7 @@ function CustomerTopMenuSelect({
     <li className="nav-item dropdown mx-2 my-2">
       <div className="bg-white rounded-pill text-dark d-flex justify-content-between align-items-center p-1">
         <strong className="rounded-circle bg-color-purple text-white p-1">
-          <span className="badge rounded-pill bg-color-purple-dark p-2">{mark}</span>
+          <span className="badge rounded-pill bg-color-purple-dark p-2">{mark ? (<i className={mark} />) : mark}</span>
         </strong>
 
         <div className={classNames(['w-100', { 'mx-2': !buttonOnClickCallback }])}>

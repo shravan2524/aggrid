@@ -13,11 +13,12 @@ type CustomerTopMenuDropDownProps = {
   title: string;
   items: CustomerTopMenuDropDownItemsTypes[];
   id: string;
-  hide?: boolean | undefined
+  hide?: boolean | undefined,
+  mark?: string;
 };
 
 function CustomerTopMenuDropDown({
-  title, items, id, hide,
+  title, items, id, hide, mark,
 }:CustomerTopMenuDropDownProps) {
   if (hide) {
     return null;
@@ -28,7 +29,7 @@ function CustomerTopMenuDropDown({
       <a className="nav-link dropdown-toggle form-select p-0 bg-white border-4 border-white rounded-pill d-flex justify-content-between align-items-center" href="#" id="dropdown05" data-bs-toggle="dropdown" aria-expanded="false">
         <strong className="rounded-circle bg-color-purple text-white p-1 m-0">
           <span className="badge rounded-pill bg-color-purple-dark p-2">
-            P
+            {mark ? (<i className={mark} />) : mark}
           </span>
         </strong>
         <span className="text-purple-dark mx-3 pe-3">{title}</span>
@@ -76,6 +77,7 @@ function CustomerTopMenuDropDown({
 
 CustomerTopMenuDropDown.defaultProps = {
   hide: false,
+  mark: 'P',
 };
 
 export default CustomerTopMenuDropDown;

@@ -174,7 +174,7 @@ export default function CustomerTopMenu() {
               {/* Companies */}
               <CustomerTopMenuSelect
                 options={companies}
-                mark="C"
+                mark="fa-solid fa-building"
                 placeholder="Companies"
                 noOptionsMessage={() => 'No Companies available'}
                 onChange={setSelectedCompanyOption}
@@ -184,7 +184,7 @@ export default function CustomerTopMenu() {
               {/* Customers */}
               <CustomerTopMenuSelect
                 options={customers}
-                mark="C"
+                mark="fa-solid fa-users"
                 placeholder="Customers"
                 noOptionsMessage={() => 'No Customers available'}
                 onChange={setSelectedCustomerOption}
@@ -194,6 +194,7 @@ export default function CustomerTopMenu() {
               {/* Profile */}
               <CustomerTopMenuDropDown
                 id="dropdown05"
+                mark="fa-solid fa-user"
                 title={userFullName ?? ''}
                 items={profileItems}
               />

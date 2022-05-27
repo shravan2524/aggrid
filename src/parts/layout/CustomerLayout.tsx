@@ -23,6 +23,7 @@ export default function CustomerLayout() {
     dispatch(fetchCompanies());
   }, [dispatch]);
 
+  // When we resize or use app in different screen sizes we need to automatically readjust some classes
   useEffect(() => {
     setMenuResponsiveClass('');
 
