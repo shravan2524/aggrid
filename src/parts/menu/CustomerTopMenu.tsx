@@ -125,7 +125,7 @@ export default function CustomerTopMenu() {
   return (
     <div className="fixed-top">
       <nav className="navbar navbar-expand-md  navbar-dark bg-color-purple-dark">
-        <div className="container-fluid">
+        <div className="container-fluid d-flex flex-wrap">
           <NavLink to="/" className="navbar-brand">
             <img src={logo} alt="Finkraft" width={90} />
           </NavLink>
@@ -140,8 +140,7 @@ export default function CustomerTopMenu() {
           >
             <span className="navbar-toggler-icon" />
           </button>
-          <div className="collapse navbar-collapse" id="navbarNavDropdown">
-
+          <div className="collapse navbar-collapse d-flex-inline flex-wrap justify-content-between align-items-center" id="navbarNavDropdown">
             <ul className="navbar-nav mr-auto">
               <li className="nav-item">
                 <NavLink to="/customer/dashboard" className="nav-link">
@@ -159,8 +158,7 @@ export default function CustomerTopMenu() {
                 </NavLink>
               </li>
             </ul>
-
-            <ul className="navbar-nav ms-auto mb-2 mb-md-0">
+            <ul className="navbar-nav mr-auto ">
 
               <li className="d-flex justify-content-between align-items-center mx-2 my-2">
                 <NavLink to="/customer/notifications" className="btn btn-primary p-1 m-0 bg-color-purple-dark border-4 border-white position-relative rounded-pill">
