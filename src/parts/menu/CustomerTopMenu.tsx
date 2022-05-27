@@ -56,8 +56,9 @@ export default function CustomerTopMenu() {
 
   // Customers ...
   const [customers, setCustomers] = useState<CustomerTopMenuSelectItemType[]>([]);
+  const [chosenCustomer, setChosenCustomer] = useState<CustomerTopMenuSelectItemType | undefined>(undefined);
   const customersSelector = useSelector(selectAllCustomers);
-  const selectedCustomer = useSelector(selectSelectedCustomer);
+  const selectedCustomerSelector = useSelector(selectSelectedCustomer);
 
   // Companies ....
   const [companies, setCompanies] = useState<CustomerTopMenuSelectItemType[]>([]);
@@ -96,15 +97,15 @@ export default function CustomerTopMenu() {
   useEffect(() => {
     dispatch(setSelectedCompany(null));
 
-    if (selectedCustomer) {
-      const filteredCompanies = companiesSelector.filter((c) => (Number(c.customer_id) === Number(selectedCustomer.id)));
+    if (selectedCustomerSelector) {
+      const filteredCompanies = companiesSelector.filter((c) => (Number(c.customer_id) === Number(selectedCustomerSelector.id)));
       setCompanies(filteredCompanies.map((i:CompaniesType) => ({ value: i.id, label: i.name })));
 
       if (filteredCompanies.length) {
         dispatch(setSelectedCompany(filteredCompanies[0].id));
       }
     }
-  }, [selectedCustomer]);
+  }, [selectedCustomerSelector]);
 
   useEffect(() => {
     if (selectedCompanySelector) {
@@ -113,6 +114,14 @@ export default function CustomerTopMenu() {
       setChosenCompany(undefined);
     }
   }, [selectedCompanySelector]);
+
+  useEffect(() => {
+    if (selectedCustomerSelector) {
+      setChosenCustomer({ label: selectedCustomerSelector?.title, value: selectedCustomerSelector?.id });
+    } else {
+      setChosenCustomer(undefined);
+    }
+  }, [selectedCustomerSelector]);
 
   const setSelectedCompanyOption = (e) => {
     dispatch(setSelectedCompany(e.value));
@@ -184,7 +193,7 @@ export default function CustomerTopMenu() {
                 placeholder="Customers"
                 noOptionsMessage={() => 'No Customers available'}
                 onChange={setSelectedCustomerOption}
-                value={{ label: selectedCustomer?.title, value: selectedCustomer?.id }}
+                value={chosenCustomer}
               />
 
               {/* Profile */}

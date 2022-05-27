@@ -77,7 +77,7 @@ function CustomerTopMenuDropDown({
 
 CustomerTopMenuDropDown.defaultProps = {
   hide: false,
-  mark: 'P',
+  mark: 'fa-solid fa-p',
 };
 
 export default CustomerTopMenuDropDown;
