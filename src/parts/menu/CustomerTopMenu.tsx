@@ -141,6 +141,7 @@ export default function CustomerTopMenu() {
             <span className="navbar-toggler-icon" />
           </button>
           <div className="collapse navbar-collapse" id="navbarNavDropdown">
+
             <ul className="navbar-nav mr-auto">
               <li className="nav-item">
                 <NavLink to="/customer/dashboard" className="nav-link">
