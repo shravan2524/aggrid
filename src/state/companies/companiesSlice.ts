@@ -6,7 +6,7 @@ import ProgressBar from 'app/utils/ProgressBar';
 import { CustomerTopMenuSelectItemType } from '../../parts/menu/CustomerTopMenuSelect';
 
 // Types ...
-type CompaniesState = {
+export type CompaniesState = {
   rows: CompaniesType[];
   isLoading: boolean;
   status: string | null;
@@ -30,11 +30,16 @@ export const companiesSlice = createSlice({
   name: 'companies',
   initialState,
   reducers: {
-    setSelectedCompany: (state: Draft<CompaniesState>, action: PayloadAction<string | number>) => {
+    setSelectedCompany: (state: Draft<CompaniesState>, action: PayloadAction<string | number | null>) => {
       const companyId = action.payload;
-      const selectedCompanyObject = state.rows.find((c) => c.id === Number(companyId));
-      if (selectedCompanyObject) {
-        state.selectedCompany = selectedCompanyObject;
+
+      if (companyId) {
+        const selectedCompanyObject = state.rows.find((c) => c.id === Number(companyId));
+        if (selectedCompanyObject) {
+          state.selectedCompany = selectedCompanyObject;
+        }
+      } else {
+        state.selectedCompany = null;
       }
     },
   },
@@ -72,10 +77,6 @@ export default companiesSlice.reducer;
 
 // Selectors ...
 const CompaniesSelector = (state) => state.companies;
-export const selectAllCompanies = createSelector(
-  CompaniesSelector,
-  (companies: CompaniesState): CustomerTopMenuSelectItemType[] => companies.rows.map((i:CompaniesType) => ({ value: i.id, label: i.name })),
-);
 
 export const getAllCompanies = createSelector(
   CompaniesSelector,
