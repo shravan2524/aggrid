@@ -9,11 +9,11 @@ import { getAuthFullNameFromLocal } from 'services/authService';
 import { useAppDispatch } from 'app/hooks';
 
 import {
-  fetchCustomers, selectAllCustomers, selectSelectedCustomer, setSelectedCustomer,
+  selectAllCustomers, selectSelectedCustomer, setSelectedCustomer,
 } from 'state/customers/customersSlice';
 
 import {
-  fetchCompanies, getAllCompanies,
+  getAllCompanies,
   selectSelectedCompany,
   setSelectedCompany,
 } from 'state/companies/companiesSlice';
@@ -34,9 +34,15 @@ function SecondaryCustomerTopMenu() {
 
   return (
     <div className="nav-scroller bg-color-purple-light">
-      <div className="container">
+      <div className="container-fluid">
         <nav className="nav nav-underline" aria-label="Secondary navigation">
-          {secondaryMenuItems.map((itm, i) => <NavLink key={`${itm.path}${i}`} to={itm.path} replace className="nav-link">{itm.text}</NavLink>)}
+          {secondaryMenuItems.map((itm, i) => (
+            <NavLink key={`${itm.path}${i}`} to={itm.path} replace className="nav-link">
+              {itm.icon && (<i className={itm.icon} />)}
+              {' '}
+              {itm.text}
+            </NavLink>
+          ))}
         </nav>
       </div>
     </div>
@@ -64,16 +70,6 @@ export default function CustomerTopMenu() {
       itemTitle: 'Profile',
       itemPath: '/customer/profile',
       icon: 'fa-solid fa-user',
-    },
-    {
-      itemTitle: 'Customers',
-      itemPath: '/customer/customers',
-      icon: 'fa-solid fa-users',
-    },
-    {
-      itemTitle: 'Companies',
-      itemPath: '/customer/companies',
-      icon: 'fa-solid fa-building',
     },
     {
       divider: true,

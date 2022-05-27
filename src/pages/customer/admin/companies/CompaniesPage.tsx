@@ -1,11 +1,11 @@
 import React, {
   useCallback, useEffect, useMemo, useRef, useState,
 } from 'react';
-import PageTitle from 'components/PageTitle';
 import { fetchCompaniesData } from 'services/companiesAPIService';
 import { AgGridReact } from 'ag-grid-react';
 import { agGridRowDrag } from 'app/utils/Helpers';
 import { useWindowDimensions } from 'app/hooks';
+import PageWrapper from 'components/PageWrapper';
 
 export default function CompaniesPage() {
   const gridRef = useRef<any>();
@@ -119,31 +119,32 @@ export default function CompaniesPage() {
   }, [width]);
 
   return (
-    <div className="container-fluid ag-theme-alpine grid-container-style">
-      <PageTitle title="Companies" />
-      <AgGridReact
-        containerStyle={containerStyle}
-        ref={gridRef}
-        rowData={rowData}
-        columnDefs={columnDefs}
-        sideBar={sideBar}
-        rowSelection="multiple"
-        rowDragManaged
-        rowDragMultiRow
-        rowGroupPanelShow="always"
-        defaultColDef={defaultColDef}
-        enableCharts
-        groupDisplayType="multipleColumns"
-        animateRows
-        onGridReady={onGridReady}
-        pagination
-        onFirstDataRendered={onFirstDataRendered}
-        groupIncludeFooter
-        groupIncludeTotalFooter
-        enableRangeSelection
-        statusBar={statusBar}
-        masterDetail
-      />
-    </div>
+    <PageWrapper pageTitle="Companies">
+      <div className=" ag-theme-alpine grid-container-style">
+        <AgGridReact
+          containerStyle={containerStyle}
+          ref={gridRef}
+          rowData={rowData}
+          columnDefs={columnDefs}
+          sideBar={sideBar}
+          rowSelection="multiple"
+          rowDragManaged
+          rowDragMultiRow
+          rowGroupPanelShow="always"
+          defaultColDef={defaultColDef}
+          enableCharts
+          groupDisplayType="multipleColumns"
+          animateRows
+          onGridReady={onGridReady}
+          pagination
+          onFirstDataRendered={onFirstDataRendered}
+          groupIncludeFooter
+          groupIncludeTotalFooter
+          enableRangeSelection
+          statusBar={statusBar}
+          masterDetail
+        />
+      </div>
+    </PageWrapper>
   );
 }

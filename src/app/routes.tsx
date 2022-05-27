@@ -16,8 +16,8 @@ const ReconciliationPrIndexPage = React.lazy(() => import('pages/customer/reconc
 const AdminIndexPage = React.lazy(() => import('pages/customer/admin/AdminPage'));
 const NotificationsIndexPage = React.lazy(() => import('pages/customer/notifications/NotificationsPage'));
 const ProfileIndexPage = React.lazy(() => import('pages/customer/profile/ProfilePage'));
-const CompaniesIndexPage = React.lazy(() => import('pages/customer/companies/CompaniesPage'));
-const CustomersIndexPage = React.lazy(() => import('pages/customer/customers/CustomersPage'));
+const CompaniesIndexPage = React.lazy(() => import('pages/customer/admin/companies/CompaniesPage'));
+const CustomersIndexPage = React.lazy(() => import('pages/customer/admin/customers/CustomersPage'));
 const SignInIndexPage = React.lazy(() => import('pages/public/auth/SignInPage'));
 const AuthHandlerProcessorIndexPage = React.lazy(() => import('pages/public/auth/AuthHandlerProcessorPage'));
 const AuthLogoutProcessorIndexPage = React.lazy(() => import('pages/public/auth/AuthLogoutProcessorPage'));
@@ -106,7 +106,35 @@ const routes: any = [
           },
           {
             path: 'admin',
-            element: <Suspense fallback={<Loader />}><AdminIndexPage /></Suspense>,
+            element: <WithSubMenu subMenuItems={[
+              {
+                path: '/customer/admin/customers',
+                text: 'Customers',
+                icon: 'fa-solid fa-users',
+              },
+              {
+                path: '/customer/admin/companies',
+                text: 'Companies',
+                icon: 'fa-solid fa-building',
+              },
+            ]}
+            />,
+
+            children: [
+              {
+                path: '',
+                element: <Suspense fallback={<Loader />}><AdminIndexPage /></Suspense>,
+              },
+              {
+                path: 'customers',
+                element: <Suspense fallback={<Loader />}><CustomersIndexPage /></Suspense>,
+              },
+              {
+                path: 'companies',
+                element: <Suspense fallback={<Loader />}><CompaniesIndexPage /></Suspense>,
+              },
+            ],
+
           },
           {
             path: 'notifications',
@@ -115,14 +143,6 @@ const routes: any = [
           {
             path: 'profile',
             element: <Suspense fallback={<Loader />}><ProfileIndexPage /></Suspense>,
-          },
-          {
-            path: 'companies',
-            element: <Suspense fallback={<Loader />}><CompaniesIndexPage /></Suspense>,
-          },
-          {
-            path: 'customers',
-            element: <Suspense fallback={<Loader />}><CustomersIndexPage /></Suspense>,
           },
         ],
       },

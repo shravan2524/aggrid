@@ -5,6 +5,7 @@ import { RootState } from 'state/store';
 export interface SecondaryMenuItemType {
   path: string;
   text: string;
+  icon?: string;
 }
 
 export interface SettingsState {
