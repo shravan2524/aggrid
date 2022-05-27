@@ -2,10 +2,11 @@ import React from 'react';
 import { Helmet, HelmetData } from 'react-helmet-async';
 
 interface PageTitleProps {
-  title: string
+  title: string,
+  icon?: string
 }
 const helmetData = new HelmetData({});
-export default function PageTitle({ title }:PageTitleProps) {
+function PageTitle({ title, icon }:PageTitleProps) {
   return (
     <div>
       <Helmet helmetData={helmetData}>
@@ -16,7 +17,7 @@ export default function PageTitle({ title }:PageTitleProps) {
         </title>
       </Helmet>
       <h4 className="pb-2 text-capitalize text-purple-dark">
-        <i className="fa-solid fa-circle-dot" />
+        <i className={icon} />
         {' '}
         {title}
       </h4>
@@ -24,3 +25,9 @@ export default function PageTitle({ title }:PageTitleProps) {
 
   );
 }
+
+PageTitle.defaultProps = {
+  icon: 'fa-solid fa-circle-dot',
+};
+
+export default PageTitle;

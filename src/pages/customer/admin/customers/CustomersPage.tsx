@@ -101,7 +101,7 @@ export default function CustomersPage() {
   }, []);
 
   return (
-    <PageWrapper pageTitle="Customers">
+    <PageWrapper pageTitle="Customers" icon="fa-solid fa-users">
       <div className="ag-theme-alpine grid-container-style">
         <AgGridReact
           containerStyle={containerStyle}

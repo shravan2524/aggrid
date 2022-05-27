@@ -9,17 +9,24 @@ import './PageWrapper.scss';
 type PageWrapperProps = {
   pageTitle: string;
   children: JSX.Element;
+  icon?: string;
 };
 
-export default function PageWrapper({ children, pageTitle }:PageWrapperProps) {
+function PageWrapper({ children, pageTitle, icon }:PageWrapperProps) {
   const secondaryMenuItemVisible = useSelector(isSecondaryMenuItemVisible);
 
   return (
     <div className={classNames(['container-fluid', { 'page-wrapper-with-submenu': secondaryMenuItemVisible }])}>
-      <PageTitle title={pageTitle} />
+      <PageTitle title={pageTitle} icon={icon} />
       <div className="row">
         {children}
       </div>
     </div>
   );
 }
+
+PageWrapper.defaultProps = {
+  icon: 'fa-solid fa-circle-dot',
+};
+
+export default PageWrapper;

@@ -119,7 +119,7 @@ export default function CompaniesPage() {
   }, [width]);
 
   return (
-    <PageWrapper pageTitle="Companies">
+    <PageWrapper pageTitle="Companies" icon="fa-solid fa-building">
       <div className=" ag-theme-alpine grid-container-style">
         <AgGridReact
           containerStyle={containerStyle}
