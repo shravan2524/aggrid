@@ -4,20 +4,23 @@ import { BACKEND_API } from '../app/config';
 [
   {
     "id": 1,
-    "uuid": "",
-    "title": "",
-    "parent": 1
-  }
+    "uuid": "123456789",
+    "title": "Customer 1",
+    "parent": null,
+    "createdAt": "2022-05-27T07:18:53.339Z",
+    "updatedAt": "2022-05-27T07:18:53.339Z"
+  },
 ]
 */
 export interface CustomersType {
   id: number,
   uuid: string,
   title: string,
-  parent: number,
+  createdAt: string,
+  updatedAt: string,
 }
 
-export async function fetchCustomersData() :Promise<CustomersType[] | null | Error> {
+export async function fetchCustomersData() :Promise<CustomersType[]> {
   const options: RequestInit = {
     method: 'GET',
     credentials: 'include',

@@ -7,56 +7,19 @@ import { selectSecondaryMenuItems } from 'state/settings/settingsSlice';
 import './CustomerTopMenu.scss';
 import { getAuthFullNameFromLocal } from 'services/authService';
 import { useAppDispatch } from 'app/hooks';
-import { fetchCompanies, setSelectedCompany } from 'state/companies/companiesActions';
-import { getCompaniesSelector } from 'state/companies/companiesSelectors';
-import { CompaniesType } from 'services/companiesAPIService';
+
+import {
+  fetchCustomers, selectAllCustomers, selectSelectedCustomer, setSelectedCustomer,
+} from 'state/customers/customersSlice';
+
+import {
+  fetchCompanies,
+  selectAllCompanies,
+  selectSelectedCompany,
+  setSelectedCompany,
+} from 'state/companies/companiesSlice';
 import CustomerTopMenuDropDown from './CustomerTopMenuDropDown';
-
-function CustomerTopMenuCompaniesItem() {
-  const [companies, setCompanies] = useState<CompaniesType[]>([]);
-  const companiesSelector = useSelector(getCompaniesSelector);
-  const dispatch = useAppDispatch();
-  const setSelectedCompanyOption = (e) => {
-    const companyId = e.currentTarget.value;
-    const selectedCompanyObject = companies.find((c) => c.id === Number(companyId));
-    if (selectedCompanyObject) {
-      dispatch(setSelectedCompany(selectedCompanyObject));
-    }
-  };
-
-  useEffect(() => {
-    dispatch(fetchCompanies());
-  }, [dispatch]);
-
-  useEffect(() => {
-    if (companiesSelector) {
-      setCompanies(companiesSelector);
-    }
-  }, [companiesSelector]);
-
-  return (
-    <li className="nav-item dropdown mx-2  my-2">
-      <div className="bg-white rounded-pill text-dark d-flex justify-content-between align-items-center p-1">
-        <strong className="rounded-circle bg-color-purple text-white p-1">
-          <span className="badge rounded-pill bg-color-purple-dark p-2">P</span>
-        </strong>
-        <select
-          onChange={setSelectedCompanyOption}
-          className="form-select m-0 pt-1 pb-1 pl-0 pr-3 border-0 rounded-pill companies"
-          aria-label="Default select example"
-        >
-          {!companies.length && (<option>No available Company</option>)}
-          {companies.length && companies.map((c) => (<option key={c.id} value={c.id}>{c.name}</option>))}
-        </select>
-        <strong className="rounded-circle p-1">
-          <button type="button" className="btn btn-sm btn-light bg-white border-0 rounded text-dark">
-            <i className="fa-solid fa-circle-plus" />
-          </button>
-        </strong>
-      </div>
-    </li>
-  );
-}
+import CustomerTopMenuSelect, { CustomerTopMenuSelectItemType } from './CustomerTopMenuSelect';
 
 function SecondaryCustomerTopMenu() {
   const secondaryMenuItems = useSelector(selectSecondaryMenuItems);
@@ -81,6 +44,16 @@ function SecondaryCustomerTopMenu() {
 }
 
 export default function CustomerTopMenu() {
+  const dispatch = useAppDispatch();
+
+  const [customers, setCustomers] = useState<CustomerTopMenuSelectItemType[]>([]);
+  const customersSelector = useSelector(selectAllCustomers);
+  const selectedCustomer = useSelector(selectSelectedCustomer);
+
+  const [companies, setCompanies] = useState<CustomerTopMenuSelectItemType[]>([]);
+  const companiesSelector = useSelector(selectAllCompanies);
+  const selectedCompany = useSelector(selectSelectedCompany);
+
   const userFullName = useMemo(() => getAuthFullNameFromLocal(), []);
 
   const profileItems = useMemo(() => [
@@ -108,6 +81,31 @@ export default function CustomerTopMenu() {
       icon: 'fa-solid fa-right-from-bracket',
     },
   ], []);
+
+  useEffect(() => {
+    dispatch(fetchCustomers());
+    dispatch(fetchCompanies());
+  }, [dispatch]);
+
+  useEffect(() => {
+    if (customersSelector) {
+      setCustomers(customersSelector);
+    }
+  }, [customersSelector]);
+
+  const setSelectedCustomerOption = (e) => {
+    dispatch(setSelectedCustomer(e.value));
+  };
+
+  useEffect(() => {
+    if (companiesSelector) {
+      setCompanies(companiesSelector);
+    }
+  }, [companiesSelector]);
+
+  const setSelectedCompanyOption = (e) => {
+    dispatch(setSelectedCompany(e.value));
+  };
 
   return (
     <div className="fixed-top">
@@ -148,12 +146,6 @@ export default function CustomerTopMenu() {
 
             <ul className="navbar-nav ms-auto mb-2 mb-md-0">
 
-              <CustomerTopMenuDropDown
-                id="dropdown05"
-                title={userFullName ?? ''}
-                items={profileItems}
-              />
-
               <li className="d-flex justify-content-between align-items-center mx-2 my-2">
                 <NavLink to="/customer/notifications" className="btn btn-primary p-1 m-0 bg-color-purple-dark border-4 border-white position-relative rounded-pill">
                   <i className="fa-solid fa-bell m-1" />
@@ -164,7 +156,33 @@ export default function CustomerTopMenu() {
                 </NavLink>
               </li>
 
-              <CustomerTopMenuCompaniesItem />
+              {/*    <CustomerTopMenuCompaniesItem /> */}
+              {/* Companies */}
+              <CustomerTopMenuSelect
+                options={companies}
+                mark="C"
+                placeholder="Companies"
+                noOptionsMessage={() => 'No Companies available'}
+                onChange={setSelectedCompanyOption}
+                value={{ label: selectedCompany?.name, value: selectedCompany?.id }}
+              />
+
+              {/* Customers */}
+              <CustomerTopMenuSelect
+                options={customers}
+                mark="C"
+                placeholder="Customers"
+                noOptionsMessage={() => 'No Customers available'}
+                onChange={setSelectedCustomerOption}
+                value={{ label: selectedCustomer?.title, value: selectedCustomer?.id }}
+              />
+
+              {/* Profile */}
+              <CustomerTopMenuDropDown
+                id="dropdown05"
+                title={userFullName ?? ''}
+                items={profileItems}
+              />
 
             </ul>
           </div>
