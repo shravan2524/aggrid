@@ -1,15 +1,15 @@
 import {
   createAsyncThunk, createSelector, createSlice, Draft, PayloadAction,
 } from '@reduxjs/toolkit';
-import { CompaniesType, fetchCompaniesData } from 'services/companiesAPIService';
+import { CompaniesType, fetchCompaniesData, postCompaniesData } from 'services/companiesAPIService';
 import ProgressBar from 'app/utils/ProgressBar';
-import { CustomerTopMenuSelectItemType } from '../../parts/menu/CustomerTopMenuSelect';
+import { toast } from 'react-hot-toast';
 
 // Types ...
 export type CompaniesState = {
   rows: CompaniesType[];
   isLoading: boolean;
-  status: string | null;
+  isPostLoading: boolean;
   selectedCompany: CompaniesType | null;
   error: string | null | undefined;
 };
@@ -17,13 +17,14 @@ export type CompaniesState = {
 const initialState: CompaniesState = {
   rows: [],
   isLoading: false,
-  status: null,
+  isPostLoading: false,
   selectedCompany: null,
   error: undefined,
 };
 
 // API Actions ...
-export const fetchCompanies = createAsyncThunk('companies/fetchCompanies', async () => fetchCompaniesData());
+export const fetchCompanies = createAsyncThunk('fetchCompanies', async () => fetchCompaniesData());
+export const newCompanyRequest = createAsyncThunk('postCompanies', async (data: any) => postCompaniesData(data));
 
 // Reducers ...
 export const companiesSlice = createSlice({
@@ -43,33 +44,51 @@ export const companiesSlice = createSlice({
       }
     },
   },
+  extraReducers: (builder) => {
+    // Fetch Companies ...
+    builder.addCase(fetchCompanies.pending, (state: Draft<CompaniesState>, action) => {
+      state.isLoading = true;
+      ProgressBar.start();
+    });
+    builder.addCase(fetchCompanies.fulfilled, (state, action) => {
+      state.rows = action.payload;
 
-  extraReducers(builder) {
-    builder
-      .addCase(fetchCompanies.pending, (state: Draft<CompaniesState>, action) => {
-        state.status = 'loading';
-        state.isLoading = true;
-        ProgressBar.start();
-      })
-      .addCase(fetchCompanies.fulfilled, (state, action) => {
-        state.rows = action.payload;
+      // if there is no selected item select first company as default
+      const { selectedCompany, rows } = state;
+      if (!selectedCompany && rows.length) {
+        // eslint-disable-next-line prefer-destructuring
+        state.selectedCompany = rows[0];
+      }
+      state.isLoading = false;
+      ProgressBar.done();
+    });
+    builder.addCase(fetchCompanies.rejected, (state, action) => {
+      const error = action.error.message;
+      if (error) {
+        toast.error(error);
+      }
+      state.isLoading = false;
+      ProgressBar.done();
+    });
 
-        // if there is no selected item select first company as default
-        const { selectedCompany, rows } = state;
-        if (!selectedCompany && rows.length) {
-          // eslint-disable-next-line prefer-destructuring
-          state.selectedCompany = rows[0];
-        }
-        state.status = 'succeeded';
-        state.isLoading = false;
-        ProgressBar.done();
-      })
-      .addCase(fetchCompanies.rejected, (state, action) => {
-        state.status = 'failed';
-        state.error = action.error.message;
-        state.isLoading = false;
-        ProgressBar.done();
-      });
+    // Add new Company ...
+    builder.addCase(newCompanyRequest.pending, (state: Draft<CompaniesState>, action) => {
+      state.isPostLoading = true;
+      ProgressBar.start();
+    });
+    builder.addCase(newCompanyRequest.fulfilled, (state, action) => {
+      toast.success('Company successfully created.');
+      state.isPostLoading = false;
+      ProgressBar.done();
+    });
+    builder.addCase(newCompanyRequest.rejected, (state, action) => {
+      const error = action.error.message;
+      if (error) {
+        toast.error(error);
+      }
+      state.isPostLoading = false;
+      ProgressBar.done();
+    });
   },
 });
 
@@ -85,6 +104,20 @@ export const getAllCompanies = createSelector(
 export const selectSelectedCompany = createSelector(
   CompaniesSelector,
   (companies: CompaniesState): CompaniesType | null => companies.selectedCompany,
+);
+export const isLoadingSelector = createSelector(
+  CompaniesSelector,
+  (companies: CompaniesState): boolean | undefined => companies.isLoading,
+);
+
+export const isPostLoadingSelector = createSelector(
+  CompaniesSelector,
+  (companies: CompaniesState): boolean | undefined => companies.isPostLoading,
+);
+
+export const selectErrorMessageSelector = createSelector(
+  CompaniesSelector,
+  (companies: CompaniesState): string | null | undefined => companies.error,
 );
 
 // Reducer actions ...

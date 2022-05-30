@@ -34,3 +34,23 @@ export async function fetchCompaniesData() :Promise<CompaniesType[]> {
   }
   return response.json();
 }
+
+export async function postCompaniesData(data) :Promise<CompaniesType[]> {
+  const options: RequestInit = {
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+    },
+    method: 'POST',
+    credentials: 'include',
+    body: JSON.stringify({ ...data }),
+  };
+
+  const apiUrl = `${BACKEND_API}/api/v1/companies`;
+  const response = await fetch(apiUrl, options);
+  if (!response.ok) {
+    const message = `An error has occurred: ${response.status}`;
+    throw new Error(message);
+  }
+  return response.json();
+}

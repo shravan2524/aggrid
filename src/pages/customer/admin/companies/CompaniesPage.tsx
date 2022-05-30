@@ -3,12 +3,17 @@ import React, {
 } from 'react';
 import { fetchCompaniesData } from 'services/companiesAPIService';
 import { AgGridReact } from 'ag-grid-react';
-import { agGridRowDrag } from 'app/utils/Helpers';
+import { agGridRowDrag, showBootstrapModal } from 'app/utils/Helpers';
 import { useWindowDimensions } from 'app/hooks';
 import PageWrapper from 'components/PageWrapper';
+import { useSelector } from 'react-redux';
+import { isPostLoadingSelector } from 'state/companies/companiesSlice';
+import NewCompanyModal from './NewCompanyModal';
 
 export default function CompaniesPage() {
   const gridRef = useRef<any>();
+  const isPostLoading = useSelector(isPostLoadingSelector);
+
   const { height, width } = useWindowDimensions();
 
   const [rowData, setRowData] = useState<any>();
@@ -104,13 +109,12 @@ export default function CompaniesPage() {
     ],
   }), []);
 
-  const onGridReady = useCallback((params) => {
+  /* const onGridReady = useCallback((params) => {
     fetchCompaniesData().then((twoAData) => {
-      console.log(twoAData);
       setRowData(twoAData);
       gridRef.current?.api.sizeColumnsToFit();
     });
-  }, []);
+  }, []); */
 
   useEffect(() => {
     if (gridRef.current?.api) {
@@ -118,9 +122,33 @@ export default function CompaniesPage() {
     }
   }, [width]);
 
+  useEffect(() => {
+    if (!isPostLoading) {
+      console.log('Fetching');
+      fetchCompaniesData().then((twoAData) => {
+        setRowData(twoAData);
+        gridRef.current?.api.sizeColumnsToFit();
+      });
+    }
+  }, [isPostLoading]);
+
   return (
     <PageWrapper pageTitle="Companies" icon="fa-solid fa-building">
+
       <div className=" ag-theme-alpine grid-container-style">
+        <NewCompanyModal />
+        <div className="d-inline-flex my-2 justify-content-between align-items-center">
+          <button
+            type="button"
+            className="btn btn-sm btn-danger"
+            onClick={() => showBootstrapModal('newCompanyModal')}
+          >
+            <i className="fa-solid fa-circle-plus" />
+            {' '}
+            Add Company
+          </button>
+        </div>
+
         <AgGridReact
           containerStyle={containerStyle}
           ref={gridRef}
@@ -135,7 +163,7 @@ export default function CompaniesPage() {
           enableCharts
           groupDisplayType="multipleColumns"
           animateRows
-          onGridReady={onGridReady}
+        //  onGridReady={onGridReady}
           pagination
           onFirstDataRendered={onFirstDataRendered}
           groupIncludeFooter
@@ -145,6 +173,7 @@ export default function CompaniesPage() {
           masterDetail
         />
       </div>
+
     </PageWrapper>
   );
 }
