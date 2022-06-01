@@ -1,7 +1,9 @@
 import {
   createAsyncThunk, createSelector, createSlice, Draft, PayloadAction,
 } from '@reduxjs/toolkit';
-import { CompaniesType, fetchCompaniesData, postCompaniesData } from 'services/companiesAPIService';
+import {
+  CompaniesType, fetchCompaniesData, postCompaniesData, putCompaniesData,
+} from 'services/companiesAPIService';
 import ProgressBar from 'app/utils/ProgressBar';
 import { toast } from 'react-hot-toast';
 
@@ -10,6 +12,7 @@ export type CompaniesState = {
   rows: CompaniesType[];
   isLoading: boolean;
   isPostLoading: boolean;
+  isPutLoading: boolean;
   selectedCompany: CompaniesType | null;
   error: string | null | undefined;
 };
@@ -18,13 +21,15 @@ const initialState: CompaniesState = {
   rows: [],
   isLoading: false,
   isPostLoading: false,
+  isPutLoading: false,
   selectedCompany: null,
   error: undefined,
 };
 
 // API Actions ...
-export const fetchCompanies = createAsyncThunk('fetchCompanies', async () => fetchCompaniesData());
+export const fetchCompanies = createAsyncThunk('getCompanies', async () => fetchCompaniesData());
 export const newCompanyRequest = createAsyncThunk('postCompanies', async (data: any) => postCompaniesData(data));
+export const updateCompanyRequest = createAsyncThunk('putCompanies', async (payload: any) => putCompaniesData(payload));
 
 // Reducers ...
 export const companiesSlice = createSlice({
@@ -89,6 +94,25 @@ export const companiesSlice = createSlice({
       state.isPostLoading = false;
       ProgressBar.done();
     });
+
+    // Update Company ...
+    builder.addCase(updateCompanyRequest.pending, (state: Draft<CompaniesState>, action) => {
+      state.isPutLoading = true;
+      ProgressBar.start();
+    });
+    builder.addCase(updateCompanyRequest.fulfilled, (state, action) => {
+      toast.success('Company successfully updated.');
+      state.isPutLoading = false;
+      ProgressBar.done();
+    });
+    builder.addCase(updateCompanyRequest.rejected, (state, action) => {
+      const error = action.error.message;
+      if (error) {
+        toast.error(error);
+      }
+      state.isPutLoading = false;
+      ProgressBar.done();
+    });
   },
 });
 
@@ -113,6 +137,11 @@ export const isLoadingSelector = createSelector(
 export const isPostLoadingSelector = createSelector(
   CompaniesSelector,
   (companies: CompaniesState): boolean | undefined => companies.isPostLoading,
+);
+
+export const isPutLoadingSelector = createSelector(
+  CompaniesSelector,
+  (companies: CompaniesState): boolean | undefined => companies.isPutLoading,
 );
 
 export const selectErrorMessageSelector = createSelector(

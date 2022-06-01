@@ -17,6 +17,8 @@ export interface CompaniesType {
   name: string,
   parent: number,
   customer_id: number,
+  createdAt: string,
+  updatedAt: string,
 }
 
 export async function fetchCompaniesData() :Promise<CompaniesType[]> {
@@ -47,6 +49,26 @@ export async function postCompaniesData(data) :Promise<CompaniesType[]> {
   };
 
   const apiUrl = `${BACKEND_API}/api/v1/companies`;
+  const response = await fetch(apiUrl, options);
+  if (!response.ok) {
+    const message = `An error has occurred: ${response.status}`;
+    throw new Error(message);
+  }
+  return response.json();
+}
+
+export async function putCompaniesData(payload) :Promise<CompaniesType[]> {
+  const options: RequestInit = {
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+    },
+    method: 'PUT',
+    credentials: 'include',
+    body: JSON.stringify({ ...payload.data }),
+  };
+
+  const apiUrl = `${BACKEND_API}/api/v1/companies/${payload.id}`;
   const response = await fetch(apiUrl, options);
   if (!response.ok) {
     const message = `An error has occurred: ${response.status}`;
