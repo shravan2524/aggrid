@@ -6,10 +6,10 @@ import classNames from 'classnames';
 import { useSelector } from 'react-redux';
 import { useAppDispatch } from 'app/hooks';
 import CustomButton from 'components/CustomButton';
-import { selectSelectedCustomer } from 'state/customers/customersSlice';
+import { getSelectedCustomer } from 'state/customers/customersSlice';
 import {
   fetchCompanies,
-  getAllCompanies,
+  getCompanies,
   isPostLoadingSelector,
   newCompanyRequest,
 } from 'state/companies/companiesSlice';
@@ -24,8 +24,8 @@ interface NewCompanyFormProps {
 export default function NewCompanyModal() {
   const dispatch = useAppDispatch();
   const isLoading = useSelector(isPostLoadingSelector);
-  const selectedCustomer = useSelector(selectSelectedCustomer);
-  const companySelector = useSelector(getAllCompanies);
+  const selectedCustomer = useSelector(getSelectedCustomer);
+  const companySelector = useSelector(getCompanies);
 
   const modalId = useMemo(() => 'newCompanyModal', []);
 

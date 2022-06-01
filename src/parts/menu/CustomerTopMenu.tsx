@@ -8,19 +8,17 @@ import './CustomerTopMenu.scss';
 import { getAuthFullNameFromLocal } from 'services/authService';
 import { useAppDispatch } from 'app/hooks';
 
-import {
-  getFirstCustomer,
-  selectAllCustomers, selectSelectedCustomer, setSelectedCustomer,
-} from 'state/customers/customersSlice';
+import { selectSelectedCustomer, selectSelectedCustomers, setSelectedCustomer } from 'state/customers/customersSlice';
 
 import {
-  getAllCompanies,
-  selectSelectedCompany,
+  getCompanies,
+  selectSelectedCompanies,
+  selectSelectedCompany, setSelectedCompanies,
   setSelectedCompany,
 } from 'state/companies/companiesSlice';
-import { CompaniesType } from 'services/companiesAPIService';
+
 import CustomerTopMenuDropDown from './CustomerTopMenuDropDown';
-import CustomerTopMenuSelect, { CustomerTopMenuSelectItemType } from './CustomerTopMenuSelect';
+import CustomerTopMenuSelect from './CustomerTopMenuSelect';
 
 function SecondaryCustomerTopMenu() {
   const secondaryMenuItems = useSelector(selectSecondaryMenuItems);
@@ -55,19 +53,14 @@ export default function CustomerTopMenu() {
 
   const userFullName = useMemo(() => getAuthFullNameFromLocal(), []);
 
-  // Customers ...
-
-  const [customers, setCustomers] = useState<CustomerTopMenuSelectItemType[]>([]);
-  const [chosenCustomer, setChosenCustomer] = useState<CustomerTopMenuSelectItemType | undefined>(undefined);
-  const customersSelector = useSelector(selectAllCustomers);
-  const selectedCustomerSelector = useSelector(selectSelectedCustomer);
-  const firstCustomerSelector = useSelector(getFirstCustomer);
+  // Customers ....
+  const selectedCustomers = useSelector(selectSelectedCustomers);
+  const selectedCustomer = useSelector(selectSelectedCustomer);
 
   // Companies ....
-  const [companies, setCompanies] = useState<CustomerTopMenuSelectItemType[]>([]);
-  const [chosenCompany, setChosenCompany] = useState<CustomerTopMenuSelectItemType | undefined>(undefined);
-  const companiesSelector = useSelector(getAllCompanies);
-  const selectedCompanySelector = useSelector(selectSelectedCompany);
+  const selectedCompanies = useSelector(selectSelectedCompanies);
+  const getAllCompanies = useSelector(getCompanies);
+  const selectedCompany = useSelector(selectSelectedCompany);
 
   const profileItems = useMemo(() => [
     {
@@ -85,59 +78,23 @@ export default function CustomerTopMenu() {
     },
   ], []);
 
-  // Set customers in select component...
-  useEffect(() => {
-    if (customersSelector) {
-      setCustomers(customersSelector);
-    }
-  }, [customersSelector]);
+  const setSelectedCompanyOption = (e) => {
+    dispatch(setSelectedCompany(e.value));
+  };
 
   const setSelectedCustomerOption = (e) => {
     dispatch(setSelectedCustomer(e.value));
   };
 
-  // Set first customer as default selection ...
   useEffect(() => {
-    if (firstCustomerSelector) {
-      dispatch(setSelectedCustomer(firstCustomerSelector.id));
+    dispatch(setSelectedCompanies([]));
+
+    if (selectedCustomer) {
+      const customerId = selectedCustomer.value;
+      const selectedCustomerCompanies = getAllCompanies.filter((i) => i.customer_id === Number(customerId));
+      dispatch(setSelectedCompanies(selectedCustomerCompanies || []));
     }
-  }, [firstCustomerSelector]);
-
-  useEffect(() => {
-    if (selectedCustomerSelector) {
-      setChosenCustomer({ label: selectedCustomerSelector?.title, value: selectedCustomerSelector?.id });
-    } else {
-      setChosenCustomer(undefined);
-    }
-  }, [selectedCustomerSelector]);
-
-  // Set selected companies
-  useEffect(() => {
-    if (selectedCustomerSelector) {
-      // get all companies filtered bny customer
-      const filteredCompanies = companiesSelector.filter((c) => (Number(c.customer_id) === Number(selectedCustomerSelector.id)));
-
-      // companies in menu top companies select
-      setCompanies(filteredCompanies.map((i:CompaniesType) => ({ value: i.id, label: i.name })));
-
-      // Set selected default company in state ...
-      if (filteredCompanies.length) {
-        dispatch(setSelectedCompany(filteredCompanies[0].id));
-      }
-    }
-  }, [selectedCustomerSelector]);
-
-  useEffect(() => {
-    if (selectedCompanySelector) {
-      setChosenCompany({ label: selectedCompanySelector?.name, value: selectedCompanySelector?.id });
-    } else {
-      setChosenCompany(undefined);
-    }
-  }, [selectedCompanySelector]);
-
-  const setSelectedCompanyOption = (e) => {
-    dispatch(setSelectedCompany(e.value));
-  };
+  }, [selectedCustomer]);
 
   return (
     <div className="fixed-top" id="customer-top-menu">
@@ -190,22 +147,22 @@ export default function CustomerTopMenu() {
               {/*    <CustomerTopMenuCompaniesItem /> */}
               {/* Companies */}
               <CustomerTopMenuSelect
-                options={companies}
+                options={selectedCompanies}
                 mark="fa-solid fa-building"
                 placeholder="Companies"
                 noOptionsMessage={() => 'No Companies available'}
                 onChange={setSelectedCompanyOption}
-                value={chosenCompany}
+                value={selectedCompany}
               />
 
               {/* Customers */}
               <CustomerTopMenuSelect
-                options={customers}
+                options={selectedCustomers}
                 mark="fa-solid fa-users"
                 placeholder="Customers"
                 noOptionsMessage={() => 'No Customers available'}
                 onChange={setSelectedCustomerOption}
-                value={chosenCustomer}
+                value={selectedCustomer}
               />
 
               {/* Profile */}

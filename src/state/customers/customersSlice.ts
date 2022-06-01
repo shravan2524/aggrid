@@ -77,19 +77,19 @@ export const selectAllCustomers = createSelector(
   (customers: CustomersState): CustomerTopMenuSelectItemType[] => customers.rows.map((i:CustomersType) => ({ value: i.id, label: i.title })),
 );
 
-export const getAllCustomers = createSelector(
-  CustomersSelector,
-  (customers: CustomersState): CustomersType[] => customers.rows.sort((a, b) => ((a.id > b.id) ? 1 : -1)),
-);
-
-export const getFirstCustomer = createSelector(
-  CustomersSelector,
-  (customers: CustomersState): CustomersType => customers.rows && customers.rows[0],
-);
-
 export const selectSelectedCustomer = createSelector(
   CustomersSelector,
-  (customers: CustomersState): CustomersType | null => customers.selectedCustomer,
+  (customers: CustomersState): CustomerTopMenuSelectItemType | undefined => (customers.selectedCustomer ? ({ value: customers.selectedCustomer.id, label: customers.selectedCustomer.title }) : undefined),
+);
+
+export const getSelectedCustomer = createSelector(
+  CustomersSelector,
+  (customers: CustomersState): CustomersType | null => (customers.selectedCustomer),
+);
+
+export const selectSelectedCustomers = createSelector(
+  CustomersSelector,
+  (customers: CustomersState): CustomerTopMenuSelectItemType[] => customers.rows.map((i) => ({ value: i.id, label: i.title })),
 );
 
 // Reducer actions ...

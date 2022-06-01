@@ -6,6 +6,7 @@ import {
 } from 'services/companiesAPIService';
 import ProgressBar from 'app/utils/ProgressBar';
 import { toast } from 'react-hot-toast';
+import { CustomerTopMenuSelectItemType } from 'parts/menu/CustomerTopMenuSelect';
 
 // Types ...
 export type CompaniesState = {
@@ -14,6 +15,7 @@ export type CompaniesState = {
   isPostLoading: boolean;
   isPutLoading: boolean;
   selectedCompany: CompaniesType | null;
+  selectedCompanies: CompaniesType[],
   error: string | null | undefined;
 };
 
@@ -23,6 +25,7 @@ const initialState: CompaniesState = {
   isPostLoading: false,
   isPutLoading: false,
   selectedCompany: null,
+  selectedCompanies: [],
   error: undefined,
 };
 
@@ -46,6 +49,18 @@ export const companiesSlice = createSlice({
         }
       } else {
         state.selectedCompany = null;
+      }
+    },
+    setSelectedCompanies: (state: Draft<CompaniesState>, action: PayloadAction<CompaniesType[]>) => {
+      const selectedCompanies = action.payload ? action.payload : [];
+      state.selectedCompanies = selectedCompanies;
+
+      if (selectedCompanies.length) {
+        // eslint-disable-next-line prefer-destructuring
+        state.selectedCompany = selectedCompanies[0];
+      } else {
+        // @ts-ignore
+        state.selectedCompany = [];
       }
     },
   },
@@ -121,14 +136,31 @@ export default companiesSlice.reducer;
 // Selectors ...
 const CompaniesSelector = (state) => state.companies;
 
-export const getAllCompanies = createSelector(
+export const getCompanies = createSelector(
   CompaniesSelector,
   (companies: CompaniesState): CompaniesType[] => companies.rows,
 );
+
+export const getSelectedCompanies = createSelector(
+  CompaniesSelector,
+  (companies: CompaniesState): CompaniesType[] => companies.selectedCompanies,
+);
+
+export const selectAllCompanies = createSelector(
+  CompaniesSelector,
+  (companies: CompaniesState): CustomerTopMenuSelectItemType[] => companies.rows.map((i) => ({ value: i.id, label: i.name })),
+);
+
 export const selectSelectedCompany = createSelector(
   CompaniesSelector,
-  (companies: CompaniesState): CompaniesType | null => companies.selectedCompany,
+  (companies: CompaniesState): CustomerTopMenuSelectItemType | undefined => (companies.selectedCompany ? ({ value: companies.selectedCompany.id, label: companies.selectedCompany.name }) : undefined),
 );
+
+export const selectSelectedCompanies = createSelector(
+  CompaniesSelector,
+  (companies: CompaniesState): CustomerTopMenuSelectItemType[] => companies.selectedCompanies.map((i) => ({ value: i.id, label: i.name })),
+);
+
 export const isLoadingSelector = createSelector(
   CompaniesSelector,
   (companies: CompaniesState): boolean | undefined => companies.isLoading,
@@ -150,5 +182,5 @@ export const selectErrorMessageSelector = createSelector(
 );
 
 // Reducer actions ...
-const { setSelectedCompany } = companiesSlice.actions;
-export { setSelectedCompany };
+const { setSelectedCompany, setSelectedCompanies } = companiesSlice.actions;
+export { setSelectedCompany, setSelectedCompanies };

@@ -6,8 +6,13 @@ import { showModal } from 'app/utils/Modal';
 import { useAppDispatch, useWindowDimensions } from 'app/hooks';
 import PageWrapper from 'components/PageWrapper';
 import { useSelector } from 'react-redux';
-import { fetchCompanies, getAllCompanies, updateCompanyRequest } from 'state/companies/companiesSlice';
-import { selectSelectedCustomer } from 'state/customers/customersSlice';
+import {
+  fetchCompanies,
+  getCompanies,
+  getSelectedCompanies,
+  updateCompanyRequest,
+} from 'state/companies/companiesSlice';
+import { getSelectedCustomer } from 'state/customers/customersSlice';
 import { agGridDateFormatter } from 'app/utils/Helpers';
 import NewCompanyModal from './NewCompanyModal';
 
@@ -57,8 +62,8 @@ function ParentRenderer(params) {
 export default function CompaniesPage() {
   const dispatch = useAppDispatch();
   const gridRef = useRef<any>();
-  const rows = useSelector(getAllCompanies);
-  const selectedCustomer = useSelector(selectSelectedCustomer);
+  const rows = useSelector(getSelectedCompanies);
+  const selectedCustomer = useSelector(getSelectedCustomer);
 
   const { height, width } = useWindowDimensions();
 
@@ -196,9 +201,7 @@ export default function CompaniesPage() {
       }
     ));
     if (selectedCustomer) {
-      setRowData(rowsFilteredData.filter((com) => Number(com.customer_id) === Number(selectedCustomer.id)));
-    } else {
-      setRowData([]);
+      setRowData(rowsFilteredData);
     }
 
     if (gridRef.current?.api) {
