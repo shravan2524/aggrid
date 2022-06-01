@@ -9,6 +9,7 @@ import { getAuthFullNameFromLocal } from 'services/authService';
 import { useAppDispatch } from 'app/hooks';
 
 import {
+  getFirstCustomer,
   selectAllCustomers, selectSelectedCustomer, setSelectedCustomer,
 } from 'state/customers/customersSlice';
 
@@ -55,10 +56,12 @@ export default function CustomerTopMenu() {
   const userFullName = useMemo(() => getAuthFullNameFromLocal(), []);
 
   // Customers ...
+
   const [customers, setCustomers] = useState<CustomerTopMenuSelectItemType[]>([]);
   const [chosenCustomer, setChosenCustomer] = useState<CustomerTopMenuSelectItemType | undefined>(undefined);
   const customersSelector = useSelector(selectAllCustomers);
   const selectedCustomerSelector = useSelector(selectSelectedCustomer);
+  const firstCustomerSelector = useSelector(getFirstCustomer);
 
   // Companies ....
   const [companies, setCompanies] = useState<CustomerTopMenuSelectItemType[]>([]);
@@ -93,14 +96,31 @@ export default function CustomerTopMenu() {
     dispatch(setSelectedCustomer(e.value));
   };
 
-  // If selected customer then we must change
+  // Set first customer as default selection ...
   useEffect(() => {
-    dispatch(setSelectedCompany(null));
+    if (firstCustomerSelector) {
+      dispatch(setSelectedCustomer(firstCustomerSelector.id));
+    }
+  }, [firstCustomerSelector]);
 
+  useEffect(() => {
     if (selectedCustomerSelector) {
+      setChosenCustomer({ label: selectedCustomerSelector?.title, value: selectedCustomerSelector?.id });
+    } else {
+      setChosenCustomer(undefined);
+    }
+  }, [selectedCustomerSelector]);
+
+  // Set selected companies
+  useEffect(() => {
+    if (selectedCustomerSelector) {
+      // get all companies filtered bny customer
       const filteredCompanies = companiesSelector.filter((c) => (Number(c.customer_id) === Number(selectedCustomerSelector.id)));
+
+      // companies in menu top companies select
       setCompanies(filteredCompanies.map((i:CompaniesType) => ({ value: i.id, label: i.name })));
 
+      // Set selected default company in state ...
       if (filteredCompanies.length) {
         dispatch(setSelectedCompany(filteredCompanies[0].id));
       }
@@ -114,14 +134,6 @@ export default function CustomerTopMenu() {
       setChosenCompany(undefined);
     }
   }, [selectedCompanySelector]);
-
-  useEffect(() => {
-    if (selectedCustomerSelector) {
-      setChosenCustomer({ label: selectedCustomerSelector?.title, value: selectedCustomerSelector?.id });
-    } else {
-      setChosenCustomer(undefined);
-    }
-  }, [selectedCustomerSelector]);
 
   const setSelectedCompanyOption = (e) => {
     dispatch(setSelectedCompany(e.value));

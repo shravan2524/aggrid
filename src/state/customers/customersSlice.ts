@@ -79,8 +79,14 @@ export const selectAllCustomers = createSelector(
 
 export const getAllCustomers = createSelector(
   CustomersSelector,
-  (customers: CustomersState): CustomersType[] => customers.rows,
+  (customers: CustomersState): CustomersType[] => customers.rows.sort((a, b) => ((a.id > b.id) ? 1 : -1)),
 );
+
+export const getFirstCustomer = createSelector(
+  CustomersSelector,
+  (customers: CustomersState): CustomersType => customers.rows && customers.rows[0],
+);
+
 export const selectSelectedCustomer = createSelector(
   CustomersSelector,
   (customers: CustomersState): CustomersType | null => customers.selectedCustomer,

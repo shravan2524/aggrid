@@ -3,7 +3,9 @@ import { Outlet, useLocation } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
 import CustomerTopMenu from 'parts/menu/CustomerTopMenu';
 import BaseFooter from 'parts/footer/BaseFooter';
-import { fetchCustomers } from 'state/customers/customersSlice';
+import {
+  fetchCustomers,
+} from 'state/customers/customersSlice';
 import { fetchCompanies } from 'state/companies/companiesSlice';
 import { useAppDispatch, useCustomerTopMenuHeightDimension } from 'app/hooks';
 import { useSelector } from 'react-redux';
@@ -13,14 +15,14 @@ export default function CustomerLayout() {
   const dispatch = useAppDispatch();
 
   const location = useLocation();
+
   const [menuResponsiveClass, setMenuResponsiveClass] = useState<string>('');
   const topMenuHeight = useCustomerTopMenuHeightDimension();
   const secondaryMenuItemVisible = useSelector(isSecondaryMenuItemVisible);
 
   // Fetch all companies and customers ...
   useEffect(() => {
-    dispatch(fetchCustomers());
-    dispatch(fetchCompanies());
+    dispatch(fetchCustomers()).then(() => dispatch(fetchCompanies()));
   }, [dispatch]);
 
   // When we resize or use app in different screen sizes we need to automatically readjust some classes
