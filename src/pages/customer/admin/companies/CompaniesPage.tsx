@@ -1,18 +1,39 @@
 import React, {
   useCallback, useEffect, useMemo, useRef, useState,
 } from 'react';
-import { fetchCompaniesData } from 'services/companiesAPIService';
 import { AgGridReact } from 'ag-grid-react';
-import { agGridRowDrag, showBootstrapModal } from 'app/utils/Helpers';
-import { useWindowDimensions } from 'app/hooks';
+import { showModal } from 'app/utils/Modal';
+import { agGridRowDrag } from 'app/utils/Helpers';
+import { useAppDispatch, useWindowDimensions } from 'app/hooks';
 import PageWrapper from 'components/PageWrapper';
 import { useSelector } from 'react-redux';
-import { isPostLoadingSelector } from 'state/companies/companiesSlice';
+import { fetchCompanies, getAllCompanies } from 'state/companies/companiesSlice';
+import { selectSelectedCustomer } from 'state/customers/customersSlice';
 import NewCompanyModal from './NewCompanyModal';
 
+function CustomActionsToolPanel() {
+  return (
+    <div className="container-fluid">
+      <div className="row p-2">
+        <button
+          type="button"
+          className="btn btn-sm btn-danger"
+          onClick={() => showModal('newCompanyModal')}
+        >
+          <i className="fa-solid fa-circle-plus" />
+          {' '}
+          Add Company
+        </button>
+      </div>
+    </div>
+  );
+}
+
 export default function CompaniesPage() {
+  const dispatch = useAppDispatch();
   const gridRef = useRef<any>();
-  const isPostLoading = useSelector(isPostLoadingSelector);
+  const rows = useSelector(getAllCompanies);
+  const selectedCustomer = useSelector(selectSelectedCustomer);
 
   const { height, width } = useWindowDimensions();
 
@@ -25,46 +46,32 @@ export default function CompaniesPage() {
       headerName: 'Companies Details',
       children: [
         {
-          headerName: 'ID',
-          field: 'id',
-          agGridRowDrag,
-          filter: 'agNumberColumnFilter',
-          chartDataType: 'category',
-        },
-        {
-          headerName: 'Sys Company ID',
-          field: 'sys_company_id',
-          agGridRowDrag,
-          filter: 'agNumberColumnFilter',
-          chartDataType: 'category',
-        },
-        {
           headerName: 'Name',
           field: 'name',
           agGridRowDrag,
           filter: 'agTextColumnFilter',
           chartDataType: 'category',
-        },
-        {
-          headerName: 'Parent',
-          field: 'parent',
-          agGridRowDrag,
-          filter: 'agNumberColumnFilter',
-          chartDataType: 'category',
-        },
-        {
-          headerName: 'Customer Id',
-          field: 'customer_id',
-          agGridRowDrag,
-          filter: 'agNumberColumnFilter',
-          chartDataType: 'category',
+          onCellValueChanged: (event) => {
+            console.log(event);
+          },
         },
       ],
     },
   ]);
 
+  const icons = useMemo<{ [key: string]: Function | string; }>(() => ({
+    'custom-actions-tool': '<i class="fa-solid fa-screwdriver-wrench"></i>',
+  }), []);
+
   const sideBar = useMemo(() => ({
     toolPanels: [
+      {
+        id: 'customActionsTool',
+        labelDefault: 'Actions',
+        labelKey: 'customActionsTool',
+        iconKey: 'custom-actions-tool',
+        toolPanel: CustomActionsToolPanel,
+      },
       {
         id: 'columns',
         labelDefault: 'Columns',
@@ -80,7 +87,7 @@ export default function CompaniesPage() {
         toolPanel: 'agFiltersToolPanel',
       },
     ],
-    defaultToolPanel: 'customStats',
+    defaultToolPanel: 'customActionsTool',
   }), []);
 
   const defaultColDef = useMemo(() => ({
@@ -98,56 +105,29 @@ export default function CompaniesPage() {
     gridRef.current?.api.sizeColumnsToFit();
   }, []);
 
-  const statusBar = useMemo(() => ({
-    statusPanels: [
-      {
-        statusPanel: 'agAggregationComponent',
-        statusPanelParams: {
-          aggFuncs: ['count', 'sum'],
-        },
-      },
-    ],
-  }), []);
-
-  /* const onGridReady = useCallback((params) => {
-    fetchCompaniesData().then((twoAData) => {
-      setRowData(twoAData);
-      gridRef.current?.api.sizeColumnsToFit();
-    });
-  }, []); */
+  const onGridReady = useCallback((params) => {
+    dispatch(fetchCompanies());
+  }, []);
 
   useEffect(() => {
     if (gridRef.current?.api) {
       gridRef.current?.api.sizeColumnsToFit();
     }
-  }, [width]);
+  }, [width, rows]);
 
   useEffect(() => {
-    if (!isPostLoading) {
-      console.log('Fetching');
-      fetchCompaniesData().then((twoAData) => {
-        setRowData(twoAData);
-        gridRef.current?.api.sizeColumnsToFit();
-      });
+    if (selectedCustomer) {
+      setRowData(rows.filter((com) => Number(com.customer_id) === Number(selectedCustomer.id)));
+    } else {
+      setRowData([]);
     }
-  }, [isPostLoading]);
+  }, [rows, selectedCustomer]);
 
   return (
     <PageWrapper pageTitle="Companies" icon="fa-solid fa-building">
 
       <div className=" ag-theme-alpine grid-container-style">
         <NewCompanyModal />
-        <div className="d-inline-flex my-2 justify-content-between align-items-center">
-          <button
-            type="button"
-            className="btn btn-sm btn-danger"
-            onClick={() => showBootstrapModal('newCompanyModal')}
-          >
-            <i className="fa-solid fa-circle-plus" />
-            {' '}
-            Add Company
-          </button>
-        </div>
 
         <AgGridReact
           containerStyle={containerStyle}
@@ -163,13 +143,13 @@ export default function CompaniesPage() {
           enableCharts
           groupDisplayType="multipleColumns"
           animateRows
-        //  onGridReady={onGridReady}
+          onGridReady={onGridReady}
+          icons={icons}
           pagination
           onFirstDataRendered={onFirstDataRendered}
           groupIncludeFooter
           groupIncludeTotalFooter
           enableRangeSelection
-          statusBar={statusBar}
           masterDetail
         />
       </div>

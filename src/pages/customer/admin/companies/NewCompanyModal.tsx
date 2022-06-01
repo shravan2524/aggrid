@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import * as yup from 'yup';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup/dist/yup';
@@ -6,12 +6,14 @@ import classNames from 'classnames';
 import { useSelector } from 'react-redux';
 import { useAppDispatch } from 'app/hooks';
 import CustomButton from 'components/CustomButton';
-import { getAllCustomers, selectSelectedCustomer } from 'state/customers/customersSlice';
+import { selectSelectedCustomer } from 'state/customers/customersSlice';
 import {
+  fetchCompanies,
   getAllCompanies,
   isPostLoadingSelector,
   newCompanyRequest,
 } from 'state/companies/companiesSlice';
+import { hideModal, initBootstrapModal } from 'app/utils/Modal';
 
 interface NewCompanyFormProps {
   name: string;
@@ -23,8 +25,9 @@ export default function NewCompanyModal() {
   const dispatch = useAppDispatch();
   const isLoading = useSelector(isPostLoadingSelector);
   const selectedCustomer = useSelector(selectSelectedCustomer);
-  const customerSelector = useSelector(getAllCustomers);
   const companySelector = useSelector(getAllCompanies);
+
+  const modalId = useMemo(() => 'newCompanyModal', []);
 
   const schema = yup.object({
     name: yup.string().required(),
@@ -54,29 +57,33 @@ export default function NewCompanyModal() {
     reset({ customer_id: selectedCustomer?.id });
   }, [selectedCustomer]);
 
+  useEffect(() => {
+    initBootstrapModal(modalId);
+  }, []);
+
+  useEffect(() => {
+    hideModal(modalId);
+    reset({ name: '' });
+    dispatch(fetchCompanies());
+  }, [isLoading]);
+
   return (
-    <div className="modal fade" id="newCompanyModal" aria-labelledby="newCompanyModalLabel" aria-hidden="true">
+    <div className="modal fade" id={modalId} aria-labelledby={`new${modalId}Label`} aria-hidden="true">
       <div className="modal-dialog modal-dialog-centered">
         <div className="modal-content">
           <form onSubmit={handleSubmit(onSubmit)}>
             <div className="modal-header">
-              <h5 className="modal-title" id="newCompanyModalLabel">New Company</h5>
+              <h5 className="modal-title" id={`new${modalId}Label`}>New Company</h5>
               <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close" />
             </div>
             <div className="modal-body">
 
               <div className="mb-3">
-                <label htmlFor="customer" className="col-form-label">Customer:</label>
-
-                <select
-                  {...register('customer_id')}
-                  className={classNames(['form-select form-select-sm', { 'is-invalid': errors.customer_id }])}
-                >
-                  <option value="">Please select a Customer ...</option>
-                  {customerSelector && customerSelector.map((option) => (
-                    <option key={option.id} value={option.id}>{option.title}</option>
-                  ))}
-                </select>
+                <label htmlFor="customer" className="col-form-label">
+                  Customer:
+                  {selectedCustomer?.title}
+                </label>
+                <input type="hidden" {...register('customer_id')} />
 
                 {errors.customer_id && (
                 <div id="validationTitleFeedback" className="invalid-feedback">

@@ -49,6 +49,10 @@ body {
 
   .ag-root-wrapper {
     min-height: 600px;
+
+    .ag-react-container{
+      width: 100%;
+    }
   }
 }
 
