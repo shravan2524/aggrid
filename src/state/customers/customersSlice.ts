@@ -121,6 +121,11 @@ export const getSelectedCustomer = createSelector(
   },
 );
 
+export const getSelectedCustomerId = createSelector(
+  CustomersSelector,
+  (customers: CustomersState): number | null => customers.selectedCustomer,
+);
+
 export const availableCustomers = createSelector(
   CustomersSelector,
   (customers: CustomersState): boolean => !!customers.rows.length,

@@ -18,7 +18,6 @@ import { CompaniesType } from 'services/companiesAPIService';
 
 interface EditCompanyFormProps {
   name: string;
-  customer_id: number | undefined;
   parent: number | undefined;
 }
 
@@ -35,7 +34,6 @@ export default function EditCompanyModal({ companyToEdit }: EditCompanyModalProp
 
   const schema = yup.object({
     name: yup.string().required(),
-    customer_id: yup.string().required(),
     parent: yup.string(),
   }).required();
 
@@ -48,14 +46,10 @@ export default function EditCompanyModal({ companyToEdit }: EditCompanyModalProp
     resolver: yupResolver(schema),
   });
 
-  const onSubmit = ({ name, customer_id, parent }: EditCompanyFormProps) => {
-    const payload = { data: { name, parent: Number(parent), customer_id }, id: companyToEdit?.id };
+  const onSubmit = ({ name, parent }: EditCompanyFormProps) => {
+    const payload = { data: { name, parent: Number(parent), customer_id: Number(selectedCustomer?.id) }, id: companyToEdit?.id };
     dispatch(updateCompanyRequest({ ...payload }));
   };
-
-  useEffect(() => {
-    reset({ customer_id: selectedCustomer?.id });
-  }, [selectedCustomer]);
 
   useEffect(() => {
     dispatch(fetchCompanies()).then(() => {
@@ -84,13 +78,6 @@ export default function EditCompanyModal({ companyToEdit }: EditCompanyModalProp
                   Customer:
                   {selectedCustomer?.title}
                 </label>
-                <input type="hidden" {...register('customer_id')} />
-
-                {errors.customer_id && (
-                <div id="validationTitleFeedback" className="invalid-feedback">
-                  <p>{errors.customer_id?.message}</p>
-                </div>
-                )}
               </div>
 
               <div className="mb-3">

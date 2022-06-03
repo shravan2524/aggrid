@@ -17,7 +17,6 @@ import { hideModal } from 'app/utils/Modal';
 
 interface NewCompanyFormProps {
   name: string;
-  customer_id: number | undefined;
   parent: number | undefined;
 }
 
@@ -31,7 +30,6 @@ export default function NewCompanyModal() {
 
   const schema = yup.object({
     name: yup.string().required(),
-    customer_id: yup.string().required(),
     parent: yup.string(),
   }).required();
 
@@ -44,19 +42,15 @@ export default function NewCompanyModal() {
     resolver: yupResolver(schema),
   });
 
-  const onSubmit = ({ name, customer_id, parent }: NewCompanyFormProps) => {
+  const onSubmit = ({ name, parent }: NewCompanyFormProps) => {
     const body = {
       name,
-      customer_id: Number(customer_id),
+      customer_id: Number(selectedCustomer?.id),
       parent: Number(parent),
     };
 
     dispatch(newCompanyRequest(body));
   };
-
-  useEffect(() => {
-    reset({ customer_id: selectedCustomer?.id });
-  }, [selectedCustomer]);
 
   useEffect(() => {
     hideModal(modalId);
@@ -80,13 +74,6 @@ export default function NewCompanyModal() {
                   Customer:
                   {selectedCustomer?.title}
                 </label>
-                <input type="hidden" {...register('customer_id')} />
-
-                {errors.customer_id && (
-                <div id="validationTitleFeedback" className="invalid-feedback">
-                  <p>{errors.customer_id?.message}</p>
-                </div>
-                )}
               </div>
 
               <div className="mb-3">
