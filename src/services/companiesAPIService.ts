@@ -30,6 +30,14 @@ export interface CompaniesAgGridType {
   updatedAt: string,
 }
 
+export interface CustomersAgGridType {
+  id: number,
+  title: string,
+  uuid: string,
+  createdAt: string,
+  updatedAt: string,
+}
+
 export async function fetchCompaniesData() :Promise<CompaniesType[]> {
   const options: RequestInit = {
     method: 'GET',

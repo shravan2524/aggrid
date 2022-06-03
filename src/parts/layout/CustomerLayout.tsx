@@ -20,7 +20,7 @@ export default function CustomerLayout() {
   const topMenuHeight = useCustomerTopMenuHeightDimension();
   const secondaryMenuItemVisible = useSelector(isSecondaryMenuItemVisible);
 
-  // Fetch all companies and customers ...
+  // Fetch all companies and workspaces ...
   useEffect(() => {
     dispatch(fetchCustomers()).then(() => dispatch(fetchCompanies()));
   }, [dispatch]);

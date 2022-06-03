@@ -3,18 +3,18 @@ import React, {
 } from 'react';
 import { AgGridReact } from 'ag-grid-react';
 import { showModal } from 'app/utils/Modal';
-import { useAppDispatch, useCompanies, useWindowDimensions } from 'app/hooks';
+import { useAppDispatch, useWindowDimensions } from 'app/hooks';
 import PageWrapper from 'components/PageWrapper';
 import {
-  fetchCompanies, updateCompanyRequest,
-} from 'state/companies/companiesSlice';
-import { agGridCompaniesDTO, agGridDateFormatter } from 'app/utils/Helpers';
-import { CompaniesType } from 'services/companiesAPIService';
+  fetchCustomers, updateCustomerRequest,
+  getCustomers,
+} from 'state/customers/customersSlice';
+import { agGridCustomersDTO, agGridDateFormatter } from 'app/utils/Helpers';
+import { CustomersType } from 'services/customersAPIService';
 import { useSelector } from 'react-redux';
-import { availableCustomers } from 'state/customers/customersSlice';
 import { ICellRendererParams } from 'ag-grid-community';
-import NewCompanyModal from './NewCompanyModal';
-import EditCompanyModal from './EditCompanyModal';
+import NewCustomerModal from './NewCustomerModal';
+import EditCustomerModal from './EditCustomerModal';
 
 type ActionsRendererProps = {
   params: ICellRendererParams;
@@ -35,11 +35,11 @@ function CustomActionsToolPanel() {
         <button
           type="button"
           className="btn btn-sm btn-danger"
-          onClick={() => showModal('newCompanyModal')}
+          onClick={() => showModal('newCustomerModal')}
         >
           <i className="fa-solid fa-circle-plus" />
           {' '}
-          Add Company
+          Add Customer
         </button>
       </div>
     </div>
@@ -63,29 +63,16 @@ function ParentRenderer(params) {
   }
 }
 
-export default function CompaniesPage() {
+export default function WorkspacesPage() {
   const dispatch = useAppDispatch();
   const gridRef = useRef<any>();
 
-  const anyCustomer = useSelector(availableCustomers);
-  const rows = useCompanies();
-  const [companyToEdit, setCompanyToEdit] = useState<CompaniesType | null>(null);
+  const rows = useSelector(getCustomers);
+  const [customerToEdit, setCustomerToEdit] = useState<CustomersType | null>(null);
 
   const { height, width } = useWindowDimensions();
 
   const [rowData, setRowData] = useState<any>();
-
-  if (!anyCustomer) {
-    return (
-      <PageWrapper pageTitle="Companies" icon="fa-solid fa-building">
-        <div className="col">
-          <div className="alert alert-info" role="alert">
-            You have no Workspaces set, please set first at less one Workspace in order to use Companies .
-          </div>
-        </div>
-      </PageWrapper>
-    );
-  }
 
   const containerStyle = useMemo(() => ({
     width: '100%',
@@ -94,13 +81,13 @@ export default function CompaniesPage() {
   }), [height, width]);
 
   const onEditClickCallback = (e, params) => {
-    setCompanyToEdit(params.data);
-    showModal('editCompanyModal');
+    setCustomerToEdit(params.data);
+    showModal('editCustomerModal');
   };
 
   const [columnDefs, setColumnDefs] = useState([
     {
-      headerName: 'Companies Details',
+      headerName: 'Customers Details',
       children: [
         {
           headerName: 'ID',
@@ -109,21 +96,24 @@ export default function CompaniesPage() {
           editable: false,
         },
         {
-          headerName: 'Name',
-          field: 'name',
+          headerName: 'UUID',
+          field: 'uuid',
           filter: 'agTextColumnFilter',
           onCellValueChanged: (event) => {
-            const { name, id } = event.data;
-            const payload = { data: { name }, id };
-            dispatch(updateCompanyRequest({ ...payload }));
+            const { uuid, id } = event.data;
+            const payload = { data: { uuid }, id };
+            dispatch(updateCustomerRequest({ ...payload }));
           },
         },
         {
-          headerName: 'Parent',
-          field: 'parent',
-          filter: 'agNumberColumnFilter',
-          valueGetter: ParentRenderer,
-          editable: false,
+          headerName: 'Title',
+          field: 'title',
+          filter: 'agTextColumnFilter',
+          onCellValueChanged: (event) => {
+            const { title, id } = event.data;
+            const payload = { data: { title }, id };
+            dispatch(updateCustomerRequest({ ...payload }));
+          },
         },
         {
           headerName: 'Created At',
@@ -204,7 +194,7 @@ export default function CompaniesPage() {
   }, []);
 
   const onGridReady = useCallback((params) => {
-    dispatch(fetchCompanies());
+    dispatch(fetchCustomers());
   }, []);
 
   useEffect(() => {
@@ -214,7 +204,7 @@ export default function CompaniesPage() {
   }, [width, rows]);
 
   useEffect(() => {
-    setRowData(agGridCompaniesDTO(rows));
+    setRowData(agGridCustomersDTO(rows));
 
     if (gridRef.current?.api) {
       gridRef.current?.api.sizeColumnsToFit();
@@ -222,11 +212,11 @@ export default function CompaniesPage() {
   }, [rows]);
 
   return (
-    <PageWrapper pageTitle="Companies" icon="fa-solid fa-building">
+    <PageWrapper pageTitle="Customers" icon="fa-solid fa-building">
 
       <div className=" ag-theme-alpine grid-container-style">
-        <NewCompanyModal />
-        <EditCompanyModal companyToEdit={companyToEdit} />
+        <NewCustomerModal />
+        <EditCustomerModal customerToEdit={customerToEdit} />
         <AgGridReact
           containerStyle={containerStyle}
           ref={gridRef}

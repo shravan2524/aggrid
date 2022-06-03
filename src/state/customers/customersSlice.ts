@@ -1,29 +1,35 @@
 import {
   createAsyncThunk, createSelector, createSlice, Draft, PayloadAction,
 } from '@reduxjs/toolkit';
-import { CustomersType, fetchCustomersData } from 'services/customersAPIService';
-import { CustomerTopMenuSelectItemType } from 'parts/menu/CustomerTopMenuSelect';
+import {
+  CustomersType, fetchCustomersData, postCustomersData, putCustomersData,
+} from 'services/customersAPIService';
 import ProgressBar from 'app/utils/ProgressBar';
+import { toast } from 'react-hot-toast';
 
 // Types ...
 type CustomersState = {
   rows: CustomersType[];
   isLoading: boolean;
-  status: string | null;
-  selectedCustomer: CustomersType | null;
+  isPostLoading: boolean;
+  isPutLoading: boolean;
+  selectedCustomer: number | null;
   error: string | null | undefined;
 };
 
 const initialState: CustomersState = {
   rows: [],
   isLoading: false,
-  status: null,
+  isPostLoading: false,
+  isPutLoading: false,
   selectedCustomer: null,
   error: undefined,
 };
 
 // API Actions ...
-export const fetchCustomers = createAsyncThunk('customers/fetchCustomers', async () => fetchCustomersData());
+export const fetchCustomers = createAsyncThunk('fetchCustomers', async () => fetchCustomersData());
+export const newCustomerRequest = createAsyncThunk('postCustomers', async (data: any) => postCustomersData(data));
+export const updateCustomerRequest = createAsyncThunk('putCompanies', async (payload: any) => putCustomersData(payload));
 
 // Reducers ...
 export const customersSlice = createSlice({
@@ -31,40 +37,68 @@ export const customersSlice = createSlice({
   initialState,
   reducers: {
     setSelectedCustomer: (state: Draft<CustomersState>, action: PayloadAction<string | number>) => {
-      const customerId = action.payload;
-      const selectedCustomerObject = state.rows.find((c) => c.id === Number(customerId));
-      if (selectedCustomerObject) {
-        state.selectedCustomer = selectedCustomerObject;
-      }
+      const selectedCustomer = state.rows.find((i) => Number(i.id) === Number(action.payload));
+      state.selectedCustomer = selectedCustomer?.id ?? null;
     },
   },
 
   extraReducers(builder) {
-    builder
-      .addCase(fetchCustomers.pending, (state: Draft<CustomersState>, action) => {
-        state.status = 'loading';
-        state.isLoading = true;
-        ProgressBar.start();
-      })
-      .addCase(fetchCustomers.fulfilled, (state, action) => {
-        state.rows = action.payload;
+    // Fetching Customers ...
+    builder.addCase(fetchCustomers.pending, (state: Draft<CustomersState>, action) => {
+      state.isLoading = true;
+      ProgressBar.start();
+    });
+    builder.addCase(fetchCustomers.fulfilled, (state, action) => {
+      state.rows = action.payload;
+      state.isLoading = false;
+      ProgressBar.done();
+    });
+    builder.addCase(fetchCustomers.rejected, (state, action) => {
+      const error = action.error.message;
+      if (error) {
+        toast.error(error);
+      }
+      state.isLoading = false;
+      ProgressBar.done();
+    });
 
-        // if there is no selected item select first customer as default
-        const { selectedCustomer, rows } = state;
-        if (!selectedCustomer && rows.length) {
-          // eslint-disable-next-line prefer-destructuring
-          state.selectedCustomer = rows[0];
-        }
-        state.status = 'succeeded';
-        state.isLoading = false;
-        ProgressBar.done();
-      })
-      .addCase(fetchCustomers.rejected, (state, action) => {
-        state.status = 'failed';
-        state.error = action.error.message;
-        state.isLoading = false;
-        ProgressBar.done();
-      });
+    // Adding new Company ...
+    builder.addCase(newCustomerRequest.pending, (state: Draft<CustomersState>, action) => {
+      state.isPostLoading = true;
+      ProgressBar.start();
+    });
+    builder.addCase(newCustomerRequest.fulfilled, (state, action) => {
+      toast.success('Customer successfully created.');
+      state.isPostLoading = false;
+      ProgressBar.done();
+    });
+    builder.addCase(newCustomerRequest.rejected, (state, action) => {
+      const error = action.error.message;
+      if (error) {
+        toast.error(error);
+      }
+      state.isPostLoading = false;
+      ProgressBar.done();
+    });
+
+    // Update Customer ...
+    builder.addCase(updateCustomerRequest.pending, (state: Draft<CustomersState>, action) => {
+      state.isPutLoading = true;
+      ProgressBar.start();
+    });
+    builder.addCase(updateCustomerRequest.fulfilled, (state, action) => {
+      toast.success('Customer successfully updated.');
+      state.isPutLoading = false;
+      ProgressBar.done();
+    });
+    builder.addCase(updateCustomerRequest.rejected, (state, action) => {
+      const error = action.error.message;
+      if (error) {
+        toast.error(error);
+      }
+      state.isPutLoading = false;
+      ProgressBar.done();
+    });
   },
 });
 
@@ -72,29 +106,34 @@ export default customersSlice.reducer;
 
 // Selectors ...
 const CustomersSelector = (state) => state.customers;
-export const selectAllCustomers = createSelector(
-  CustomersSelector,
-  (customers: CustomersState): CustomerTopMenuSelectItemType[] => customers.rows.map((i:CustomersType) => ({ value: i.id, label: i.title })),
-);
 
-export const selectSelectedCustomer = createSelector(
+export const getCustomers = createSelector(
   CustomersSelector,
-  (customers: CustomersState): CustomerTopMenuSelectItemType | undefined => (customers.selectedCustomer ? ({ value: customers.selectedCustomer.id, label: customers.selectedCustomer.title }) : undefined),
+  (customers: CustomersState): CustomersType[] => customers.rows,
 );
 
 export const getSelectedCustomer = createSelector(
   CustomersSelector,
-  (customers: CustomersState): CustomersType | null => (customers.selectedCustomer),
-);
+  (customers: CustomersState): CustomersType | undefined => {
+    const customerId = customers.selectedCustomer;
 
-export const selectSelectedCustomers = createSelector(
-  CustomersSelector,
-  (customers: CustomersState): CustomerTopMenuSelectItemType[] => customers.rows.map((i) => ({ value: i.id, label: i.title })),
+    return customers.rows.find((i) => (i.id === customerId));
+  },
 );
 
 export const availableCustomers = createSelector(
   CustomersSelector,
   (customers: CustomersState): boolean => !!customers.rows.length,
+);
+
+export const isPostLoadingSelector = createSelector(
+  CustomersSelector,
+  (customers: CustomersState): boolean | undefined => customers.isPostLoading,
+);
+
+export const isPutLoadingSelector = createSelector(
+  CustomersSelector,
+  (customers: CustomersState): boolean | undefined => customers.isPutLoading,
 );
 
 // Reducer actions ...
