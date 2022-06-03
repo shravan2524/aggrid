@@ -92,6 +92,11 @@ export const selectSelectedCustomers = createSelector(
   (customers: CustomersState): CustomerTopMenuSelectItemType[] => customers.rows.map((i) => ({ value: i.id, label: i.title })),
 );
 
+export const availableCustomers = createSelector(
+  CustomersSelector,
+  (customers: CustomersState): boolean => !!customers.rows.length,
+);
+
 // Reducer actions ...
 const { setSelectedCustomer } = customersSlice.actions;
 export { setSelectedCustomer };
