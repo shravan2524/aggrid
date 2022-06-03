@@ -39,6 +39,8 @@
     "import/prefer-default-export": "off",
     "jsx-a11y/img-redundant-alt": "off",
     "import/no-extraneous-dependencies": ["error", {"devDependencies": true}],
-    "linebreak-style": 0
+    "linebreak-style": 0,
+	"indent": [2, "tab"],
+    "no-tabs": 0
   }
 }
