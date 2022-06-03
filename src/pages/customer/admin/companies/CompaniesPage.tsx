@@ -3,23 +3,20 @@ import React, {
 } from 'react';
 import { AgGridReact } from 'ag-grid-react';
 import { showModal } from 'app/utils/Modal';
-import { useAppDispatch, useWindowDimensions } from 'app/hooks';
+import { useAppDispatch, useCompanies, useWindowDimensions } from 'app/hooks';
 import PageWrapper from 'components/PageWrapper';
-import { useSelector } from 'react-redux';
 import {
-  fetchCompanies,
-  getCompanies,
-  getSelectedCompanies,
-  updateCompanyRequest,
+  fetchCompanies, updateCompanyRequest,
 } from 'state/companies/companiesSlice';
-import { getSelectedCustomer } from 'state/customers/customersSlice';
-import { agGridDateFormatter } from 'app/utils/Helpers';
+import { agGridCompaniesDTO, agGridDateFormatter } from 'app/utils/Helpers';
+import { CompaniesType } from 'services/companiesAPIService';
 import NewCompanyModal from './NewCompanyModal';
+import EditCompanyModal from './EditCompanyModal';
 
-function ActionsRenderer() {
+function ActionsRenderer({ params, onEditClickCallback }: any) {
   return (
     <div className="d-flex justify-content-start align-items-center w-100 h-100">
-      <button type="button" className="btn btn-sm btn-light"><i className="fa-solid fa-pen-to-square" /></button>
+      <button type="button" className="btn btn-sm btn-light" onClick={(e) => onEditClickCallback(e, params)}><i className="fa-solid fa-pen-to-square" /></button>
     </div>
   );
 }
@@ -62,8 +59,9 @@ function ParentRenderer(params) {
 export default function CompaniesPage() {
   const dispatch = useAppDispatch();
   const gridRef = useRef<any>();
-  const rows = useSelector(getSelectedCompanies);
-  const selectedCustomer = useSelector(getSelectedCustomer);
+
+  const rows = useCompanies();
+  const [companyToEdit, setCompanyToEdit] = useState<CompaniesType | null>(null);
 
   const { height, width } = useWindowDimensions();
 
@@ -74,6 +72,11 @@ export default function CompaniesPage() {
     height: `${(height)}px`,
     minHeight: '600px',
   }), [height, width]);
+
+  const onEditClickCallback = (e, params) => {
+    setCompanyToEdit(params.data);
+    showModal('editCompanyModal');
+  };
 
   const [columnDefs, setColumnDefs] = useState([
     {
@@ -118,7 +121,8 @@ export default function CompaniesPage() {
         },
         {
           field: 'actions',
-          cellRenderer: ActionsRenderer,
+          // eslint-disable-next-line react/no-unstable-nested-components
+          cellRenderer: (params) => (<ActionsRenderer params={params} onEditClickCallback={(e) => onEditClickCallback(e, params)} />),
           editable: false,
           filter: false,
           cellStyle: (params) => {
@@ -190,31 +194,19 @@ export default function CompaniesPage() {
   }, [width, rows]);
 
   useEffect(() => {
-    const rowsFilteredData = rows.map((r) => (
-      {
-        name: r.name,
-        parent: r.parent,
-        customer_id: r.customer_id,
-        id: r.id,
-        createdAt: r.createdAt,
-        updatedAt: r.updatedAt,
-      }
-    ));
-    if (selectedCustomer) {
-      setRowData(rowsFilteredData);
-    }
+    setRowData(agGridCompaniesDTO(rows));
 
     if (gridRef.current?.api) {
       gridRef.current?.api.sizeColumnsToFit();
     }
-  }, [rows, selectedCustomer]);
+  }, [rows]);
 
   return (
     <PageWrapper pageTitle="Companies" icon="fa-solid fa-building">
 
       <div className=" ag-theme-alpine grid-container-style">
         <NewCompanyModal />
-
+        <EditCompanyModal companyToEdit={companyToEdit} />
         <AgGridReact
           containerStyle={containerStyle}
           ref={gridRef}

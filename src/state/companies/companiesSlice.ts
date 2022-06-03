@@ -14,8 +14,7 @@ export type CompaniesState = {
   isLoading: boolean;
   isPostLoading: boolean;
   isPutLoading: boolean;
-  selectedCompany: CompaniesType | null;
-  selectedCompanies: CompaniesType[],
+  selectedCompany: number | null;
   error: string | null | undefined;
 };
 
@@ -25,7 +24,6 @@ const initialState: CompaniesState = {
   isPostLoading: false,
   isPutLoading: false,
   selectedCompany: null,
-  selectedCompanies: [],
   error: undefined,
 };
 
@@ -39,29 +37,12 @@ export const companiesSlice = createSlice({
   name: 'companies',
   initialState,
   reducers: {
-    setSelectedCompany: (state: Draft<CompaniesState>, action: PayloadAction<string | number | null>) => {
-      const companyId = action.payload;
-
-      if (companyId) {
-        const selectedCompanyObject = state.rows.find((c) => c.id === Number(companyId));
-        if (selectedCompanyObject) {
-          state.selectedCompany = selectedCompanyObject;
-        }
-      } else {
-        state.selectedCompany = null;
-      }
+    setSelectedCompany: (state: Draft<CompaniesState>, action: PayloadAction<string | number | null | undefined>) => {
+      const selectedCompany = state.rows.find((i) => Number(i.id) === Number(action.payload));
+      state.selectedCompany = selectedCompany?.id ?? null;
     },
-    setSelectedCompanies: (state: Draft<CompaniesState>, action: PayloadAction<CompaniesType[]>) => {
-      const selectedCompanies = action.payload ? action.payload : [];
-      state.selectedCompanies = selectedCompanies;
-
-      if (selectedCompanies.length) {
-        // eslint-disable-next-line prefer-destructuring
-        state.selectedCompany = selectedCompanies[0];
-      } else {
-        // @ts-ignore
-        state.selectedCompany = [];
-      }
+    clearCompany: (state: Draft<CompaniesState>) => {
+      state.selectedCompany = null;
     },
   },
   extraReducers: (builder) => {
@@ -72,13 +53,6 @@ export const companiesSlice = createSlice({
     });
     builder.addCase(fetchCompanies.fulfilled, (state, action) => {
       state.rows = action.payload;
-
-      // if there is no selected item select first company as default
-      const { selectedCompany, rows } = state;
-      if (!selectedCompany && rows.length) {
-        // eslint-disable-next-line prefer-destructuring
-        state.selectedCompany = rows[0];
-      }
       state.isLoading = false;
       ProgressBar.done();
     });
@@ -141,11 +115,6 @@ export const getCompanies = createSelector(
   (companies: CompaniesState): CompaniesType[] => companies.rows,
 );
 
-export const getSelectedCompanies = createSelector(
-  CompaniesSelector,
-  (companies: CompaniesState): CompaniesType[] => companies.selectedCompanies,
-);
-
 export const selectAllCompanies = createSelector(
   CompaniesSelector,
   (companies: CompaniesState): CustomerTopMenuSelectItemType[] => companies.rows.map((i) => ({ value: i.id, label: i.name })),
@@ -153,12 +122,11 @@ export const selectAllCompanies = createSelector(
 
 export const selectSelectedCompany = createSelector(
   CompaniesSelector,
-  (companies: CompaniesState): CustomerTopMenuSelectItemType | undefined => (companies.selectedCompany ? ({ value: companies.selectedCompany.id, label: companies.selectedCompany.name }) : undefined),
-);
-
-export const selectSelectedCompanies = createSelector(
-  CompaniesSelector,
-  (companies: CompaniesState): CustomerTopMenuSelectItemType[] => companies.selectedCompanies.map((i) => ({ value: i.id, label: i.name })),
+  (companies: CompaniesState): CustomerTopMenuSelectItemType | undefined => {
+    const comps = companies.rows;
+    const selectedCompany = comps.find((i) => i.id === companies.selectedCompany);
+    return (companies.selectedCompany ? ({ value: selectedCompany?.id, label: selectedCompany?.name }) : undefined);
+  },
 );
 
 export const isLoadingSelector = createSelector(
@@ -182,5 +150,5 @@ export const selectErrorMessageSelector = createSelector(
 );
 
 // Reducer actions ...
-const { setSelectedCompany, setSelectedCompanies } = companiesSlice.actions;
-export { setSelectedCompany, setSelectedCompanies };
+const { setSelectedCompany, clearCompany } = companiesSlice.actions;
+export { setSelectedCompany, clearCompany };

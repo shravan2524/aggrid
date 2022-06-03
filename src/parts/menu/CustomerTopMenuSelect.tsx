@@ -66,7 +66,6 @@ function CustomerTopMenuSelect({
     }),
 
   }), []);
-
   return (
     <li className="nav-item dropdown mx-2 my-2">
       <div className="bg-white rounded-pill text-dark d-flex justify-content-between align-items-center p-1">
@@ -84,7 +83,7 @@ function CustomerTopMenuSelect({
             isSearchable={isSearchable}
             placeholder={placeholder}
             noOptionsMessage={noOptionsMessage}
-            value={value}
+            value={value || null}
           />
         </div>
 
