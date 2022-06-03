@@ -67,25 +67,12 @@ export default function CompaniesPage() {
   const dispatch = useAppDispatch();
   const gridRef = useRef<any>();
 
-  const anyCustomer = useSelector(availableCustomers);
-  const rows = useCompanies();
-  const [companyToEdit, setCompanyToEdit] = useState<CompaniesType | null>(null);
-
-  const { height, width } = useWindowDimensions();
-
   const [rowData, setRowData] = useState<any>();
 
-  if (!anyCustomer) {
-    return (
-      <PageWrapper pageTitle="Companies" icon="fa-solid fa-building">
-        <div className="col">
-          <div className="alert alert-info" role="alert">
-            You have no Workspaces set, please set first at less one Workspace in order to use Companies .
-          </div>
-        </div>
-      </PageWrapper>
-    );
-  }
+  const anyCustomer = useSelector(availableCustomers);
+  const { height, width } = useWindowDimensions();
+  const rows = useCompanies();
+  const [companyToEdit, setCompanyToEdit] = useState<CompaniesType | null>(null);
 
   const containerStyle = useMemo(() => ({
     width: '100%',
@@ -220,6 +207,18 @@ export default function CompaniesPage() {
       gridRef.current?.api.sizeColumnsToFit();
     }
   }, [rows]);
+
+  if (!anyCustomer) {
+    return (
+      <PageWrapper pageTitle="Companies" icon="fa-solid fa-building">
+        <div className="col">
+          <div className="alert alert-info" role="alert">
+            You have no Workspaces set, please set first at less one Workspace in order to use Companies .
+          </div>
+        </div>
+      </PageWrapper>
+    );
+  }
 
   return (
     <PageWrapper pageTitle="Companies" icon="fa-solid fa-building">

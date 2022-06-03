@@ -7,7 +7,7 @@ import { useAppDispatch, useWindowDimensions } from 'app/hooks';
 import PageWrapper from 'components/PageWrapper';
 import {
   fetchCustomers, updateCustomerRequest,
-  getCustomers,
+  getCustomers, setSelectedCustomer,
 } from 'state/customers/customersSlice';
 import { agGridCustomersDTO, agGridDateFormatter } from 'app/utils/Helpers';
 import { CustomersType } from 'services/customersAPIService';
@@ -19,11 +19,13 @@ import EditCustomerModal from './EditCustomerModal';
 type ActionsRendererProps = {
   params: ICellRendererParams;
   onEditClickCallback: (e: React.MouseEvent<HTMLButtonElement>, params: ICellRendererParams) => void;
+  onSelectClickCallback: (e: React.MouseEvent<HTMLButtonElement>, params: ICellRendererParams) => void;
 };
-function ActionsRenderer({ params, onEditClickCallback }: ActionsRendererProps) {
+function ActionsRenderer({ params, onEditClickCallback, onSelectClickCallback }: ActionsRendererProps) {
   return (
-    <div className="d-flex justify-content-start align-items-center w-100 h-100">
+    <div className="d-flex justify-content-evenly align-items-center w-100 h-100">
       <button type="button" className="btn btn-sm btn-light" onClick={(e) => onEditClickCallback(e, params)}><i className="fa-solid fa-pen-to-square" /></button>
+      <button type="button" className="btn btn-sm btn-light" onClick={(e) => onSelectClickCallback(e, params)}><i className="fa-solid fa-circle-check" /></button>
     </div>
   );
 }
@@ -85,6 +87,14 @@ export default function WorkspacesPage() {
     showModal('editCustomerModal');
   };
 
+  const onSelectClickCallback = (e, params) => {
+    if (params.data) {
+      if (params.data.id) {
+        dispatch(setSelectedCustomer(params.data.id));
+      }
+    }
+  };
+
   const [columnDefs, setColumnDefs] = useState([
     {
       headerName: 'Customers Details',
@@ -132,7 +142,7 @@ export default function WorkspacesPage() {
         {
           field: 'actions',
           // eslint-disable-next-line react/no-unstable-nested-components
-          cellRenderer: (params) => (<ActionsRenderer params={params} onEditClickCallback={(e) => onEditClickCallback(e, params)} />),
+          cellRenderer: (params) => (<ActionsRenderer params={params} onEditClickCallback={(e) => onEditClickCallback(e, params)} onSelectClickCallback={(e) => onSelectClickCallback(e, params)} />),
           editable: false,
           filter: false,
           cellStyle: (params) => {

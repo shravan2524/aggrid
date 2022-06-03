@@ -50,6 +50,8 @@ export default function NewCompanyModal() {
       customer_id: Number(customer_id),
       parent: Number(parent),
     };
+
+    console.log(body);
     dispatch(newCompanyRequest(body));
   };
 
