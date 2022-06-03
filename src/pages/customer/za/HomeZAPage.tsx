@@ -3,7 +3,7 @@ import PageWrapper from 'components/PageWrapper';
 
 export default function HomeZAPage() {
   return (
-    <PageWrapper pageTitle="Home ZA">
+    <PageWrapper pageTitle="Dashboard">
       <h3>Coming Soon !</h3>
     </PageWrapper>
   );

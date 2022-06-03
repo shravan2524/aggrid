@@ -68,7 +68,7 @@ export const customersSlice = createSlice({
       ProgressBar.start();
     });
     builder.addCase(newCustomerRequest.fulfilled, (state, action) => {
-      toast.success('Customer successfully created.');
+      toast.success('Workspace successfully created.');
       state.isPostLoading = false;
       ProgressBar.done();
     });
@@ -87,7 +87,7 @@ export const customersSlice = createSlice({
       ProgressBar.start();
     });
     builder.addCase(updateCustomerRequest.fulfilled, (state, action) => {
-      toast.success('Customer successfully updated.');
+      toast.success('Workspace successfully updated.');
       state.isPutLoading = false;
       ProgressBar.done();
     });

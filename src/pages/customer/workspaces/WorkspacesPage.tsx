@@ -13,9 +13,9 @@ import { agGridCustomersDTO, agGridDateFormatter } from 'app/utils/Helpers';
 import { CustomersType } from 'services/customersAPIService';
 import { useSelector } from 'react-redux';
 import { ICellRendererParams } from 'ag-grid-community';
+import { setSelectedCompany } from 'state/companies/companiesSlice';
 import NewCustomerModal from './NewCustomerModal';
 import EditCustomerModal from './EditCustomerModal';
-import { setSelectedCompany } from '../../../state/companies/companiesSlice';
 
 type ActionsRendererProps = {
   params: ICellRendererParams;
@@ -25,8 +25,16 @@ type ActionsRendererProps = {
 function ActionsRenderer({ params, onEditClickCallback, onSelectClickCallback }: ActionsRendererProps) {
   return (
     <div className="d-flex justify-content-evenly align-items-center w-100 h-100">
-      <button type="button" className="btn btn-sm btn-light" onClick={(e) => onEditClickCallback(e, params)}><i className="fa-solid fa-pen-to-square" /></button>
-      <button type="button" className="btn btn-sm btn-light" onClick={(e) => onSelectClickCallback(e, params)}><i className="fa-solid fa-circle-check" /></button>
+      <button type="button" className="btn btn-sm btn-light" onClick={(e) => onEditClickCallback(e, params)}>
+        <i className="fa-solid fa-pen-to-square" />
+        {' '}
+        Edit
+      </button>
+      <button type="button" className="btn btn-sm btn-light" onClick={(e) => onSelectClickCallback(e, params)}>
+        <i className="fa-solid fa-circle-check" />
+        {' '}
+        Select
+      </button>
     </div>
   );
 }
@@ -42,7 +50,7 @@ function CustomActionsToolPanel() {
         >
           <i className="fa-solid fa-circle-plus" />
           {' '}
-          Add Customer
+          Add new Workspace
         </button>
       </div>
     </div>
@@ -224,7 +232,7 @@ export default function WorkspacesPage() {
   }, [rows]);
 
   return (
-    <PageWrapper pageTitle="Customers" icon="fa-solid fa-building">
+    <PageWrapper pageTitle="Workspaces" icon="fa-solid fa-building">
 
       <div className=" ag-theme-alpine grid-container-style">
         <NewCustomerModal />
