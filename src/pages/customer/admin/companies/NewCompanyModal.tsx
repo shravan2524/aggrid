@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from 'react';
+import React, { useEffect } from 'react';
 import * as yup from 'yup';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup/dist/yup';
@@ -13,7 +13,7 @@ import {
   isPostLoadingSelector,
   newCompanyRequest,
 } from 'state/companies/companiesSlice';
-import { hideModal, initBootstrapModal } from 'app/utils/Modal';
+import { hideModal } from 'app/utils/Modal';
 
 interface NewCompanyFormProps {
   name: string;
@@ -27,7 +27,7 @@ export default function NewCompanyModal() {
   const selectedCustomer = useSelector(getSelectedCustomer);
   const companySelector = useSelector(getCompanies);
 
-  const modalId = useMemo(() => 'newCompanyModal', []);
+  const modalId = 'newCompanyModal';
 
   const schema = yup.object({
     name: yup.string().required(),
@@ -51,17 +51,12 @@ export default function NewCompanyModal() {
       parent: Number(parent),
     };
 
-    console.log(body);
     dispatch(newCompanyRequest(body));
   };
 
   useEffect(() => {
     reset({ customer_id: selectedCustomer?.id });
   }, [selectedCustomer]);
-
-  useEffect(() => {
-    initBootstrapModal(modalId);
-  }, []);
 
   useEffect(() => {
     hideModal(modalId);
@@ -81,7 +76,7 @@ export default function NewCompanyModal() {
             <div className="modal-body">
 
               <div className="mb-3">
-                <label htmlFor="customer" className="col-form-label">
+                <label htmlFor="customer_id" className="col-form-label">
                   Customer:
                   {selectedCustomer?.title}
                 </label>
@@ -95,7 +90,7 @@ export default function NewCompanyModal() {
               </div>
 
               <div className="mb-3">
-                <label htmlFor="customer" className="col-form-label">Parent:</label>
+                <label htmlFor="parent" className="col-form-label">Parent:</label>
                 <select
                   {...register('parent')}
                   className={classNames(['form-select form-select-sm', { 'is-invalid': errors.parent }])}

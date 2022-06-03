@@ -2,7 +2,7 @@ import React from 'react';
 
 interface LoadingButtonProps {
   isLoading?: boolean;
-  children: string | JSX.Element | JSX.Element[];
+  children?: string | JSX.Element | JSX.Element[];
   className?: string,
   isSubmit?: boolean;
 }
@@ -29,7 +29,8 @@ function CustomButton({
 CustomButton.defaultProps = {
   isLoading: false,
   className: 'btn btn-warning btn-lg',
-  isSubmit: 'Submit',
+  children: 'Submit',
+  isSubmit: true,
 };
 
 export default CustomButton;

@@ -15,6 +15,7 @@ import { useSelector } from 'react-redux';
 import { ICellRendererParams } from 'ag-grid-community';
 import NewCustomerModal from './NewCustomerModal';
 import EditCustomerModal from './EditCustomerModal';
+import { setSelectedCompany } from '../../../state/companies/companiesSlice';
 
 type ActionsRendererProps = {
   params: ICellRendererParams;
@@ -90,6 +91,7 @@ export default function WorkspacesPage() {
   const onSelectClickCallback = (e, params) => {
     if (params.data) {
       if (params.data.id) {
+        dispatch(setSelectedCompany(null));
         dispatch(setSelectedCustomer(params.data.id));
       }
     }

@@ -89,9 +89,6 @@ export const useCompanies = () => {
     if (selectedCustomer) {
       const selectedCustomerCompanies = getAllCompanies.filter((i) => i.customer_id === Number(selectedCustomer.id));
       setCustomerCompanies(selectedCustomerCompanies);
-
-      console.log(getAllCompanies);
-      console.log(selectedCustomerCompanies);
     }
   }, [getAllCompanies]);
 

@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from 'react';
+import React, { useEffect } from 'react';
 import * as yup from 'yup';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup/dist/yup';
@@ -7,7 +7,7 @@ import { useSelector } from 'react-redux';
 import { useAppDispatch } from 'app/hooks';
 import CustomButton from 'components/CustomButton';
 
-import { hideModal, initBootstrapModal } from 'app/utils/Modal';
+import { hideModal } from 'app/utils/Modal';
 import {
   fetchCustomers, isPostLoadingSelector, newCustomerRequest,
 } from 'state/customers/customersSlice';
@@ -21,7 +21,7 @@ export default function NewCustomerModal() {
   const dispatch = useAppDispatch();
   const isLoading = useSelector(isPostLoadingSelector);
 
-  const modalId = useMemo(() => 'newCustomerModal', []);
+  const modalId = 'newCustomerModal';
 
   const schema = yup.object({
     title: yup.string().required(),
@@ -41,10 +41,6 @@ export default function NewCustomerModal() {
     const body = { title, uuid };
     dispatch(newCustomerRequest(body));
   };
-
-  useEffect(() => {
-    initBootstrapModal(modalId);
-  }, []);
 
   useEffect(() => {
     hideModal(modalId);

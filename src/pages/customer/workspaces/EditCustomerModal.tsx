@@ -11,7 +11,7 @@ import {
   isPutLoadingSelector, updateCustomerRequest,
 
 } from 'state/customers/customersSlice';
-import { hideModal, initBootstrapModal } from 'app/utils/Modal';
+import { hideModal } from 'app/utils/Modal';
 import { CustomersType } from 'services/customersAPIService';
 
 interface EditCustomerFormProps {
@@ -46,10 +46,6 @@ export default function EditCustomerModal({ customerToEdit }: EditCustomerModalP
     const payload = { data: { title, uuid }, id: customerToEdit?.id };
     dispatch(updateCustomerRequest({ ...payload }));
   };
-
-  useEffect(() => {
-    initBootstrapModal(modalId);
-  }, []);
 
   useEffect(() => {
     dispatch(fetchCustomers()).then(() => {

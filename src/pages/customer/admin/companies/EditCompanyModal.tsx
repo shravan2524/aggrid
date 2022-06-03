@@ -13,7 +13,7 @@ import {
   isPutLoadingSelector, updateCompanyRequest,
 
 } from 'state/companies/companiesSlice';
-import { hideModal, initBootstrapModal } from 'app/utils/Modal';
+import { hideModal } from 'app/utils/Modal';
 import { CompaniesType } from 'services/companiesAPIService';
 
 interface EditCompanyFormProps {
@@ -56,10 +56,6 @@ export default function EditCompanyModal({ companyToEdit }: EditCompanyModalProp
   useEffect(() => {
     reset({ customer_id: selectedCustomer?.id });
   }, [selectedCustomer]);
-
-  useEffect(() => {
-    initBootstrapModal(modalId);
-  }, []);
 
   useEffect(() => {
     dispatch(fetchCompanies()).then(() => {
