@@ -3,13 +3,26 @@ import React, {
 } from 'react';
 import { AgGridReact } from 'ag-grid-react';
 import { showModal } from 'app/utils/Modal';
-import { agGridRowDrag } from 'app/utils/Helpers';
 import { useAppDispatch, useWindowDimensions } from 'app/hooks';
 import PageWrapper from 'components/PageWrapper';
 import { useSelector } from 'react-redux';
-import { fetchCompanies, getAllCompanies } from 'state/companies/companiesSlice';
-import { selectSelectedCustomer } from 'state/customers/customersSlice';
+import {
+  fetchCompanies,
+  getCompanies,
+  getSelectedCompanies,
+  updateCompanyRequest,
+} from 'state/companies/companiesSlice';
+import { getSelectedCustomer } from 'state/customers/customersSlice';
+import { agGridDateFormatter } from 'app/utils/Helpers';
 import NewCompanyModal from './NewCompanyModal';
+
+function ActionsRenderer() {
+  return (
+    <div className="d-flex justify-content-start align-items-center w-100 h-100">
+      <button type="button" className="btn btn-sm btn-light"><i className="fa-solid fa-pen-to-square" /></button>
+    </div>
+  );
+}
 
 function CustomActionsToolPanel() {
   return (
@@ -29,30 +42,91 @@ function CustomActionsToolPanel() {
   );
 }
 
+function ParentRenderer(params) {
+  let result = '---';
+
+  try {
+    const parentId = params.data.parent;
+    params.api.forEachNode((rowNode) => {
+      if (rowNode.data.id.toString() === parentId.toString()) {
+        result = rowNode.data.name;
+      }
+    });
+
+    return result;
+  } catch (e) {
+    return result;
+  }
+}
+
 export default function CompaniesPage() {
   const dispatch = useAppDispatch();
   const gridRef = useRef<any>();
-  const rows = useSelector(getAllCompanies);
-  const selectedCustomer = useSelector(selectSelectedCustomer);
+  const rows = useSelector(getSelectedCompanies);
+  const selectedCustomer = useSelector(getSelectedCustomer);
 
   const { height, width } = useWindowDimensions();
 
   const [rowData, setRowData] = useState<any>();
 
-  const containerStyle = useMemo(() => ({ width: '100%', height: `${(height)}px`, minHeight: '600px' }), [height, width]);
+  const containerStyle = useMemo(() => ({
+    width: '100%',
+    height: `${(height)}px`,
+    minHeight: '600px',
+  }), [height, width]);
 
   const [columnDefs, setColumnDefs] = useState([
     {
       headerName: 'Companies Details',
       children: [
         {
+          headerName: 'ID',
+          field: 'id',
+          filter: 'agNumberColumnFilter',
+          editable: false,
+        },
+        {
           headerName: 'Name',
           field: 'name',
-          agGridRowDrag,
           filter: 'agTextColumnFilter',
-          chartDataType: 'category',
           onCellValueChanged: (event) => {
-            console.log(event);
+            const { name, id } = event.data;
+            const payload = { data: { name }, id };
+            dispatch(updateCompanyRequest({ ...payload }));
+          },
+        },
+        {
+          headerName: 'Parent',
+          field: 'parent',
+          filter: 'agNumberColumnFilter',
+          valueGetter: ParentRenderer,
+          editable: false,
+        },
+        {
+          headerName: 'Created At',
+          field: 'createdAt',
+          filter: 'agDateColumnFilter',
+          valueFormatter: agGridDateFormatter,
+          editable: false,
+        },
+        {
+          headerName: 'Updated At',
+          field: 'updatedAt',
+          filter: 'agDateColumnFilter',
+          valueFormatter: agGridDateFormatter,
+          editable: false,
+        },
+        {
+          field: 'actions',
+          cellRenderer: ActionsRenderer,
+          editable: false,
+          filter: false,
+          cellStyle: (params) => {
+            if (params.value === 'Actions') {
+              // mark police cells as red
+              return { width: '100%', height: '100%' };
+            }
+            return null;
           },
         },
       ],
@@ -116,10 +190,22 @@ export default function CompaniesPage() {
   }, [width, rows]);
 
   useEffect(() => {
+    const rowsFilteredData = rows.map((r) => (
+      {
+        name: r.name,
+        parent: r.parent,
+        customer_id: r.customer_id,
+        id: r.id,
+        createdAt: r.createdAt,
+        updatedAt: r.updatedAt,
+      }
+    ));
     if (selectedCustomer) {
-      setRowData(rows.filter((com) => Number(com.customer_id) === Number(selectedCustomer.id)));
-    } else {
-      setRowData([]);
+      setRowData(rowsFilteredData);
+    }
+
+    if (gridRef.current?.api) {
+      gridRef.current?.api.sizeColumnsToFit();
     }
   }, [rows, selectedCustomer]);
 
