@@ -59,6 +59,23 @@ function CustomerTopMenuDropDown({
             return null;
           }
 
+          if (itemPath === '#') {
+            return (
+              <>
+                <li key={`${i}${id}`}>
+                  <small className="dropdown-item-text text-muted text-uppercase">
+                    <i className="fa-solid fa-check" />
+                    {' '}
+                    {itemTitle}
+                  </small>
+                </li>
+                <li key={`${i}${id}`}>
+                  <hr className="dropdown-divider" />
+                </li>
+              </>
+            );
+          }
+
           return (
             <li key={`${i}${id}${itemTitle}`}>
               <NavLink to={itemPath} className="dropdown-item">
