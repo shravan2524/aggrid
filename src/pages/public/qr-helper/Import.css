@@ -22,7 +22,7 @@
   margin-top: -1em;
 }
 
-.file-stuff .thumbnail-selected {
+img.thumbnail-selected {
   border: 2px solid green !important;
   border-radius: 10px;
 }
@@ -31,7 +31,7 @@
   border-radius: 10px;
 }
 
-.file-stuff img.thumbnail {
+img.thumbnail {
   max-width: 250px;
   max-height: 250px;
   float: left;
@@ -56,10 +56,18 @@
   padding: 0;
 }
 
+.p-2 {
+  padding: 2em;
+}
+
 .pr-2 {
   padding-right: 2em;
 }
 
 .pl-2 {
   padding-left: 2em;
+}
+
+w-100 {
+  width: 100%;
 }
