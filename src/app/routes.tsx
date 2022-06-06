@@ -21,6 +21,7 @@ const WorkspacesIndexPage = React.lazy(() => import('pages/customer/workspaces/W
 const SignInIndexPage = React.lazy(() => import('pages/public/auth/SignInPage'));
 const AuthHandlerProcessorIndexPage = React.lazy(() => import('pages/public/auth/AuthHandlerProcessorPage'));
 const AuthLogoutProcessorIndexPage = React.lazy(() => import('pages/public/auth/AuthLogoutProcessorPage'));
+const QRHelper = React.lazy(() => import('pages/public/qr-helper/Import'));
 
 const routes: any = [
 
@@ -47,6 +48,11 @@ const routes: any = [
         element: <Suspense fallback={<Loader />}><SignInIndexPage /></Suspense>,
       },
     ],
+  },
+
+  {
+    path: '/qr-helper',
+    element: (<Suspense fallback={<Loader />}><QRHelper /></Suspense>),
   },
 
   // Supposed protected customer routes ....
