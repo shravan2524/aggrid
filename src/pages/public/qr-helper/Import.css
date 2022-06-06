@@ -48,10 +48,10 @@ img.thumbnail {
   float: right;
 }
 
-.p-1 {
+/* /* .p-1 {
   padding: 1em;
-}
-
+} */
+/*
 .p-0 {
   padding: 0;
 }
@@ -66,8 +66,9 @@ img.thumbnail {
 
 .pl-2 {
   padding-left: 2em;
-}
+} */
 
-w-100 {
-  width: 100%;
+.fixed-bottom {
+  position: fixed;
+  bottom: 0;
 }
