@@ -113,20 +113,6 @@ export default function CompaniesPage() {
           editable: false,
         },
         {
-          headerName: 'Created At',
-          field: 'createdAt',
-          filter: 'agDateColumnFilter',
-          valueFormatter: agGridDateFormatter,
-          editable: false,
-        },
-        {
-          headerName: 'Updated At',
-          field: 'updatedAt',
-          filter: 'agDateColumnFilter',
-          valueFormatter: agGridDateFormatter,
-          editable: false,
-        },
-        {
           field: 'actions',
           // eslint-disable-next-line react/no-unstable-nested-components
           cellRenderer: (params) => (<ActionsRenderer params={params} onEditClickCallback={(e) => onEditClickCallback(e, params)} />),

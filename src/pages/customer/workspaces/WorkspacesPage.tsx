@@ -9,7 +9,7 @@ import {
   fetchCustomers, updateCustomerRequest,
   getCustomers, setSelectedCustomer,
 } from 'state/customers/customersSlice';
-import { agGridCustomersDTO, agGridDateFormatter } from 'app/utils/Helpers';
+import { agGridCustomersDTO } from 'app/utils/Helpers';
 import { CustomersType } from 'services/customersAPIService';
 import { useSelector } from 'react-redux';
 import { ICellRendererParams } from 'ag-grid-community';
@@ -116,16 +116,6 @@ export default function WorkspacesPage() {
           editable: false,
         },
         {
-          headerName: 'UUID',
-          field: 'uuid',
-          filter: 'agTextColumnFilter',
-          onCellValueChanged: (event) => {
-            const { uuid, id } = event.data;
-            const payload = { data: { uuid }, id };
-            dispatch(updateCustomerRequest({ ...payload }));
-          },
-        },
-        {
           headerName: 'Title',
           field: 'title',
           filter: 'agTextColumnFilter',
@@ -134,20 +124,6 @@ export default function WorkspacesPage() {
             const payload = { data: { title }, id };
             dispatch(updateCustomerRequest({ ...payload }));
           },
-        },
-        {
-          headerName: 'Created At',
-          field: 'createdAt',
-          filter: 'agDateColumnFilter',
-          valueFormatter: agGridDateFormatter,
-          editable: false,
-        },
-        {
-          headerName: 'Updated At',
-          field: 'updatedAt',
-          filter: 'agDateColumnFilter',
-          valueFormatter: agGridDateFormatter,
-          editable: false,
         },
         {
           field: 'actions',
