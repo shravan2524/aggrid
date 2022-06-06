@@ -15,6 +15,8 @@ import {
 
 import CustomerTopMenuDropDown from './CustomerTopMenuDropDown';
 import CustomerTopMenuSelect from './CustomerTopMenuSelect';
+import { getSelectedCustomer, setSelectedCustomer } from '../../state/customers/customersSlice';
+import { CustomersType } from '../../services/customersAPIService';
 
 function SecondaryCustomerTopMenu() {
   const secondaryMenuItems = useSelector(selectSecondaryMenuItems);
@@ -46,6 +48,7 @@ function SecondaryCustomerTopMenu() {
 
 export default function CustomerTopMenu() {
   const dispatch = useAppDispatch();
+  const selectedWorkspace = useSelector(getSelectedCustomer);
 
   const userFullName = useMemo(() => getAuthFullNameFromLocal(), []);
 
@@ -54,6 +57,14 @@ export default function CustomerTopMenu() {
   const selectedCompany = useSelector(selectSelectedCompany);
 
   const profileItems = useMemo(() => [
+    {
+      itemTitle: selectedWorkspace?.title ?? 'UNKNOWN',
+      itemPath: '#',
+      icon: 'fa-solid fa-user',
+    },
+    {
+      divider: true,
+    },
     {
       itemTitle: 'Profile',
       itemPath: '/customer/profile',
@@ -72,7 +83,7 @@ export default function CustomerTopMenu() {
       itemPath: '/auth/logout',
       icon: 'fa-solid fa-right-from-bracket',
     },
-  ], []);
+  ], [selectedWorkspace]);
 
   const setSelectedCompanyOption = (e) => {
     const companyId = e.value;

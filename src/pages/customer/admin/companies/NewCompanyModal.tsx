@@ -71,8 +71,9 @@ export default function NewCompanyModal() {
 
               <div className="mb-3">
                 <label htmlFor="customer_id" className="col-form-label">
-                  Customer:
-                  {selectedCustomer?.title}
+                  Selected Workspace:
+                  {' '}
+                  <strong>{selectedCustomer?.title}</strong>
                 </label>
               </div>
 

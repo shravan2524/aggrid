@@ -29,7 +29,6 @@ export interface CompaniesAgGridType {
 export interface CustomersAgGridType {
   id: number,
   title: string,
-  uuid: string,
   createdAt: string,
   updatedAt: string,
 }

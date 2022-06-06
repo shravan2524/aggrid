@@ -14,7 +14,6 @@ import { BACKEND_API } from '../app/config';
 */
 export interface CustomersType {
   id: number,
-  uuid: string,
   title: string,
   createdAt: string,
   updatedAt: string,
