@@ -63,6 +63,9 @@ export default function CustomerTopMenu() {
       icon: 'fa-solid fa-user',
     },
     {
+      divider: true,
+    },
+    {
       itemTitle: 'Profile',
       itemPath: '/customer/profile',
       icon: 'fa-solid fa-user',

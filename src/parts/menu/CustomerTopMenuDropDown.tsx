@@ -1,5 +1,6 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
+import { v4 as uuidv4 } from 'uuid';
 
 type CustomerTopMenuDropDownItemsTypes = {
   itemTitle?: string | undefined;
@@ -26,7 +27,13 @@ function CustomerTopMenuDropDown({
 
   return (
     <li className="nav-item dropdown mx-2 my-2">
-      <a className="nav-link dropdown-toggle form-select p-0 bg-white border-4 border-white rounded-pill d-flex justify-content-between align-items-center" href="#" id="dropdown05" data-bs-toggle="dropdown" aria-expanded="false">
+      <a
+        className="nav-link dropdown-toggle form-select p-0 bg-white border-4 border-white rounded-pill d-flex justify-content-between align-items-center"
+        href="#"
+        id="dropdown05"
+        data-bs-toggle="dropdown"
+        aria-expanded="false"
+      >
         <strong className="rounded-circle bg-color-purple text-white p-1 m-0">
           <span className="badge rounded-pill bg-color-purple-dark p-2">
             {mark ? (<i className={mark} />) : mark}
@@ -45,7 +52,7 @@ function CustomerTopMenuDropDown({
         }, i) => {
           if (divider) {
             return (
-              <li key={`${i}${id}`}>
+              <li key={`${i}${id}${uuidv4()}${title}`}>
                 <hr className="dropdown-divider" />
               </li>
             );
@@ -61,23 +68,18 @@ function CustomerTopMenuDropDown({
 
           if (itemPath === '#') {
             return (
-              <>
-                <li key={`${i}${id}`}>
-                  <small className="dropdown-item-text text-muted text-uppercase">
-                    <i className="fa-solid fa-check" />
-                    {' '}
-                    {itemTitle}
-                  </small>
-                </li>
-                <li key={`${i}${id}`}>
-                  <hr className="dropdown-divider" />
-                </li>
-              </>
+              <li key={`${title}${i}${id}${uuidv4()}`}>
+                <small className="dropdown-item-text text-muted text-uppercase">
+                  <i className="fa-solid fa-check" />
+                  {' '}
+                  {itemTitle}
+                </small>
+              </li>
             );
           }
 
           return (
-            <li key={`${i}${id}${itemTitle}`}>
+            <li key={`${i}${title}${id}${itemTitle}${uuidv4()}`}>
               <NavLink to={itemPath} className="dropdown-item">
                 {icon && (<i className={icon} />) }
                 {' '}
