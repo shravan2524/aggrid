@@ -1,6 +1,7 @@
 import {
   createAsyncThunk, createSelector, createSlice, Draft, PayloadAction,
 } from '@reduxjs/toolkit';
+import { v4 as uuidv4 } from 'uuid';
 import {
   CustomersType, fetchCustomersData, postCustomersData, putCustomersData,
 } from 'services/customersAPIService';
@@ -28,7 +29,7 @@ const initialState: CustomersState = {
 
 // API Actions ...
 export const fetchCustomers = createAsyncThunk('fetchCustomers', async () => fetchCustomersData());
-export const newCustomerRequest = createAsyncThunk('postCustomers', async (data: any) => postCustomersData(data));
+export const newCustomerRequest = createAsyncThunk('postCustomers', async (data: any) => postCustomersData({ ...data, uuid: uuidv4() }));
 export const updateCustomerRequest = createAsyncThunk('putCompanies', async (payload: any) => putCustomersData(payload));
 
 // Reducers ...

@@ -30,13 +30,11 @@ export function agGridCustomersDTO(companies : CustomersType[]): CustomersAgGrid
   return companies.map(({
     id,
     title,
-    uuid,
     createdAt,
     updatedAt,
   }) => ({
     id,
     title,
-    uuid,
     createdAt,
     updatedAt,
   }));
