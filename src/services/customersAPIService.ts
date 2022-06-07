@@ -19,6 +19,13 @@ export interface CustomersType {
   updatedAt: string,
 }
 
+export interface CustomersAgGridType {
+  id: number,
+  title: string,
+  createdAt: string,
+  updatedAt: string,
+}
+
 export async function fetchCustomersData() :Promise<CustomersType[]> {
   const options: RequestInit = {
     method: 'GET',
