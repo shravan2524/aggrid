@@ -9,8 +9,10 @@ type ImgWH = {
   h: number;
 };
 
+type CoordinatesCb = (s: Coordinate, e: Coordinate) => void;
 interface CanvasProps {
   imgWH: ImgWH;
+  onCoordinatesChange: CoordinatesCb;
 }
 
 type Coordinate = {
@@ -18,17 +20,22 @@ type Coordinate = {
   y: number;
 };
 
-const Canvas = ({ imgWH }: CanvasProps) => {
+type Coordinates = {
+  s: Coordinate;
+  e: Coordinate;
+}
+
+const Canvas = ({ imgWH, onCoordinatesChange }: CanvasProps) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [isPainting, setIsPainting] = useState(false);
   const [mousePosition, setMousePosition] = useState<Coordinate | undefined>(undefined);
 
   const startPaint = useCallback((event: MouseEvent) => {
     const coordinates = getCoordinates(event);
-    console.log('startPaing', coordinates);
     if (coordinates) {
       setMousePosition(coordinates);
       setIsPainting(true);
+      clearCanvas();
     }
   }, []);
 
@@ -47,9 +54,11 @@ const Canvas = ({ imgWH }: CanvasProps) => {
     (event: MouseEvent) => {
       if (isPainting) {
         const newMousePosition = getCoordinates(event);
+
         if (mousePosition && newMousePosition) {
-          drawLine(mousePosition, newMousePosition);
-          setMousePosition(newMousePosition);
+          onCoordinatesChange(mousePosition, newMousePosition);
+          draw(mousePosition, newMousePosition);
+          // setMousePosition(newMousePosition);
         }
       }
     },
@@ -100,7 +109,32 @@ const Canvas = ({ imgWH }: CanvasProps) => {
     return { x: event.offsetX, y: event.offsetY };
   };
 
-  const drawLine = (originalMousePosition: Coordinate, newMousePosition: Coordinate) => {
+  const escapeKey = useCallback((event: KeyboardEvent) => {
+    if (event.key === 'Escape') {
+      clearCanvas();
+    }
+  }, []);
+
+  useEffect(() => {
+    document.addEventListener('keydown', escapeKey);
+    return () => {
+      document.removeEventListener('keydown', escapeKey);
+    }
+  }, [escapeKey]);
+
+  const clearCanvas = () => {
+    if (!canvasRef.current) {
+      return;
+    }
+    const canvas: HTMLCanvasElement = canvasRef.current;
+    const context = canvas.getContext('2d');
+    if (context) {
+      context.clearRect(0, 0, imgWH.w, imgWH.h);
+      // context.stroke();
+    }
+  }
+
+  const draw = (originalMousePosition: Coordinate, newMousePosition: Coordinate) => {
     if (!canvasRef.current) {
       return;
     }
@@ -109,12 +143,18 @@ const Canvas = ({ imgWH }: CanvasProps) => {
     if (context) {
       context.strokeStyle = 'red';
       context.lineJoin = 'round';
-      context.lineWidth = 5;
+      context.lineWidth = 1;
 
+      context.clearRect(0, 0, imgWH.w, imgWH.h);
       context.beginPath();
-      context.moveTo(originalMousePosition.x, originalMousePosition.y);
-      context.lineTo(newMousePosition.x, newMousePosition.y);
-      context.closePath();
+      // // this is for line
+      // context.moveTo(originalMousePosition.x, originalMousePosition.y);
+      // context.lineTo(newMousePosition.x, newMousePosition.y);
+      // context.closePath();
+      context.rect(
+        originalMousePosition.x, originalMousePosition.y,
+        newMousePosition.x - originalMousePosition.x, newMousePosition.y - originalMousePosition.y
+      );
 
       context.stroke();
     }
@@ -126,6 +166,7 @@ const Canvas = ({ imgWH }: CanvasProps) => {
 function Thumbnail(props: any) {
   const { img, isSelected, onSelect } = props;
   const [showModal, setShowModal] = useState(false);
+  const [coordinates, setCoordinates] = useState<Coordinates | undefined>();
 
   const className = `thumbnail ${isSelected ? 'thumbnail-selected' : ''} cursor-pointer`;
 
@@ -166,12 +207,12 @@ function Thumbnail(props: any) {
               <div className="modal-body">
                 <div style={{ position: 'relative', height: imgWH.h }}>
                   <img src={img} onLoad={onImgLoad} style={{ maxWidth: '750px', position: 'absolute', left: '0' }} onClick={() => setShowModal(!showModal)} loading='lazy' alt={img} />
-                  <Canvas imgWH={imgWH} />
+                  <Canvas imgWH={imgWH} onCoordinatesChange={(s, e) => setCoordinates({ s, e })} />
                 </div>
               </div>
               <div className="modal-footer">
                 <button type="button" className="btn btn-secondary" data-dismiss="modal" onClick={() => setShowModal(false)}>Close</button>
-                <button type="button" className="btn btn-primary" onClick={() => { onSelect(); setShowModal(false); }}>{isSelected ? 'Unselect' : 'Select'}</button>
+                <button type="button" className="btn btn-primary" onClick={() => { onSelect(coordinates); setShowModal(false); }}>{isSelected ? 'Unselect' : 'Select'}</button>
               </div>
             </div>
           </div>
@@ -186,8 +227,8 @@ function Thumbnail(props: any) {
 function File(props) {
   const { name, value, onSelect } = props;
 
-  const doSelect = (idx) => {
-    return onSelect(name, idx);
+  const doSelect = (idx, c) => {
+    return onSelect(name, idx, c);
   }
 
   return (
@@ -195,7 +236,7 @@ function File(props) {
       <p className='title'><a href={name} target='_blank'>{name}</a></p>
       {value.map((obj, idx) => {
         return (
-          <Thumbnail img={obj.i} isSelected={Boolean(obj.s)} key={idx} onSelect={() => doSelect(idx)} />
+          <Thumbnail img={obj.i} isSelected={Boolean(obj.s)} key={idx} onSelect={(c) => doSelect(idx, c)} />
         )
       })}
       <div style={{ clear: 'both' }} ></div>
@@ -209,12 +250,12 @@ function ImportOld(props) {
   useEffect(() => {
     const r = {};
     data.forEach((el) => {
-      const f = el[0], i = el[1], n = el[2], s = '';
+      const f = el[0], i = el[1], n = el[2], s = el[3] || '', c = el[4] || '';
       if (!r[f]) {
         r[f] = [];
       }
 
-      r[f].push({ i, n, s });
+      r[f].push({ i, n, s, c });
     });
 
     setItems(r);
@@ -222,22 +263,24 @@ function ImportOld(props) {
 
   const [noFiles, setNoFiles] = useState(10);
 
-  const onSelectImage = (fileName, imageIdx) => {
+  const onSelectImage = (fileName, imageIdx, coordinates) => {
     const newItems = { ...items };
     newItems[fileName][imageIdx]['s'] = Boolean(newItems[fileName][imageIdx]['s']) ? '' : 'selected';
+    newItems[fileName][imageIdx]['c'] = JSON.stringify(coordinates);
     setItems(newItems);
   }
 
   const exportStuff = () => {
     const wb = XLSX.utils.book_new();
-    const dt = [['File', 'Image', 'PageNo', 'Status']];
+    const dt = [['File', 'Image', 'PageNo', 'Status', 'Coordinates']];
     Object.keys(items).forEach((k, idx) => {
       items[k].forEach((o) => {
         dt.push([
           k,
           o.i,
           o.n,
-          o.s !== '' ? o.s : (noFiles > idx ? 'viewed' : '')
+          o.s !== '' ? o.s : (noFiles > idx ? 'viewed' : ''),
+          o.c,
         ]);
       })
     });
@@ -283,7 +326,7 @@ function ImportNew(props) {
 
   useEffect(() => {
     const newItems = data.map((el: any) => {
-      const f = el[0], i = el[1], n = el[2], s = '', c = '';
+      const f = el[0], i = el[1], n = el[2], s = el[3] || '', c = el[4] || '';
 
       return { f, i, n, s, c };
     });
@@ -291,9 +334,10 @@ function ImportNew(props) {
     setItems(newItems);
   }, [data]);
 
-  const onSelectImage = (imageIdx) => {
+  const onSelectImage = (imageIdx, c) => {
     const newItems = [...items];
     newItems[imageIdx]['s'] = Boolean(items[imageIdx]['s']) ? '' : 'selected';
+    newItems[imageIdx]['c'] = JSON.stringify(c);
     setItems(newItems);
   }
 
@@ -323,7 +367,7 @@ function ImportNew(props) {
         }
 
         return (
-          <Thumbnail key={idx} img={el.i} isSelected={Boolean(el.s)} onSelect={() => onSelectImage(idx)} />
+          <Thumbnail key={idx} img={el.i} isSelected={Boolean(el.s)} onSelect={(c) => onSelectImage(idx, c)} />
         );
       })
     }
