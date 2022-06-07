@@ -14,7 +14,13 @@ import { BACKEND_API } from '../app/config';
 */
 export interface CustomersType {
   id: number,
-  uuid: string,
+  title: string,
+  createdAt: string,
+  updatedAt: string,
+}
+
+export interface CustomersAgGridType {
+  id: number,
   title: string,
   createdAt: string,
   updatedAt: string,
@@ -29,6 +35,46 @@ export async function fetchCustomersData() :Promise<CustomersType[]> {
   const apiUrl = `${BACKEND_API}/api/v1/customers`;
   const response = await fetch(apiUrl, options);
 
+  if (!response.ok) {
+    const message = `An error has occurred: ${response.status}`;
+    throw new Error(message);
+  }
+  return response.json();
+}
+
+export async function postCustomersData(data) :Promise<CustomersType[]> {
+  const options: RequestInit = {
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+    },
+    method: 'POST',
+    credentials: 'include',
+    body: JSON.stringify({ ...data }),
+  };
+
+  const apiUrl = `${BACKEND_API}/api/v1/customers`;
+  const response = await fetch(apiUrl, options);
+  if (!response.ok) {
+    const message = `An error has occurred: ${response.status}`;
+    throw new Error(message);
+  }
+  return response.json();
+}
+
+export async function putCustomersData(payload) :Promise<CustomersType[]> {
+  const options: RequestInit = {
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+    },
+    method: 'PUT',
+    credentials: 'include',
+    body: JSON.stringify({ ...payload.data }),
+  };
+
+  const apiUrl = `${BACKEND_API}/api/v1/customers/${payload.id}`;
+  const response = await fetch(apiUrl, options);
   if (!response.ok) {
     const message = `An error has occurred: ${response.status}`;
     throw new Error(message);

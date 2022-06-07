@@ -3,27 +3,22 @@ import React, {
 } from 'react';
 import { AgGridReact } from 'ag-grid-react';
 import { showModal } from 'app/utils/Modal';
-import { useAppDispatch, useCompanies, useWindowDimensions } from 'app/hooks';
+import { useAppDispatch, useWindowDimensions } from 'app/hooks';
 import PageWrapper from 'components/PageWrapper';
-import {
-  fetchCompanies, updateCompanyRequest,
-} from 'state/companies/companiesSlice';
-import { agGridCompaniesDTO, agGridDateFormatter } from 'app/utils/Helpers';
-import { CompaniesType } from 'services/companiesAPIService';
-import { useSelector } from 'react-redux';
-import { availableCustomers } from 'state/customers/customersSlice';
+import { agGridFilesDTO } from 'app/utils/Helpers';
+
 import { ICellRendererParams } from 'ag-grid-community';
-import NewCompanyModal from './NewCompanyModal';
-import EditCompanyModal from './EditCompanyModal';
+import { useSelector } from 'react-redux';
+import { fetchFiles, getFiles } from 'state/files/filesSlice';
 
 type ActionsRendererProps = {
   params: ICellRendererParams;
-  onEditClickCallback: (e: React.MouseEvent<HTMLButtonElement>, params: ICellRendererParams) => void;
+  onFileMappingClickCallback: (e: React.MouseEvent<HTMLButtonElement>, params: ICellRendererParams) => void;
 };
-function ActionsRenderer({ params, onEditClickCallback }: ActionsRendererProps) {
+function ActionsRenderer({ params, onFileMappingClickCallback }: ActionsRendererProps) {
   return (
     <div className="d-flex justify-content-start align-items-center w-100 h-100">
-      <button type="button" className="btn btn-sm btn-light" onClick={(e) => onEditClickCallback(e, params)}><i className="fa-solid fa-pen-to-square" /></button>
+      <button type="button" className="btn btn-sm btn-light" onClick={(e) => onFileMappingClickCallback(e, params)}><i className="fa-solid fa-pen-to-square" /></button>
     </div>
   );
 }
@@ -35,44 +30,24 @@ function CustomActionsToolPanel() {
         <button
           type="button"
           className="btn btn-sm btn-danger"
-          onClick={() => showModal('newCompanyModal')}
+          onClick={() => showModal('newFileModal')}
         >
-          <i className="fa-solid fa-circle-plus" />
+          <i className="fa-solid fa-cloud-arrow-up" />
           {' '}
-          Add Company
+          Add Files
         </button>
       </div>
     </div>
   );
 }
 
-function ParentRenderer(params) {
-  let result = '---';
-
-  try {
-    const parentId = params.data.parent;
-    params.api.forEachNode((rowNode) => {
-      if (rowNode.data.id.toString() === parentId.toString()) {
-        result = rowNode.data.name;
-      }
-    });
-
-    return result;
-  } catch (e) {
-    return result;
-  }
-}
-
-export default function CompaniesPage() {
+export default function FilesPage() {
   const dispatch = useAppDispatch();
   const gridRef = useRef<any>();
 
   const [rowData, setRowData] = useState<any>();
-
-  const anyCustomer = useSelector(availableCustomers);
   const { height, width } = useWindowDimensions();
-  const rows = useCompanies();
-  const [companyToEdit, setCompanyToEdit] = useState<CompaniesType | null>(null);
+  const rows = useSelector(getFiles);
 
   const containerStyle = useMemo(() => ({
     width: '100%',
@@ -80,42 +55,29 @@ export default function CompaniesPage() {
     minHeight: '600px',
   }), [height, width]);
 
-  const onEditClickCallback = (e, params) => {
-    setCompanyToEdit(params.data);
-    showModal('editCompanyModal');
+  const onFileMappingClickCallback = (e, params) => {
+    console.log('Do Mapping or something like show a modal etc here ...');
   };
 
   const [columnDefs, setColumnDefs] = useState([
     {
-      headerName: 'Companies Details',
+      headerName: 'Files Details',
       children: [
         {
-          headerName: 'ID',
-          field: 'id',
-          filter: 'agNumberColumnFilter',
-          editable: false,
-        },
-        {
           headerName: 'Name',
-          field: 'name',
-          filter: 'agTextColumnFilter',
-          onCellValueChanged: (event) => {
-            const { name, id } = event.data;
-            const payload = { data: { name }, id };
-            dispatch(updateCompanyRequest({ ...payload }));
-          },
+          field: 'customer_file_name',
+          filter: 'agNumberColumnFilter',
+          editable: false,
         },
         {
-          headerName: 'Parent',
-          field: 'parent',
-          filter: 'agNumberColumnFilter',
-          valueGetter: ParentRenderer,
-          editable: false,
+          headerName: 'Type',
+          field: 'file_type',
+          filter: 'agTextColumnFilter',
         },
         {
           field: 'actions',
           // eslint-disable-next-line react/no-unstable-nested-components
-          cellRenderer: (params) => (<ActionsRenderer params={params} onEditClickCallback={(e) => onEditClickCallback(e, params)} />),
+          cellRenderer: (params) => (<ActionsRenderer params={params} onFileMappingClickCallback={(e) => onFileMappingClickCallback(e, params)} />),
           editable: false,
           filter: false,
           cellStyle: (params) => {
@@ -177,7 +139,7 @@ export default function CompaniesPage() {
   }, []);
 
   const onGridReady = useCallback((params) => {
-    dispatch(fetchCompanies());
+    dispatch(fetchFiles());
   }, []);
 
   useEffect(() => {
@@ -187,31 +149,17 @@ export default function CompaniesPage() {
   }, [width, rows]);
 
   useEffect(() => {
-    setRowData(agGridCompaniesDTO(rows));
+    setRowData(agGridFilesDTO(rows));
 
     if (gridRef.current?.api) {
       gridRef.current?.api.sizeColumnsToFit();
     }
   }, [rows]);
 
-  if (!anyCustomer) {
-    return (
-      <PageWrapper pageTitle="Companies" icon="fa-solid fa-building">
-        <div className="col">
-          <div className="alert alert-info" role="alert">
-            You have no Workspaces set, please set first at less one Workspace in order to use Companies .
-          </div>
-        </div>
-      </PageWrapper>
-    );
-  }
-
   return (
-    <PageWrapper pageTitle="Companies" icon="fa-solid fa-building">
+    <PageWrapper pageTitle="Files" icon="fa-solid fa-file-arrow-up">
 
-      <div className=" ag-theme-alpine grid-container-style">
-        <NewCompanyModal />
-        <EditCompanyModal companyToEdit={companyToEdit} />
+      <div className="ag-theme-alpine grid-container-style">
         <AgGridReact
           containerStyle={containerStyle}
           ref={gridRef}

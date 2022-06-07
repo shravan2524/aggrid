@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useMemo } from 'react';
 import { NavLink } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import logo from 'logo-white.svg';
@@ -8,16 +8,15 @@ import './CustomerTopMenu.scss';
 import { getAuthFullNameFromLocal } from 'services/authService';
 import { useAppDispatch, useCompanies } from 'app/hooks';
 
-import { selectSelectedCustomer, selectSelectedCustomers, setSelectedCustomer } from 'state/customers/customersSlice';
-
 import {
-  clearCompany,
   selectSelectedCompany,
   setSelectedCompany,
 } from 'state/companies/companiesSlice';
 
 import CustomerTopMenuDropDown from './CustomerTopMenuDropDown';
-import CustomerTopMenuSelect, { CustomerTopMenuSelectItemType } from './CustomerTopMenuSelect';
+import CustomerTopMenuSelect from './CustomerTopMenuSelect';
+import { getSelectedCustomer, setSelectedCustomer } from '../../state/customers/customersSlice';
+import { CustomersType } from '../../services/customersAPIService';
 
 function SecondaryCustomerTopMenu() {
   const secondaryMenuItems = useSelector(selectSecondaryMenuItems);
@@ -49,12 +48,9 @@ function SecondaryCustomerTopMenu() {
 
 export default function CustomerTopMenu() {
   const dispatch = useAppDispatch();
+  const selectedWorkspace = useSelector(getSelectedCustomer);
 
   const userFullName = useMemo(() => getAuthFullNameFromLocal(), []);
-
-  // Customers ....
-  const customers = useSelector(selectSelectedCustomers);
-  const selectedCustomer = useSelector(selectSelectedCustomer);
 
   // Companies ....
   const companies = useCompanies();
@@ -62,9 +58,22 @@ export default function CustomerTopMenu() {
 
   const profileItems = useMemo(() => [
     {
+      itemTitle: selectedWorkspace?.title ?? 'UNKNOWN',
+      itemPath: '#',
+      icon: 'fa-solid fa-user',
+    },
+    {
+      divider: true,
+    },
+    {
       itemTitle: 'Profile',
       itemPath: '/customer/profile',
       icon: 'fa-solid fa-user',
+    },
+    {
+      itemTitle: 'Workspaces',
+      itemPath: '/customer/workspaces',
+      icon: 'fa-solid fa-house-laptop',
     },
     {
       divider: true,
@@ -74,17 +83,12 @@ export default function CustomerTopMenu() {
       itemPath: '/auth/logout',
       icon: 'fa-solid fa-right-from-bracket',
     },
-  ], []);
+  ], [selectedWorkspace]);
 
   const setSelectedCompanyOption = (e) => {
     const companyId = e.value;
     const selectedComp = companies.find((i) => i.id === companyId);
     dispatch(setSelectedCompany(selectedComp ? selectedComp.id : null));
-  };
-
-  const setSelectedCustomerOption = (e) => {
-    dispatch(setSelectedCompany(null));
-    dispatch(setSelectedCustomer(e.value));
   };
 
   return (
@@ -143,16 +147,6 @@ export default function CustomerTopMenu() {
                 noOptionsMessage={() => 'No Companies available'}
                 onChange={setSelectedCompanyOption}
                 value={selectedCompany}
-              />
-
-              {/* Customers */}
-              <CustomerTopMenuSelect
-                options={customers}
-                mark="fa-solid fa-users"
-                placeholder="Customers"
-                noOptionsMessage={() => 'No Customers available'}
-                onChange={setSelectedCustomerOption}
-                value={selectedCustomer}
               />
 
               {/* Profile */}

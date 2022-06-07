@@ -3,12 +3,12 @@ import type { AppDispatch } from 'state/store';
 import { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { isAuthenticated } from '../services/authService';
-import { selectSelectedCustomer } from '../state/customers/customersSlice';
 import {
   fetchCompanies,
   getCompanies,
 } from '../state/companies/companiesSlice';
-import { CompaniesAgGridType, CompaniesType } from '../services/companiesAPIService';
+import { CompaniesType } from '../services/companiesAPIService';
+import { getSelectedCustomer } from '../state/customers/customersSlice';
 
 // Use throughout your app instead of plain `useDispatch` and `useSelector`
 export const useAppDispatch = () => useDispatch<AppDispatch>();
@@ -78,7 +78,7 @@ export const useCompanies = () => {
   const dispatch = useAppDispatch();
 
   const [customerCompanies, setCustomerCompanies] = useState<CompaniesType[]>([]);
-  const selectedCustomer = useSelector(selectSelectedCustomer);
+  const selectedCustomer = useSelector(getSelectedCustomer);
   const getAllCompanies = useSelector(getCompanies);
 
   useEffect(() => {
@@ -87,8 +87,7 @@ export const useCompanies = () => {
 
   useEffect(() => {
     if (selectedCustomer) {
-      const customerId = selectedCustomer.value;
-      const selectedCustomerCompanies = getAllCompanies.filter((i) => i.customer_id === Number(customerId));
+      const selectedCustomerCompanies = getAllCompanies.filter((i) => i.customer_id === Number(selectedCustomer.id));
       setCustomerCompanies(selectedCustomerCompanies);
     }
   }, [getAllCompanies]);

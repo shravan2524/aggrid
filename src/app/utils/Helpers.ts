@@ -1,6 +1,8 @@
 import { ValueFormatterParams } from 'ag-grid-community';
 import moment from 'moment';
 import { CompaniesAgGridType, CompaniesType } from 'services/companiesAPIService';
+import { CustomersAgGridType, CustomersType } from 'services/customersAPIService';
+import { FilesAgGridType, FilesType } from 'services/filesAPIService';
 
 export function agGridRowDrag(params) {
   // only rows that are NOT groups should be draggable
@@ -17,14 +19,34 @@ export function agGridCompaniesDTO(companies : CompaniesType[]): CompaniesAgGrid
     name,
     parent,
     customer_id,
-    createdAt,
-    updatedAt,
   }) => ({
     id,
     name,
     parent,
     customer_id,
+  }));
+}
+
+export function agGridCustomersDTO(companies : CustomersType[]): CustomersAgGridType[] {
+  return companies.map(({
+    id,
+    title,
     createdAt,
     updatedAt,
+  }) => ({
+    id,
+    title,
+    createdAt,
+    updatedAt,
+  }));
+}
+
+export function agGridFilesDTO(companies : FilesType[]): FilesAgGridType[] {
+  return companies.map(({
+    customer_file_name,
+    file_type,
+  }) => ({
+    customer_file_name,
+    file_type,
   }));
 }

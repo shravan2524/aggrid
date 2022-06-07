@@ -3,27 +3,38 @@ import React, {
 } from 'react';
 import { AgGridReact } from 'ag-grid-react';
 import { showModal } from 'app/utils/Modal';
-import { useAppDispatch, useCompanies, useWindowDimensions } from 'app/hooks';
+import { useAppDispatch, useWindowDimensions } from 'app/hooks';
 import PageWrapper from 'components/PageWrapper';
 import {
-  fetchCompanies, updateCompanyRequest,
-} from 'state/companies/companiesSlice';
-import { agGridCompaniesDTO, agGridDateFormatter } from 'app/utils/Helpers';
-import { CompaniesType } from 'services/companiesAPIService';
+  fetchCustomers, updateCustomerRequest,
+  getCustomers, setSelectedCustomer,
+} from 'state/customers/customersSlice';
+import { agGridCustomersDTO } from 'app/utils/Helpers';
+import { CustomersType } from 'services/customersAPIService';
 import { useSelector } from 'react-redux';
-import { availableCustomers } from 'state/customers/customersSlice';
 import { ICellRendererParams } from 'ag-grid-community';
-import NewCompanyModal from './NewCompanyModal';
-import EditCompanyModal from './EditCompanyModal';
+import { setSelectedCompany } from 'state/companies/companiesSlice';
+import NewCustomerModal from './NewCustomerModal';
+import EditCustomerModal from './EditCustomerModal';
 
 type ActionsRendererProps = {
   params: ICellRendererParams;
   onEditClickCallback: (e: React.MouseEvent<HTMLButtonElement>, params: ICellRendererParams) => void;
+  onSelectClickCallback: (e: React.MouseEvent<HTMLButtonElement>, params: ICellRendererParams) => void;
 };
-function ActionsRenderer({ params, onEditClickCallback }: ActionsRendererProps) {
+function ActionsRenderer({ params, onEditClickCallback, onSelectClickCallback }: ActionsRendererProps) {
   return (
-    <div className="d-flex justify-content-start align-items-center w-100 h-100">
-      <button type="button" className="btn btn-sm btn-light" onClick={(e) => onEditClickCallback(e, params)}><i className="fa-solid fa-pen-to-square" /></button>
+    <div className="d-flex justify-content-evenly align-items-center w-100 h-100">
+      <button type="button" className="btn btn-sm btn-light" onClick={(e) => onEditClickCallback(e, params)}>
+        <i className="fa-solid fa-pen-to-square" />
+        {' '}
+        Edit
+      </button>
+      <button type="button" className="btn btn-sm btn-light" onClick={(e) => onSelectClickCallback(e, params)}>
+        <i className="fa-solid fa-circle-check" />
+        {' '}
+        Select
+      </button>
     </div>
   );
 }
@@ -35,11 +46,11 @@ function CustomActionsToolPanel() {
         <button
           type="button"
           className="btn btn-sm btn-danger"
-          onClick={() => showModal('newCompanyModal')}
+          onClick={() => showModal('newCustomerModal')}
         >
           <i className="fa-solid fa-circle-plus" />
           {' '}
-          Add Company
+          Add new Workspace
         </button>
       </div>
     </div>
@@ -63,16 +74,16 @@ function ParentRenderer(params) {
   }
 }
 
-export default function CompaniesPage() {
+export default function WorkspacesPage() {
   const dispatch = useAppDispatch();
   const gridRef = useRef<any>();
 
-  const [rowData, setRowData] = useState<any>();
+  const rows = useSelector(getCustomers);
+  const [customerToEdit, setCustomerToEdit] = useState<CustomersType | null>(null);
 
-  const anyCustomer = useSelector(availableCustomers);
   const { height, width } = useWindowDimensions();
-  const rows = useCompanies();
-  const [companyToEdit, setCompanyToEdit] = useState<CompaniesType | null>(null);
+
+  const [rowData, setRowData] = useState<any>();
 
   const containerStyle = useMemo(() => ({
     width: '100%',
@@ -81,13 +92,22 @@ export default function CompaniesPage() {
   }), [height, width]);
 
   const onEditClickCallback = (e, params) => {
-    setCompanyToEdit(params.data);
-    showModal('editCompanyModal');
+    setCustomerToEdit(params.data);
+    showModal('editCustomerModal');
+  };
+
+  const onSelectClickCallback = (e, params) => {
+    if (params.data) {
+      if (params.data.id) {
+        dispatch(setSelectedCompany(null));
+        dispatch(setSelectedCustomer(params.data.id));
+      }
+    }
   };
 
   const [columnDefs, setColumnDefs] = useState([
     {
-      headerName: 'Companies Details',
+      headerName: 'Customers Details',
       children: [
         {
           headerName: 'ID',
@@ -96,26 +116,19 @@ export default function CompaniesPage() {
           editable: false,
         },
         {
-          headerName: 'Name',
-          field: 'name',
+          headerName: 'Title',
+          field: 'title',
           filter: 'agTextColumnFilter',
           onCellValueChanged: (event) => {
-            const { name, id } = event.data;
-            const payload = { data: { name }, id };
-            dispatch(updateCompanyRequest({ ...payload }));
+            const { title, id } = event.data;
+            const payload = { data: { title }, id };
+            dispatch(updateCustomerRequest({ ...payload }));
           },
-        },
-        {
-          headerName: 'Parent',
-          field: 'parent',
-          filter: 'agNumberColumnFilter',
-          valueGetter: ParentRenderer,
-          editable: false,
         },
         {
           field: 'actions',
           // eslint-disable-next-line react/no-unstable-nested-components
-          cellRenderer: (params) => (<ActionsRenderer params={params} onEditClickCallback={(e) => onEditClickCallback(e, params)} />),
+          cellRenderer: (params) => (<ActionsRenderer params={params} onEditClickCallback={(e) => onEditClickCallback(e, params)} onSelectClickCallback={(e) => onSelectClickCallback(e, params)} />),
           editable: false,
           filter: false,
           cellStyle: (params) => {
@@ -177,7 +190,7 @@ export default function CompaniesPage() {
   }, []);
 
   const onGridReady = useCallback((params) => {
-    dispatch(fetchCompanies());
+    dispatch(fetchCustomers());
   }, []);
 
   useEffect(() => {
@@ -187,31 +200,19 @@ export default function CompaniesPage() {
   }, [width, rows]);
 
   useEffect(() => {
-    setRowData(agGridCompaniesDTO(rows));
+    setRowData(agGridCustomersDTO(rows));
 
     if (gridRef.current?.api) {
       gridRef.current?.api.sizeColumnsToFit();
     }
   }, [rows]);
 
-  if (!anyCustomer) {
-    return (
-      <PageWrapper pageTitle="Companies" icon="fa-solid fa-building">
-        <div className="col">
-          <div className="alert alert-info" role="alert">
-            You have no Workspaces set, please set first at less one Workspace in order to use Companies .
-          </div>
-        </div>
-      </PageWrapper>
-    );
-  }
-
   return (
-    <PageWrapper pageTitle="Companies" icon="fa-solid fa-building">
+    <PageWrapper pageTitle="Workspaces" icon="fa-solid fa-building">
 
       <div className=" ag-theme-alpine grid-container-style">
-        <NewCompanyModal />
-        <EditCompanyModal companyToEdit={companyToEdit} />
+        <NewCustomerModal />
+        <EditCustomerModal customerToEdit={customerToEdit} />
         <AgGridReact
           containerStyle={containerStyle}
           ref={gridRef}
