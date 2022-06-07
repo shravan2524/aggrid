@@ -6,8 +6,9 @@ import './Import.css';
 
 function Thumbnail(props: any) {
   const { img, isSelected, onSelect } = props;
+  const [showModal, setShowModal] = useState(false);
 
-  const className = `thumbnail ${isSelected ? 'thumbnail-selected' : ''}`;
+  const className = `thumbnail ${isSelected ? 'thumbnail-selected' : ''} cursor-pointer`;
 
   return (
     <div
@@ -18,9 +19,31 @@ function Thumbnail(props: any) {
         marginBottom: '1em',
       }}
     >
-      <img src={img} className={className} onClick={onSelect} loading='lazy' alt={img} />
-      <br />
-      <a href={img} target='_blank'>view</a>
+
+      <img src={img} className={className} onClick={() => setShowModal(!showModal)} loading='lazy' alt={img} />
+      {(showModal === true) && (
+        <div className="modal d-inline-block" tabIndex={-1} role="dialog" data-show={showModal}>
+          <div className="modal-dialog modal-lg modal-dialog-centered" role="document">
+            <div className="modal-content">
+              <div className="modal-header">
+                <h5 className="modal-title" id="exampleModalLabel">{img}</h5>
+                <button type="button" className="close" onClick={() => setShowModal(false)}>
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div className="modal-body">
+                <img src={img} style={{ maxWidth: '750px' }} onClick={() => setShowModal(!showModal)} loading='lazy' alt={img} />
+              </div>
+              <div className="modal-footer">
+                <button type="button" className="btn btn-secondary" data-dismiss="modal" onClick={() => setShowModal(false)}>Close</button>
+                <button type="button" className="btn btn-primary" onClick={() => { onSelect(); setShowModal(false); }}>{isSelected ? 'Unselect' : 'Select'}</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+      {/* <br /> */}
+      {/* <a href={img} target='_blank'>view</a> */}
     </div>
   );
 }
@@ -125,9 +148,9 @@ function ImportNew(props) {
 
   useEffect(() => {
     const newItems = data.map((el: any) => {
-      const f = el[0], i = el[1], n = el[2], s = '';
+      const f = el[0], i = el[1], n = el[2], s = '', c = '';
 
-      return { f, i, n, s };
+      return { f, i, n, s, c };
     });
 
     setItems(newItems);
@@ -141,13 +164,14 @@ function ImportNew(props) {
 
   const exportStuff = () => {
     const wb = XLSX.utils.book_new();
-    const dt = [['File', 'Image', 'PageNo', 'Status']];
+    const dt = [['File', 'Image', 'PageNo', 'Status', 'Coordinates']];
     items.forEach((o: any, idx) => {
       dt.push([
         o.f,
         o.i,
         o.n,
-        o.s !== '' ? o.s : (noFiles > idx ? 'viewed' : '')
+        o.s !== '' ? o.s : (noFiles > idx ? 'viewed' : ''),
+        o.c,
       ]);
     });
 
