@@ -1,14 +1,146 @@
 /* eslint-disable */
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState, useCallback } from 'react';
 import * as XLSX from 'xlsx';
 
 import './Import.css';
+
+type ImgWH = {
+  w: number;
+  h: number;
+};
+
+interface CanvasProps {
+  imgWH: ImgWH;
+}
+
+type Coordinate = {
+  x: number;
+  y: number;
+};
+
+const Canvas = ({ imgWH }: CanvasProps) => {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const [isPainting, setIsPainting] = useState(false);
+  const [mousePosition, setMousePosition] = useState<Coordinate | undefined>(undefined);
+
+  const startPaint = useCallback((event: MouseEvent) => {
+    const coordinates = getCoordinates(event);
+    console.log('startPaing', coordinates);
+    if (coordinates) {
+      setMousePosition(coordinates);
+      setIsPainting(true);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!canvasRef.current) {
+      return;
+    }
+    const canvas: HTMLCanvasElement = canvasRef.current;
+    canvas.addEventListener('mousedown', startPaint);
+    return () => {
+      canvas.removeEventListener('mousedown', startPaint);
+    };
+  }, [startPaint]);
+
+  const paint = useCallback(
+    (event: MouseEvent) => {
+      if (isPainting) {
+        const newMousePosition = getCoordinates(event);
+        if (mousePosition && newMousePosition) {
+          drawLine(mousePosition, newMousePosition);
+          setMousePosition(newMousePosition);
+        }
+      }
+    },
+    [isPainting, mousePosition]
+  );
+
+  useEffect(() => {
+    if (!canvasRef.current) {
+      return;
+    }
+    const canvas: HTMLCanvasElement = canvasRef.current;
+    canvas.addEventListener('mousemove', paint);
+    return () => {
+      canvas.removeEventListener('mousemove', paint);
+    };
+  }, [paint]);
+
+  const exitPaint = useCallback(() => {
+    setIsPainting(false);
+    setMousePosition(undefined);
+  }, []);
+
+  useEffect(() => {
+    if (!canvasRef.current) {
+      return;
+    }
+    const canvas: HTMLCanvasElement = canvasRef.current;
+    canvas.addEventListener('mouseup', exitPaint);
+    canvas.addEventListener('mouseleave', exitPaint);
+    return () => {
+      canvas.removeEventListener('mouseup', exitPaint);
+      canvas.removeEventListener('mouseleave', exitPaint);
+    };
+  }, [exitPaint]);
+
+  const getCoordinates = (event: MouseEvent): Coordinate | undefined => {
+    if (!canvasRef.current) {
+      return;
+    }
+
+    // console.log('modal', modal.offsetLeft, modal.offsetTop);
+    // console.log('canvas', canvas.offsetLeft, canvas.offsetTop);
+    // console.log('event', event.offsetX, event.offsetY);
+
+    // console.log(event.pageX, canvas.offsetLeft, event.pageY, canvas.offsetTop);
+
+    // return { x: event.pageX - canvas.offsetLeft, y: event.pageY - canvas.offsetTop };
+    return { x: event.offsetX, y: event.offsetY };
+  };
+
+  const drawLine = (originalMousePosition: Coordinate, newMousePosition: Coordinate) => {
+    if (!canvasRef.current) {
+      return;
+    }
+    const canvas: HTMLCanvasElement = canvasRef.current;
+    const context = canvas.getContext('2d');
+    if (context) {
+      context.strokeStyle = 'red';
+      context.lineJoin = 'round';
+      context.lineWidth = 5;
+
+      context.beginPath();
+      context.moveTo(originalMousePosition.x, originalMousePosition.y);
+      context.lineTo(newMousePosition.x, newMousePosition.y);
+      context.closePath();
+
+      context.stroke();
+    }
+  };
+
+  return <canvas ref={canvasRef} height={imgWH.h} width={imgWH.w} style={{ position: 'absolute', left: '0', zIndex: '1000000' }} />;
+};
 
 function Thumbnail(props: any) {
   const { img, isSelected, onSelect } = props;
   const [showModal, setShowModal] = useState(false);
 
   const className = `thumbnail ${isSelected ? 'thumbnail-selected' : ''} cursor-pointer`;
+
+  const [imgWH, setImgWH] = useState({
+    w: 0,
+    h: 0,
+  });
+
+  const onImgLoad = ({ target: img }) => {
+    const { offsetHeight, offsetWidth } = img;
+    setImgWH({
+      w: offsetWidth,
+      h: offsetHeight,
+    });
+  };
 
   return (
     <div
@@ -32,7 +164,10 @@ function Thumbnail(props: any) {
                 </button>
               </div>
               <div className="modal-body">
-                <img src={img} style={{ maxWidth: '750px' }} onClick={() => setShowModal(!showModal)} loading='lazy' alt={img} />
+                <div style={{ position: 'relative', height: imgWH.h }}>
+                  <img src={img} onLoad={onImgLoad} style={{ maxWidth: '750px', position: 'absolute', left: '0' }} onClick={() => setShowModal(!showModal)} loading='lazy' alt={img} />
+                  <Canvas imgWH={imgWH} />
+                </div>
               </div>
               <div className="modal-footer">
                 <button type="button" className="btn btn-secondary" data-dismiss="modal" onClick={() => setShowModal(false)}>Close</button>
