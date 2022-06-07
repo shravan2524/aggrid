@@ -1,0 +1,15 @@
+.modal-body{
+	height: 28rem;
+	width: 30rem;
+	padding: 1rem 3rem 1rem 3rem;
+	overflow-y: scroll;
+}
+.modal-dialog, .modal-content{
+	justify-content: center !important;
+}
+th > div select{
+	width: 11rem !important;
+}
+table{
+	margin-bottom: 1em;
+}

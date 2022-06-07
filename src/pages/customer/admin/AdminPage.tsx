@@ -7,4 +7,4 @@ export default function AdminPage() {
       <h3>Coming Soon !</h3>
     </PageWrapper>
   );
-}
+  }

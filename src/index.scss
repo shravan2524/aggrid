@@ -70,3 +70,36 @@ body {
 .top-menu-responsive-2 {
   margin-top: 11rem;
 }
+table {
+	font-family: arial, sans-serif;
+	border-collapse: collapse;
+	width: 100%;
+  }
+  
+  td, th {
+	border: 1px solid #dddddd;
+	text-align: left;
+	padding: 8px;
+  }
+  th{
+	  padding: 0px;
+  }
+  th > div{
+	display: flex;
+	justify-content: space-between;
+  }
+  th select{
+	padding: 7px;
+    width: 6rem;
+	background-color: white !important;
+  }
+  th span{
+	justify-content: center;
+    margin: auto;
+    margin-left: 8px;
+  }
+  select {
+	   padding: 7px;
+	   background-color: #0dcaf0;
+	   border-radius: 3px;
+  }
