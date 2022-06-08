@@ -193,7 +193,10 @@ function Thumbnail(props: any) {
       }}
     >
 
-      <img src={img} className={className} onClick={() => setShowModal(!showModal)} loading='lazy' alt={img} />
+      <div style={{ position: 'relative' }}>
+        <img src={img} className={className} onClick={() => setShowModal(!showModal)} loading='lazy' alt={img} />
+        <button className='btn btn-sm btn-primary px-2' onClick={() => onSelect()} style={{ position: 'absolute', left: 0, top: 0 }}>{isSelected ? 'u' : 's'}</button>
+      </div>
       {(showModal === true) && (
         <div className="modal d-inline-block" tabIndex={-1} role="dialog" data-show={showModal}>
           <div className="modal-dialog modal-lg modal-dialog-centered" role="document">
