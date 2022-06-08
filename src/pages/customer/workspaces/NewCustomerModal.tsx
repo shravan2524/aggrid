@@ -14,7 +14,6 @@ import {
 
 interface NewCustomerFormProps {
   title: string;
-  uuid: string;
 }
 
 export default function NewCustomerModal() {
@@ -25,7 +24,6 @@ export default function NewCustomerModal() {
 
   const schema = yup.object({
     title: yup.string().required(),
-    uuid: yup.string().required(),
   }).required();
 
   const {
@@ -37,14 +35,14 @@ export default function NewCustomerModal() {
     resolver: yupResolver(schema),
   });
 
-  const onSubmit = ({ title, uuid }: NewCustomerFormProps) => {
-    const body = { title, uuid };
+  const onSubmit = ({ title }: NewCustomerFormProps) => {
+    const body = { title };
     dispatch(newCustomerRequest(body));
   };
 
   useEffect(() => {
     hideModal(modalId);
-    reset({ title: '', uuid: '' });
+    reset({ title: '' });
     dispatch(fetchCustomers());
   }, [isLoading]);
 
@@ -59,20 +57,6 @@ export default function NewCustomerModal() {
             </div>
             <div className="modal-body">
 
-              <div className="mb-3">
-                <label htmlFor="uuid" className="col-form-label">UUID:</label>
-                <input
-                  {...register('uuid')}
-                  id="title"
-                  className={classNames(['form-control form-control-sm', { 'is-invalid': errors.uuid }])}
-                  placeholder="Enter Customer name ..."
-                />
-                {errors.uuid && (
-                <div id="validationTitleFeedback" className="invalid-feedback">
-                  <p>{errors.uuid?.message}</p>
-                </div>
-                )}
-              </div>
               <div className="mb-3">
                 <label htmlFor="name" className="col-form-label">Title:</label>
                 <input
