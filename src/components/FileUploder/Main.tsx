@@ -20,7 +20,7 @@ function ReactFileUploder() {
   const UploadFunction = () => {
     if (fileDropZone) {
       setLoading(true);
-      GetS3Url().then(({ url, KeyId }: URL) => {
+      GetS3Url({ setLoading }).then(({ url, KeyId }: URL) => {
         setS3Url(url);
         setObjectKey(KeyId);
       });

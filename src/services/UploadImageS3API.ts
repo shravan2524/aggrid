@@ -7,18 +7,23 @@ type IProps = {
   setLoading: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
+interface URL {
+  setLoading: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
 // GET S3 URL
-export async function GetS3Url() {
+export async function GetS3Url({ setLoading }: URL) {
   const options: RequestInit = {
     method: 'GET',
   };
 
-  const apiUrl = `${BACKEND_API}/api/v1/pre-signed-url/`;
+  const apiUrl = `${BACKEND_API}/api/v1/pre-signed-url`;
   const response = await fetch(apiUrl, options);
 
   if (!response.ok) {
     const message = `An error has occurred: ${response.status}`;
     toast.error(message);
+    setLoading(false);
   }
   return response.json();
 }
