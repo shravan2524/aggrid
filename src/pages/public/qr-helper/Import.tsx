@@ -4,6 +4,8 @@ import * as XLSX from 'xlsx';
 
 import './Import.css';
 
+const autoSaveInterval = 300 * 1000;
+
 type ImgWH = {
   w: number;
   h: number;
@@ -275,6 +277,10 @@ function ImportOld(props) {
   }
 
   const exportStuff = () => {
+    if (!fileName || !sheetName) {
+      return;
+    }
+
     const wb = XLSX.utils.book_new();
     const dt = [['File', 'Image', 'PageNo', 'Status', 'Coordinates']];
     Object.keys(items).forEach((k, idx) => {
@@ -293,6 +299,11 @@ function ImportOld(props) {
     XLSX.utils.book_append_sheet(wb, ws, 'Result', true);
     XLSX.writeFileXLSX(wb, `Result - ${fileName} - ${sheetName} - ${new Date()}.xlsx`);
   }
+
+  useEffect(() => {
+    const interval = setInterval(exportStuff, autoSaveInterval);
+    return () => clearInterval(interval);
+  }, []);
 
   return (
     <>
@@ -381,6 +392,9 @@ function ImportNew(props) {
   }
 
   const exportStuff = () => {
+    if (!fileName || !sheetName) {
+      return;
+    }
     const wb = XLSX.utils.book_new();
     const dt = [['File', 'Image', 'PageNo', 'Status', 'Coordinates']];
     items.forEach((o: any, idx) => {
@@ -397,6 +411,11 @@ function ImportNew(props) {
     XLSX.utils.book_append_sheet(wb, ws, 'Result', true);
     XLSX.writeFileXLSX(wb, `Result - ${fileName} - ${sheetName} - ${new Date()}.xlsx`);
   }
+
+  useEffect(() => {
+    const interval = setInterval(exportStuff, autoSaveInterval);
+    return () => clearInterval(interval);
+  }, []);
 
   return (<>
     {
