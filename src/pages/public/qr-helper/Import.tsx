@@ -328,6 +328,9 @@ function ImportNew(props) {
   const [items, setItems] = useState([{}]);
   const [noFiles, setNoFiles] = useState(numberOfImages);
 
+  const [shiftIsDown, setShiftIsDown] = useState(false);
+  const [initialImageIdx, setInitialImageIdx] = useState<number | undefined>();
+
   useEffect(() => {
     const newItems = data.map((el: any) => {
       const f = el[0], i = el[1], n = el[2], s = el[3] || '', c = el[4] || '';
@@ -338,10 +341,42 @@ function ImportNew(props) {
     setItems(newItems);
   }, [data]);
 
+  const shiftKeyDown = useCallback((event: KeyboardEvent) => {
+    if (event.key === 'Shift') {
+      setShiftIsDown(true);
+    }
+  }, []);
+
+  const shiftKeyUp = useCallback((event: KeyboardEvent) => {
+    if (event.key === 'Shift') {
+      setShiftIsDown(false);
+      setInitialImageIdx(undefined);
+    }
+  }, []);
+
+  useEffect(() => {
+    document.addEventListener('keydown', shiftKeyDown);
+    document.addEventListener('keyup', shiftKeyUp);
+    return () => {
+      document.removeEventListener('keydown', shiftKeyDown);
+      document.removeEventListener('keyup', shiftKeyUp);
+    }
+  }, [shiftKeyDown]);
+
   const onSelectImage = (imageIdx, c) => {
     const newItems = [...items];
     newItems[imageIdx]['s'] = Boolean(items[imageIdx]['s']) ? '' : 'selected';
     newItems[imageIdx]['c'] = JSON.stringify(c);
+    // console.log('shiftIsDown', shiftIsDown, initialImageIdx, imageIdx);
+    if (!shiftIsDown) {
+      setInitialImageIdx(imageIdx);
+    } else {
+      if (initialImageIdx) {
+        for (let i = initialImageIdx + 1; i < imageIdx; i++) {
+          newItems[i]['s'] = 'selected';
+        }
+      }
+    }
     setItems(newItems);
   }
 
