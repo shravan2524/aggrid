@@ -9,12 +9,12 @@ interface IProps {
   setFileDropZone: React.Dispatch<React.SetStateAction<null>>;
 }
 
-const UploadButton: React.FC<IProps> = ({
+function UploadButton({
   file,
   UploadFunction,
   loading,
   setFileDropZone,
-}) => {
+}: IProps) {
   return (
     <>
       <div className="d-flex gap-2 justify-content-between py-2 px-4 border align-items-center mb-4 rounded flex-wrap">
@@ -22,7 +22,11 @@ const UploadButton: React.FC<IProps> = ({
         <div className="text-wrap">{file.name}</div>
         <p>
           Size:
-          <strong>({SizeInMB(file.size)})</strong>
+          <strong>
+            (
+            {SizeInMB(file.size)}
+            )
+          </strong>
         </p>
       </div>
       <div className="d-grid gap-2">
@@ -52,6 +56,6 @@ const UploadButton: React.FC<IProps> = ({
       </div>
     </>
   );
-};
+}
 
 export default UploadButton;

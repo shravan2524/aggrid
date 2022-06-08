@@ -11,10 +11,8 @@ $main: #282952;
     background-color: #fafbfc;
 }
 .drop{
-    width: 40%;
+    width: 100%;
     border-radius: 20px;
-    background-color: white;
-    padding: 1.5rem;
 }
 .upload{
 padding: 3rem 0;
@@ -35,4 +33,9 @@ img{
 .cancel{
     color: red;
     cursor: pointer;
+}
+.uploadIcon{
+    color:$main;
+    font-size: 2.5rem;
+    margin-bottom: 12px;
 }

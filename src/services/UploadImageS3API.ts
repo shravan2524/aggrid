@@ -40,6 +40,6 @@ export async function uploadImageAPI({
       setLoading(false);
     }
   } catch (e) {
-    toast.error("Error");
+    toast.error('Error');
   }
 }
