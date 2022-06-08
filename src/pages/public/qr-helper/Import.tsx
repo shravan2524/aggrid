@@ -168,7 +168,7 @@ function Thumbnail(props: any) {
   const [showModal, setShowModal] = useState(false);
   const [coordinates, setCoordinates] = useState<Coordinates | undefined>();
 
-  const className = `thumbnail ${isSelected ? 'thumbnail-selected' : ''} cursor-pointer`;
+  const className = `thumbnail ${isSelected === 'selected' ? 'thumbnail-selected' : ''} cursor-pointer`;
 
   const [imgWH, setImgWH] = useState({
     w: 0,
@@ -199,10 +199,11 @@ function Thumbnail(props: any) {
           <div className="modal-dialog modal-lg modal-dialog-centered" role="document">
             <div className="modal-content">
               <div className="modal-header">
-                <h5 className="modal-title" id="exampleModalLabel">{img}</h5>
-                <button type="button" className="close" onClick={() => setShowModal(false)}>
-                  <span aria-hidden="true">&times;</span>
-                </button>
+                <a className="modal-title" id="exampleModalLabel" href={img} target="_blank">{img}</a>
+                <div className="float-right">
+                  <button type="button" className="btn btn-primary m-1" onClick={() => { onSelect({ c: coordinates, wh: imgWH }); setShowModal(false); }}>{isSelected === 'selected' ? 'Unselect' : 'Select'}</button>
+                  <button type="button" className="btn btn-secondary m-1" data-dismiss="modal" onClick={() => setShowModal(false)}>X</button>
+                </div>
               </div>
               <div className="modal-body">
                 <div style={{ position: 'relative', height: imgWH.h }}>
@@ -212,7 +213,7 @@ function Thumbnail(props: any) {
               </div>
               <div className="modal-footer">
                 <button type="button" className="btn btn-secondary" data-dismiss="modal" onClick={() => setShowModal(false)}>Close</button>
-                <button type="button" className="btn btn-primary" onClick={() => { onSelect(coordinates); setShowModal(false); }}>{isSelected ? 'Unselect' : 'Select'}</button>
+                <button type="button" className="btn btn-primary" onClick={() => { onSelect({ c: coordinates, wh: imgWH }); setShowModal(false); }}>{isSelected === 'selected' ? 'Unselect' : 'Select'}</button>
               </div>
             </div>
           </div>
@@ -236,7 +237,7 @@ function File(props) {
       <p className='title'><a href={name} target='_blank'>{name}</a></p>
       {value.map((obj, idx) => {
         return (
-          <Thumbnail img={obj.i} isSelected={Boolean(obj.s)} key={idx} onSelect={(c) => doSelect(idx, c)} />
+          <Thumbnail img={obj.i} isSelected={obj.s} key={idx} onSelect={(c) => doSelect(idx, c)} />
         )
       })}
       <div style={{ clear: 'both' }} ></div>
@@ -363,11 +364,11 @@ function ImportNew(props) {
     {
       items.map((el: any, idx) => {
         if (idx > noFiles) {
-          return <></>;
+          return null;
         }
 
         return (
-          <Thumbnail key={idx} img={el.i} isSelected={Boolean(el.s)} onSelect={(c) => onSelectImage(idx, c)} />
+          <Thumbnail key={idx} img={el.i} isSelected={el.s} onSelect={(c) => onSelectImage(idx, c)} />
         );
       })
     }
