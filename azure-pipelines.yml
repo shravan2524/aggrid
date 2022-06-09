@@ -80,6 +80,11 @@ stages:
                     "name": "AWS_REGION",
                     "value": "$(AWS_REGION)",
                     "slotSetting": false
+                  },
+                  {
+                    "name": "AWS_SDK_LOAD_CONFIG",
+                    "value": "$(AWS_SDK_LOAD_CONFIG)",
+                    "slotSetting": false
                   }
                 ]
 
