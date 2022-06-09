@@ -17,8 +17,8 @@ import {
 import { hideModal, initBootstrapModal } from 'app/utils/Modal';
 import { Column } from 'ag-grid-community';
 
-interface newProps{
-	contentType : string;
+interface NewProps {
+  contentType : string;
 }
 
 interface NewCompanyFormProps {
@@ -28,106 +28,97 @@ interface NewCompanyFormProps {
 }
 
 function Columnlist() {
-	const [contentTypeselect, setcontentTypeselect] = useState([
-		{
-			columnName : '2A : a',
-			selected : 0,
-		},
-		{
-			columnName : '2A : b',
-			selected : 0,
-		},
-		{
-			columnName : '2A : c',
-			selected : 0,
-		},
-		{
-			columnName : '2A : d',
-			selected : 0,
-		},
-		{
-			columnName : '2A : e',
-			selected : 0,
-		},
-		{
-			columnName : '2A : f',
-			selected : 0,
-		},
-		{
-			columnName : '2A : g',
-			selected : 0,
-		}
-	]);
-	const [test, settest] = useState(true)
-	
-	const  arr = [
-		1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1
-	]
-	function onchange(index, e){
-		const value = e.target.value;
-		console.log(value);
-		const tempcontentTypeselect = contentTypeselect;
-		var ind = tempcontentTypeselect.findIndex((v) => v.columnName ===value );
-		tempcontentTypeselect[ind].selected = index+1;
-		setcontentTypeselect(tempcontentTypeselect);
-		console.log(contentTypeselect, index, e, ind);
-		settest(!test);
-	}
-    return (
-		<div>
-			{
-				arr.map((ee, ind) => {
-					return <table key={ind}>
-					<tr>	
-						<th>
-							<div>
-							<span>Seller Gstin</span>
-							<select onChange={(e1) => onchange(ind, e1)}>
-			<option>Column Mapping : </option>
-			{
-				contentTypeselect.map((e) => {
-					// console.log(e.selected, ind);
-					return (
-						(e.selected==(ind+1) || !e.selected)
-						?<option>{e.columnName}</option> 
-						:null
-					)
-				})
-			}
-		</select>
-							</div>
-						</th>
-					  </tr>
-					<tr>
-						<td>3718AJBD18BAJD</td>
-					  </tr>
-					<tr>
-						<td>25472HGAGDH1812</td>
-					  </tr>
-					<tr>
-						<td>127AKDH1828BD11</td>
-					  </tr>
-					<tr>
-						<td>25472HGAGDH1812</td>
-					  </tr>
-				</table>
-				})
-			}
-			
-		</div>
-	)
+  const [contentTypeselect, setcontentTypeselect] = useState([
+    {
+      columnName: '2A : a',
+      selected: 0,
+    },
+    {
+      columnName: '2A : b',
+      selected: 0,
+    },
+    {
+      columnName: '2A : c',
+      selected: 0,
+    },
+    {
+      columnName: '2A : d',
+      selected: 0,
+    },
+    {
+      columnName: '2A : e',
+      selected: 0,
+    },
+    {
+      columnName: '2A : f',
+      selected: 0,
+    },
+    {
+      columnName: '2A : g',
+      selected: 0,
+    },
+  ]);
+  const [test, settest] = useState(true);
+
+  const arr = [
+    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+  ];
+  function onchange(index, e) {
+    const tempcontentTypeselect = contentTypeselect;
+    const ind = tempcontentTypeselect.findIndex((v) => v.columnName === e.target.value);
+    tempcontentTypeselect[ind].selected = index + 1;
+    setcontentTypeselect(tempcontentTypeselect);
+    settest(!test);
+  }
+  return (
+    <div>
+      {
+      arr.map((ee, ind) => (
+        <table key={ind}>
+          <tr>
+            <th>
+              <div>
+                <span>Seller Gstin</span>
+                <select onChange={(e1) => onchange(ind, e1)}>
+                  <option>Column Mapping : </option>
+                  {
+                    contentTypeselect.map((e) => (
+                      (e.selected === (ind + 1) || !e.selected)
+                        ? <option>{e.columnName}</option>
+                        : null
+                    ))
+                    }
+                </select>
+              </div>
+            </th>
+          </tr>
+          <tr>
+            <td>3718AJBD18BAJD</td>
+          </tr>
+          <tr>
+            <td>25472HGAGDH1812</td>
+          </tr>
+          <tr>
+            <td>127AKDH1828BD11</td>
+          </tr>
+          <tr>
+            <td>25472HGAGDH1812</td>
+          </tr>
+        </table>
+      ))
+
+      }
+
+    </div>
+  );
 }
 
-
-export default function NewCompanyModal({contentType}:newProps) {
-	console.log(contentType);
+export default function ColumnMapping() {
   const dispatch = useAppDispatch();
   const isLoading = useSelector(isPostLoadingSelector);
   const selectedCustomer = useSelector(getSelectedCustomer);
   const companySelector = useSelector(getCompanies);
-
   const modalId = useMemo(() => 'newCompanyModal', []);
-
   const schema = yup.object({
     name: yup.string().required(),
     customer_id: yup.string().required(),
@@ -167,7 +158,7 @@ export default function NewCompanyModal({contentType}:newProps) {
   }, [isLoading]);
   return (
     <div className="modal fade" id={modalId} aria-labelledby={`new${modalId}Label`} aria-hidden="true">
-      <div className="modal-dialog modal-dialog-centered" >
+      <div className="modal-dialog modal-dialog-centered">
         <div className="modal-content">
           <form onSubmit={handleSubmit(onSubmit)}>
             <div className="modal-header">
@@ -175,8 +166,7 @@ export default function NewCompanyModal({contentType}:newProps) {
               <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close" />
             </div>
             <div className="modal-body">
-				<Columnlist  />
-
+              <Columnlist />
             </div>
             <div className="modal-footer">
               <button type="button" className="btn btn-sm btn-danger" data-bs-dismiss="modal">
