@@ -1,0 +1,41 @@
+$main: #282952;
+
+.flex-colo{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+.main{
+    padding: 3rem 0;
+    background-color: #fafbfc;
+}
+.drop{
+    width: 100%;
+    border-radius: 20px;
+}
+.upload{
+padding: 3rem 0;
+cursor: pointer;
+
+img{
+    width:4rem;
+    height: 4rem;
+    object-fit: contain;
+}
+}
+.text-small{
+    font-size: .7rem;
+}
+.icon{
+    font-size: 4rem;
+}
+.cancel{
+    color: red;
+    cursor: pointer;
+}
+.uploadIcon{
+    color:$main;
+    font-size: 2.5rem;
+    margin-bottom: 12px;
+}

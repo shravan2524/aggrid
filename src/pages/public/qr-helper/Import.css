@@ -40,6 +40,10 @@ img.thumbnail {
   border-radius: 10px;
 }
 
+.cursor-pointer {
+  cursor: pointer;
+}
+
 .float-left {
   float: left;
 }
