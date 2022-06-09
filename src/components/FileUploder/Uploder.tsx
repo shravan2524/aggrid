@@ -1,6 +1,5 @@
 import React, { useCallback } from 'react';
 import { useDropzone } from 'react-dropzone';
-import { accepted } from './SizeInMb';
 
 interface Iprops {
   setFileDropZone: React.Dispatch<React.SetStateAction<null>>;
@@ -19,7 +18,6 @@ function Uploder({ setFileDropZone }: Iprops) {
     onDrop,
     multiple: false,
     maxFiles: 1,
-    accept: accepted(),
   });
 
   return (
@@ -42,8 +40,6 @@ function Uploder({ setFileDropZone }: Iprops) {
         <b>File : </b>
         {isDragReject ? 'Only Supports' : 'Require'}
         : (1) File
-        <b> Format : </b>
-        (images,text/*,.json,.xl,.doc,.ppt,.pdf)
       </p>
     </div>
   );
