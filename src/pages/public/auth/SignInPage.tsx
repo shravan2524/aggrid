@@ -6,6 +6,6 @@ export default function SignInPage() {
   return (
     // <PageWrapper pageTitle="Sign  In">
     <ReactFileUploder />
-    // </PageWrapper>
+    /* </PageWrapper> */
   );
 }

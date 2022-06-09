@@ -269,7 +269,6 @@ return (
 	<PageWrapper pageTitle="2A">
 	<div className="ag-theme-alpine grid-container-style">
 	<ContentPreview contentType={contentType} />
-	{/* <ColumnMapping /> */}
 		<AgGridReact
 		containerStyle={containerStyle}
 		ref={gridRef}
