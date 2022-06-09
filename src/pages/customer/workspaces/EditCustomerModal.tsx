@@ -16,7 +16,6 @@ import { CustomersType } from 'services/customersAPIService';
 
 interface EditCustomerFormProps {
   title: string;
-  uuid: string;
 }
 
 interface EditCustomerModalProps {
@@ -30,7 +29,6 @@ export default function EditCustomerModal({ customerToEdit }: EditCustomerModalP
 
   const schema = yup.object({
     title: yup.string().required(),
-    uuid: yup.string().required(),
   }).required();
 
   const {
@@ -42,8 +40,8 @@ export default function EditCustomerModal({ customerToEdit }: EditCustomerModalP
     resolver: yupResolver(schema),
   });
 
-  const onSubmit = ({ title, uuid }: EditCustomerFormProps) => {
-    const payload = { data: { title, uuid }, id: customerToEdit?.id };
+  const onSubmit = ({ title }: EditCustomerFormProps) => {
+    const payload = { data: { title }, id: customerToEdit?.id };
     dispatch(updateCustomerRequest({ ...payload }));
   };
 
@@ -54,7 +52,7 @@ export default function EditCustomerModal({ customerToEdit }: EditCustomerModalP
   }, [isLoading]);
 
   useEffect(() => {
-    reset({ title: customerToEdit?.title, uuid: customerToEdit?.uuid });
+    reset({ title: customerToEdit?.title });
   }, [customerToEdit]);
 
   return (
@@ -67,22 +65,6 @@ export default function EditCustomerModal({ customerToEdit }: EditCustomerModalP
               <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close" />
             </div>
             <div className="modal-body">
-
-              <div className="mb-3">
-                <label htmlFor="uuid" className="col-form-label">UUID:</label>
-                <input
-                  {...register('uuid')}
-                  id="uuid"
-                  className={classNames(['form-control form-control-sm', { 'is-invalid': errors.uuid }])}
-                  placeholder="Enter Customer UUID ..."
-                />
-
-                {errors.uuid && (
-                <div id="validationTitleFeedback" className="invalid-feedback">
-                  <p>{errors.uuid?.message}</p>
-                </div>
-                )}
-              </div>
 
               <div className="mb-3">
                 <label htmlFor="title" className="col-form-label">Title:</label>

@@ -17,10 +17,12 @@ const AdminIndexPage = React.lazy(() => import('pages/customer/admin/AdminPage')
 const NotificationsIndexPage = React.lazy(() => import('pages/customer/notifications/NotificationsPage'));
 const ProfileIndexPage = React.lazy(() => import('pages/customer/profile/ProfilePage'));
 const CompaniesIndexPage = React.lazy(() => import('pages/customer/admin/companies/CompaniesPage'));
+const FilesIndexPage = React.lazy(() => import('pages/customer/admin/files/FilesPage'));
 const WorkspacesIndexPage = React.lazy(() => import('pages/customer/workspaces/WorkspacesPage'));
 const SignInIndexPage = React.lazy(() => import('pages/public/auth/SignInPage'));
 const AuthHandlerProcessorIndexPage = React.lazy(() => import('pages/public/auth/AuthHandlerProcessorPage'));
 const AuthLogoutProcessorIndexPage = React.lazy(() => import('pages/public/auth/AuthLogoutProcessorPage'));
+const QRHelper = React.lazy(() => import('pages/public/qr-helper/Import'));
 
 const routes: any = [
 
@@ -47,6 +49,11 @@ const routes: any = [
         element: <Suspense fallback={<Loader />}><SignInIndexPage /></Suspense>,
       },
     ],
+  },
+
+  {
+    path: '/qr-helper',
+    element: (<Suspense fallback={<Loader />}><QRHelper /></Suspense>),
   },
 
   // Supposed protected customer routes ....
@@ -112,6 +119,11 @@ const routes: any = [
                 text: 'Companies',
                 icon: 'fa-solid fa-building',
               },
+              {
+                path: '/customer/admin/files',
+                text: 'Files',
+                icon: 'fa-solid fa-file-arrow-up',
+              },
             ]}
             />,
             children: [
@@ -122,6 +134,10 @@ const routes: any = [
               {
                 path: 'companies',
                 element: <Suspense fallback={<Loader />}><CompaniesIndexPage /></Suspense>,
+              },
+              {
+                path: 'files',
+                element: <Suspense fallback={<Loader />}><FilesIndexPage /></Suspense>,
               },
             ],
           },

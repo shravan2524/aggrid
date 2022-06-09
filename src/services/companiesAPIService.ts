@@ -17,8 +17,6 @@ export interface CompaniesType {
   name: string,
   parent: number,
   customer_id: number,
-  createdAt: string,
-  updatedAt: string,
 }
 
 export interface CompaniesAgGridType {
@@ -26,16 +24,6 @@ export interface CompaniesAgGridType {
   name: string,
   parent: number,
   customer_id: number,
-  createdAt: string,
-  updatedAt: string,
-}
-
-export interface CustomersAgGridType {
-  id: number,
-  title: string,
-  uuid: string,
-  createdAt: string,
-  updatedAt: string,
 }
 
 export async function fetchCompaniesData() :Promise<CompaniesType[]> {
