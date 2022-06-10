@@ -39,24 +39,10 @@ function ActionsRenderer({ params, onFileMappingClickCallback }: ActionsRenderer
 }
 
 function CustomActionsToolPanel() {
-  const [contentType, setcontentType] = useState('Select Content Type');
-  function onchange(e) {
-    setcontentType(e.target.value);
-  }
   return (
     <div className="container-fluid">
       <div className="row p-2">
         <ReactFileUploder />
-        <select className="p-8 mb-3" onChange={onchange}>
-          <option selected disabled>Select Content Type </option>
-          <option value="Content Type : 2A">Content Type : 2A</option>
-          <option value="Content Type : 2B">Content Type : 2B</option>
-          <option value="Content Type : PR">Content Type : PR</option>
-          <option value="Content Type : QR">Content Type : QR</option>
-        </select>
-        <button type="button" className="btn btn-sm btn-info" onClick={() => showModal('newCompanyModal')}>
-          Column Mapping
-        </button>
       </div>
     </div>
   );
