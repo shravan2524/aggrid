@@ -7,8 +7,10 @@ import { useAppDispatch, useWindowDimensions } from 'app/hooks';
 import PageWrapper from 'components/PageWrapper';
 import { agGridFilesDTO } from 'app/utils/Helpers';
 
-import { ICellRendererParams } from 'ag-grid-community';
+import ReactFileUploder from 'components/FileUploder/Main';
+import { Column, ICellRendererParams } from 'ag-grid-community';
 import { useSelector } from 'react-redux';
+import ColumnMapping from 'pages/customer/reconciliation/ColumnMapping';
 import { fetchFiles, getFiles } from 'state/files/filesSlice';
 
 type ActionsRendererProps = {
@@ -16,25 +18,44 @@ type ActionsRendererProps = {
   onFileMappingClickCallback: (e: React.MouseEvent<HTMLButtonElement>, params: ICellRendererParams) => void;
 };
 function ActionsRenderer({ params, onFileMappingClickCallback }: ActionsRendererProps) {
+  const [contentType, setcontentType] = useState('Select Content Type');
+  function onchange(e) {
+    setcontentType(e.target.value);
+  }
   return (
     <div className="d-flex justify-content-start align-items-center w-100 h-100">
-      <button type="button" className="btn btn-sm btn-light" onClick={(e) => onFileMappingClickCallback(e, params)}><i className="fa-solid fa-pen-to-square" /></button>
+      <select className="p-8 mb-3" onChange={onchange}>
+        <option selected disabled>Select Content Type </option>
+        <option value="Content Type : 2A">Content Type : 2A</option>
+        <option value="Content Type : 2B">Content Type : 2B</option>
+        <option value="Content Type : PR">Content Type : PR</option>
+        <option value="Content Type : QR">Content Type : QR</option>
+      </select>
+      <button type="button" className="btn btn-sm btn-info" onClick={() => showModal('newCompanyModal')}>
+        Column Mapping
+      </button>
     </div>
   );
 }
 
 function CustomActionsToolPanel() {
+  const [contentType, setcontentType] = useState('Select Content Type');
+  function onchange(e) {
+    setcontentType(e.target.value);
+  }
   return (
     <div className="container-fluid">
       <div className="row p-2">
-        <button
-          type="button"
-          className="btn btn-sm btn-danger"
-          onClick={() => showModal('newFileModal')}
-        >
-          <i className="fa-solid fa-cloud-arrow-up" />
-          {' '}
-          Add Files
+        <ReactFileUploder />
+        <select className="p-8 mb-3" onChange={onchange}>
+          <option selected disabled>Select Content Type </option>
+          <option value="Content Type : 2A">Content Type : 2A</option>
+          <option value="Content Type : 2B">Content Type : 2B</option>
+          <option value="Content Type : PR">Content Type : PR</option>
+          <option value="Content Type : QR">Content Type : QR</option>
+        </select>
+        <button type="button" className="btn btn-sm btn-info" onClick={() => showModal('newCompanyModal')}>
+          Column Mapping
         </button>
       </div>
     </div>
@@ -158,8 +179,8 @@ export default function FilesPage() {
 
   return (
     <PageWrapper pageTitle="Files" icon="fa-solid fa-file-arrow-up">
-
       <div className="ag-theme-alpine grid-container-style">
+        <ColumnMapping />
         <AgGridReact
           containerStyle={containerStyle}
           ref={gridRef}

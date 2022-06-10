@@ -3,7 +3,7 @@ import React, {
 } from 'react';
 
 import { AgGridReact } from 'ag-grid-react';
-
+import { AgGroupComponent } from '@ag-grid-community/core';
 import { fetch2AData } from 'services/2AAPIService';
 import { agGridRowDrag } from 'app/utils/Helpers';
 import PageWrapper from 'components/PageWrapper';
@@ -188,9 +188,8 @@ export default function Reconciliation2APage() {
         iconKey: 'filter',
         toolPanel: 'agFiltersToolPanel',
       },
-
     ],
-    defaultToolPanel: 'customStats',
+    defaultToolPanel: 'customActionsTool',
   }), []);
 
   const defaultColDef = useMemo(() => ({
@@ -205,7 +204,6 @@ export default function Reconciliation2APage() {
   }), []);
 
   const onFirstDataRendered = useCallback((params) => {
-    //  gridRef.current.api.sizeColumnsToFit();
   }, []);
 
   const statusBar = useMemo(() => ({

@@ -4,8 +4,6 @@ import ReactFileUploder from 'components/FileUploder/Main';
 
 export default function SignInPage() {
   return (
-    // <PageWrapper pageTitle="Sign  In">
     <ReactFileUploder />
-    // </PageWrapper>
   );
 }
