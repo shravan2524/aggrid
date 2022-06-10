@@ -40,6 +40,7 @@ export const customersSlice = createSlice({
     setSelectedCustomer: (state: Draft<CustomersState>, action: PayloadAction<string | number>) => {
       const selectedCustomer = state.rows.find((i) => Number(i.id) === Number(action.payload));
       state.selectedCustomer = selectedCustomer?.id ?? null;
+      toast.success(`Workspace ${selectedCustomer?.title} successfully selected.`);
     },
   },
 
