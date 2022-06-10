@@ -43,7 +43,7 @@ function ReactFileUploder() {
   }, [s3Url, fileDropZone]);
 
   return (
-    <div className="flex-colo main">
+    <>
       <button
         type="button"
         className="btn btn-sm btn-danger px-4 d-flex gap-2 align-items-center"
@@ -85,7 +85,7 @@ function ReactFileUploder() {
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }
 
