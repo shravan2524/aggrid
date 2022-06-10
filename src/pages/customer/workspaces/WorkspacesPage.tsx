@@ -7,7 +7,7 @@ import { useAppDispatch, useWindowDimensions } from 'app/hooks';
 import PageWrapper from 'components/PageWrapper';
 import {
   fetchCustomers, updateCustomerRequest,
-  getCustomers, setSelectedCustomer,
+  getCustomers, setSelectedCustomer, getSelectedCustomer,
 } from 'state/customers/customersSlice';
 import { agGridCustomersDTO } from 'app/utils/Helpers';
 import { CustomersType } from 'services/customersAPIService';
@@ -79,6 +79,7 @@ export default function WorkspacesPage() {
   const gridRef = useRef<any>();
 
   const rows = useSelector(getCustomers);
+  const selectedWorkspace = useSelector(getSelectedCustomer);
   const [customerToEdit, setCustomerToEdit] = useState<CustomersType | null>(null);
 
   const { height, width } = useWindowDimensions();
@@ -206,6 +207,14 @@ export default function WorkspacesPage() {
       gridRef.current?.api.sizeColumnsToFit();
     }
   }, [rows]);
+
+  useEffect(() => {
+    if (gridRef.current?.api && selectedWorkspace) {
+      gridRef.current?.api.forEachNodeAfterFilter((rowNode) => {
+        rowNode.setSelected(rowNode.data.title === selectedWorkspace?.title);
+      });
+    }
+  }, [selectedWorkspace]);
 
   return (
     <PageWrapper pageTitle="Workspaces" icon="fa-solid fa-building">

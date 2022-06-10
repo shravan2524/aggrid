@@ -1,9 +1,10 @@
 import React from 'react';
 import PageWrapper from 'components/PageWrapper';
-import ReactFileUploder from 'components/FileUploder/Main';
 
 export default function SignInPage() {
   return (
-    <ReactFileUploder />
+    <PageWrapper pageTitle="Sign In Page">
+      <h3>Coming Soon !</h3>
+    </PageWrapper>
   );
 }
