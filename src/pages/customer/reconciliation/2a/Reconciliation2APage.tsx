@@ -3,15 +3,11 @@ import React, {
 } from 'react';
 
 import { AgGridReact } from 'ag-grid-react';
-
+import { AgGroupComponent } from '@ag-grid-community/core';
 import { fetch2AData } from 'services/2AAPIService';
 import { agGridRowDrag } from 'app/utils/Helpers';
 import PageWrapper from 'components/PageWrapper';
 import { useWindowDimensions } from 'app/hooks';
-import { showModal } from 'app/utils/Modal';
-import NewCompanyModal from 'pages/customer/admin/companies/NewCompanyModal';
-import ContentPreview from 'pages/customer/reconciliation/ColumnMapping';
-import { Column } from 'ag-grid-community';
 
 export default function Reconciliation2APage() {
   const gridRef = useRef<any>();

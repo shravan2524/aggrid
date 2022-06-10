@@ -84,7 +84,7 @@ function Columnlist() {
                   {
                     contentTypeselect.map((e) => (
                       (e.selected === (ind + 1) || !e.selected)
-                        ? <option>{e.columnName}</option>
+                        ? <option key={e.columnName}>{e.columnName}</option>
                         : null
                     ))
                     }
