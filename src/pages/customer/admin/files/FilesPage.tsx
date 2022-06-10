@@ -23,8 +23,8 @@ function ActionsRenderer({ params, onFileMappingClickCallback }: ActionsRenderer
     setcontentType(e.target.value);
   }
   return (
-    <div className="d-flex justify-content-start align-items-center w-100 h-100">
-      <select className="p-8 mb-3" onChange={onchange}>
+    <div className="d-flex justify-content-space-between align-items-center w-100 h-100" id="columns">
+      <select className="p-8" onChange={onchange}>
         <option selected disabled>Select Content Type </option>
         <option value="Content Type : 2A">Content Type : 2A</option>
         <option value="Content Type : 2B">Content Type : 2B</option>
