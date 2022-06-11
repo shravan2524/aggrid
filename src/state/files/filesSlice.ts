@@ -27,6 +27,7 @@ const initialState: FilesState = {
 // API Actions ...
 export const fetchFiles = createAsyncThunk('getFiles', async () => fetchFilesData());
 export const updateFileRequest = createAsyncThunk('putFiles', async (payload: any) => putFilesData(payload));
+export const updateContentType = createAsyncThunk('putcontentType', async (payload: any) => updateContentType(payload));
 
 // Reducers ...
 export const filesSlice = createSlice({
@@ -66,6 +67,25 @@ export const filesSlice = createSlice({
       ProgressBar.done();
     });
     builder.addCase(updateFileRequest.rejected, (state, action) => {
+      const error = action.error.message;
+      if (error) {
+        toast.error(error);
+      }
+      state.isPutLoading = false;
+      ProgressBar.done();
+    });
+
+    // update content type
+    builder.addCase(updateContentType.pending, (state: Draft<FilesState>, action) => {
+      state.isPutLoading = true;
+      ProgressBar.start();
+    });
+    builder.addCase(updateContentType.fulfilled, (state, action) => {
+      toast.success('File successfully updated.');
+      state.isPutLoading = false;
+      ProgressBar.done();
+    });
+    builder.addCase(updateContentType.rejected, (state, action) => {
       const error = action.error.message;
       if (error) {
         toast.error(error);

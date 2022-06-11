@@ -26,12 +26,12 @@ function ActionsRenderer({ params, onFileMappingClickCallback }: ActionsRenderer
     <div className="d-flex justify-content-between align-items-center w-100 h-100" id="columns">
       <select className="p-8" onChange={onchange}>
         <option selected disabled>Select Content Type </option>
-        <option value="Content Type : 2A">Content Type : 2A</option>
-        <option value="Content Type : 2B">Content Type : 2B</option>
-        <option value="Content Type : PR">Content Type : PR</option>
-        <option value="Content Type : QR">Content Type : QR</option>
+        <option value="2A">2A</option>
+        <option value="2B">2B</option>
+        <option value="PR">Purchase Register</option>
+        <option value="invoicePDF">Invoice PDF</option>
       </select>
-      <button type="button" className="btn btn-sm btn-info" onClick={() => showModal('newCompanyModal')}>
+      <button type="button" className="btn btn-sm btn-primary" onClick={() => showModal('newCompanyModal')}>
         Column Mapping
       </button>
     </div>
