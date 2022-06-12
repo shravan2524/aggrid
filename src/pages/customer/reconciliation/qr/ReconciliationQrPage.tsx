@@ -3,6 +3,7 @@ import React, {
   useMemo, useRef, useState,
 } from 'react';
 import { fetchQRData } from 'services/qrAPIService';
+
 import { AgGridReact } from 'ag-grid-react';
 import { agGridRowDrag } from 'app/utils/Helpers';
 import { toast } from 'react-hot-toast';
@@ -210,11 +211,7 @@ export default function ReconciliationQrPage() {
   const onGridReady = useCallback((params) => {
     fetchQRData().then((twoAData) => {
       setRowData(twoAData);
-    })
-      .catch((e) => {
-        toast.error(e.message);
-        navigate('/auth/logout');
-      });
+    });
   }, []);
 
   return (

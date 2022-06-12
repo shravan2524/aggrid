@@ -98,8 +98,17 @@ table {
     margin: auto;
     margin-left: 8px;
   }
-  select {
-	   padding: 7px;
-	   background-color: #0dcaf0;
+  #columns{
+	width: 90% !important;
+  }
+  #columns select {
+	   padding: 4px;
+	   background-color: #0d6efd;
 	   border-radius: 3px;
+	   color: white;
+	   font-size: smaller;
+  }
+  #columns button{
+		font-size: smaller;
+		padding: 4px;
   }
