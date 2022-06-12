@@ -1,15 +1,19 @@
 import { BACKEND_API } from '../app/config';
 
 export interface FilesType {
-  customer_file_id: number,
-  customer_file_name: string,
-  file_type: string,
-
+  id: number,
+  fileName: string,
+  fileType: string,
+  contentType: string,
+  columnMapping: Object,
 }
 
 export interface FilesAgGridType {
-  customer_file_name: string,
-  file_type: string,
+  id: number,
+  fileName: string,
+  fileType: string,
+  contentType: string | undefined,
+  columnMapping: Object | undefined,
 }
 
 export async function fetchFilesData(): Promise<FilesType[]> {

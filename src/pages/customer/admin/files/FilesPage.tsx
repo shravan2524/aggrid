@@ -82,13 +82,13 @@ export default function FilesPage() {
       children: [
         {
           headerName: 'Name',
-          field: 'customer_file_name',
+          field: 'fileName',
           filter: 'agNumberColumnFilter',
           editable: false,
         },
         {
           headerName: 'Type',
-          field: 'file_type',
+          field: 'fileType',
           filter: 'agTextColumnFilter',
         },
         {
