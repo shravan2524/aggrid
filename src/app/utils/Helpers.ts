@@ -13,7 +13,7 @@ export function agGridDateFormatter(params: ValueFormatterParams) {
   return moment(params.value).format('LLL');
 }
 
-export function agGridCompaniesDTO(companies : CompaniesType[]): CompaniesAgGridType[] {
+export function agGridCompaniesDTO(companies: CompaniesType[]): CompaniesAgGridType[] {
   return companies.map(({
     id,
     name,
@@ -27,7 +27,7 @@ export function agGridCompaniesDTO(companies : CompaniesType[]): CompaniesAgGrid
   }));
 }
 
-export function agGridCustomersDTO(companies : CustomersType[]): CustomersAgGridType[] {
+export function agGridCustomersDTO(companies: CustomersType[]): CustomersAgGridType[] {
   return companies.map(({
     id,
     title,
@@ -41,11 +41,13 @@ export function agGridCustomersDTO(companies : CustomersType[]): CustomersAgGrid
   }));
 }
 
-export function agGridFilesDTO(companies : FilesType[]): FilesAgGridType[] {
-  return companies.map(({
+export function agGridFilesDTO(items: FilesType[]): FilesAgGridType[] {
+  return items.map(({
+    customer_file_id,
     customer_file_name,
     file_type,
   }) => ({
+    customer_file_id,
     customer_file_name,
     file_type,
   }));

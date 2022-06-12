@@ -11,25 +11,35 @@ import ReactFileUploder from 'components/FileUploder/Main';
 import { Column, ICellRendererParams } from 'ag-grid-community';
 import { useSelector } from 'react-redux';
 import ColumnMapping from 'pages/customer/reconciliation/ColumnMapping';
-import { fetchFiles, getFiles } from 'state/files/filesSlice';
+import {
+  fetchFiles, getFiles,
+  setContentTypeRequest, setColumnMappingRequest,
+} from 'state/files/filesSlice';
 
 type ActionsRendererProps = {
   params: ICellRendererParams;
   onFileMappingClickCallback: (e: React.MouseEvent<HTMLButtonElement>, params: ICellRendererParams) => void;
 };
 function ActionsRenderer({ params, onFileMappingClickCallback }: ActionsRendererProps) {
-  const [contentType, setcontentType] = useState('Select Content Type');
+  const [contentType, setcontentType] = useState('');
+  const dispatch = useAppDispatch();
+
+  // console.log('params', params);
+
   function onchange(e) {
     setcontentType(e.target.value);
+    /* eslint-disable-next-line */
+    dispatch(setContentTypeRequest({ ...params.data, data: e.target.value }));
   }
+
   return (
     <div className="d-flex justify-content-between align-items-center w-100 h-100" id="columns">
       <select className="p-8" onChange={onchange}>
         <option selected disabled>Select Content Type </option>
-        <option value="2A">2A</option>
-        <option value="2B">2B</option>
+        <option value="2A">GSTR2A</option>
+        <option value="2B">GSTR2B</option>
         <option value="PR">Purchase Register</option>
-        <option value="invoicePDF">Invoice PDF</option>
+        <option value="InvoicePDF">Invoice PDF</option>
       </select>
       <button type="button" className="btn btn-sm btn-primary" onClick={() => showModal('newCompanyModal')}>
         Column Mapping
