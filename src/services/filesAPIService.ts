@@ -74,10 +74,10 @@ export async function setContentType(payload): Promise<FilesType[]> {
     },
     method: 'PUT',
     credentials: 'include',
-    body: JSON.stringify({ file_type: payload.data }),
+    body: JSON.stringify({ fileType: payload.data }),
   };
 
-  const apiUrl = `${BACKEND_API}/api/v1/files/${payload.customer_file_id}/content-type`;
+  const apiUrl = `${BACKEND_API}/api/v1/files/${payload.id}/content-type`;
   const response = await fetch(apiUrl, options);
   if (!response.ok) {
     const message = `An error has occurred: ${response.status}`;
@@ -94,7 +94,7 @@ export async function setColumnMapping(payload): Promise<FilesType[]> {
     },
     method: 'PUT',
     credentials: 'include',
-    body: JSON.stringify({ column_mapping_for_file: payload.data }),
+    body: JSON.stringify({ columnMapping: payload.data }),
   };
 
   const apiUrl = `${BACKEND_API}/api/v1/files/${payload.id}/column-mapping`;
