@@ -2,7 +2,7 @@ import React, { useCallback } from 'react';
 import { useDropzone } from 'react-dropzone';
 
 interface Iprops {
-  setFileDropZone: React.Dispatch<React.SetStateAction<null>>;
+  setFileDropZone: React.Dispatch<any>;
 }
 
 function Uploder({ setFileDropZone }: Iprops) {

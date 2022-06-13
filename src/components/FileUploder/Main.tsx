@@ -11,16 +11,17 @@ interface URL {
 }
 
 function ReactFileUploder() {
-  const [fileDropZone, setFileDropZone] = useState(null);
+  const [fileDropZone, setFileDropZone] = useState<any>();
   const [s3Url, setS3Url] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
   const [objectKey, setObjectKey] = useState<string>('');
+  const [progress, setProgress] = useState<any>();
   const modalId = 'add';
 
   const UploadFunction = () => {
     if (fileDropZone) {
       setLoading(true);
-      GetS3Url({ setLoading }).then(({ url, KeyId }: URL) => {
+      GetS3Url({ setLoading, fileDropZone }).then(({ url, KeyId }: URL) => {
         setS3Url(url);
         setObjectKey(KeyId);
       });
@@ -33,9 +34,11 @@ function ReactFileUploder() {
         s3Url,
         fileDropZone,
         setLoading,
+        setProgress,
       }).then(() => {
         setFileDropZone(null);
         setS3Url('');
+        setProgress(null);
         toast.success('File Uploded.');
         hideModal(modalId);
       });
@@ -76,6 +79,7 @@ function ReactFileUploder() {
             </div>
             <div className="modal-body">
               <UploadFileModel
+                progress={progress}
                 UploadFunction={UploadFunction}
                 loading={loading}
                 fileDropZone={fileDropZone}
