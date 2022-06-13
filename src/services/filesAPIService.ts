@@ -1,15 +1,19 @@
 import { BACKEND_API } from '../app/config';
 
 export interface FilesType {
-  customer_file_id: number,
-  customer_file_name: string,
-  file_type: string,
-
+  id: number,
+  fileName: string,
+  fileType: string,
+  contentType: string,
+  columnMapping: Object,
 }
 
 export interface FilesAgGridType {
-  customer_file_name: string,
-  file_type: string,
+  id: number,
+  fileName: string,
+  fileType: string,
+  contentType: string | undefined,
+  columnMapping: Object | undefined,
 }
 
 export async function fetchFilesData(): Promise<FilesType[]> {
@@ -70,10 +74,10 @@ export async function setContentType(payload): Promise<FilesType[]> {
     },
     method: 'PUT',
     credentials: 'include',
-    body: JSON.stringify({ file_type: payload.data }),
+    body: JSON.stringify({ fileType: payload.data }),
   };
 
-  const apiUrl = `${BACKEND_API}/api/v1/files/${payload.customer_file_id}/content-type`;
+  const apiUrl = `${BACKEND_API}/api/v1/files/${payload.id}/content-type`;
   const response = await fetch(apiUrl, options);
   if (!response.ok) {
     const message = `An error has occurred: ${response.status}`;
@@ -90,7 +94,7 @@ export async function setColumnMapping(payload): Promise<FilesType[]> {
     },
     method: 'PUT',
     credentials: 'include',
-    body: JSON.stringify({ column_mapping_for_file: payload.data }),
+    body: JSON.stringify({ columnMapping: payload.data }),
   };
 
   const apiUrl = `${BACKEND_API}/api/v1/files/${payload.id}/column-mapping`;

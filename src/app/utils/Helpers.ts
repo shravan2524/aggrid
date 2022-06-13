@@ -43,12 +43,16 @@ export function agGridCustomersDTO(companies: CustomersType[]): CustomersAgGridT
 
 export function agGridFilesDTO(items: FilesType[]): FilesAgGridType[] {
   return items.map(({
-    customer_file_id,
-    customer_file_name,
-    file_type,
+    id,
+    fileName,
+    fileType,
+    contentType,
+    columnMapping,
   }) => ({
-    customer_file_id,
-    customer_file_name,
-    file_type,
+    id,
+    fileName,
+    fileType,
+    contentType,
+    columnMapping,
   }));
 }
