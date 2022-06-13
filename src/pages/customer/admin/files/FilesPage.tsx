@@ -27,14 +27,15 @@ function ActionsRenderer({ params, onFileMappingClickCallback }: ActionsRenderer
     const payload = { data: { name }, id };
     dispatch(updateContentType({ ...payload }));
   }
+
   return (
     <div className="d-flex justify-content-between align-items-center w-100 h-100" id="columns">
       <select className="p-8" onChange={onchange}>
         <option selected disabled>Select Content Type </option>
-        <option value="2A">2A</option>
-        <option value="2B">2B</option>
+        <option value="2A">GSTR2A</option>
+        <option value="2B">GSTR2B</option>
         <option value="PR">Purchase Register</option>
-        <option value="invoicePDF">Invoice PDF</option>
+        <option value="InvoicePDF">Invoice PDF</option>
       </select>
       <button type="button" className="btn btn-sm btn-primary" onClick={() => showModal('newCompanyModal')}>
         Column Mapping
@@ -77,13 +78,13 @@ export default function FilesPage() {
       children: [
         {
           headerName: 'Name',
-          field: 'customer_file_name',
+          field: 'fileName',
           filter: 'agNumberColumnFilter',
           editable: false,
         },
         {
           headerName: 'Type',
-          field: 'file_type',
+          field: 'fileType',
           filter: 'agTextColumnFilter',
         },
         {

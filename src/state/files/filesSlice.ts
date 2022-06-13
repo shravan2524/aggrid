@@ -2,7 +2,9 @@ import {
   createAsyncThunk, createSelector, createSlice, Draft, PayloadAction,
 } from '@reduxjs/toolkit';
 import {
-  FilesType, fetchFilesData, putFilesData,
+  FilesType,
+  fetchFilesData, putFilesData,
+  setContentType, setColumnMapping,
 } from 'services/filesAPIService';
 import ProgressBar from 'app/utils/ProgressBar';
 import { toast } from 'react-hot-toast';
@@ -27,7 +29,8 @@ const initialState: FilesState = {
 // API Actions ...
 export const fetchFiles = createAsyncThunk('getFiles', async () => fetchFilesData());
 export const updateFileRequest = createAsyncThunk('putFiles', async (payload: any) => putFilesData(payload));
-export const updateContentType = createAsyncThunk('putcontentType', async (payload: any) => updateContentType(payload));
+export const setContentTypeRequest = createAsyncThunk('setContentType', async (payload: any) => setContentType(payload));
+export const setColumnMappingRequest = createAsyncThunk('setColumnMapping', async (payload: any) => setColumnMapping(payload));
 
 // Reducers ...
 export const filesSlice = createSlice({
@@ -75,17 +78,36 @@ export const filesSlice = createSlice({
       ProgressBar.done();
     });
 
-    // update content type
-    builder.addCase(updateContentType.pending, (state: Draft<FilesState>, action) => {
+    // Set ContentType
+    builder.addCase(setContentTypeRequest.pending, (state: Draft<FilesState>, action) => {
       state.isPutLoading = true;
       ProgressBar.start();
     });
-    builder.addCase(updateContentType.fulfilled, (state, action) => {
+    builder.addCase(setContentTypeRequest.fulfilled, (state, action) => {
       toast.success('File successfully updated.');
       state.isPutLoading = false;
       ProgressBar.done();
     });
-    builder.addCase(updateContentType.rejected, (state, action) => {
+    builder.addCase(setContentTypeRequest.rejected, (state, action) => {
+      const error = action.error.message;
+      if (error) {
+        toast.error(error);
+      }
+      state.isPutLoading = false;
+      ProgressBar.done();
+    });
+
+    // Set ContentType
+    builder.addCase(setColumnMappingRequest.pending, (state: Draft<FilesState>, action) => {
+      state.isPutLoading = true;
+      ProgressBar.start();
+    });
+    builder.addCase(setColumnMappingRequest.fulfilled, (state, action) => {
+      toast.success('File successfully updated.');
+      state.isPutLoading = false;
+      ProgressBar.done();
+    });
+    builder.addCase(setColumnMappingRequest.rejected, (state, action) => {
       const error = action.error.message;
       if (error) {
         toast.error(error);
