@@ -11,7 +11,8 @@ import ReactFileUploder from 'components/FileUploder/Main';
 import { Column, ICellRendererParams } from 'ag-grid-community';
 import { useSelector } from 'react-redux';
 import ColumnMapping from 'pages/customer/reconciliation/ColumnMapping';
-import { fetchFiles, getFiles } from 'state/files/filesSlice';
+import { fetchFiles, getFiles, updateContentType } from 'state/files/filesSlice';
+import { updateWhile } from 'typescript';
 
 type ActionsRendererProps = {
   params: ICellRendererParams;
@@ -19,8 +20,12 @@ type ActionsRendererProps = {
 };
 function ActionsRenderer({ params, onFileMappingClickCallback }: ActionsRendererProps) {
   const [contentType, setcontentType] = useState('Select Content Type');
+  const dispatch = useAppDispatch();
   function onchange(e) {
     setcontentType(e.target.value);
+    const { name, id } = e.data;
+    const payload = { data: { name }, id };
+    dispatch(updateContentType({ ...payload }));
   }
   return (
     <div className="d-flex justify-content-between align-items-center w-100 h-100" id="columns">
