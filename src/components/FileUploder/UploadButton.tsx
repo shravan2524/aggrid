@@ -6,7 +6,8 @@ interface IProps {
   UploadFunction: () => void;
   file: IFile;
   loading: boolean;
-  setFileDropZone: React.Dispatch<React.SetStateAction<null>>;
+  setFileDropZone: React.Dispatch<any>;
+  progress: any;
 }
 
 function UploadButton({
@@ -14,6 +15,7 @@ function UploadButton({
   UploadFunction,
   loading,
   setFileDropZone,
+  progress,
 }: IProps) {
   return (
     <>
@@ -24,26 +26,43 @@ function UploadButton({
           Size:
           <strong>
             (
-            {SizeInMB(file.size)}
+            {
+              SizeInMB(file.size)
+            }
             )
           </strong>
         </p>
       </div>
       <div className="d-grid gap-2">
-        <button
-          type="button"
-          onClick={UploadFunction}
-          className="btn btn-primary py-2 rounded shadow"
-        >
-          {loading ? (
-            'Loading....'
-          ) : (
+        {loading ? (
+          <div className="progress barProgress">
+            <div
+              className="progress-bar"
+              role="progressbar"
+              aria-valuenow={progress}
+              aria-valuemin={0}
+              aria-valuemax={100}
+              style={{
+                width: `${progress}%`,
+              }}
+            >
+              {progress}
+              %
+            </div>
+          </div>
+        ) : (
+          <button
+            type="button"
+            onClick={UploadFunction}
+            className="btn btn-primary py-2 rounded shadow"
+          >
             <span>
               UPLOAD
               <i className="mx-4 fas fa-cloud-upload" />
             </span>
-          )}
-        </button>
+          </button>
+        )}
+
         <button
           type="button"
           onClick={() => {
