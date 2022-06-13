@@ -65,6 +65,11 @@ stages:
                     "name": "AWS_SDK_LOAD_CONFIG",
                     "value": "$(AWS_SDK_LOAD_CONFIG)",
                     "slotSetting": false
+                  },
+                  {
+                    "name": "ENCRYPTION_KEY",
+                    "value": "$(ENCRYPTION_KEY)",
+                    "slotSetting": false
                   }
                 ]
 
