@@ -32,7 +32,6 @@ export async function fetchFilesData(): Promise<FilesType[]> {
   ];
   const apiUrl = `${BACKEND_API}/api/v1/files`;
   const response = await fetch(apiUrl, options);
-  //   return res;
   if (!response.ok) {
     const message = `An error has occurreds: ${response.status}`;
     throw new Error(message);
