@@ -3,10 +3,11 @@ import UploadButton from './UploadButton';
 import Uploder from './Uploder';
 
 interface IProps {
-  fileDropZone: null;
+  fileDropZone: any;
   UploadFunction: () => void;
   loading: boolean;
-  setFileDropZone: React.Dispatch<React.SetStateAction<null>>;
+  setFileDropZone: React.Dispatch<any>;
+  progress:any
 }
 
 function UploadFileModel({
@@ -14,6 +15,7 @@ function UploadFileModel({
   loading,
   fileDropZone,
   setFileDropZone,
+  progress,
 }: IProps) {
   return (
     <div>
@@ -24,6 +26,7 @@ function UploadFileModel({
             UploadFunction={UploadFunction}
             loading={loading}
             setFileDropZone={setFileDropZone}
+            progress={progress}
           />
         ) : (
           <Uploder setFileDropZone={setFileDropZone} />

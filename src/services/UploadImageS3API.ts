@@ -1,31 +1,30 @@
 import toast from 'react-hot-toast';
+import axios from 'axios';
 import { BACKEND_API } from '../app/config';
 
 type IProps = {
   s3Url: string;
-  fileDropZone: null;
+  fileDropZone: any;
   setLoading: React.Dispatch<React.SetStateAction<boolean>>;
+  setProgress: React.Dispatch<any>;
 };
 
 interface URL {
   setLoading: React.Dispatch<React.SetStateAction<boolean>>;
+  fileDropZone: any;
 }
 
 // GET S3 URL
-export async function GetS3Url({ setLoading }: URL) {
-  const options: RequestInit = {
-    method: 'GET',
-  };
-
-  const apiUrl = `${BACKEND_API}/api/v1/pre-signed-url`;
-  const response = await fetch(apiUrl, options);
-
-  if (!response.ok) {
-    const message = `An error has occurred: ${response.status}`;
-    toast.error(message);
+export async function GetS3Url({ setLoading, fileDropZone }: URL) {
+  try {
+    const res = await axios.post(`${BACKEND_API}/api/v1/pre-signed-url`, {
+      fileName: fileDropZone ? fileDropZone.name : '',
+    });
+    return res.data;
+  } catch (e) {
+    toast.error('An error has occurred');
     setLoading(false);
   }
-  return response.json();
 }
 
 // UPLOAD API
@@ -33,18 +32,18 @@ export async function uploadImageAPI({
   s3Url,
   fileDropZone,
   setLoading,
+  setProgress,
 }: IProps) {
   try {
-    const options: RequestInit = {
-      method: 'PUT',
-      body: fileDropZone,
-    };
-    setLoading(true);
-    const response = await fetch(s3Url, options);
-    if (response.ok) {
-      setLoading(false);
-    }
+    await axios.put(s3Url, fileDropZone, {
+      onUploadProgress: (event) => {
+        const percent = Math.floor((event.loaded / event.total) * 100);
+        setProgress(percent);
+      },
+    });
+    setLoading(false);
   } catch (e) {
     toast.error('Error');
+    setLoading(false);
   }
 }

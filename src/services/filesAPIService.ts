@@ -29,31 +29,15 @@ export async function fetchFilesData(): Promise<FilesType[]> {
       contentType: '2A',
       columnMapping: '223432',
     },
-    {
-      id: 134,
-      fileName: 'xyz',
-      fileType: '2A',
-      contentType: '2A',
-      columnMapping: '223432',
-    },
-    {
-      id: 134,
-      fileName: 'xyz',
-      fileType: '2A',
-      contentType: '2A',
-      columnMapping: '223432',
-    },
   ];
   const apiUrl = `${BACKEND_API}/api/v1/files`;
   const response = await fetch(apiUrl, options);
-  // console.log('hi');
-  console.log(res);
   return res;
   if (!response.ok) {
-    const message = `An error has occurred: ${response.status}`;
+    const message = `An error has occurreds: ${response.status}`;
     throw new Error(message);
   }
-  return res;
+  return response.json();
 }
 
 export async function putFilesData(payload): Promise<FilesType[]> {

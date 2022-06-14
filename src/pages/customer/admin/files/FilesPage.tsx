@@ -21,6 +21,7 @@ type ActionsRendererProps = {
 function ActionsRenderer({ params, onFileMappingClickCallback }: ActionsRendererProps) {
   const [contentType, setcontentType] = useState('Select Content Type');
   const dispatch = useAppDispatch();
+  console.log(params);
   function onchange(e) {
     setcontentType(e.target.value);
     const { name, id } = e.data;
