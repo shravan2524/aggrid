@@ -18,6 +18,7 @@ const NotificationsIndexPage = React.lazy(() => import('pages/customer/notificat
 const ProfileIndexPage = React.lazy(() => import('pages/customer/profile/ProfilePage'));
 const CompaniesIndexPage = React.lazy(() => import('pages/customer/admin/companies/CompaniesPage'));
 const FilesIndexPage = React.lazy(() => import('pages/customer/admin/files/FilesPage'));
+const CommentsIndexPage = React.lazy(() => import('pages/customer/admin/comments/CommentsPage'));
 const WorkspacesIndexPage = React.lazy(() => import('pages/customer/workspaces/WorkspacesPage'));
 const SignInIndexPage = React.lazy(() => import('pages/public/auth/SignInPage'));
 const AuthHandlerProcessorIndexPage = React.lazy(() => import('pages/public/auth/AuthHandlerProcessorPage'));
@@ -124,6 +125,11 @@ const routes: any = [
                 text: 'Files',
                 icon: 'fa-solid fa-file-arrow-up',
               },
+              {
+                path: '/customer/admin/comments',
+                text: 'Comments',
+                icon: 'fa-solid fa-file-arrow-up',
+              },
             ]}
             />,
             children: [
@@ -138,6 +144,10 @@ const routes: any = [
               {
                 path: 'files',
                 element: <Suspense fallback={<Loader />}><FilesIndexPage /></Suspense>,
+              },
+              {
+                path: 'comments',
+                element: <Suspense fallback={<Loader />}><CommentsIndexPage /></Suspense>,
               },
             ],
           },

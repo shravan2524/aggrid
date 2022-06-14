@@ -11,7 +11,7 @@ import ReactFileUploder from 'components/FileUploder/Main';
 import { Column, ICellRendererParams } from 'ag-grid-community';
 import { useSelector } from 'react-redux';
 import ColumnMapping from 'pages/customer/reconciliation/ColumnMapping';
-import { fetchFiles, getFiles, updateContentType } from 'state/files/filesSlice';
+import { fetchFiles, getFiles, setContentTypeRequest } from 'state/files/filesSlice';
 import { updateWhile } from 'typescript';
 
 type ActionsRendererProps = {
@@ -25,17 +25,16 @@ function ActionsRenderer({ params, onFileMappingClickCallback }: ActionsRenderer
     setcontentType(e.target.value);
     const { name, id } = e.data;
     const payload = { data: { name }, id };
-    dispatch(updateContentType({ ...payload }));
+    dispatch(setContentTypeRequest({ ...payload }));
   }
-
   return (
     <div className="d-flex justify-content-between align-items-center w-100 h-100" id="columns">
       <select className="p-8" onChange={onchange}>
         <option selected disabled>Select Content Type </option>
-        <option value="2A">GSTR2A</option>
-        <option value="2B">GSTR2B</option>
+        <option value="2A">2A</option>
+        <option value="2B">2B</option>
         <option value="PR">Purchase Register</option>
-        <option value="InvoicePDF">Invoice PDF</option>
+        <option value="invoicePDF">Invoice PDF</option>
       </select>
       <button type="button" className="btn btn-sm btn-primary" onClick={() => showModal('newCompanyModal')}>
         Column Mapping
@@ -78,13 +77,13 @@ export default function FilesPage() {
       children: [
         {
           headerName: 'Name',
-          field: 'fileName',
+          field: 'customer_file_name',
           filter: 'agNumberColumnFilter',
           editable: false,
         },
         {
           headerName: 'Type',
-          field: 'fileType',
+          field: 'file_type',
           filter: 'agTextColumnFilter',
         },
         {
