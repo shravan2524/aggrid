@@ -23,9 +23,7 @@ type ActionsRendererProps = {
 function ActionsRenderer({ params, onFileMappingClickCallback }: ActionsRendererProps) {
   const [contentType, setcontentType] = useState('');
   const dispatch = useAppDispatch();
-
-  // console.log('params', params);
-
+  console.log('params', params);
   function onchange(e) {
     setcontentType(e.target.value);
     /* eslint-disable-next-line */
@@ -200,7 +198,6 @@ export default function FilesPage() {
           masterDetail
         />
       </div>
-
     </PageWrapper>
   );
 }

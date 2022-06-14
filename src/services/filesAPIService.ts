@@ -23,23 +23,17 @@ export async function fetchFilesData(): Promise<FilesType[]> {
   };
   const res = [
     {
-      customer_file_name: 'xyz',
-      file_type: '2A',
-    },
-    {
-      customer_file_name: 'xyz',
-      file_type: '2A',
-    },
-    {
-      customer_file_name: 'xyz',
-      file_type: '2A',
+      id: 134,
+      fileName: 'xyz',
+      fileType: '2A',
+      contentType: '2A',
+      columnMapping: '223432',
     },
   ];
   const apiUrl = `${BACKEND_API}/api/v1/files`;
   const response = await fetch(apiUrl, options);
-  // console.log('hi');
   if (!response.ok) {
-    const message = `An error has occurred: ${response.status}`;
+    const message = `An error has occurreds: ${response.status}`;
     throw new Error(message);
   }
   return response.json();
