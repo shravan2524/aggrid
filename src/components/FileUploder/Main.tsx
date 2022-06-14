@@ -1,6 +1,5 @@
 import { hideModal, showModal } from 'app/utils/Modal';
 import React, { useEffect, useState } from 'react';
-import { toast } from 'react-hot-toast';
 import { GetS3Url } from 'services/UploadImageS3API';
 import UploadFileModel from './UploadMode';
 import './Uploder.scss';
@@ -21,7 +20,6 @@ function ReactFileUploder() {
   };
 
   const Close = () => {
-    toast.success('Upload Successfully');
     hideModal(modalId);
     setFileDropZone(null);
     setProgress(null);
