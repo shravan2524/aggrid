@@ -7,7 +7,8 @@ interface IProps {
   UploadFunction: () => void;
   loading: boolean;
   setFileDropZone: React.Dispatch<any>;
-  progress:any
+  progress:any;
+  results:boolean;
 }
 
 function UploadFileModel({
@@ -16,6 +17,7 @@ function UploadFileModel({
   fileDropZone,
   setFileDropZone,
   progress,
+  results,
 }: IProps) {
   return (
     <div>
@@ -27,6 +29,7 @@ function UploadFileModel({
             loading={loading}
             setFileDropZone={setFileDropZone}
             progress={progress}
+            results={results}
           />
         ) : (
           <Uploder setFileDropZone={setFileDropZone} />

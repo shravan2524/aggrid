@@ -4,10 +4,11 @@ import { IFile } from './Types';
 
 interface IProps {
   UploadFunction: () => void;
-  file: IFile;
+  file: IFile[];
   loading: boolean;
   setFileDropZone: React.Dispatch<any>;
   progress: any;
+  results: boolean;
 }
 
 function UploadButton({
@@ -16,23 +17,30 @@ function UploadButton({
   loading,
   setFileDropZone,
   progress,
+  results,
 }: IProps) {
   return (
     <>
-      <div className="d-flex gap-2 justify-content-between py-2 px-4 border align-items-center mb-4 rounded flex-wrap">
-        <i className="icon text-warning fas fa-file-image" />
-        <div className="text-wrap">{file.name}</div>
-        <p>
-          Size:
-          <strong>
-            (
-            {
-              SizeInMB(file.size)
-            }
-            )
-          </strong>
-        </p>
-      </div>
+      {file.map((f, i) => (
+        <div
+          key={i}
+          className="d-flex gap-2 justify-content-between py-2 px-4 border align-items-center mb-4 rounded flex-wrap"
+        >
+          <i className="icon text-warning fas fa-file-image" />
+          <div className="text-wrap">{f.name}</div>
+          <p>
+            Size:
+            <strong>
+              (
+              {
+                SizeInMB(f.size)
+              }
+              )
+            </strong>
+          </p>
+        </div>
+      ))}
+
       <div className="d-grid gap-2">
         {loading ? (
           <div className="progress barProgress">
@@ -63,15 +71,17 @@ function UploadButton({
           </button>
         )}
 
-        <button
-          type="button"
-          onClick={() => {
-            setFileDropZone(null);
-          }}
-          className="cancel btn flex-colo"
-        >
-          <p>Cancel</p>
-        </button>
+        {!results && (
+          <button
+            type="button"
+            onClick={() => {
+              setFileDropZone(null);
+            }}
+            className="cancel btn flex-colo"
+          >
+            <p>Cancel</p>
+          </button>
+        )}
       </div>
     </>
   );
