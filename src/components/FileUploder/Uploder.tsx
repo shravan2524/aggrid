@@ -8,7 +8,7 @@ interface Iprops {
 function Uploder({ setFileDropZone }: Iprops) {
   //   onDrop
   const onDrop = useCallback((acceptedFiles: any) => {
-    setFileDropZone(acceptedFiles[0]);
+    setFileDropZone(acceptedFiles);
   }, []);
 
   //   DropZone Hook
@@ -16,8 +16,8 @@ function Uploder({ setFileDropZone }: Iprops) {
     getRootProps, getInputProps, isDragReject,
   } = useDropzone({
     onDrop,
-    multiple: false,
-    maxFiles: 1,
+    multiple: true,
+    maxFiles: 5,
   });
 
   return (
@@ -37,9 +37,8 @@ function Uploder({ setFileDropZone }: Iprops) {
       <p
         className={`text-small ${isDragReject ? 'text-danger' : 'fst-italic'}`}
       >
-        <b>File : </b>
         {isDragReject ? 'Only Supports' : 'Require'}
-        : (1) File
+        : (5) Files
       </p>
     </div>
   );

@@ -1,49 +1,36 @@
 import { hideModal, showModal } from 'app/utils/Modal';
 import React, { useEffect, useState } from 'react';
 import { toast } from 'react-hot-toast';
-import { GetS3Url, uploadImageAPI } from 'services/UploadImageS3API';
+import { GetS3Url } from 'services/UploadImageS3API';
 import UploadFileModel from './UploadMode';
 import './Uploder.scss';
 
-interface URL {
-  url: string;
-  KeyId: string;
-}
-
 function ReactFileUploder() {
   const [fileDropZone, setFileDropZone] = useState<any>();
-  const [s3Url, setS3Url] = useState<string>('');
+  const [results, setResults] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
-  const [objectKey, setObjectKey] = useState<string>('');
   const [progress, setProgress] = useState<any>();
   const modalId = 'add';
 
   const UploadFunction = () => {
     if (fileDropZone) {
-      setLoading(true);
-      GetS3Url({ setLoading, fileDropZone }).then(({ url, KeyId }: URL) => {
-        setS3Url(url);
-        setObjectKey(KeyId);
+      GetS3Url({ setLoading, fileDropZone, setProgress }).then(() => {
+        setResults(true);
       });
     }
   };
 
+  const Close = () => {
+    toast.success('Upload Successfully');
+    hideModal(modalId);
+    setFileDropZone(null);
+    setProgress(null);
+    setResults(false);
+    setLoading(false);
+  };
+
   useEffect(() => {
-    if (s3Url) {
-      uploadImageAPI({
-        s3Url,
-        fileDropZone,
-        setLoading,
-        setProgress,
-      }).then(() => {
-        setFileDropZone(null);
-        setS3Url('');
-        setProgress(null);
-        toast.success('File Uploded.');
-        hideModal(modalId);
-      });
-    }
-  }, [s3Url, fileDropZone]);
+  }, [fileDropZone, results]);
 
   return (
     <>
@@ -53,7 +40,7 @@ function ReactFileUploder() {
         onClick={() => showModal('add')}
       >
         <i className="fas fa-cloud-upload-alt" />
-        Upload New File
+        Upload New Files
       </button>
       {/* MODEL */}
       <div
@@ -70,12 +57,7 @@ function ReactFileUploder() {
               ) : (
                 <h5>Upload File:</h5>
               )}
-              <button
-                type="button"
-                className="btn-close"
-                data-bs-dismiss="modal"
-                aria-label="Close"
-              />
+              <button type="button" className="btn-close" onClick={Close} />
             </div>
             <div className="modal-body">
               <UploadFileModel
@@ -84,6 +66,7 @@ function ReactFileUploder() {
                 loading={loading}
                 fileDropZone={fileDropZone}
                 setFileDropZone={setFileDropZone}
+                results={results}
               />
             </div>
           </div>
