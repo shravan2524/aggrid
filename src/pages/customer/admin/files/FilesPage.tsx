@@ -9,8 +9,8 @@ import { agGridFilesDTO } from 'app/utils/Helpers';
 
 import ReactFileUploder from 'components/FileUploder/Main';
 import { Column, ICellRendererParams } from 'ag-grid-community';
+import ColumnMapping from 'components/ColumnMapping/ColumnMapping';
 import { useSelector } from 'react-redux';
-import ColumnMapping from 'pages/customer/reconciliation/ColumnMapping';
 import {
   fetchFiles, getFiles,
   setContentTypeRequest, setColumnMappingRequest,
@@ -21,9 +21,9 @@ type ActionsRendererProps = {
   onFileMappingClickCallback: (e: React.MouseEvent<HTMLButtonElement>, params: ICellRendererParams) => void;
 };
 function ActionsRenderer({ params, onFileMappingClickCallback }: ActionsRendererProps) {
-  const [contentType, setcontentType] = useState('');
+  const [contentType, setcontentType] = useState('GSTR2A');
   const dispatch = useAppDispatch();
-  console.log('params', params);
+  // console.log('params', params);
   function onchange(e) {
     setcontentType(e.target.value);
     /* eslint-disable-next-line */
@@ -34,14 +34,31 @@ function ActionsRenderer({ params, onFileMappingClickCallback }: ActionsRenderer
     <div className="d-flex justify-content-between align-items-center w-100 h-100" id="columns">
       <select className="p-8" onChange={onchange}>
         <option selected disabled>Select Content Type </option>
-        <option value="2A">GSTR2A</option>
-        <option value="2B">GSTR2B</option>
-        <option value="PR">Purchase Register</option>
-        <option value="InvoicePDF">Invoice PDF</option>
+        {
+          (params.data) && (params.data.fileType === '2A')
+            ? <option selected value="2A">GSTR2A</option>
+            : null
+        }
+        {
+          (params.data) && (params.data.fileType === '2B')
+            ? <option selected value="2B">GSTR2B</option>
+            : <option>GSTR2B</option>
+        }
+        {
+          (params.data) && (params.data.fileType === 'PR')
+            ? <option selected value="PR">Purchase Register</option>
+            : <option>Purchase Register</option>
+        }
+        <option>Invoice PDF</option>
       </select>
-      <button type="button" className="btn btn-sm btn-primary" onClick={() => showModal('newCompanyModal')}>
-        Column Mapping
-      </button>
+      {
+        (params.data)
+        && (params.data.fileType === '2A' || params.data.fileType === '2B' || params.data.fileType === 'PR')
+          ? (
+            <ColumnMapping id={params.data.id} fileType={params.data.fileType} />
+          )
+          : null
+      }
     </div>
   );
 }
@@ -174,7 +191,6 @@ export default function FilesPage() {
   return (
     <PageWrapper pageTitle="Files" icon="fa-solid fa-file-arrow-up">
       <div className="ag-theme-alpine grid-container-style">
-        <ColumnMapping />
         <AgGridReact
           containerStyle={containerStyle}
           ref={gridRef}
