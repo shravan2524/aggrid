@@ -21,16 +21,8 @@ export async function fetchFilesData(): Promise<FilesType[]> {
     method: 'GET',
     credentials: 'include',
   };
-  const res = [
-    {
-      id: 134,
-      fileName: 'xyz',
-      fileType: '2A',
-      contentType: '2A',
-      columnMapping: '223432',
-    },
-  ];
   const apiUrl = `${BACKEND_API}/api/v1/files`;
+  // const apiUrl = 'https://beta.finkraft.ai/api/v1/files';
   const response = await fetch(apiUrl, options);
   if (!response.ok) {
     const message = `An error has occurreds: ${response.status}`;
@@ -81,6 +73,7 @@ export async function setContentType(payload): Promise<FilesType[]> {
 }
 
 export async function setColumnMapping(payload): Promise<FilesType[]> {
+  console.log(payload.column_mapping_for_file, 'ah');
   const options: RequestInit = {
     headers: {
       Accept: 'application/json',
@@ -88,10 +81,11 @@ export async function setColumnMapping(payload): Promise<FilesType[]> {
     },
     method: 'PUT',
     credentials: 'include',
-    body: JSON.stringify({ columnMapping: payload.data }),
+    body: JSON.stringify({ column_mapping_for_file: payload.column_mapping_for_file }),
   };
 
-  const apiUrl = `${BACKEND_API}/api/v1/files/${payload.id}/column-mapping`;
+  // const apiUrl = `https://beta.finkraft.ai/api/v1/files/${payload.data}/column-mapping`;
+  const apiUrl = `${BACKEND_API}/api/v1/files/${payload.data}/column-mapping`;
   const response = await fetch(apiUrl, options);
   if (!response.ok) {
     const message = `An error has occurred: ${response.status}`;
