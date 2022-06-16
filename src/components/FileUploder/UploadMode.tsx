@@ -7,7 +7,7 @@ interface IProps {
   UploadFunction: () => void;
   loading: boolean;
   setFileDropZone: React.Dispatch<any>;
-  progress:any;
+  progress:number;
   results:boolean;
 }
 

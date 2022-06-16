@@ -4,36 +4,36 @@ import { BACKEND_API } from '../app/config';
 
 interface URL {
   setLoading: React.Dispatch<React.SetStateAction<boolean>>;
-  fileDropZone: any;
-  setProgress: React.Dispatch<any>;
+  file: any;
+  setProgress: React.Dispatch<React.SetStateAction<number[]>>;
 }
 
 // GET PRE-SIGNED URL
-function getUrlFunction(file) {
+function getUrlFunction(file: File) {
   return axios.post(`${BACKEND_API}/api/v1/pre-signed-url`, {
     fileName: file ? file.name : '',
   });
 }
 
 // PUT OBJECTS IN AWS S3
-function putObjectsFunction(getUrl, file, setProgress) {
+function putObjectsFunction(getUrl, file: File, setProgress) {
   return axios.put(getUrl.data.url, file, {
-    onUploadProgress: (event) => {
+    onUploadProgress: (event: any) => {
       const percent = Math.floor((event.loaded / event.total) * 100);
-      setProgress(percent);
+      setProgress([percent]);
     },
   });
 }
 
 // FINAL API'S
-export async function GetS3Url({ setLoading, fileDropZone, setProgress }: URL) {
+export async function GetS3Url({ setLoading, file, setProgress }: URL) {
   try {
     setLoading(true);
-    fileDropZone.forEach(async (file: any) => {
-      const getUrl = await getUrlFunction(file);
+    const getUrl = await getUrlFunction(file);
+    if (getUrl) {
       await putObjectsFunction(getUrl, file, setProgress);
-      return getUrl.data;
-    });
+      console.log(getUrl.data);
+    }
   } catch (e) {
     toast.error('An error has occurred');
     setLoading(false);
