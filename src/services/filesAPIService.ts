@@ -73,7 +73,7 @@ export async function setContentType(payload): Promise<FilesType[]> {
 }
 
 export async function setColumnMapping(payload): Promise<FilesType[]> {
-  console.log(payload.column_mapping_for_file, 'ah');
+  // console.log(payload.column_mapping_for_file, 'ah');
   const options: RequestInit = {
     headers: {
       Accept: 'application/json',
@@ -81,7 +81,7 @@ export async function setColumnMapping(payload): Promise<FilesType[]> {
     },
     method: 'PUT',
     credentials: 'include',
-    body: JSON.stringify({ column_mapping_for_file: payload.column_mapping_for_file }),
+    body: JSON.stringify({ columnMapping: payload.columnMapping }),
   };
 
   // const apiUrl = `https://beta.finkraft.ai/api/v1/files/${payload.data}/column-mapping`;

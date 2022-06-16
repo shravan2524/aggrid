@@ -1,19 +1,12 @@
-.mapping{
-	height: 25rem;
-	width: 26.8rem;
-	padding: 1rem 3rem 1rem 3rem;
-	overflow-x: hidden;
-	overflow-y: scroll;
+th>div select {
+  width: 11rem !important;
 }
-.modal-dialog, .modal-content{
-	justify-content: center !important;
+
+table {
+  margin-bottom: 1em;
 }
-th > div select{
-	width: 11rem !important;
-}
-table{
-	margin-bottom: 1em;
-}
-.modal-content{
-	width: 27rem;
+
+.columnMapping th {
+  background-color: #c0c0c0;
+  padding: .2rem;
 }
