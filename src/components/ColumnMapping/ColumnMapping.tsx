@@ -419,7 +419,7 @@ export default function ColumnMapping({ fileType, id } :Type) {
         <Modal.Header closeButton>
           <Modal.Title>Modal heading</Modal.Title>
         </Modal.Header>
-        <Modal.Body className='mapping'>
+        <Modal.Body className="mapping">
           {
             contentPreview
               ? (
