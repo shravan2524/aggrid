@@ -17,7 +17,6 @@ function Uploder({ setFileDropZone }: Iprops) {
   } = useDropzone({
     onDrop,
     multiple: true,
-    maxFiles: 5,
   });
 
   return (
@@ -33,13 +32,12 @@ function Uploder({ setFileDropZone }: Iprops) {
         Drag & Drop or
         <span className="text-warning"> Browser</span>
       </p>
-
-      <p
+      {/* <p
         className={`text-small ${isDragReject ? 'text-danger' : 'fst-italic'}`}
       >
         {isDragReject ? 'Only Supports' : 'Require'}
         : (5) Files
-      </p>
+      </p> */}
     </div>
   );
 }
