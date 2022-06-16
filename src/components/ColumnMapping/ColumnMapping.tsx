@@ -20,367 +20,392 @@ export default function ColumnMapping({ fileType, id } :Type) {
   const [column2A, setcolumn2A] = useState([
     {
       columnName: 'id',
-      selected: '',
+      columnType: '',
     },
     {
       columnName: 'customerFileId',
-      selected: '',
+      columnType: '',
     },
     {
       columnName: 'workspace',
-      selected: '',
+      columnType: '',
     },
     {
       columnName: 'invoiceNumber',
-      selected: '',
+      columnType: '',
     },
     {
       columnName: 'sellerGSTIN',
-      selected: '',
+      columnType: '',
     },
     {
       columnName: 'buyerGSTIN',
-      selected: '',
+      columnType: '',
     },
     {
       columnName: 'invoiceDate',
-      selected: '',
+      columnType: '',
     },
     {
       columnName: 'filingPeriod',
-      selected: '',
+      columnType: '',
     },
     {
       columnName: 'documentType',
-      selected: '',
+      columnType: '',
     },
     {
       columnName: 'originalInvoiceNumber',
-      selected: '',
+      columnType: '',
     },
     {
       columnName: 'originalInvoiceDate',
-      selected: '',
+      columnType: '',
     },
     {
       columnName: 'totalAmount',
-      selected: '',
+      columnType: '',
     },
     {
       columnName: 'igst',
-      selected: '',
+      columnType: '',
     },
     {
       columnName: 'sgst',
-      selected: '',
+      columnType: '',
     },
     {
       columnName: 'cgst',
-      selected: '',
+      columnType: '',
     },
     {
       columnName: 'totalGst',
-      selected: '',
+      columnType: '',
     },
     {
       columnName: 'taxableAmount',
-      selected: '',
+      columnType: '',
     },
     {
       columnName: 'taxRate',
-      selected: '',
+      columnType: '',
     },
     {
       columnName: 'irn',
-      selected: '',
+      columnType: '',
     },
     {
       columnName: 'rowUpdateDate',
-      selected: '',
+      columnType: '',
     },
     {
       columnName: 'irnDate',
-      selected: '',
+      columnType: '',
     },
     {
       columnName: 'extraColumns',
-      selected: '',
+      columnType: '',
     },
     {
       columnName: 'createdBy',
-      selected: '',
+      columnType: '',
     },
     {
       columnName: 'createdAt',
-      selected: '',
+      columnType: '',
     },
     {
       columnName: 'modifiedBy',
-      selected: '',
+      columnType: '',
     },
     {
       columnName: 'modifiedAt',
-      selected: '',
+      columnType: '',
     },
     {
       columnName: 'errors',
-      selected: '',
+      columnType: '',
     },
   ]);
   const [column2B, setcolumn2B] = useState([
     {
       columnName: 'id',
-      selected: '',
+      columnType: '',
     },
     {
       columnName: 'customerFileId',
-      selected: '',
+      columnType: '',
     },
     {
       columnName: 'workspace',
-      selected: '',
+      columnType: '',
     },
     {
       columnName: 'invoiceNumber',
-      selected: '',
+      columnType: '',
     },
     {
       columnName: 'sellerGSTIN',
-      selected: '',
+      columnType: '',
     },
     {
       columnName: 'buyerGSTIN',
-      selected: '',
+      columnType: '',
     },
     {
       columnName: 'invoiceDate',
-      selected: '',
+      columnType: '',
     },
     {
       columnName: 'filingPeriod',
-      selected: '',
+      columnType: '',
     },
     {
       columnName: 'documentType',
-      selected: '',
+      columnType: '',
     },
     {
       columnName: 'originalInvoiceNumber',
-      selected: '',
+      columnType: '',
     },
     {
       columnName: 'originalInvoiceDate',
-      selected: '',
+      columnType: '',
     },
     {
       columnName: 'totalAmount',
-      selected: '',
+      columnType: '',
     },
     {
       columnName: 'igst',
-      selected: '',
+      columnType: '',
     },
     {
       columnName: 'sgst',
-      selected: '',
+      columnType: '',
     },
     {
       columnName: 'cgst',
-      selected: '',
+      columnType: '',
     },
     {
       columnName: 'totalGst',
-      selected: '',
+      columnType: '',
     },
     {
       columnName: 'taxableAmount',
-      selected: '',
+      columnType: '',
     },
     {
       columnName: 'taxRate',
-      selected: '',
+      columnType: '',
     },
     {
       columnName: 'irn',
-      selected: '',
+      columnType: '',
     },
     {
       columnName: 'rowUpdateDate',
-      selected: '',
+      columnType: '',
     },
     {
       columnName: 'irnDate',
-      selected: '',
+      columnType: '',
     },
     {
       columnName: 'itcAvailability',
-      selected: '',
+      columnType: '',
     },
     {
       columnName: 'reason',
-      selected: '',
+      columnType: '',
     },
     {
       columnName: 'applicablePercentOfTaxRate',
-      selected: '',
+      columnType: '',
     },
     {
       columnName: 'extraColumns',
-      selected: '',
+      columnType: '',
     },
     {
       columnName: 'createdBy',
-      selected: '',
+      columnType: '',
     },
     {
       columnName: 'createdAt',
-      selected: '',
+      columnType: '',
     },
     {
       columnName: 'modifiedBy',
-      selected: '',
+      columnType: '',
     },
     {
       columnName: 'modifiedAt',
-      selected: '',
+      columnType: '',
     },
     {
       columnName: 'errors',
-      selected: '',
+      columnType: '',
     },
   ]);
   const [columnPR, setcolumnPR] = useState([
     {
       columnName: 'id',
-      selected: '',
+      columnType: '',
     },
     {
       columnName: 'customerFileId',
-      selected: '',
+      columnType: '',
     },
     {
       columnName: 'workspace',
-      selected: '',
+      columnType: '',
     },
     {
       columnName: 'invoiceNumber',
-      selected: '',
+      columnType: '',
     },
     {
       columnName: 'sellerGSTIN',
-      selected: '',
+      columnType: '',
     },
     {
       columnName: 'buyerGSTIN',
-      selected: '',
+      columnType: '',
     },
     {
       columnName: 'invoiceDate',
-      selected: '',
+      columnType: '',
     },
     {
       columnName: 'filingPeriod',
-      selected: '',
+      columnType: '',
     },
     {
       columnName: 'documentType',
-      selected: '',
+      columnType: '',
     },
     {
       columnName: 'originalInvoiceNumber',
-      selected: '',
+      columnType: '',
     },
     {
       columnName: 'originalInvoiceDate',
-      selected: '',
+      columnType: '',
     },
     {
       columnName: 'totalAmount',
-      selected: '',
+      columnType: '',
     },
     {
       columnName: 'igst',
-      selected: '',
+      columnType: '',
     },
     {
       columnName: 'sgst',
-      selected: '',
+      columnType: '',
     },
     {
       columnName: 'cgst',
-      selected: '',
+      columnType: '',
     },
     {
       columnName: 'totalGst',
-      selected: '',
+      columnType: '',
     },
     {
       columnName: 'taxableAmount',
-      selected: '',
+      columnType: '',
     },
     {
       columnName: 'taxRate',
-      selected: '',
+      columnType: '',
     },
     {
       columnName: 'irn',
-      selected: '',
+      columnType: '',
     },
     {
       columnName: 'fileName',
-      selected: '',
+      columnType: '',
     },
     {
       columnName: 'VoucherNumber',
-      selected: '',
+      columnType: '',
     },
     {
       columnName: 'rowUpdateDate',
-      selected: '',
+      columnType: '',
     },
     {
       columnName: 'extraColumns',
-      selected: '',
+      columnType: '',
     },
     {
       columnName: 'createdBy',
-      selected: '',
+      columnType: '',
     },
     {
       columnName: 'createdAt',
-      selected: '',
+      columnType: '',
     },
     {
       columnName: 'modifiedBy',
-      selected: '',
+      columnType: '',
     },
     {
       columnName: 'modifiedAt',
-      selected: '',
+      columnType: '',
     },
     {
       columnName: 'errors',
-      selected: '',
+      columnType: '',
     },
   ]);
+  const [column, setcolumn] = useState([
+    {
+      column_mapping_for_file: {
+      },
+    },
+  ]);
+
   function onchange(keyName, e) {
     if (fileType === '2A') {
       const tempcontentTypeselect = column2A;
       const ind = tempcontentTypeselect.findIndex((v) => v.columnName === e.target.value);
-      tempcontentTypeselect[ind].selected = keyName;
+      tempcontentTypeselect[ind].columnType = keyName;
+      const tempcol = {
+        keyName: {
+          columnName: tempcontentTypeselect[ind].columnName,
+        },
+      };
+      console.log(tempcol, keyName, e.target.value);
       setcolumn2A(tempcontentTypeselect);
       settest(!test);
     } else if (fileType === '2B') {
       const tempcontentTypeselect = column2B;
       const ind = tempcontentTypeselect.findIndex((v) => v.columnName === e.target.value);
-      tempcontentTypeselect[ind].selected = keyName;
+      tempcontentTypeselect[ind].columnType = keyName;
       setcolumn2B(tempcontentTypeselect);
+      const tempcol = {
+        keyName: {
+          columnName: tempcontentTypeselect[ind],
+        },
+      };
+      console.log(tempcol);
       settest(!test);
     } else {
       const tempcontentTypeselect = columnPR;
       const ind = tempcontentTypeselect.findIndex((v) => v.columnName === e.target.value);
-      tempcontentTypeselect[ind].selected = keyName;
+      tempcontentTypeselect[ind].columnType = keyName;
       setcolumnPR(tempcontentTypeselect);
+      const tempcol = {
+        keyName: {
+          columnName: tempcontentTypeselect[ind],
+        },
+      };
+      console.log(tempcol);
       settest(!test);
     }
   }
@@ -405,7 +430,6 @@ export default function ColumnMapping({ fileType, id } :Type) {
       method: 'GET',
       credentials: 'include',
     };
-    // const apiUrl = `https://beta.finkraft.ai/api/v1/files/${id}/preview`;
     const apiUrl = `${BACKEND_API}/api/v1/files/${id}/preview`;
     fetch(apiUrl, options)
       .then((response) => response.json())
@@ -434,18 +458,18 @@ export default function ColumnMapping({ fileType, id } :Type) {
                             {
                               (fileType === '2A')
                                 ? column2A.map((e) => (
-                                  (e.selected === keyName || e.selected === '')
+                                  (e.columnType === keyName || e.columnType === '')
                                     ? <option key={e.columnName}>{e.columnName}</option>
                                     : null
                                 ))
                                 : (fileType === '2B')
                                   ? column2B.map((e) => (
-                                    (e.selected === keyName || e.selected === '')
+                                    (e.columnType === keyName || e.columnType === '')
                                       ? <option key={e.columnName}>{e.columnName}</option>
                                       : null
                                   ))
                                   : columnPR.map((e) => (
-                                    (e.selected === keyName || e.selected === '')
+                                    (e.columnType === keyName || e.columnType === '')
                                       ? <option key={e.columnName}>{e.columnName}</option>
                                       : null
                                   ))
