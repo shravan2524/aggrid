@@ -36,5 +36,6 @@ export async function postComments(payload): Promise<Comment[]> {
     const message = `An error has occurred: ${response.status}`;
     throw new Error(message);
   }
+
   return response.json();
 }
