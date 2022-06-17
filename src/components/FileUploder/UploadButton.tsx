@@ -7,7 +7,7 @@ interface IProps {
   file: IFile[];
   loading: boolean;
   setFileDropZone: React.Dispatch<any>;
-  progress: any;
+  progress: number;
   results: boolean;
 }
 
@@ -19,28 +19,30 @@ function UploadButton({
   progress,
   results,
 }: IProps) {
+  // Total Files Size
+  const Size = file.reduce((accumulator, object) => accumulator + object.size, 0);
   return (
     <>
-      {file.map((f, i) => (
-        <div
-          key={i}
-          className="d-flex gap-2 justify-content-between py-2 px-4 border align-items-center mb-4 rounded flex-wrap"
-        >
-          <i className="icon text-warning fas fa-file-image" />
-          <div className="text-wrap">{f.name}</div>
-          <p>
-            Size:
-            <strong>
-              (
-              {
-                SizeInMB(f.size)
-              }
-              )
-            </strong>
-          </p>
+      <div className="d-flex gap-2 justify-content-between py-2 px-4 border align-items-center mb-4 rounded flex-wrap">
+        <i className="icon text-warning fas fa-file-upload" />
+        <div className="text-wrap">
+          {file.length > 1
+            ? `(${file.length}) Files`
+            : `(${file.length}) File`}
+          {' '}
+          Selected
         </div>
-      ))}
-
+        <p>
+          Size:
+          <strong>
+            (
+            {
+              SizeInMB(Size)
+            }
+            )
+          </strong>
+        </p>
+      </div>
       <div className="d-grid gap-2">
         {loading ? (
           <div className="progress barProgress">
