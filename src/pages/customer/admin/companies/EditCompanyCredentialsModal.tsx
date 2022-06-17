@@ -12,6 +12,7 @@ import { fetchCompanyCredentialsData } from 'services/credentialsAPIService';
 
 interface EditCompanyFormProps {
   username: string;
+  password: string;
 }
 
 interface EditCompanyCredentialsModalProps {
@@ -30,6 +31,7 @@ export default function EditCompanyCredentialsModal({ companyToEditCredentials }
 
   const schema = yup.object({
     username: yup.string().required(),
+    password: yup.string().required(),
   }).required();
 
   const {
@@ -41,8 +43,8 @@ export default function EditCompanyCredentialsModal({ companyToEditCredentials }
     resolver: yupResolver(schema),
   });
 
-  const onSubmit = ({ username }: EditCompanyFormProps) => {
-    const payload = { data: { username }, id: companyToEditCredentials?.id };
+  const onSubmit = ({ username, password }: EditCompanyFormProps) => {
+    const payload = { data: { username, password }, id: companyToEditCredentials?.id };
     // dispatch(updateCompanyRequest({ ...payload }));
   };
 
@@ -78,7 +80,7 @@ export default function EditCompanyCredentialsModal({ companyToEditCredentials }
                 </label>
               </div>
               <div className="mb-3">
-                <label htmlFor="name" className="col-form-label">Username:</label>
+                <label htmlFor="username" className="col-form-label">Username:</label>
                 <input
                   {...register('username')}
                   id="username"
@@ -88,6 +90,22 @@ export default function EditCompanyCredentialsModal({ companyToEditCredentials }
                 {errors.username && (
                 <div id="validationTitleFeedback" className="invalid-feedback">
                   <p>{errors.username?.message}</p>
+                </div>
+                )}
+              </div>
+
+              <div className="mb-3">
+                <label htmlFor="password" className="col-form-label">Password:</label>
+                <input
+                  {...register('password')}
+                  id="password"
+                  type="password"
+                  className={classNames(['form-control form-control-sm', { 'is-invalid': errors.password }])}
+                  placeholder="Enter Credentials password ..."
+                />
+                {errors.password && (
+                <div id="validationTitleFeedback" className="invalid-feedback">
+                  <p>{errors.password?.message}</p>
                 </div>
                 )}
               </div>
