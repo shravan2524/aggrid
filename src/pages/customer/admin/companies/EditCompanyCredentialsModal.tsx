@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from 'react';
+import React, { useCallback, useEffect, useMemo } from 'react';
 import * as yup from 'yup';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup/dist/yup';
@@ -7,34 +7,31 @@ import { useSelector } from 'react-redux';
 import { useAppDispatch } from 'app/hooks';
 import CustomButton from 'components/CustomButton';
 import { getSelectedCustomer } from 'state/customers/customersSlice';
-import {
-  fetchCompanies,
-  getCompanies,
-  isPutLoadingSelector, updateCompanyRequest,
-
-} from 'state/companies/companiesSlice';
-import { hideModal } from 'app/utils/Modal';
 import { CompaniesType } from 'services/companiesAPIService';
+import { fetchCompanyCredentialsData } from 'services/credentialsAPIService';
 
 interface EditCompanyFormProps {
-  name: string;
-  parent: number | undefined;
+  username: string;
+  password: string;
 }
 
-interface EditCompanyModalProps {
-  companyToEdit: CompaniesType | null;
+interface EditCompanyCredentialsModalProps {
+  companyToEditCredentials: CompaniesType | null;
 }
-export default function EditCompanyModal({ companyToEdit }: EditCompanyModalProps) {
+export default function EditCompanyCredentialsModal({ companyToEditCredentials }: EditCompanyCredentialsModalProps) {
   const dispatch = useAppDispatch();
-  const isLoading = useSelector(isPutLoadingSelector);
+  const isLoading = false;
   const selectedCustomer = useSelector(getSelectedCustomer);
-  const companySelector = useSelector(getCompanies);
 
-  const modalId = useMemo(() => 'editCompanyModal', []);
+  const modalId = useMemo(() => 'editCredentialsCompanyModal', []);
+
+  const onModalClose = useCallback(() => {
+
+  }, []);
 
   const schema = yup.object({
-    name: yup.string().required(),
-    parent: yup.string(),
+    username: yup.string().required(),
+    password: yup.string().required(),
   }).required();
 
   const {
@@ -46,21 +43,18 @@ export default function EditCompanyModal({ companyToEdit }: EditCompanyModalProp
     resolver: yupResolver(schema),
   });
 
-  const onSubmit = ({ name, parent }: EditCompanyFormProps) => {
-    const payload = { data: { name, parent: Number(parent), customer_id: Number(selectedCustomer?.id) }, id: companyToEdit?.id };
-    dispatch(updateCompanyRequest({ ...payload }));
+  const onSubmit = ({ username, password }: EditCompanyFormProps) => {
+    const payload = { data: { username, password }, id: companyToEditCredentials?.id };
+    // dispatch(updateCompanyRequest({ ...payload }));
   };
 
   useEffect(() => {
-    dispatch(fetchCompanies()).then(() => {
-      hideModal(modalId);
-    });
-  }, [isLoading]);
-
-  useEffect(() => {
-    const parentCom = companySelector.find((i) => i.parent === companyToEdit?.parent);
-    reset({ name: companyToEdit?.name, parent: parentCom?.parent });
-  }, [companyToEdit]);
+    if (companyToEditCredentials) {
+      fetchCompanyCredentialsData(companyToEditCredentials?.id).then((res) => {
+        console.log(res);
+      });
+    }
+  }, [companyToEditCredentials]);
 
   return (
     <div className="modal fade" id={modalId} aria-labelledby={`new${modalId}Label`} aria-hidden="true">
@@ -68,7 +62,7 @@ export default function EditCompanyModal({ companyToEdit }: EditCompanyModalProp
         <div className="modal-content">
           <form onSubmit={handleSubmit(onSubmit)}>
             <div className="modal-header">
-              <h5 className="modal-title" id={`new${modalId}Label`}>Edit Company</h5>
+              <h5 className="modal-title" id={`new${modalId}Label`}>Edit Company Credentials</h5>
               <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close" />
             </div>
             <div className="modal-body">
@@ -79,37 +73,39 @@ export default function EditCompanyModal({ companyToEdit }: EditCompanyModalProp
                   {selectedCustomer?.title}
                 </label>
               </div>
-
               <div className="mb-3">
-                <label htmlFor="customer" className="col-form-label">Parent:</label>
-                <select
-                  {...register('parent')}
-                  className={classNames(['form-select form-select-sm', { 'is-invalid': errors.parent }])}
-                >
-                  <option value="">Please select Parent Company ...</option>
-                  {companySelector && companySelector.map((option) => (
-                    <option key={option.id} value={option.id}>{option.name}</option>
-                  ))}
-                </select>
-
-                {errors.parent && (
+                <label htmlFor="customer" className="col-form-label">
+                  Company:
+                  {companyToEditCredentials?.name}
+                </label>
+              </div>
+              <div className="mb-3">
+                <label htmlFor="username" className="col-form-label">Username:</label>
+                <input
+                  {...register('username')}
+                  id="username"
+                  className={classNames(['form-control form-control-sm', { 'is-invalid': errors.username }])}
+                  placeholder="Enter Credentials username ..."
+                />
+                {errors.username && (
                 <div id="validationTitleFeedback" className="invalid-feedback">
-                  <p>{errors.parent?.message}</p>
+                  <p>{errors.username?.message}</p>
                 </div>
                 )}
               </div>
 
               <div className="mb-3">
-                <label htmlFor="name" className="col-form-label">Title:</label>
+                <label htmlFor="password" className="col-form-label">Password:</label>
                 <input
-                  {...register('name')}
-                  id="title"
-                  className={classNames(['form-control form-control-sm', { 'is-invalid': errors.name }])}
-                  placeholder="Enter Company name ..."
+                  {...register('password')}
+                  id="password"
+                  type="password"
+                  className={classNames(['form-control form-control-sm', { 'is-invalid': errors.password }])}
+                  placeholder="Enter Credentials password ..."
                 />
-                {errors.name && (
+                {errors.password && (
                 <div id="validationTitleFeedback" className="invalid-feedback">
-                  <p>{errors.name?.message}</p>
+                  <p>{errors.password?.message}</p>
                 </div>
                 )}
               </div>
