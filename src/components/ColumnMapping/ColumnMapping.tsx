@@ -42,8 +42,7 @@ export default function ColumnMapping({ fileType, id }: Type) {
       method: 'GET',
       credentials: 'include',
     };
-    // const apiUrl = `${BACKEND_API}/api/v1/files/${id}/preview`;
-    const apiUrl = `https://beta.finkraft.ai/api/v1/files/${id}/preview`;
+    const apiUrl = `${BACKEND_API}/api/v1/files/${id}/preview`;
     fetch(apiUrl, options)
       .then((response) => response.json())
       .then((data1) => setcontentPreview(data1.contentPreview));
