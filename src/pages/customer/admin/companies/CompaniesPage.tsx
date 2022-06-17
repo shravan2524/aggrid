@@ -2,28 +2,39 @@ import React, {
   useCallback, useEffect, useMemo, useRef, useState,
 } from 'react';
 import { AgGridReact } from 'ag-grid-react';
-import { showModal } from 'app/utils/Modal';
+import { hideModal, showModal } from 'app/utils/Modal';
 import { useAppDispatch, useCompanies, useWindowDimensions } from 'app/hooks';
 import PageWrapper from 'components/PageWrapper';
 import {
   fetchCompanies, updateCompanyRequest,
 } from 'state/companies/companiesSlice';
-import { agGridCompaniesDTO, agGridDateFormatter } from 'app/utils/Helpers';
+import { agGridCompaniesDTO } from 'app/utils/Helpers';
 import { CompaniesType } from 'services/companiesAPIService';
 import { useSelector } from 'react-redux';
 import { availableCustomers } from 'state/customers/customersSlice';
 import { ICellRendererParams } from 'ag-grid-community';
 import NewCompanyModal from './NewCompanyModal';
 import EditCompanyModal from './EditCompanyModal';
+import EditCompanyCredentialsModal from './EditCompanyCredentialsModal';
 
 type ActionsRendererProps = {
   params: ICellRendererParams;
   onEditClickCallback: (e: React.MouseEvent<HTMLButtonElement>, params: ICellRendererParams) => void;
+  onCredentialsClickCallback: (e: React.MouseEvent<HTMLButtonElement>, params: ICellRendererParams) => void;
 };
-function ActionsRenderer({ params, onEditClickCallback }: ActionsRendererProps) {
+function ActionsRenderer({ params, onEditClickCallback, onCredentialsClickCallback }: ActionsRendererProps) {
   return (
-    <div className="d-flex justify-content-start align-items-center w-100 h-100">
-      <button type="button" className="btn btn-sm btn-light" onClick={(e) => onEditClickCallback(e, params)}><i className="fa-solid fa-pen-to-square" /></button>
+    <div className="d-flex justify-content-around align-items-center w-100 h-100 ">
+      <button type="button" className="btn btn-sm btn-light" onClick={(e) => onEditClickCallback(e, params)}>
+        <i className="fa-solid fa-pen-to-square" />
+        {' '}
+        Edit
+      </button>
+      <button type="button" className="btn btn-sm btn-danger" onClick={(e) => onCredentialsClickCallback(e, params)}>
+        <i className="fa-solid fa-key" />
+        {' '}
+        Credentials
+      </button>
     </div>
   );
 }
@@ -73,6 +84,7 @@ export default function CompaniesPage() {
   const { height, width } = useWindowDimensions();
   const rows = useCompanies();
   const [companyToEdit, setCompanyToEdit] = useState<CompaniesType | null>(null);
+  const [companyToEditCredentials, setCompanyToEditCredentials] = useState<CompaniesType | null>(null);
 
   const containerStyle = useMemo(() => ({
     width: '100%',
@@ -82,7 +94,18 @@ export default function CompaniesPage() {
 
   const onEditClickCallback = (e, params) => {
     setCompanyToEdit(params.data);
-    showModal('editCompanyModal');
+    showModal('editCompanyModal', () => {
+      setCompanyToEdit(null);
+      setCompanyToEditCredentials(null);
+    });
+  };
+
+  const onCredentialsClickCallback = (e, params) => {
+    setCompanyToEditCredentials(params.data);
+    showModal('editCredentialsCompanyModal', () => {
+      setCompanyToEdit(null);
+      setCompanyToEditCredentials(null);
+    });
   };
 
   const [columnDefs, setColumnDefs] = useState([
@@ -115,7 +138,13 @@ export default function CompaniesPage() {
         {
           field: 'actions',
           // eslint-disable-next-line react/no-unstable-nested-components
-          cellRenderer: (params) => (<ActionsRenderer params={params} onEditClickCallback={(e) => onEditClickCallback(e, params)} />),
+          cellRenderer: (params) => (
+            <ActionsRenderer
+              params={params}
+              onEditClickCallback={(e) => onEditClickCallback(e, params)}
+              onCredentialsClickCallback={(e) => onCredentialsClickCallback(e, params)}
+            />
+          ),
           editable: false,
           filter: false,
           cellStyle: (params) => {
@@ -212,6 +241,7 @@ export default function CompaniesPage() {
       <div className=" ag-theme-alpine grid-container-style">
         <NewCompanyModal />
         <EditCompanyModal companyToEdit={companyToEdit} />
+        <EditCompanyCredentialsModal companyToEditCredentials={companyToEditCredentials} />
         <AgGridReact
           containerStyle={containerStyle}
           ref={gridRef}

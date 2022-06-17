@@ -68,7 +68,7 @@ export default function EditCompanyModal({ companyToEdit }: EditCompanyModalProp
         <div className="modal-content">
           <form onSubmit={handleSubmit(onSubmit)}>
             <div className="modal-header">
-              <h5 className="modal-title" id={`new${modalId}Label`}>New Company</h5>
+              <h5 className="modal-title" id={`new${modalId}Label`}>Edit Company</h5>
               <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close" />
             </div>
             <div className="modal-body">
