@@ -1,9 +1,11 @@
+import { convertToObject } from 'typescript';
 import { BACKEND_API } from '../app/config';
 
 export interface CommentType {
 }
 
 export async function fetchCommentsData(): Promise<Comment[]> {
+  console.log(BACKEND_API);
   const options: RequestInit = {
     method: 'GET',
     credentials: 'include',
@@ -14,20 +16,22 @@ export async function fetchCommentsData(): Promise<Comment[]> {
     const message = `An error has occurred: ${response.status}`;
     throw new Error(message);
   }
+  console.log(response.json(), 'shravan');
   return response.json();
 }
 
 export async function postComments(payload): Promise<Comment[]> {
+  console.log(payload, 'shravanca');
   const options: RequestInit = {
     headers: {
       Accept: 'application/json',
       'Content-Type': 'application/json',
     },
-    method: 'PUT',
+    method: 'POST',
     credentials: 'include',
-    body: JSON.stringify({ ...payload.comment }),
+    body: JSON.stringify({ ...payload.Comments }),
   };
-  const apiUrl = `${BACKEND_API}/api/v1/comments`;
+  const apiUrl = `${BACKEND_API}/api/v1/comments/`;
   const response = await fetch(apiUrl, options);
   if (!response.ok) {
     const message = `An error has occurred: ${response.status}`;

@@ -22,7 +22,6 @@ export async function fetchFilesData(): Promise<FilesType[]> {
     credentials: 'include',
   };
   const apiUrl = `${BACKEND_API}/api/v1/files`;
-  // const apiUrl = 'https://beta.finkraft.ai/api/v1/files';
   const response = await fetch(apiUrl, options);
   if (!response.ok) {
     const message = `An error has occurreds: ${response.status}`;
@@ -52,7 +51,17 @@ export async function putFilesData(payload): Promise<FilesType[]> {
 }
 
 export async function setContentType(payload): Promise<FilesType[]> {
-  console.log('payload', payload);
+  let data1;
+  if (payload.data === 'GSTR2B') {
+    data1 = '2B';
+  } else if (payload.data === 'GSTR2A') {
+    data1 = '2A';
+  } else if (payload.data === 'Purchase Register') {
+    data1 = 'PR';
+  } else {
+    data1 = 'invoicePDF';
+  }
+  console.log(data1);
   const options: RequestInit = {
     headers: {
       Accept: 'application/json',
@@ -60,7 +69,7 @@ export async function setContentType(payload): Promise<FilesType[]> {
     },
     method: 'PUT',
     credentials: 'include',
-    body: JSON.stringify({ fileType: payload.data }),
+    body: JSON.stringify({ fileType: payload.data1 }),
   };
 
   const apiUrl = `${BACKEND_API}/api/v1/files/${payload.id}/content-type`;
@@ -73,7 +82,6 @@ export async function setContentType(payload): Promise<FilesType[]> {
 }
 
 export async function setColumnMapping(payload): Promise<FilesType[]> {
-  console.log(payload.column_mapping_for_file, 'ah');
   const options: RequestInit = {
     headers: {
       Accept: 'application/json',
@@ -81,10 +89,8 @@ export async function setColumnMapping(payload): Promise<FilesType[]> {
     },
     method: 'PUT',
     credentials: 'include',
-    body: JSON.stringify({ column_mapping_for_file: payload.column_mapping_for_file }),
+    body: JSON.stringify({ columnMapping: payload.columnMapping }),
   };
-
-  // const apiUrl = `https://beta.finkraft.ai/api/v1/files/${payload.data}/column-mapping`;
   const apiUrl = `${BACKEND_API}/api/v1/files/${payload.data}/column-mapping`;
   const response = await fetch(apiUrl, options);
   if (!response.ok) {
