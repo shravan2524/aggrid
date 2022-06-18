@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import * as yup from 'yup';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup/dist/yup';
@@ -7,6 +7,9 @@ import { useSelector } from 'react-redux';
 import CustomButton from 'components/CustomButton';
 import { getSelectedCustomer } from 'state/customers/customersSlice';
 import { CompaniesType } from 'services/companiesAPIService';
+import { postCompanyCredentialsData } from 'services/credentialsAPIService';
+import { toast } from 'react-hot-toast';
+import { hideModal } from 'app/utils/Modal';
 
 interface CompanyNewFormProps {
   username: string;
@@ -16,10 +19,12 @@ interface CompanyNewFormProps {
 interface CompanyNewCredentialsFormProps {
   companyData: CompaniesType | null;
   modalId: string;
-  isLoading: boolean;
 }
-export default function CompanyNewCredentialsForm({ modalId, companyData, isLoading }: CompanyNewCredentialsFormProps) {
+
+export default function CompanyNewCredentialsForm({ modalId, companyData }: CompanyNewCredentialsFormProps) {
   const selectedCustomer = useSelector(getSelectedCustomer);
+
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const schema = yup.object({
     username: yup.string().required(),
@@ -29,7 +34,6 @@ export default function CompanyNewCredentialsForm({ modalId, companyData, isLoad
   const {
     register,
     handleSubmit,
-    reset,
     formState: { errors },
   } = useForm<CompanyNewFormProps>({
     resolver: yupResolver(schema),
@@ -37,8 +41,19 @@ export default function CompanyNewCredentialsForm({ modalId, companyData, isLoad
 
   const onSubmit = ({ username, password }: CompanyNewFormProps) => {
     const payload = { data: { username, password }, id: companyData?.id };
-    // dispatch(updateCompanyRequest({ ...payload }));
     console.log('New Company Credentials: ', payload);
+    setIsLoading(true);
+    postCompanyCredentialsData(companyData?.id, { username, password })
+      .then((r) => {
+        setIsLoading(false);
+        toast.success('Company credentials successfully created.');
+        hideModal(modalId);
+      }).catch((e) => {
+        setIsLoading(false);
+        toast.error(e.message);
+      }).finally(() => {
+        setIsLoading(false);
+      });
   };
 
   return (
@@ -70,9 +85,9 @@ export default function CompanyNewCredentialsForm({ modalId, companyData, isLoad
             placeholder="Enter Credentials username ..."
           />
           {errors.username && (
-          <div id="validationTitleFeedback" className="invalid-feedback">
-            <p>{errors.username?.message}</p>
-          </div>
+            <div id="validationTitleFeedback" className="invalid-feedback">
+              <p>{errors.username?.message}</p>
+            </div>
           )}
         </div>
 
@@ -86,9 +101,9 @@ export default function CompanyNewCredentialsForm({ modalId, companyData, isLoad
             placeholder="Enter Credentials password ..."
           />
           {errors.password && (
-          <div id="validationTitleFeedback" className="invalid-feedback">
-            <p>{errors.password?.message}</p>
-          </div>
+            <div id="validationTitleFeedback" className="invalid-feedback">
+              <p>{errors.password?.message}</p>
+            </div>
           )}
         </div>
 

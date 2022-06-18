@@ -2,7 +2,7 @@ import React, {
   useCallback, useEffect, useMemo, useRef, useState,
 } from 'react';
 import { AgGridReact } from 'ag-grid-react';
-import { hideModal, showModal } from 'app/utils/Modal';
+import { showModal } from 'app/utils/Modal';
 import { useAppDispatch, useCompanies, useWindowDimensions } from 'app/hooks';
 import PageWrapper from 'components/PageWrapper';
 import {

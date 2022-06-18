@@ -55,12 +55,9 @@ export default function CompanyCredentialsModal({ companyData }: EditCompanyCred
   useEffect(() => {
     if (companyData) {
       fetchCompanyCredentialsData(companyData?.id).then((res) => {
-        console.log(res);
-
         setCompanyCredentials(res);
         reset({ username: res.credentials.username });
       }).catch((e) => {
-        console.log('Here');
         setCompanyCredentials(null);
         reset({ username: '' });
       });
@@ -74,7 +71,7 @@ export default function CompanyCredentialsModal({ companyData }: EditCompanyCred
           {
             companyCredentials
               ? <CompanyEditCredentialsForm companyData={companyData} companyCredentials={companyCredentials} modalId={modalId} isLoading={isLoading} />
-              : <CompanyNewCredentialsForm companyData={companyData} modalId={modalId} isLoading={isLoading} />
+              : <CompanyNewCredentialsForm companyData={companyData} modalId={modalId} />
           }
         </div>
       </div>
