@@ -37,7 +37,7 @@ function ActionsRenderer({ params, onFileMappingClickCallback }: ActionsRenderer
         {
           (params.data) && (params.data.fileType === '2A')
             ? <option selected value="2A">GSTR2A</option>
-            : null
+            : <option>GSTR2A</option>
         }
         {
           (params.data) && (params.data.fileType === '2B')
