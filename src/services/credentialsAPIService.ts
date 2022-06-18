@@ -52,7 +52,7 @@ export async function putCompanyCredentialsData(companyId, payload) :Promise<Cre
     },
     method: 'PUT',
     credentials: 'include',
-    body: JSON.stringify({ ...payload.data }),
+    body: JSON.stringify({ ...payload }),
   };
 
   const apiUrl = `${BACKEND_API}/api/v1/credentials/${companyId}/company`;

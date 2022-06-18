@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import * as yup from 'yup';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup/dist/yup';
@@ -7,7 +7,9 @@ import { useSelector } from 'react-redux';
 import CustomButton from 'components/CustomButton';
 import { getSelectedCustomer } from 'state/customers/customersSlice';
 import { CompaniesType } from 'services/companiesAPIService';
-import { CredentialsType } from 'services/credentialsAPIService';
+import { CredentialsType, putCompanyCredentialsData } from 'services/credentialsAPIService';
+import { toast } from 'react-hot-toast';
+import { hideModal } from 'app/utils/Modal';
 
 interface CompanyEditFormProps {
   username: string;
@@ -19,12 +21,12 @@ interface CompanyEditCredentialsFormProps {
   companyData: CompaniesType | null;
   companyCredentials: CredentialsType | null;
   modalId: string;
-  isLoading: boolean;
 }
 export default function CompanyEditCredentialsForm({
-  modalId, companyData, isLoading, companyCredentials,
+  modalId, companyData, companyCredentials,
 }: CompanyEditCredentialsFormProps) {
   const selectedCustomer = useSelector(getSelectedCustomer);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const schema = yup.object({
     username: yup.string().required(),
@@ -48,9 +50,21 @@ export default function CompanyEditCredentialsForm({
   }, [companyCredentials]);
 
   const onSubmit = ({ username, password, current_password }: CompanyEditFormProps) => {
-    const payload = { data: { username, password, current_password }, id: companyData?.id };
-    // dispatch(updateCompanyRequest({ ...payload }));
-    console.log('Edit Company Credentials: ', payload);
+    setIsLoading(true);
+    putCompanyCredentialsData(companyData?.id, { username, password, current_password })
+      .then((r) => {
+        console.log(r);
+        toast.success('Company credentials successfully updated.');
+        setIsLoading(false);
+        hideModal(modalId);
+        reset({ current_password: '', password: '' });
+      })
+      .catch(() => {
+        toast.error('Wrong password.');
+        setIsLoading(false);
+      }).finally(() => {
+        setIsLoading(false);
+      });
   };
 
   return (

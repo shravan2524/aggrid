@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import * as yup from 'yup';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup/dist/yup';
@@ -33,6 +33,7 @@ export default function CompanyNewCredentialsForm({ modalId, companyData }: Comp
 
   const {
     register,
+    reset,
     handleSubmit,
     formState: { errors },
   } = useForm<CompanyNewFormProps>({
@@ -40,8 +41,6 @@ export default function CompanyNewCredentialsForm({ modalId, companyData }: Comp
   });
 
   const onSubmit = ({ username, password }: CompanyNewFormProps) => {
-    const payload = { data: { username, password }, id: companyData?.id };
-    console.log('New Company Credentials: ', payload);
     setIsLoading(true);
     postCompanyCredentialsData(companyData?.id, { username, password })
       .then((r) => {
@@ -55,6 +54,10 @@ export default function CompanyNewCredentialsForm({ modalId, companyData }: Comp
         setIsLoading(false);
       });
   };
+
+  useEffect(() => {
+    reset({ password: '', username: '' });
+  }, [companyData]);
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
