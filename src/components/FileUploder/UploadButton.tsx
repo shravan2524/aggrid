@@ -8,7 +8,8 @@ interface IProps {
   loading: boolean;
   setFileDropZone: React.Dispatch<any>;
   progress: number;
-  results: boolean;
+  message: any;
+  setMessage:React.Dispatch<any>;
 }
 
 function UploadButton({
@@ -17,18 +18,20 @@ function UploadButton({
   loading,
   setFileDropZone,
   progress,
-  results,
+  message,
+  setMessage,
 }: IProps) {
   // Total Files Size
-  const Size = file.reduce((accumulator, object) => accumulator + object.size, 0);
+  const Size = file.reduce(
+    (accumulator, object) => accumulator + object.size,
+    0,
+  );
   return (
     <>
       <div className="d-flex gap-2 justify-content-between py-2 px-4 border align-items-center mb-4 rounded flex-wrap">
         <i className="icon text-warning fas fa-file-upload" />
         <div className="text-wrap">
-          {file.length > 1
-            ? `(${file.length}) Files`
-            : `(${file.length}) File`}
+          {file.length > 1 ? `(${file.length}) Files` : `(${file.length}) File`}
           {' '}
           Selected
         </div>
@@ -61,28 +64,40 @@ function UploadButton({
             </div>
           </div>
         ) : (
-          <button
-            type="button"
-            onClick={UploadFunction}
-            className="btn btn-primary py-2 rounded shadow"
-          >
-            <span>
-              UPLOAD
-              <i className="mx-4 fas fa-cloud-upload" />
-            </span>
-          </button>
+          <>
+            <button
+              type="button"
+              onClick={UploadFunction}
+              className="btn btn-primary py-2 rounded shadow"
+            >
+              <span>
+                UPLOAD
+                <i className="mx-4 fas fa-cloud-upload" />
+              </span>
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                setFileDropZone(null);
+                setMessage([]);
+              }}
+              className="cancel btn flex-colo"
+            >
+              <p>Cancel</p>
+            </button>
+          </>
         )}
-
-        {!results && (
-          <button
-            type="button"
-            onClick={() => {
-              setFileDropZone(null);
-            }}
-            className="cancel btn flex-colo"
-          >
-            <p>Cancel</p>
-          </button>
+        {loading && message.length > 0 && (
+          <div className="messageUpload mt-4 rounded">
+            <ul>
+              {message.map((item: any, i: any) => (
+                <li className="text-success" key={i}>
+                  <i className="fas fa-check-circle" />
+                  {item}
+                </li>
+              ))}
+            </ul>
+          </div>
         )}
       </div>
     </>

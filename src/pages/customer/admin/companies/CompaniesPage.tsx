@@ -2,7 +2,7 @@ import React, {
   useCallback, useEffect, useMemo, useRef, useState,
 } from 'react';
 import { AgGridReact } from 'ag-grid-react';
-import { hideModal, showModal } from 'app/utils/Modal';
+import { showModal } from 'app/utils/Modal';
 import { useAppDispatch, useCompanies, useWindowDimensions } from 'app/hooks';
 import PageWrapper from 'components/PageWrapper';
 import {
@@ -15,7 +15,7 @@ import { availableCustomers } from 'state/customers/customersSlice';
 import { ICellRendererParams } from 'ag-grid-community';
 import NewCompanyModal from './NewCompanyModal';
 import EditCompanyModal from './EditCompanyModal';
-import EditCompanyCredentialsModal from './EditCompanyCredentialsModal';
+import CompanyCredentialsModal from './CompanyCredentialsModal';
 
 type ActionsRendererProps = {
   params: ICellRendererParams;
@@ -83,8 +83,7 @@ export default function CompaniesPage() {
   const anyCustomer = useSelector(availableCustomers);
   const { height, width } = useWindowDimensions();
   const rows = useCompanies();
-  const [companyToEdit, setCompanyToEdit] = useState<CompaniesType | null>(null);
-  const [companyToEditCredentials, setCompanyToEditCredentials] = useState<CompaniesType | null>(null);
+  const [companyData, setCompanyData] = useState<CompaniesType | null>(null);
 
   const containerStyle = useMemo(() => ({
     width: '100%',
@@ -93,18 +92,16 @@ export default function CompaniesPage() {
   }), [height, width]);
 
   const onEditClickCallback = (e, params) => {
-    setCompanyToEdit(params.data);
+    setCompanyData(params.data);
     showModal('editCompanyModal', () => {
-      setCompanyToEdit(null);
-      setCompanyToEditCredentials(null);
+      setCompanyData(null);
     });
   };
 
   const onCredentialsClickCallback = (e, params) => {
-    setCompanyToEditCredentials(params.data);
+    setCompanyData(params.data);
     showModal('editCredentialsCompanyModal', () => {
-      setCompanyToEdit(null);
-      setCompanyToEditCredentials(null);
+      setCompanyData(null);
     });
   };
 
@@ -240,8 +237,8 @@ export default function CompaniesPage() {
 
       <div className=" ag-theme-alpine grid-container-style">
         <NewCompanyModal />
-        <EditCompanyModal companyToEdit={companyToEdit} />
-        <EditCompanyCredentialsModal companyToEditCredentials={companyToEditCredentials} />
+        <EditCompanyModal companyData={companyData} />
+        <CompanyCredentialsModal companyData={companyData} />
         <AgGridReact
           containerStyle={containerStyle}
           ref={gridRef}

@@ -13,10 +13,10 @@ import {
   setSelectedCompany,
 } from 'state/companies/companiesSlice';
 
+import { getSelectedCustomer } from 'state/customers/customersSlice';
+import { BACKEND_API } from 'app/config';
 import CustomerTopMenuDropDown from './CustomerTopMenuDropDown';
 import CustomerTopMenuSelect from './CustomerTopMenuSelect';
-import { getSelectedCustomer, setSelectedCustomer } from '../../state/customers/customersSlice';
-import { CustomersType } from '../../services/customersAPIService';
 
 function SecondaryCustomerTopMenu() {
   const secondaryMenuItems = useSelector(selectSecondaryMenuItems);
@@ -80,7 +80,8 @@ export default function CustomerTopMenu() {
     },
     {
       itemTitle: 'Logout',
-      itemPath: '/auth/logout',
+      itemPath: `${BACKEND_API}/api/v1/logout`,
+      itemExternal: true,
       icon: 'fa-solid fa-right-from-bracket',
     },
   ], [selectedWorkspace]);
