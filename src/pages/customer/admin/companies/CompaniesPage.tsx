@@ -24,7 +24,7 @@ type ActionsRendererProps = {
 };
 function ActionsRenderer({ params, onEditClickCallback, onCredentialsClickCallback }: ActionsRendererProps) {
   return (
-    <div className="d-flex justify-content-around align-items-center w-100 h-100 ">
+    <div className="d-flex justify-content-around align-items-center w-100 h-100">
       <button type="button" className="btn btn-sm btn-light" onClick={(e) => onEditClickCallback(e, params)}>
         <i className="fa-solid fa-pen-to-square" />
         {' '}
@@ -39,18 +39,26 @@ function ActionsRenderer({ params, onEditClickCallback, onCredentialsClickCallba
   );
 }
 
-function CustomActionsToolPanel() {
+function CustomActionsToolPanel(onRefreshCallback) {
   return (
     <div className="container-fluid">
-      <div className="row p-2">
+      <div className="row p-2 gap-2">
         <button
           type="button"
-          className="btn btn-sm btn-danger"
+          className="btn btn-sm btn-danger px-4 d-flex gap-2 align-items-center justify-content-center"
           onClick={() => showModal('newCompanyModal')}
         >
           <i className="fa-solid fa-circle-plus" />
-          {' '}
           Add Company
+        </button>
+
+        <button
+          type="button"
+          className="btn btn-sm btn-info px-4 d-flex gap-2 align-items-center justify-content-center"
+          onClick={onRefreshCallback}
+        >
+          <i className="fa-solid fa-rotate" />
+          Refresh
         </button>
       </div>
     </div>
@@ -160,6 +168,10 @@ export default function CompaniesPage() {
     'custom-actions-tool': '<i class="fa-solid fa-screwdriver-wrench"></i>',
   }), []);
 
+  const onRefreshCallback = () => {
+    dispatch(fetchCompanies());
+  };
+
   const sideBar = useMemo(() => ({
     toolPanels: [
       {
@@ -167,7 +179,7 @@ export default function CompaniesPage() {
         labelDefault: 'Actions',
         labelKey: 'customActionsTool',
         iconKey: 'custom-actions-tool',
-        toolPanel: CustomActionsToolPanel,
+        toolPanel: () => CustomActionsToolPanel(onRefreshCallback),
       },
       {
         id: 'columns',
@@ -219,6 +231,8 @@ export default function CompaniesPage() {
       gridRef.current?.api.sizeColumnsToFit();
     }
   }, [rows]);
+
+  console.log(rows);
 
   if (!anyCustomer) {
     return (

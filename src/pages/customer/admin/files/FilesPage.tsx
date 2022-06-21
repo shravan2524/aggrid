@@ -63,11 +63,20 @@ function ActionsRenderer({ params, onFileMappingClickCallback }: ActionsRenderer
   );
 }
 
-function CustomActionsToolPanel() {
+function CustomActionsToolPanel(onRefreshCallback) {
   return (
     <div className="container-fluid">
-      <div className="row p-2">
+      <div className="row p-2 gap-2">
         <ReactFileUploder />
+
+        <button
+          type="button"
+          className="btn btn-sm btn-info px-4 d-flex gap-2 align-items-center justify-content-center"
+          onClick={onRefreshCallback}
+        >
+          <i className="fa-solid fa-rotate" />
+          Refresh
+        </button>
       </div>
     </div>
   );
@@ -128,6 +137,10 @@ export default function FilesPage() {
     'custom-actions-tool': '<i class="fa-solid fa-screwdriver-wrench"></i>',
   }), []);
 
+  const onRefreshCallback = () => {
+    dispatch(fetchFiles());
+  };
+
   const sideBar = useMemo(() => ({
     toolPanels: [
       {
@@ -135,7 +148,7 @@ export default function FilesPage() {
         labelDefault: 'Actions',
         labelKey: 'customActionsTool',
         iconKey: 'custom-actions-tool',
-        toolPanel: CustomActionsToolPanel,
+        toolPanel: () => CustomActionsToolPanel(onRefreshCallback),
       },
       {
         id: 'columns',
