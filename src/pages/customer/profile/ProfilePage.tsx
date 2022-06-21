@@ -1,7 +1,21 @@
-import React from 'react';
+import React, {
+  useCallback, useEffect, useMemo, useRef, useState,
+} from 'react';
 import PageTitle from 'components/PageTitle';
+import { BACKEND_API } from 'app/config';
 
 export default function ProfilePage() {
+  const [userDetails, setuserDetails] = useState<any>({});
+  useEffect(() => {
+    const options: RequestInit = {
+      method: 'GET',
+      credentials: 'include',
+    };
+    const apiUrl = `${BACKEND_API}/api/v1/me/`;
+    fetch(apiUrl, options)
+      .then((response) => response.json())
+      .then((data) => setuserDetails(data));
+  }, []);
   return (
     <>
       <PageTitle title="Profile" />
@@ -10,10 +24,8 @@ export default function ProfilePage() {
           <div className="col-lg-4">
             <div className="card mb-4">
               <div className="card-body text-center">
-                <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava3.webp" alt="avatar" className="rounded-circle img-fluid" />
-                <h5 className="my-3">John Smith</h5>
-                <p className="text-muted mb-1">Full Stack Developer</p>
-                <p className="text-muted mb-4">Bay Area, San Francisco, CA</p>
+                <img src={userDetails.picture} alt="avatar" className="rounded-circle img-fluid" />
+                <h5 className="my-3">{userDetails.name}</h5>
               </div>
             </div>
           </div>
@@ -25,7 +37,7 @@ export default function ProfilePage() {
                     <p className="mb-0">Full Name</p>
                   </div>
                   <div className="col-sm-9">
-                    <p className="text-muted mb-0">Johnatan Smith</p>
+                    <p className="text-muted mb-0">{userDetails.name}</p>
                   </div>
                 </div>
                 <hr />
@@ -34,34 +46,16 @@ export default function ProfilePage() {
                     <p className="mb-0">Email</p>
                   </div>
                   <div className="col-sm-9">
-                    <p className="text-muted mb-0">example@example.com</p>
+                    <p className="text-muted mb-0">{userDetails.email}</p>
                   </div>
                 </div>
                 <hr />
                 <div className="row">
                   <div className="col-sm-3">
-                    <p className="mb-0">Phone</p>
+                    <p className="mb-0">NickName</p>
                   </div>
                   <div className="col-sm-9">
-                    <p className="text-muted mb-0">(097) 234-5678</p>
-                  </div>
-                </div>
-                <hr />
-                <div className="row">
-                  <div className="col-sm-3">
-                    <p className="mb-0">Mobile</p>
-                  </div>
-                  <div className="col-sm-9">
-                    <p className="text-muted mb-0">(098) 765-4321</p>
-                  </div>
-                </div>
-                <hr />
-                <div className="row">
-                  <div className="col-sm-3">
-                    <p className="mb-0">Address</p>
-                  </div>
-                  <div className="col-sm-9">
-                    <p className="text-muted mb-0">Bay Area, San Francisco, CA</p>
+                    <p className="text-muted mb-0">{userDetails.nickname}</p>
                   </div>
                 </div>
               </div>

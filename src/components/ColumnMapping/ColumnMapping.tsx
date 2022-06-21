@@ -35,7 +35,7 @@ export default function ColumnMapping({ fileType, id }: Type) {
       data: id,
     }));
   };
-  const [contentPreview, setcontentPreview] = useState();
+  const [contentPreview, setcontentPreview] = useState<any[]>();
   const handleShow = () => {
     setShow(true);
     const options: RequestInit = {
@@ -55,7 +55,7 @@ export default function ColumnMapping({ fileType, id }: Type) {
       newColumnMapping[k] = { columnName };
       // set the mapping
       setColumnMapping(newColumnMapping);
-      console.log(newColumnMapping);
+      //  console.log(newColumnMapping);
     };
     return fn;
   };
@@ -87,15 +87,13 @@ export default function ColumnMapping({ fileType, id }: Type) {
                           </div>
                         </th>
                       </tr>
-                      <tr>
-                        <td>{contentPreview[keyName][0] || ' '}</td>
-                      </tr>
-                      <tr>
-                        <td>{contentPreview[keyName][1] || ' '}</td>
-                      </tr>
-                      <tr>
-                        <td>{contentPreview[keyName][2] || ' '}</td>
-                      </tr>
+                      {
+                        contentPreview[keyName].map((e) => (
+                          e
+                            ? <tr><td>{e}</td></tr>
+                            : null
+                        ))
+                      }
                     </tbody>
                   </table>
                 )))

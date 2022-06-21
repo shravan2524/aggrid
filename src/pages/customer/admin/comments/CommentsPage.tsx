@@ -13,11 +13,9 @@ interface Type {
 }
 
 function Date({ date }: Type) {
-//   console.log(date);
   const ret = date.slice(8, 10);
   ret.concat(' ');
   const check = date.slice(5, 7);
-  console.log(ret, check);
   let month = '';
   if (check.localeCompare('01') === 0) {
     month = 'January';
@@ -102,8 +100,6 @@ export default function CommentsPage() {
       .then((response) => response.json())
       .then((data1) => {
         setdata(data1);
-        console.log(data1);
-        console.log(data, 'data');
       });
   }, []);
 
