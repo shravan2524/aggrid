@@ -51,17 +51,6 @@ export async function putFilesData(payload): Promise<FilesType[]> {
 }
 
 export async function setContentType(payload): Promise<FilesType[]> {
-  let data1;
-  if (payload.data === 'GSTR2B') {
-    data1 = '2B';
-  } else if (payload.data === 'GSTR2A') {
-    data1 = '2A';
-  } else if (payload.data === 'Purchase Register') {
-    data1 = 'PR';
-  } else {
-    data1 = 'invoicePDF';
-  }
-  // console.log(data1);
   const options: RequestInit = {
     headers: {
       Accept: 'application/json',
@@ -69,7 +58,7 @@ export async function setContentType(payload): Promise<FilesType[]> {
     },
     method: 'PUT',
     credentials: 'include',
-    body: JSON.stringify({ fileType: payload.data1 }),
+    body: JSON.stringify({ fileType: payload.data }),
   };
 
   const apiUrl = `${BACKEND_API}/api/v1/files/${payload.id}/content-type`;
