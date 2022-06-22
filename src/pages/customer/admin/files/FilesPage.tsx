@@ -123,14 +123,14 @@ export default function FilesPage() {
     // console.log('Do Mapping or something like show a modal etc here ...');
     const tselectfiles = selectedFiles;
     const ind = tselectfiles.findIndex((v) => v === e);
-    console.log(ind);
+    // console.log(ind);
     if (ind === -1) {
       tselectfiles.push(e);
     } else {
       tselectfiles.splice(ind, 1);
     }
     setselectedFiles(tselectfiles);
-    console.log(selectedFiles);
+    // console.log(selectedFiles);
   };
 
   const [columnDefs, setColumnDefs] = useState([

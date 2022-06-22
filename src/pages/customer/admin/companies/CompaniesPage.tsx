@@ -232,7 +232,7 @@ export default function CompaniesPage() {
     }
   }, [rows]);
 
-  console.log(rows);
+  // console.log(rows);
 
   if (!anyCustomer) {
     return (
