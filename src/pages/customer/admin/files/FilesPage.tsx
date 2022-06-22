@@ -3,21 +3,20 @@ import React, {
 } from 'react';
 import { downloadZip } from 'client-zip';
 import { AgGridReact } from 'ag-grid-react';
-import { showModal } from 'app/utils/Modal';
 import { useAppDispatch, useWindowDimensions } from 'app/hooks';
 import PageWrapper from 'components/PageWrapper';
-import CustomButton from 'components/CustomButton';
 import { agGridFilesDTO } from 'app/utils/Helpers';
 import { BACKEND_API } from 'app/config';
 import ReactFileUploder from 'components/FileUploder/Main';
-import { Column, Downloader, ICellRendererParams } from 'ag-grid-community';
+import { ICellRendererParams } from 'ag-grid-community';
 import ColumnMapping from 'components/ColumnMapping/ColumnMapping';
 import './FilePage.scss';
 import { useSelector } from 'react-redux';
 import {
   fetchFiles, getFiles,
-  setContentTypeRequest, setColumnMappingRequest,
+  setContentTypeRequest, isLoadingSelector,
 } from 'state/files/filesSlice';
+import classNames from 'classnames';
 
 type ActionsRendererProps = {
   params: ICellRendererParams;
@@ -27,11 +26,18 @@ type SelectActionsRendererProps = {
   params: ICellRendererParams;
   onFileMappingClickCallback: (e: React.MouseEvent<HTMLButtonElement>, params: ICellRendererParams) => void;
 };
-function SelectFiles({ params, onFileMappingClickCallback } : SelectActionsRendererProps) {
+
+function SelectFiles({ params, onFileMappingClickCallback }: SelectActionsRendererProps) {
   // console.log(params.data);
   return (
     <div>
-      <input type="checkbox" id="vehicle1" name="vehicle1" value="Bike" onChange={(e) => onFileMappingClickCallback(params.data.id, params)} />
+      <input
+        type="checkbox"
+        id="vehicle1"
+        name="vehicle1"
+        value="Bike"
+        onChange={(e) => onFileMappingClickCallback(params.data.id, params)}
+      />
       <label> </label>
     </div>
   );
@@ -40,11 +46,12 @@ function SelectFiles({ params, onFileMappingClickCallback } : SelectActionsRende
 function ActionsRenderer({ params, onFileMappingClickCallback }: ActionsRendererProps) {
   const [contentType, setcontentType] = useState(params?.data?.fileType || '');
   const dispatch = useAppDispatch();
+
   // console.log('params', params);
   function onchange(e) {
     setcontentType(e.target.value);
     /* eslint-disable-next-line */
-    dispatch(setContentTypeRequest({ ...params.data, data: e.target.value }));
+        dispatch(setContentTypeRequest({...params.data, data: e.target.value}));
   }
   const [preSignedUrl, setpreSignedUrl] = useState();
 
@@ -65,20 +72,20 @@ function ActionsRenderer({ params, onFileMappingClickCallback }: ActionsRenderer
   return (
     <div className="d-flex justify-content-between align-items-center w-100 h-100" id="columns">
       <select className="p-8" onChange={onchange} value={contentType}>
-        <option disabled value="">Select Content Type </option>
+        <option disabled value="">Select Content Type</option>
         <option value="2A">GSTR2A</option>
         <option value="2B">GSTR2B</option>
         <option value="PR">Purchase Register</option>
         <option value="InvoicePDF">Invoice PDF</option>
       </select>
       {
-        (params.data)
-          && (params.data.fileType === '2A' || params.data.fileType === '2B' || params.data.fileType === 'PR')
-          ? (
-            <ColumnMapping id={params.data.id} fileType={params.data.fileType} />
-          )
-          : null
-      }
+                (params.data)
+                && (params.data.fileType === '2A' || params.data.fileType === '2B' || params.data.fileType === 'PR')
+                  ? (
+                    <ColumnMapping id={params.data.id} fileType={params.data.fileType} />
+                  )
+                  : null
+            }
       <a
         type="button"
         href={preSignedUrl}
@@ -89,7 +96,7 @@ function ActionsRenderer({ params, onFileMappingClickCallback }: ActionsRenderer
   );
 }
 
-function CustomActionsToolPanel(onRefreshCallback, ret) {
+function CustomActionsToolPanel(onRefreshCallback, ret, isFetchLoading) {
   async function test(temp) {
     const link = document.createElement('a');
     const blob = await downloadZip(temp).blob();
@@ -114,7 +121,7 @@ function CustomActionsToolPanel(onRefreshCallback, ret) {
           className="btn btn-sm btn-info px-4 d-flex gap-2 align-items-center justify-content-center"
           onClick={onRefreshCallback}
         >
-          <i className="fa-solid fa-rotate" />
+          <i className={classNames(['fa-solid', 'fa-rotate', { 'fa-spin': isFetchLoading }])} />
           Refresh
         </button>
         <button
@@ -137,6 +144,7 @@ export default function FilesPage() {
   const [rowData, setRowData] = useState<any>();
   const { height, width } = useWindowDimensions();
   const rows = useSelector(getFiles);
+  const isFetchLoading = useSelector(isLoadingSelector);
 
   const containerStyle = useMemo(() => ({
     width: '100%',
@@ -180,7 +188,12 @@ export default function FilesPage() {
         {
           field: '',
           // eslint-disable-next-line react/no-unstable-nested-components
-          cellRenderer: (params) => (<SelectFiles params={params} onFileMappingClickCallback={(e) => onFileMappingClickCallback(e, params)} />),
+          cellRenderer: (params) => (
+            <SelectFiles
+              params={params}
+              onFileMappingClickCallback={(e) => onFileMappingClickCallback(e, params)}
+            />
+          ),
           editable: false,
           filter: false,
           cellStyle: (params) => {
@@ -203,7 +216,12 @@ export default function FilesPage() {
         {
           field: 'actions',
           // eslint-disable-next-line react/no-unstable-nested-components
-          cellRenderer: (params) => (<ActionsRenderer params={params} onFileMappingClickCallback={(e) => onFileMappingClickCallback(e, params)} />),
+          cellRenderer: (params) => (
+            <ActionsRenderer
+              params={params}
+              onFileMappingClickCallback={(e) => onFileMappingClickCallback(e, params)}
+            />
+          ),
           editable: false,
           filter: false,
           cellStyle: (params) => {
@@ -233,7 +251,7 @@ export default function FilesPage() {
         labelDefault: 'Actions',
         labelKey: 'customActionsTool',
         iconKey: 'custom-actions-tool',
-        toolPanel: () => CustomActionsToolPanel(onRefreshCallback, ret),
+        toolPanel: () => CustomActionsToolPanel(onRefreshCallback, isFetchLoading, ret),
       },
       {
         id: 'columns',
@@ -251,7 +269,7 @@ export default function FilesPage() {
       },
     ],
     defaultToolPanel: 'customActionsTool',
-  }), []);
+  }), [isFetchLoading]);
 
   const defaultColDef = useMemo(() => ({
     sortable: true,
