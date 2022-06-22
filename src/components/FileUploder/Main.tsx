@@ -1,6 +1,6 @@
 import { hideModal, showModal } from 'app/utils/Modal';
 import React, { useRef, useState } from 'react';
-import { GetS3Url } from 'services/UploadImageS3API';
+import { MutPart } from 'services/UploadImageS3API';
 import UploadFileModel from './UploadMode';
 import './Uploder.scss';
 
@@ -14,22 +14,18 @@ function ReactFileUploder() {
 
   // CALL API
   const UploadFile = async (i: any, file: File) => {
-    const progressInf = [...progressInfosRef.current];
-    return GetS3Url({ setLoading }, file, (event: any) => {
-      if (event.lengthComputable) {
-        progressInf[i].percentage = Math.round(
-          (100 * event.loaded) / event.total,
-        );
-        setProgress(progressInf);
-      }
-    }).then(() => {
-      setMessage((prevMessage: any) => [...prevMessage, file.name]);
+    MutPart({ setLoading }, file).then(() => {
+      setMessage((prevMessage: any) => [
+        ...prevMessage,
+        `Uploaded the file successfully: ${file.name}`,
+      ]);
     });
   };
 
   // UPLOAD FUNCTION
   const UploadFunction = () => {
     if (fileDropZone) {
+      setLoading(true);
       const progressInf = fileDropZone.map((file: File) => ({
         percentage: 0,
         fileName: file.name,
@@ -43,36 +39,35 @@ function ReactFileUploder() {
   };
 
   // CALCULATE PROGRESS
-  const mapProgress = progress.map((i: any) => i.percentage);
-  const getSingleNumber = mapProgress.reduce(
-    (prev: any, a: any) => a + (prev || 0),
-    0,
-  );
-  const Total = Number(
-    progress.length > 0
-      ? (getSingleNumber / (progress.length > 0 ? progress.length : 0)).toFixed(
-        0,
-      )
-      : 0,
-  );
+  // const mapProgress = progress.map((i: any) => i.percentage);
+  // const getSingleNumber = mapProgress.reduce(
+  //   (prev: any, a: any) => a + (prev || 0),
+  //   0,
+  // );
+  // const Total = Number(
+  //   progress.length > 0
+  //     ? (getSingleNumber / (progress.length > 0 ? progress.length : 0)).toFixed(
+  //       0,
+  //     )
+  //     : 0,
+  // );
 
   // CLOSE MODEL
   const Close = () => {
     hideModal(modalId);
-    if (Total === 100) {
-      hideModal(modalId);
-      setFileDropZone(null);
-      setProgress([]);
-      setLoading(false);
-      setMessage([]);
-    }
+    // if (Total === 100) {
+    setFileDropZone(null);
+    setProgress([]);
+    setLoading(false);
+    setMessage([]);
+    // }
   };
 
   return (
     <>
       <button
         type="button"
-        className="btn btn-sm btn-danger px-4 d-flex gap-2 align-items-center justify-content-center"
+        className="btn btn-sm btn-danger px-4 d-flex gap-2 align-items-center"
         onClick={() => showModal('add')}
       >
         <i className="fas fa-cloud-upload-alt" />
@@ -97,7 +92,7 @@ function ReactFileUploder() {
             </div>
             <div className="modal-body">
               <UploadFileModel
-                progress={Total}
+                progress={0}
                 UploadFunction={UploadFunction}
                 loading={loading}
                 fileDropZone={fileDropZone}
