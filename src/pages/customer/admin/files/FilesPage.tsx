@@ -37,7 +37,7 @@ function SelectFiles({ params, onFileMappingClickCallback } : SelectActionsRende
 }
 
 function ActionsRenderer({ params, onFileMappingClickCallback }: ActionsRendererProps) {
-  const [contentType, setcontentType] = useState('GSTR2A');
+  const [contentType, setcontentType] = useState(params?.data?.fileType || '');
   const dispatch = useAppDispatch();
   // console.log('params', params);
   function onchange(e) {
@@ -51,28 +51,16 @@ function ActionsRenderer({ params, onFileMappingClickCallback }: ActionsRenderer
   };
   return (
     <div className="d-flex justify-content-between align-items-center w-100 h-100" id="columns">
-      <select className="p-8" onChange={onchange}>
-        <option selected disabled>Select Content Type </option>
-        {
-          (params.data) && (params.data.fileType === '2A')
-            ? <option selected value="2A">GSTR2A</option>
-            : <option>GSTR2A</option>
-        }
-        {
-          (params.data) && (params.data.fileType === '2B')
-            ? <option selected value="2B">GSTR2B</option>
-            : <option>GSTR2B</option>
-        }
-        {
-          (params.data) && (params.data.fileType === 'PR')
-            ? <option selected value="PR">Purchase Register</option>
-            : <option>Purchase Register</option>
-        }
-        <option>Invoice PDF</option>
+      <select className="p-8" onChange={onchange} value={contentType}>
+        <option disabled value="">Select Content Type </option>
+        <option value="2A">GSTR2A</option>
+        <option value="2B">GSTR2B</option>
+        <option value="PR">Purchase Register</option>
+        <option value="InvoicePDF">Invoice PDF</option>
       </select>
       {
         (params.data)
-        && (params.data.fileType === '2A' || params.data.fileType === '2B' || params.data.fileType === 'PR')
+          && (params.data.fileType === '2A' || params.data.fileType === '2B' || params.data.fileType === 'PR')
           ? (
             <ColumnMapping id={params.data.id} fileType={params.data.fileType} />
           )
