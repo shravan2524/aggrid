@@ -251,7 +251,7 @@ export default function FilesPage() {
         labelDefault: 'Actions',
         labelKey: 'customActionsTool',
         iconKey: 'custom-actions-tool',
-        toolPanel: () => CustomActionsToolPanel(onRefreshCallback, isFetchLoading, ret),
+        toolPanel: () => CustomActionsToolPanel(onRefreshCallback, ret, isFetchLoading),
       },
       {
         id: 'columns',
