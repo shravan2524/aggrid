@@ -13,7 +13,8 @@ import { agGridCustomersDTO } from 'app/utils/Helpers';
 import { CustomersType } from 'services/customersAPIService';
 import { useSelector } from 'react-redux';
 import { ICellRendererParams } from 'ag-grid-community';
-import { setSelectedCompany } from 'state/companies/companiesSlice';
+import { setSelectedCompany, isLoadingSelector } from 'state/companies/companiesSlice';
+import classNames from 'classnames';
 import NewCustomerModal from './NewCustomerModal';
 import EditCustomerModal from './EditCustomerModal';
 
@@ -39,7 +40,7 @@ function ActionsRenderer({ params, onEditClickCallback, onSelectClickCallback }:
   );
 }
 
-function CustomActionsToolPanel(onRefreshCallback) {
+function CustomActionsToolPanel(onRefreshCallback, isFetchLoading) {
   return (
     <div className="container-fluid">
       <div className="row p-2 gap-2">
@@ -56,7 +57,7 @@ function CustomActionsToolPanel(onRefreshCallback) {
           className="btn btn-sm btn-info px-4 d-flex gap-2 align-items-center justify-content-center"
           onClick={onRefreshCallback}
         >
-          <i className="fa-solid fa-rotate" />
+          <i className={classNames(['fa-solid', 'fa-rotate', { 'fa-spin': isFetchLoading }])} />
           Refresh
         </button>
       </div>
@@ -88,7 +89,7 @@ export default function WorkspacesPage() {
   const rows = useSelector(getCustomers);
   const selectedWorkspace = useSelector(getSelectedCustomer);
   const [customerToEdit, setCustomerToEdit] = useState<CustomersType | null>(null);
-
+  const isFetchLoading = useSelector(isLoadingSelector);
   const { height, width } = useWindowDimensions();
 
   const [rowData, setRowData] = useState<any>();
@@ -166,7 +167,7 @@ export default function WorkspacesPage() {
         labelDefault: 'Actions',
         labelKey: 'customActionsTool',
         iconKey: 'custom-actions-tool',
-        toolPanel: () => CustomActionsToolPanel(onRefreshCallback),
+        toolPanel: () => CustomActionsToolPanel(onRefreshCallback, isFetchLoading),
       },
       {
         id: 'columns',
@@ -184,7 +185,7 @@ export default function WorkspacesPage() {
       },
     ],
     defaultToolPanel: 'customActionsTool',
-  }), []);
+  }), [isFetchLoading]);
 
   const defaultColDef = useMemo(() => ({
     sortable: true,

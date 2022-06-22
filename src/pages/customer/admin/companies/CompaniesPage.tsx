@@ -6,13 +6,14 @@ import { showModal } from 'app/utils/Modal';
 import { useAppDispatch, useCompanies, useWindowDimensions } from 'app/hooks';
 import PageWrapper from 'components/PageWrapper';
 import {
-  fetchCompanies, updateCompanyRequest,
+  fetchCompanies, updateCompanyRequest, isLoadingSelector,
 } from 'state/companies/companiesSlice';
 import { agGridCompaniesDTO } from 'app/utils/Helpers';
 import { CompaniesType } from 'services/companiesAPIService';
 import { useSelector } from 'react-redux';
 import { availableCustomers } from 'state/customers/customersSlice';
 import { ICellRendererParams } from 'ag-grid-community';
+import classNames from 'classnames';
 import NewCompanyModal from './NewCompanyModal';
 import EditCompanyModal from './EditCompanyModal';
 import CompanyCredentialsModal from './CompanyCredentialsModal';
@@ -39,7 +40,7 @@ function ActionsRenderer({ params, onEditClickCallback, onCredentialsClickCallba
   );
 }
 
-function CustomActionsToolPanel(onRefreshCallback) {
+function CustomActionsToolPanel(onRefreshCallback, isFetchLoading) {
   return (
     <div className="container-fluid">
       <div className="row p-2 gap-2">
@@ -57,7 +58,7 @@ function CustomActionsToolPanel(onRefreshCallback) {
           className="btn btn-sm btn-info px-4 d-flex gap-2 align-items-center justify-content-center"
           onClick={onRefreshCallback}
         >
-          <i className="fa-solid fa-rotate" />
+          <i className={classNames(['fa-solid', 'fa-rotate', { 'fa-spin': isFetchLoading }])} />
           Refresh
         </button>
       </div>
@@ -92,6 +93,7 @@ export default function CompaniesPage() {
   const { height, width } = useWindowDimensions();
   const rows = useCompanies();
   const [companyData, setCompanyData] = useState<CompaniesType | null>(null);
+  const isFetchLoading = useSelector(isLoadingSelector);
 
   const containerStyle = useMemo(() => ({
     width: '100%',
@@ -179,7 +181,7 @@ export default function CompaniesPage() {
         labelDefault: 'Actions',
         labelKey: 'customActionsTool',
         iconKey: 'custom-actions-tool',
-        toolPanel: () => CustomActionsToolPanel(onRefreshCallback),
+        toolPanel: () => CustomActionsToolPanel(onRefreshCallback, isFetchLoading),
       },
       {
         id: 'columns',
@@ -197,7 +199,7 @@ export default function CompaniesPage() {
       },
     ],
     defaultToolPanel: 'customActionsTool',
-  }), []);
+  }), [isFetchLoading]);
 
   const defaultColDef = useMemo(() => ({
     sortable: true,
