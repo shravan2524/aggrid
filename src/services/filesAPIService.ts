@@ -21,6 +21,7 @@ export async function fetchFilesData(): Promise<FilesType[]> {
     method: 'GET',
     credentials: 'include',
   };
+  // const apiUrl = `${BACKEND_API}/api/v1/files`;
   const apiUrl = `${BACKEND_API}/api/v1/files`;
   const response = await fetch(apiUrl, options);
   if (!response.ok) {

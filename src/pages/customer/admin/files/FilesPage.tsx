@@ -1,13 +1,14 @@
 import React, {
   useCallback, useEffect, useMemo, useRef, useState,
 } from 'react';
+import { downloadZip } from 'client-zip';
 import { AgGridReact } from 'ag-grid-react';
 import { showModal } from 'app/utils/Modal';
 import { useAppDispatch, useWindowDimensions } from 'app/hooks';
 import PageWrapper from 'components/PageWrapper';
 import CustomButton from 'components/CustomButton';
 import { agGridFilesDTO } from 'app/utils/Helpers';
-
+import { BACKEND_API } from 'app/config';
 import ReactFileUploder from 'components/FileUploder/Main';
 import { Column, Downloader, ICellRendererParams } from 'ag-grid-community';
 import ColumnMapping from 'components/ColumnMapping/ColumnMapping';
@@ -45,10 +46,22 @@ function ActionsRenderer({ params, onFileMappingClickCallback }: ActionsRenderer
     /* eslint-disable-next-line */
     dispatch(setContentTypeRequest({ ...params.data, data: e.target.value }));
   }
+  const [preSignedUrl, setpreSignedUrl] = useState();
 
-  const download = (e) => {
-    console.log('download file');
-  };
+  useEffect(() => {
+    const options: RequestInit = {
+      method: 'GET',
+      credentials: 'include',
+    };
+    const apiUrl = `${BACKEND_API}/api/v1/files/${params.data.id}/download`;
+    fetch(apiUrl, options)
+      .then((response) => response.json())
+      .then((data1) => {
+        // console.log(data1);
+        setpreSignedUrl(data1);
+      });
+  }, []);
+
   return (
     <div className="d-flex justify-content-between align-items-center w-100 h-100" id="columns">
       <select className="p-8" onChange={onchange} value={contentType}>
@@ -66,19 +79,31 @@ function ActionsRenderer({ params, onFileMappingClickCallback }: ActionsRenderer
           )
           : null
       }
-      <button
+      <a
         type="button"
-        className="btn btn-sm btn-info px-4 d-flex gap-2 align-items-center justify-content-center"
-        onClick={download}
+        href={preSignedUrl}
       >
         <i className="fa fa-download" />
-        Download File
-      </button>
+      </a>
     </div>
   );
 }
 
-function CustomActionsToolPanel(onRefreshCallback) {
+function CustomActionsToolPanel(onRefreshCallback, ret) {
+  async function test(temp) {
+    const link = document.createElement('a');
+    const blob = await downloadZip(temp).blob();
+    link.href = URL.createObjectURL(blob);
+    link.download = 'files.zip';
+    link.click();
+    link.remove();
+  }
+  async function downloadTestZip() {
+    const res = await ret();
+    setTimeout(() => {
+      test(res);
+    }, 3000);
+  }
   return (
     <div className="container-fluid">
       <div className="row p-2 gap-2">
@@ -95,7 +120,7 @@ function CustomActionsToolPanel(onRefreshCallback) {
         <button
           type="button"
           className="btn btn-sm btn-info px-4 d-flex gap-2 align-items-center justify-content-center"
-          onClick={onRefreshCallback}
+          onClick={downloadTestZip}
         >
           <i className="fa fa-download" />
           Download Files
@@ -123,16 +148,31 @@ export default function FilesPage() {
     // console.log('Do Mapping or something like show a modal etc here ...');
     const tselectfiles = selectedFiles;
     const ind = tselectfiles.findIndex((v) => v === e);
-    // console.log(ind);
     if (ind === -1) {
       tselectfiles.push(e);
     } else {
       tselectfiles.splice(ind, 1);
     }
     setselectedFiles(tselectfiles);
-    // console.log(selectedFiles);
   };
-
+  const [tmp, settmp] = useState<any[]>([]);
+  const ret = async () => {
+    await selectedFiles.map((e) => {
+      const options: RequestInit = {
+        method: 'GET',
+        credentials: 'include',
+      };
+      const apiUrl = `${BACKEND_API}/api/v1/files/${e}/download`;
+      fetch(apiUrl, options)
+        .then((response) => response.json())
+        .then(async (data1) => {
+          const temp = await fetch(data1);
+          tmp.push(temp);
+        });
+      return 1;
+    });
+    return tmp;
+  };
   const [columnDefs, setColumnDefs] = useState([
     {
       headerName: 'Files Details',
@@ -193,7 +233,7 @@ export default function FilesPage() {
         labelDefault: 'Actions',
         labelKey: 'customActionsTool',
         iconKey: 'custom-actions-tool',
-        toolPanel: () => CustomActionsToolPanel(onRefreshCallback),
+        toolPanel: () => CustomActionsToolPanel(onRefreshCallback, ret),
       },
       {
         id: 'columns',
