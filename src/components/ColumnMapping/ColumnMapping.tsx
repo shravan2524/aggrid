@@ -35,18 +35,24 @@ export default function ColumnMapping({ fileType, id }: Type) {
       data: id,
     }));
   };
-  const [contentPreview, setcontentPreview] = useState();
+  const [filedata, setfiledata] = useState<any[]>();
+  const [contentPreview, setcontentPreview] = useState<any[]>();
   const handleShow = () => {
     setShow(true);
     const options: RequestInit = {
       method: 'GET',
       credentials: 'include',
     };
-    const apiUrl = `${BACKEND_API}/api/v1/files/${id}/preview`;
+    const apiUrl = `${BACKEND_API}/api/v1/files/${id}`;
     fetch(apiUrl, options)
       .then((response) => response.json())
-      .then((data1) => setcontentPreview(data1.contentPreview));
+      .then((data1) => {
+        setcontentPreview(data1.contentPreview);
+        setColumnMapping(data1.columnMapping);
+      });
   };
+
+  // console.log(filedata, id);
 
   const setMapping = (k) => {
     const fn = (e) => {
@@ -55,7 +61,7 @@ export default function ColumnMapping({ fileType, id }: Type) {
       newColumnMapping[k] = { columnName };
       // set the mapping
       setColumnMapping(newColumnMapping);
-      console.log(newColumnMapping);
+      // console.log(newColumnMapping);
     };
     return fn;
   };
@@ -87,15 +93,13 @@ export default function ColumnMapping({ fileType, id }: Type) {
                           </div>
                         </th>
                       </tr>
-                      <tr>
-                        <td>{contentPreview[keyName][0] || ' '}</td>
-                      </tr>
-                      <tr>
-                        <td>{contentPreview[keyName][1] || ' '}</td>
-                      </tr>
-                      <tr>
-                        <td>{contentPreview[keyName][2] || ' '}</td>
-                      </tr>
+                      {
+                        contentPreview[keyName].map((e) => (
+                          e
+                            ? <tr><td>{e}</td></tr>
+                            : null
+                        ))
+                      }
                     </tbody>
                   </table>
                 )))

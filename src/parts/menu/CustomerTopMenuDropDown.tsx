@@ -1,10 +1,12 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
+import { BACKEND_API } from '../../app/config';
 
 type CustomerTopMenuDropDownItemsTypes = {
   itemTitle?: string | undefined;
   itemPath?: string | undefined;
+  itemExternal?: boolean | undefined,
   icon?: string | undefined;
   divider?: boolean | undefined;
   itemHide?: boolean | undefined
@@ -46,6 +48,7 @@ function CustomerTopMenuDropDown({
         {items.map(({
           itemTitle,
           itemPath,
+          itemExternal,
           icon,
           divider,
           itemHide,
@@ -80,11 +83,22 @@ function CustomerTopMenuDropDown({
 
           return (
             <li key={`${i}${title}${id}${itemTitle}${uuidv4()}`}>
-              <NavLink to={itemPath} className="dropdown-item">
-                {icon && (<i className={icon} />) }
-                {' '}
-                {itemTitle}
-              </NavLink>
+
+              {itemExternal
+                ? (
+                  <a href={itemPath} className="dropdown-item">
+                    {icon && (<i className={icon} />) }
+                    {' '}
+                    {itemTitle}
+                  </a>
+                )
+                : (
+                  <NavLink to={itemPath} className="dropdown-item">
+                    {icon && (<i className={icon} />) }
+                    {' '}
+                    {itemTitle}
+                  </NavLink>
+                )}
             </li>
           );
         })}

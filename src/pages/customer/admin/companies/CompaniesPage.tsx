@@ -2,20 +2,21 @@ import React, {
   useCallback, useEffect, useMemo, useRef, useState,
 } from 'react';
 import { AgGridReact } from 'ag-grid-react';
-import { hideModal, showModal } from 'app/utils/Modal';
+import { showModal } from 'app/utils/Modal';
 import { useAppDispatch, useCompanies, useWindowDimensions } from 'app/hooks';
 import PageWrapper from 'components/PageWrapper';
 import {
-  fetchCompanies, updateCompanyRequest,
+  fetchCompanies, updateCompanyRequest, isLoadingSelector,
 } from 'state/companies/companiesSlice';
 import { agGridCompaniesDTO } from 'app/utils/Helpers';
 import { CompaniesType } from 'services/companiesAPIService';
 import { useSelector } from 'react-redux';
 import { availableCustomers } from 'state/customers/customersSlice';
 import { ICellRendererParams } from 'ag-grid-community';
+import classNames from 'classnames';
 import NewCompanyModal from './NewCompanyModal';
 import EditCompanyModal from './EditCompanyModal';
-import EditCompanyCredentialsModal from './EditCompanyCredentialsModal';
+import CompanyCredentialsModal from './CompanyCredentialsModal';
 
 type ActionsRendererProps = {
   params: ICellRendererParams;
@@ -24,7 +25,7 @@ type ActionsRendererProps = {
 };
 function ActionsRenderer({ params, onEditClickCallback, onCredentialsClickCallback }: ActionsRendererProps) {
   return (
-    <div className="d-flex justify-content-around align-items-center w-100 h-100 ">
+    <div className="d-flex justify-content-around align-items-center w-100 h-100">
       <button type="button" className="btn btn-sm btn-light" onClick={(e) => onEditClickCallback(e, params)}>
         <i className="fa-solid fa-pen-to-square" />
         {' '}
@@ -39,18 +40,26 @@ function ActionsRenderer({ params, onEditClickCallback, onCredentialsClickCallba
   );
 }
 
-function CustomActionsToolPanel() {
+function CustomActionsToolPanel(onRefreshCallback, isFetchLoading) {
   return (
     <div className="container-fluid">
-      <div className="row p-2">
+      <div className="row p-2 gap-2">
         <button
           type="button"
-          className="btn btn-sm btn-danger"
+          className="btn btn-sm btn-danger px-4 d-flex gap-2 align-items-center justify-content-center"
           onClick={() => showModal('newCompanyModal')}
         >
           <i className="fa-solid fa-circle-plus" />
-          {' '}
           Add Company
+        </button>
+
+        <button
+          type="button"
+          className="btn btn-sm btn-info px-4 d-flex gap-2 align-items-center justify-content-center"
+          onClick={onRefreshCallback}
+        >
+          <i className={classNames(['fa-solid', 'fa-rotate', { 'fa-spin': isFetchLoading }])} />
+          Refresh
         </button>
       </div>
     </div>
@@ -83,8 +92,8 @@ export default function CompaniesPage() {
   const anyCustomer = useSelector(availableCustomers);
   const { height, width } = useWindowDimensions();
   const rows = useCompanies();
-  const [companyToEdit, setCompanyToEdit] = useState<CompaniesType | null>(null);
-  const [companyToEditCredentials, setCompanyToEditCredentials] = useState<CompaniesType | null>(null);
+  const [companyData, setCompanyData] = useState<CompaniesType | null>(null);
+  const isFetchLoading = useSelector(isLoadingSelector);
 
   const containerStyle = useMemo(() => ({
     width: '100%',
@@ -93,18 +102,16 @@ export default function CompaniesPage() {
   }), [height, width]);
 
   const onEditClickCallback = (e, params) => {
-    setCompanyToEdit(params.data);
+    setCompanyData(params.data);
     showModal('editCompanyModal', () => {
-      setCompanyToEdit(null);
-      setCompanyToEditCredentials(null);
+      setCompanyData(null);
     });
   };
 
   const onCredentialsClickCallback = (e, params) => {
-    setCompanyToEditCredentials(params.data);
+    setCompanyData(params.data);
     showModal('editCredentialsCompanyModal', () => {
-      setCompanyToEdit(null);
-      setCompanyToEditCredentials(null);
+      setCompanyData(null);
     });
   };
 
@@ -163,6 +170,10 @@ export default function CompaniesPage() {
     'custom-actions-tool': '<i class="fa-solid fa-screwdriver-wrench"></i>',
   }), []);
 
+  const onRefreshCallback = () => {
+    dispatch(fetchCompanies());
+  };
+
   const sideBar = useMemo(() => ({
     toolPanels: [
       {
@@ -170,7 +181,7 @@ export default function CompaniesPage() {
         labelDefault: 'Actions',
         labelKey: 'customActionsTool',
         iconKey: 'custom-actions-tool',
-        toolPanel: CustomActionsToolPanel,
+        toolPanel: () => CustomActionsToolPanel(onRefreshCallback, isFetchLoading),
       },
       {
         id: 'columns',
@@ -188,7 +199,7 @@ export default function CompaniesPage() {
       },
     ],
     defaultToolPanel: 'customActionsTool',
-  }), []);
+  }), [isFetchLoading]);
 
   const defaultColDef = useMemo(() => ({
     sortable: true,
@@ -223,6 +234,8 @@ export default function CompaniesPage() {
     }
   }, [rows]);
 
+  // console.log(rows);
+
   if (!anyCustomer) {
     return (
       <PageWrapper pageTitle="Companies" icon="fa-solid fa-building">
@@ -240,8 +253,8 @@ export default function CompaniesPage() {
 
       <div className=" ag-theme-alpine grid-container-style">
         <NewCompanyModal />
-        <EditCompanyModal companyToEdit={companyToEdit} />
-        <EditCompanyCredentialsModal companyToEditCredentials={companyToEditCredentials} />
+        <EditCompanyModal companyData={companyData} />
+        <CompanyCredentialsModal companyData={companyData} />
         <AgGridReact
           containerStyle={containerStyle}
           ref={gridRef}

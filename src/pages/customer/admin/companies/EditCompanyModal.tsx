@@ -22,9 +22,9 @@ interface EditCompanyFormProps {
 }
 
 interface EditCompanyModalProps {
-  companyToEdit: CompaniesType | null;
+  companyData: CompaniesType | null;
 }
-export default function EditCompanyModal({ companyToEdit }: EditCompanyModalProps) {
+export default function EditCompanyModal({ companyData }: EditCompanyModalProps) {
   const dispatch = useAppDispatch();
   const isLoading = useSelector(isPutLoadingSelector);
   const selectedCustomer = useSelector(getSelectedCustomer);
@@ -47,7 +47,7 @@ export default function EditCompanyModal({ companyToEdit }: EditCompanyModalProp
   });
 
   const onSubmit = ({ name, parent }: EditCompanyFormProps) => {
-    const payload = { data: { name, parent: Number(parent), customer_id: Number(selectedCustomer?.id) }, id: companyToEdit?.id };
+    const payload = { data: { name, parent: Number(parent), customer_id: Number(selectedCustomer?.id) }, id: companyData?.id };
     dispatch(updateCompanyRequest({ ...payload }));
   };
 
@@ -58,9 +58,9 @@ export default function EditCompanyModal({ companyToEdit }: EditCompanyModalProp
   }, [isLoading]);
 
   useEffect(() => {
-    const parentCom = companySelector.find((i) => i.parent === companyToEdit?.parent);
-    reset({ name: companyToEdit?.name, parent: parentCom?.parent });
-  }, [companyToEdit]);
+    const parentCom = companySelector.find((i) => i.parent === companyData?.parent);
+    reset({ name: companyData?.name, parent: parentCom?.parent });
+  }, [companyData]);
 
   return (
     <div className="modal fade" id={modalId} aria-labelledby={`new${modalId}Label`} aria-hidden="true">
