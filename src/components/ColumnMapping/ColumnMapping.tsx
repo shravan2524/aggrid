@@ -56,7 +56,6 @@ export default function ColumnMapping({ fileType, id }: Type) {
 
   const setMapping = (k) => {
     const fn = (e) => {
-      alert(1);
       const columnName = e.target.value;
       const newColumnMapping = { ...columnMapping };
       newColumnMapping[k] = { columnName };
