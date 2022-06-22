@@ -13,7 +13,7 @@ import {
   setSelectedCompany,
 } from 'state/companies/companiesSlice';
 
-import { getSelectedCustomer } from 'state/customers/customersSlice';
+import { getSelectedTenant } from 'state/tenants/tenantsSlice';
 import { BACKEND_API } from 'app/config';
 import CustomerTopMenuDropDown from './CustomerTopMenuDropDown';
 import CustomerTopMenuSelect from './CustomerTopMenuSelect';
@@ -48,7 +48,7 @@ function SecondaryCustomerTopMenu() {
 
 export default function CustomerTopMenu() {
   const dispatch = useAppDispatch();
-  const selectedWorkspace = useSelector(getSelectedCustomer);
+  const selectedWorkspace = useSelector(getSelectedTenant);
 
   const userFullName = useMemo(() => getAuthFullNameFromLocal(), []);
 

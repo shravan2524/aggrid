@@ -6,7 +6,7 @@ import classNames from 'classnames';
 import { useSelector } from 'react-redux';
 import { useAppDispatch } from 'app/hooks';
 import CustomButton from 'components/CustomButton';
-import { getSelectedCustomer } from 'state/customers/customersSlice';
+import { getSelectedTenant } from 'state/tenants/tenantsSlice';
 import {
   fetchCompanies,
   getCompanies,
@@ -23,7 +23,7 @@ interface NewCompanyFormProps {
 export default function NewCompanyModal() {
   const dispatch = useAppDispatch();
   const isLoading = useSelector(isPostLoadingSelector);
-  const selectedCustomer = useSelector(getSelectedCustomer);
+  const selectedCustomer = useSelector(getSelectedTenant);
   const companySelector = useSelector(getCompanies);
 
   const modalId = 'newCompanyModal';
@@ -90,9 +90,9 @@ export default function NewCompanyModal() {
                 </select>
 
                 {errors.parent && (
-                <div id="validationTitleFeedback" className="invalid-feedback">
-                  <p>{errors.parent?.message}</p>
-                </div>
+                  <div id="validationTitleFeedback" className="invalid-feedback">
+                    <p>{errors.parent?.message}</p>
+                  </div>
                 )}
               </div>
 
@@ -105,9 +105,9 @@ export default function NewCompanyModal() {
                   placeholder="Enter Company name ..."
                 />
                 {errors.name && (
-                <div id="validationTitleFeedback" className="invalid-feedback">
-                  <p>{errors.name?.message}</p>
-                </div>
+                  <div id="validationTitleFeedback" className="invalid-feedback">
+                    <p>{errors.name?.message}</p>
+                  </div>
                 )}
               </div>
 

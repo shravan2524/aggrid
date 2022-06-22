@@ -8,7 +8,7 @@ import {
   getCompanies,
 } from '../state/companies/companiesSlice';
 import { CompaniesType } from '../services/companiesAPIService';
-import { getSelectedCustomer } from '../state/customers/customersSlice';
+import { getSelectedTenant } from '../state/tenants/tenantsSlice';
 
 // Use throughout your app instead of plain `useDispatch` and `useSelector`
 export const useAppDispatch = () => useDispatch<AppDispatch>();
@@ -78,7 +78,7 @@ export const useCompanies = () => {
   const dispatch = useAppDispatch();
 
   const [customerCompanies, setCustomerCompanies] = useState<CompaniesType[]>([]);
-  const selectedCustomer = useSelector(getSelectedCustomer);
+  const selectedCustomer = useSelector(getSelectedTenant);
   const getAllCompanies = useSelector(getCompanies);
 
   useEffect(() => {
@@ -87,7 +87,7 @@ export const useCompanies = () => {
 
   useEffect(() => {
     if (selectedCustomer) {
-      const selectedCustomerCompanies = getAllCompanies.filter((i) => i.customer_id === Number(selectedCustomer.id));
+      const selectedCustomerCompanies = getAllCompanies.filter((i) => i.tenantId === Number(selectedCustomer.id));
       setCustomerCompanies(selectedCustomerCompanies);
     }
   }, [getAllCompanies]);

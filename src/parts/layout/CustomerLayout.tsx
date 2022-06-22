@@ -4,8 +4,8 @@ import { Toaster } from 'react-hot-toast';
 import CustomerTopMenu from 'parts/menu/CustomerTopMenu';
 import BaseFooter from 'parts/footer/BaseFooter';
 import {
-  fetchCustomers, getCustomers, getSelectedCustomer, setSelectedCustomer,
-} from 'state/customers/customersSlice';
+  fetchTenants, getTenants, getSelectedTenant, setSelectedTenant,
+} from 'state/tenants/tenantsSlice';
 import { fetchCompanies } from 'state/companies/companiesSlice';
 import { useAppDispatch, useCustomerTopMenuHeightDimension } from 'app/hooks';
 import { useSelector } from 'react-redux';
@@ -15,20 +15,20 @@ export default function CustomerLayout() {
   const dispatch = useAppDispatch();
 
   const location = useLocation();
-  const customers = useSelector(getCustomers);
-  const selectedCustomer = useSelector(getSelectedCustomer);
+  const customers = useSelector(getTenants);
+  const selectedCustomer = useSelector(getSelectedTenant);
   const [menuResponsiveClass, setMenuResponsiveClass] = useState<string>('');
   const topMenuHeight = useCustomerTopMenuHeightDimension();
   const secondaryMenuItemVisible = useSelector(isSecondaryMenuItemVisible);
 
   // Fetch all companies and workspaces ...
   useEffect(() => {
-    dispatch(fetchCustomers()).then(() => dispatch(fetchCompanies()));
+    dispatch(fetchTenants()).then(() => dispatch(fetchCompanies()));
   }, [dispatch]);
 
   useEffect(() => {
     if (customers.length && !selectedCustomer) {
-      dispatch(setSelectedCustomer(customers[0].id));
+      dispatch(setSelectedTenant(customers[0].id));
     }
   }, [customers]);
 
