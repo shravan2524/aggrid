@@ -5,10 +5,11 @@ import { AgGridReact } from 'ag-grid-react';
 import { showModal } from 'app/utils/Modal';
 import { useAppDispatch, useWindowDimensions } from 'app/hooks';
 import PageWrapper from 'components/PageWrapper';
+import CustomButton from 'components/CustomButton';
 import { agGridFilesDTO } from 'app/utils/Helpers';
 
 import ReactFileUploder from 'components/FileUploder/Main';
-import { Column, ICellRendererParams } from 'ag-grid-community';
+import { Column, Downloader, ICellRendererParams } from 'ag-grid-community';
 import ColumnMapping from 'components/ColumnMapping/ColumnMapping';
 import './FilePage.scss';
 import { useSelector } from 'react-redux';
@@ -21,6 +22,20 @@ type ActionsRendererProps = {
   params: ICellRendererParams;
   onFileMappingClickCallback: (e: React.MouseEvent<HTMLButtonElement>, params: ICellRendererParams) => void;
 };
+type SelectActionsRendererProps = {
+  params: ICellRendererParams;
+  onFileMappingClickCallback: (e: React.MouseEvent<HTMLButtonElement>, params: ICellRendererParams) => void;
+};
+function SelectFiles({ params, onFileMappingClickCallback } : SelectActionsRendererProps) {
+  // console.log(params.data);
+  return (
+    <div>
+      <input type="checkbox" id="vehicle1" name="vehicle1" value="Bike" onChange={(e) => onFileMappingClickCallback(params.data.id, params)} />
+      <label> </label>
+    </div>
+  );
+}
+
 function ActionsRenderer({ params, onFileMappingClickCallback }: ActionsRendererProps) {
   const [contentType, setcontentType] = useState('GSTR2A');
   const dispatch = useAppDispatch();
@@ -31,6 +46,9 @@ function ActionsRenderer({ params, onFileMappingClickCallback }: ActionsRenderer
     dispatch(setContentTypeRequest({ ...params.data, data: e.target.value }));
   }
 
+  const download = (e) => {
+    console.log('download file');
+  };
   return (
     <div className="d-flex justify-content-between align-items-center w-100 h-100" id="columns">
       <select className="p-8" onChange={onchange}>
@@ -60,6 +78,14 @@ function ActionsRenderer({ params, onFileMappingClickCallback }: ActionsRenderer
           )
           : null
       }
+      <button
+        type="button"
+        className="btn btn-sm btn-info px-4 d-flex gap-2 align-items-center justify-content-center"
+        onClick={download}
+      >
+        <i className="fa fa-download" />
+        Download File
+      </button>
     </div>
   );
 }
@@ -77,6 +103,14 @@ function CustomActionsToolPanel(onRefreshCallback) {
         >
           <i className="fa-solid fa-rotate" />
           Refresh
+        </button>
+        <button
+          type="button"
+          className="btn btn-sm btn-info px-4 d-flex gap-2 align-items-center justify-content-center"
+          onClick={onRefreshCallback}
+        >
+          <i className="fa fa-download" />
+          Download Files
         </button>
       </div>
     </div>
@@ -96,14 +130,42 @@ export default function FilesPage() {
     height: '25rem',
   }), [height, width]);
 
+  const [selectedFiles, setselectedFiles] = useState<any[]>([]);
   const onFileMappingClickCallback = (e, params) => {
     // console.log('Do Mapping or something like show a modal etc here ...');
+    const tselectfiles = selectedFiles;
+    const ind = tselectfiles.findIndex((v) => v === e);
+    console.log(ind);
+    if (ind === -1) {
+      tselectfiles.push(e);
+    } else {
+      tselectfiles.splice(ind, 1);
+    }
+    setselectedFiles(tselectfiles);
+    console.log(selectedFiles);
   };
 
   const [columnDefs, setColumnDefs] = useState([
     {
       headerName: 'Files Details',
       children: [
+        {
+          field: '',
+          // eslint-disable-next-line react/no-unstable-nested-components
+          cellRenderer: (params) => (<SelectFiles params={params} onFileMappingClickCallback={(e) => onFileMappingClickCallback(e, params)} />),
+          editable: false,
+          filter: false,
+          cellStyle: (params) => {
+            if (params.value === 'Actions') {
+              // mark police cells as red
+              return { width: '100%', height: '100%' };
+            }
+            return null;
+          },
+          width: 40,
+          minWidth: 40,
+          maxWidth: 40,
+        },
         {
           headerName: 'Name',
           field: 'fileName',

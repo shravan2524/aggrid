@@ -9,7 +9,6 @@ import CustomButton from 'components/CustomButton';
 import {
   fetchCustomers,
   isPutLoadingSelector, updateCustomerRequest,
-
 } from 'state/customers/customersSlice';
 import { hideModal } from 'app/utils/Modal';
 import { CustomersType } from 'services/customersAPIService';
