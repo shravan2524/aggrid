@@ -48,7 +48,7 @@ body {
   width: 100%;
 
   .ag-root-wrapper {
-    min-height: 600px;
+    height: 65vh;
 
     .ag-react-container{
       width: 100%;
@@ -126,3 +126,12 @@ table {
 .mta{
 	margin-top: 10rem;
 }
+
+.ag-theme-alpine .ag-column-drop-horizontal, .ag-header-row .ag-header-row-column-group{
+	height: 30px;
+}
+
+.ag-header-row{
+	height: 40px !important;
+}
+

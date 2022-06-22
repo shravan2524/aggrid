@@ -61,7 +61,7 @@ export async function setContentType(payload): Promise<FilesType[]> {
   } else {
     data1 = 'invoicePDF';
   }
-  console.log(data1);
+  // console.log(data1);
   const options: RequestInit = {
     headers: {
       Accept: 'application/json',

@@ -10,6 +10,7 @@ import { agGridFilesDTO } from 'app/utils/Helpers';
 import ReactFileUploder from 'components/FileUploder/Main';
 import { Column, ICellRendererParams } from 'ag-grid-community';
 import ColumnMapping from 'components/ColumnMapping/ColumnMapping';
+import './FilePage.scss';
 import { useSelector } from 'react-redux';
 import {
   fetchFiles, getFiles,
@@ -83,12 +84,11 @@ export default function FilesPage() {
 
   const containerStyle = useMemo(() => ({
     width: '100%',
-    height: `${(height)}px`,
-    minHeight: '600px',
+    height: '25rem',
   }), [height, width]);
 
   const onFileMappingClickCallback = (e, params) => {
-    console.log('Do Mapping or something like show a modal etc here ...');
+    // console.log('Do Mapping or something like show a modal etc here ...');
   };
 
   const [columnDefs, setColumnDefs] = useState([
@@ -100,11 +100,6 @@ export default function FilesPage() {
           field: 'fileName',
           filter: 'agNumberColumnFilter',
           editable: false,
-        },
-        {
-          headerName: 'Type',
-          field: 'fileType',
-          filter: 'agTextColumnFilter',
         },
         {
           field: 'actions',
