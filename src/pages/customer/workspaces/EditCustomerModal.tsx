@@ -7,18 +7,18 @@ import { useSelector } from 'react-redux';
 import { useAppDispatch } from 'app/hooks';
 import CustomButton from 'components/CustomButton';
 import {
-  fetchCustomers,
-  isPutLoadingSelector, updateCustomerRequest,
-} from 'state/customers/customersSlice';
+  fetchTenants,
+  isPutLoadingSelector, updateTenantRequest,
+} from 'state/tenants/tenantsSlice';
 import { hideModal } from 'app/utils/Modal';
-import { CustomersType } from 'services/customersAPIService';
+import { TenantType } from 'services/tenantsAPIService';
 
 interface EditCustomerFormProps {
   title: string;
 }
 
 interface EditCustomerModalProps {
-  customerToEdit: CustomersType | null;
+  customerToEdit: TenantType | null;
 }
 export default function EditCustomerModal({ customerToEdit }: EditCustomerModalProps) {
   const dispatch = useAppDispatch();
@@ -41,11 +41,11 @@ export default function EditCustomerModal({ customerToEdit }: EditCustomerModalP
 
   const onSubmit = ({ title }: EditCustomerFormProps) => {
     const payload = { data: { title }, id: customerToEdit?.id };
-    dispatch(updateCustomerRequest({ ...payload }));
+    dispatch(updateTenantRequest({ ...payload }));
   };
 
   useEffect(() => {
-    dispatch(fetchCustomers()).then(() => {
+    dispatch(fetchTenants()).then(() => {
       hideModal(modalId);
     });
   }, [isLoading]);
@@ -74,9 +74,9 @@ export default function EditCustomerModal({ customerToEdit }: EditCustomerModalP
                   placeholder="Enter Customer title ..."
                 />
                 {errors.title && (
-                <div id="validationTitleFeedback" className="invalid-feedback">
-                  <p>{errors.title?.message}</p>
-                </div>
+                  <div id="validationTitleFeedback" className="invalid-feedback">
+                    <p>{errors.title?.message}</p>
+                  </div>
                 )}
               </div>
 

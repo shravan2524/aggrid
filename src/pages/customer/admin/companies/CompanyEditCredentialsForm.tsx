@@ -5,7 +5,7 @@ import { yupResolver } from '@hookform/resolvers/yup/dist/yup';
 import classNames from 'classnames';
 import { useSelector } from 'react-redux';
 import CustomButton from 'components/CustomButton';
-import { getSelectedCustomer } from 'state/customers/customersSlice';
+import { getSelectedTenant } from 'state/tenants/tenantsSlice';
 import { CompaniesType } from 'services/companiesAPIService';
 import { CredentialsType, putCompanyCredentialsData } from 'services/credentialsAPIService';
 import { toast } from 'react-hot-toast';
@@ -25,7 +25,7 @@ interface CompanyEditCredentialsFormProps {
 export default function CompanyEditCredentialsForm({
   modalId, companyData, companyCredentials,
 }: CompanyEditCredentialsFormProps) {
-  const selectedCustomer = useSelector(getSelectedCustomer);
+  const selectedCustomer = useSelector(getSelectedTenant);
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const schema = yup.object({
@@ -97,9 +97,9 @@ export default function CompanyEditCredentialsForm({
             placeholder="Enter Credentials username ..."
           />
           {errors.username && (
-          <div id="validationTitleFeedback" className="invalid-feedback">
-            <p>{errors.username?.message}</p>
-          </div>
+            <div id="validationTitleFeedback" className="invalid-feedback">
+              <p>{errors.username?.message}</p>
+            </div>
           )}
         </div>
 
@@ -113,9 +113,9 @@ export default function CompanyEditCredentialsForm({
             placeholder="Enter Credentials current password ..."
           />
           {errors.current_password && (
-          <div id="validationCurrentPasswordFeedback" className="invalid-feedback">
-            <p>{errors.current_password?.message}</p>
-          </div>
+            <div id="validationCurrentPasswordFeedback" className="invalid-feedback">
+              <p>{errors.current_password?.message}</p>
+            </div>
           )}
         </div>
 
@@ -129,9 +129,9 @@ export default function CompanyEditCredentialsForm({
             placeholder="Enter Credentials new password ..."
           />
           {errors.password && (
-          <div id="validationTitleFeedback" className="invalid-feedback">
-            <p>{errors.password?.message}</p>
-          </div>
+            <div id="validationTitleFeedback" className="invalid-feedback">
+              <p>{errors.password?.message}</p>
+            </div>
           )}
         </div>
 

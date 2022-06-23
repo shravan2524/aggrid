@@ -5,7 +5,7 @@ import { yupResolver } from '@hookform/resolvers/yup/dist/yup';
 import classNames from 'classnames';
 import { useSelector } from 'react-redux';
 import CustomButton from 'components/CustomButton';
-import { getSelectedCustomer } from 'state/customers/customersSlice';
+import { getSelectedTenant } from 'state/tenants/tenantsSlice';
 import { CompaniesType } from 'services/companiesAPIService';
 import { postCompanyCredentialsData } from 'services/credentialsAPIService';
 import { toast } from 'react-hot-toast';
@@ -22,7 +22,7 @@ interface CompanyNewCredentialsFormProps {
 }
 
 export default function CompanyNewCredentialsForm({ modalId, companyData }: CompanyNewCredentialsFormProps) {
-  const selectedCustomer = useSelector(getSelectedCustomer);
+  const selectedCustomer = useSelector(getSelectedTenant);
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
 

@@ -11,7 +11,7 @@ import {
 import { agGridCompaniesDTO } from 'app/utils/Helpers';
 import { CompaniesType } from 'services/companiesAPIService';
 import { useSelector } from 'react-redux';
-import { availableCustomers } from 'state/customers/customersSlice';
+import { availableTenants } from 'state/tenants/tenantsSlice';
 import { ICellRendererParams } from 'ag-grid-community';
 import classNames from 'classnames';
 import NewCompanyModal from './NewCompanyModal';
@@ -89,7 +89,7 @@ export default function CompaniesPage() {
 
   const [rowData, setRowData] = useState<any>();
 
-  const anyCustomer = useSelector(availableCustomers);
+  const anyCustomer = useSelector(availableTenants);
   const { height, width } = useWindowDimensions();
   const rows = useCompanies();
   const [companyData, setCompanyData] = useState<CompaniesType | null>(null);

@@ -9,8 +9,8 @@ import CustomButton from 'components/CustomButton';
 
 import { hideModal } from 'app/utils/Modal';
 import {
-  fetchCustomers, isPostLoadingSelector, newCustomerRequest,
-} from 'state/customers/customersSlice';
+  fetchTenants, isPostLoadingSelector, newTenantRequest,
+} from 'state/tenants/tenantsSlice';
 
 interface NewCustomerFormProps {
   title: string;
@@ -37,13 +37,13 @@ export default function NewCustomerModal() {
 
   const onSubmit = ({ title }: NewCustomerFormProps) => {
     const body = { title };
-    dispatch(newCustomerRequest(body));
+    dispatch(newTenantRequest(body));
   };
 
   useEffect(() => {
     hideModal(modalId);
     reset({ title: '' });
-    dispatch(fetchCustomers());
+    dispatch(fetchTenants());
   }, [isLoading]);
 
   return (
@@ -66,9 +66,9 @@ export default function NewCustomerModal() {
                   placeholder="Enter Customer name ..."
                 />
                 {errors.title && (
-                <div id="validationTitleFeedback" className="invalid-feedback">
-                  <p>{errors.title?.message}</p>
-                </div>
+                  <div id="validationTitleFeedback" className="invalid-feedback">
+                    <p>{errors.title?.message}</p>
+                  </div>
                 )}
               </div>
 

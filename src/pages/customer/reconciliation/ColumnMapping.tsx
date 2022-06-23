@@ -6,7 +6,7 @@ import classNames from 'classnames';
 import { useSelector } from 'react-redux';
 import { useAppDispatch } from 'app/hooks';
 import CustomButton from 'components/CustomButton';
-import { getSelectedCustomer } from 'state/customers/customersSlice';
+import { getSelectedTenant } from 'state/tenants/tenantsSlice';
 import './ColumnMapping.scss';
 import {
   fetchCompanies,
@@ -18,7 +18,7 @@ import { hideModal, initBootstrapModal } from 'app/utils/Modal';
 import { Column } from 'ag-grid-community';
 
 interface NewProps {
-  contentType : string;
+  contentType: string;
 }
 
 interface NewCompanyFormProps {
@@ -73,39 +73,39 @@ function Columnlist() {
   return (
     <div>
       {
-      arr.map((ee, ind) => (
-        <table key={ind}>
-          <tr>
-            <th>
-              <div>
-                <span>Seller Gstin</span>
-                <select onChange={(e1) => onchange(ind, e1)}>
-                  <option>Column Mapping : </option>
-                  {
-                    contentTypeselect.map((e) => (
-                      (e.selected === (ind + 1) || !e.selected)
-                        ? <option key={e.columnName}>{e.columnName}</option>
-                        : null
-                    ))
+        arr.map((ee, ind) => (
+          <table key={ind}>
+            <tr>
+              <th>
+                <div>
+                  <span>Seller Gstin</span>
+                  <select onChange={(e1) => onchange(ind, e1)}>
+                    <option>Column Mapping : </option>
+                    {
+                      contentTypeselect.map((e) => (
+                        (e.selected === (ind + 1) || !e.selected)
+                          ? <option key={e.columnName}>{e.columnName}</option>
+                          : null
+                      ))
                     }
-                </select>
-              </div>
-            </th>
-          </tr>
-          <tr>
-            <td>3718AJBD18BAJD</td>
-          </tr>
-          <tr>
-            <td>25472HGAGDH1812</td>
-          </tr>
-          <tr>
-            <td>127AKDH1828BD11</td>
-          </tr>
-          <tr>
-            <td>25472HGAGDH1812</td>
-          </tr>
-        </table>
-      ))
+                  </select>
+                </div>
+              </th>
+            </tr>
+            <tr>
+              <td>3718AJBD18BAJD</td>
+            </tr>
+            <tr>
+              <td>25472HGAGDH1812</td>
+            </tr>
+            <tr>
+              <td>127AKDH1828BD11</td>
+            </tr>
+            <tr>
+              <td>25472HGAGDH1812</td>
+            </tr>
+          </table>
+        ))
 
       }
 
@@ -116,7 +116,7 @@ function Columnlist() {
 export default function ColumnMapping() {
   const dispatch = useAppDispatch();
   const isLoading = useSelector(isPostLoadingSelector);
-  const selectedCustomer = useSelector(getSelectedCustomer);
+  const selectedCustomer = useSelector(getSelectedTenant);
   const companySelector = useSelector(getCompanies);
   const modalId = useMemo(() => 'newCompanyModal', []);
   const schema = yup.object({

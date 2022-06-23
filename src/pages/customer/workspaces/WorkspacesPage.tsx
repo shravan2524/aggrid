@@ -6,11 +6,11 @@ import { showModal } from 'app/utils/Modal';
 import { useAppDispatch, useWindowDimensions } from 'app/hooks';
 import PageWrapper from 'components/PageWrapper';
 import {
-  fetchCustomers, updateCustomerRequest,
-  getCustomers, setSelectedCustomer, getSelectedCustomer,
-} from 'state/customers/customersSlice';
+  fetchTenants, updateTenantRequest,
+  getTenants, setSelectedTenant, getSelectedTenant,
+} from 'state/tenants/tenantsSlice';
 import { agGridCustomersDTO } from 'app/utils/Helpers';
-import { CustomersType } from 'services/customersAPIService';
+import { TenantType } from 'services/tenantsAPIService';
 import { useSelector } from 'react-redux';
 import { ICellRendererParams } from 'ag-grid-community';
 import { setSelectedCompany, isLoadingSelector } from 'state/companies/companiesSlice';
@@ -85,10 +85,9 @@ function ParentRenderer(params) {
 export default function WorkspacesPage() {
   const dispatch = useAppDispatch();
   const gridRef = useRef<any>();
-
-  const rows = useSelector(getCustomers);
-  const selectedWorkspace = useSelector(getSelectedCustomer);
-  const [customerToEdit, setCustomerToEdit] = useState<CustomersType | null>(null);
+  const rows = useSelector(getTenants);
+  const selectedWorkspace = useSelector(getSelectedTenant);
+  const [customerToEdit, setCustomerToEdit] = useState<TenantType | null>(null);
   const isFetchLoading = useSelector(isLoadingSelector);
   const { height, width } = useWindowDimensions();
 
@@ -109,7 +108,7 @@ export default function WorkspacesPage() {
     if (params.data) {
       if (params.data.id) {
         dispatch(setSelectedCompany(null));
-        dispatch(setSelectedCustomer(params.data.id));
+        dispatch(setSelectedTenant(params.data.id));
       }
     }
   };
@@ -131,7 +130,7 @@ export default function WorkspacesPage() {
           onCellValueChanged: (event) => {
             const { title, id } = event.data;
             const payload = { data: { title }, id };
-            dispatch(updateCustomerRequest({ ...payload }));
+            dispatch(updateTenantRequest({ ...payload }));
           },
         },
         {
@@ -157,7 +156,7 @@ export default function WorkspacesPage() {
   }), []);
 
   const onRefreshCallback = () => {
-    dispatch(fetchCustomers());
+    dispatch(fetchTenants());
   };
 
   const sideBar = useMemo(() => ({
@@ -203,7 +202,7 @@ export default function WorkspacesPage() {
   }, []);
 
   const onGridReady = useCallback((params) => {
-    dispatch(fetchCustomers());
+    dispatch(fetchTenants());
   }, []);
 
   useEffect(() => {

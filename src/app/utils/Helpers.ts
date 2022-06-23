@@ -1,7 +1,7 @@
 import { ValueFormatterParams } from 'ag-grid-community';
 import moment from 'moment';
 import { CompaniesAgGridType, CompaniesType } from 'services/companiesAPIService';
-import { CustomersAgGridType, CustomersType } from 'services/customersAPIService';
+import { TenantAGGridType, TenantType } from 'services/tenantsAPIService';
 import { FilesAgGridType, FilesType } from 'services/filesAPIService';
 
 export function agGridRowDrag(params) {
@@ -18,16 +18,16 @@ export function agGridCompaniesDTO(companies: CompaniesType[]): CompaniesAgGridT
     id,
     name,
     parent,
-    customer_id,
+    tenantId,
   }) => ({
     id,
     name,
     parent,
-    customer_id,
+    tenantId,
   }));
 }
 
-export function agGridCustomersDTO(companies: CustomersType[]): CustomersAgGridType[] {
+export function agGridCustomersDTO(companies: TenantType[]): TenantAGGridType[] {
   return companies.map(({
     id,
     title,

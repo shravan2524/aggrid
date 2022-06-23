@@ -1,4 +1,5 @@
-import { BACKEND_API } from '../app/config';
+import { BACKEND_API } from 'app/config';
+import { tenantUuid } from 'state/tenants/helper';
 
 /*
 [
@@ -13,26 +14,26 @@ import { BACKEND_API } from '../app/config';
 */
 export interface CompaniesType {
   id: number,
-  sys_company_id: number,
+  sysCompanyId: number,
   name: string,
   parent: number,
-  customer_id: number,
+  tenantId: number,
 }
 
 export interface CompaniesAgGridType {
   id: number,
   name: string,
   parent: number,
-  customer_id: number,
+  tenantId: number,
 }
 
-export async function fetchCompaniesData() :Promise<CompaniesType[]> {
+export async function fetchCompaniesData(): Promise<CompaniesType[]> {
   const options: RequestInit = {
     method: 'GET',
     credentials: 'include',
   };
 
-  const apiUrl = `${BACKEND_API}/api/v1/companies`;
+  const apiUrl = `${BACKEND_API}/api/v1/${tenantUuid()}/companies`;
   const response = await fetch(apiUrl, options);
 
   if (!response.ok) {
@@ -42,7 +43,7 @@ export async function fetchCompaniesData() :Promise<CompaniesType[]> {
   return response.json();
 }
 
-export async function postCompaniesData(data) :Promise<CompaniesType[]> {
+export async function postCompaniesData(data): Promise<CompaniesType[]> {
   const options: RequestInit = {
     headers: {
       Accept: 'application/json',
@@ -53,7 +54,7 @@ export async function postCompaniesData(data) :Promise<CompaniesType[]> {
     body: JSON.stringify({ ...data }),
   };
 
-  const apiUrl = `${BACKEND_API}/api/v1/companies`;
+  const apiUrl = `${BACKEND_API}/api/v1/${tenantUuid()}/companies`;
   const response = await fetch(apiUrl, options);
   if (!response.ok) {
     const message = `An error has occurred: ${response.status}`;
@@ -62,7 +63,7 @@ export async function postCompaniesData(data) :Promise<CompaniesType[]> {
   return response.json();
 }
 
-export async function putCompaniesData(payload) :Promise<CompaniesType[]> {
+export async function putCompaniesData(payload): Promise<CompaniesType[]> {
   const options: RequestInit = {
     headers: {
       Accept: 'application/json',
@@ -73,7 +74,7 @@ export async function putCompaniesData(payload) :Promise<CompaniesType[]> {
     body: JSON.stringify({ ...payload.data }),
   };
 
-  const apiUrl = `${BACKEND_API}/api/v1/companies/${payload.id}`;
+  const apiUrl = `${BACKEND_API}/api/v1/${tenantUuid()}/companies/${payload.id}`;
   const response = await fetch(apiUrl, options);
   if (!response.ok) {
     const message = `An error has occurred: ${response.status}`;

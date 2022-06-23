@@ -1,4 +1,5 @@
-import { BACKEND_API } from '../app/config';
+import { BACKEND_API } from 'app/config';
+import { tenantUuid } from 'state/tenants/helper';
 
 export interface FilesType {
   id: number,
@@ -21,7 +22,7 @@ export async function fetchFilesData(): Promise<FilesType[]> {
     method: 'GET',
     credentials: 'include',
   };
-  const apiUrl = `${BACKEND_API}/api/v1/files`;
+  const apiUrl = `${BACKEND_API}/api/v1/${tenantUuid()}/files`;
   const response = await fetch(apiUrl, options);
   if (!response.ok) {
     const message = `An error has occurreds: ${response.status}`;
@@ -41,7 +42,7 @@ export async function putFilesData(payload): Promise<FilesType[]> {
     body: JSON.stringify({ ...payload.data }),
   };
 
-  const apiUrl = `${BACKEND_API}/api/v1/files/${payload.id}`;
+  const apiUrl = `${BACKEND_API}/api/v1/${tenantUuid()}/files/${payload.id}`;
   const response = await fetch(apiUrl, options);
   if (!response.ok) {
     const message = `An error has occurred: ${response.status}`;
@@ -61,7 +62,7 @@ export async function setContentType(payload): Promise<FilesType[]> {
     body: JSON.stringify({ fileType: payload.data }),
   };
 
-  const apiUrl = `${BACKEND_API}/api/v1/files/${payload.id}/content-type`;
+  const apiUrl = `${BACKEND_API}/api/v1/${tenantUuid()}/files/${payload.id}/content-type`;
   const response = await fetch(apiUrl, options);
   if (!response.ok) {
     const message = `An error has occurred: ${response.status}`;
@@ -80,7 +81,7 @@ export async function setColumnMapping(payload): Promise<FilesType[]> {
     credentials: 'include',
     body: JSON.stringify({ columnMapping: payload.columnMapping }),
   };
-  const apiUrl = `${BACKEND_API}/api/v1/files/${payload.data}/column-mapping`;
+  const apiUrl = `${BACKEND_API}/api/v1/${tenantUuid()}/files/${payload.data}/column-mapping`;
   const response = await fetch(apiUrl, options);
   if (!response.ok) {
     const message = `An error has occurred: ${response.status}`;
