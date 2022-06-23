@@ -7,6 +7,10 @@ table {
 }
 
 .columnMapping th {
-  background-color: #c0c0c0;
+  background-color: #F0F0F0;
   padding: .2rem;
+}
+
+.columnMappingActive th {
+  background-color: #B0B0B0;
 }

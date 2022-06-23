@@ -48,8 +48,8 @@ export default function ColumnMapping({ fileType, id }: Type) {
     fetch(apiUrl, options)
       .then((response) => response.json())
       .then((data1) => {
-        setcontentPreview(data1.contentPreview);
-        setColumnMapping(data1.columnMapping);
+        setcontentPreview(data1.contentPreview || {});
+        setColumnMapping(data1.columnMapping || {});
       });
   };
 
@@ -79,7 +79,7 @@ export default function ColumnMapping({ fileType, id }: Type) {
             contentPreview
               ? (
                 Object.keys(contentPreview).map((keyName, i) => (
-                  <table key={i} className="columnMapping">
+                  <table key={i} className={`columnMapping ${columnMapping[keyName]?.columnName ? 'columnMappingActive' : ''}`}>
                     <tbody>
                       <tr>
                         <th>
@@ -95,11 +95,12 @@ export default function ColumnMapping({ fileType, id }: Type) {
                         </th>
                       </tr>
                       {
-                        contentPreview[keyName].map((e) => (
-                          e
-                            ? <tr><td>{e}</td></tr>
-                            : null
-                        ))
+                        contentPreview[keyName]?.map(
+                          (e, idx) => {
+                            e = e || ' ';
+                            return (<tr key={idx}><td>{e}</td></tr>);
+                          },
+                        )
                       }
                     </tbody>
                   </table>
