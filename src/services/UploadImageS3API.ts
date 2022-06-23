@@ -1,8 +1,9 @@
 import axios from 'axios';
 import toast from 'react-hot-toast';
 import { BACKEND_API } from 'app/config';
+import { tenantUuid } from 'state/tenants/helper';
 
-const API = `${BACKEND_API}/api/v1/pre-signed-url`;
+const API = `${BACKEND_API}/api/v1/${tenantUuid()}/files`;
 
 // GET ID
 function getIdFunction(file: File) {
