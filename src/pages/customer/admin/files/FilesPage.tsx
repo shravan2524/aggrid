@@ -45,6 +45,10 @@ function SelectFiles({ params, onFileMappingClickCallback }: SelectActionsRender
 }
 
 function ActionsRenderer({ params, onFileMappingClickCallback }: ActionsRendererProps) {
+  if (!params.data) {
+    return null;
+  }
+
   const [contentType, setcontentType] = useState(params?.data?.fileType || '');
   const dispatch = useAppDispatch();
 
@@ -52,23 +56,22 @@ function ActionsRenderer({ params, onFileMappingClickCallback }: ActionsRenderer
   function onchange(e) {
     setcontentType(e.target.value);
     /* eslint-disable-next-line */
-        dispatch(setContentTypeRequest({...params.data, data: e.target.value}));
+    dispatch(setContentTypeRequest({ ...params.data, data: e.target.value }));
   }
-  const [preSignedUrl, setpreSignedUrl] = useState();
 
-  useEffect(() => {
+  const downloadFile = (fileId) => {
     const options: RequestInit = {
       method: 'GET',
       credentials: 'include',
     };
-    const apiUrl = `${BACKEND_API}/api/v1/${tenantUuid()}/files/${params.data.id}/download`;
+    const apiUrl = `${BACKEND_API}/api/v1/${tenantUuid()}/files/${fileId}/download`;
     fetch(apiUrl, options)
       .then((response) => response.json())
-      .then((data1) => {
-        // console.log(data1);
-        setpreSignedUrl(data1);
+      .then((d) => {
+        const url = d?.url || d;
+        window.open(url, '_blank');
       });
-  }, []);
+  };
 
   return (
     <div className="d-flex justify-content-between align-items-center w-100 h-100" id="columns">
@@ -80,19 +83,20 @@ function ActionsRenderer({ params, onFileMappingClickCallback }: ActionsRenderer
         <option value="InvoicePDF">Invoice PDF</option>
       </select>
       {
-                (params.data)
-                && (params.data.fileType === '2A' || params.data.fileType === '2B' || params.data.fileType === 'PR')
-                  ? (
-                    <ColumnMapping id={params.data.id} fileType={params.data.fileType} />
-                  )
-                  : null
-            }
-      <a
+        (params.data)
+          && (params.data.fileType === '2A' || params.data.fileType === '2B' || params.data.fileType === 'PR')
+          ? (
+            <ColumnMapping id={params.data.id} fileType={params.data.fileType} />
+          )
+          : null
+      }
+      <button
         type="button"
-        href={preSignedUrl}
+        onClick={() => downloadFile(params.data.id)}
+        className="btn btn-primary"
       >
         <i className="fa fa-download" />
-      </a>
+      </button>
     </div>
   );
 }
