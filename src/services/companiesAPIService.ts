@@ -37,7 +37,7 @@ export async function fetchCompaniesData(): Promise<CompaniesType[]> {
   const response = await fetch(apiUrl, options);
 
   if (!response.ok) {
-    const message = `An error has occurresfsfd: ${response.status}`;
+    const message = `An error has occurr: ${response.status}`;
     throw new Error(message);
   }
   return response.json();

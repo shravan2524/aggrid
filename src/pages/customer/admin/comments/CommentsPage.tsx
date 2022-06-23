@@ -7,6 +7,7 @@ import { useAppDispatch, useWindowDimensions } from 'app/hooks';
 import { postComment, fetchComments } from 'state/comments/commentsSlice';
 import { fetchCommentsData } from 'services/commentsAPIServices';
 import { type } from 'os';
+import { tenantUuid } from 'state/tenants/helper';
 
 interface Type {
   date: string;
@@ -95,7 +96,7 @@ export default function CommentsPage() {
       method: 'GET',
       credentials: 'include',
     };
-    const apiUrl = `${BACKEND_API}/api/v1/comments/`;
+    const apiUrl = `${BACKEND_API}/api/v1/${tenantUuid()}/comments/`;
     fetch(apiUrl, options)
       .then((response) => response.json())
       .then((data1) => {

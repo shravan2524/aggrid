@@ -8,6 +8,7 @@ import {
   fetchFiles, getFiles,
   setContentTypeRequest, setColumnMappingRequest,
 } from 'state/files/filesSlice';
+import { tenantUuid } from 'state/tenants/helper';
 import { BACKEND_API } from 'app/config';
 import { columns2A, columns2B, columnsPR } from './DBColumns';
 
@@ -43,7 +44,7 @@ export default function ColumnMapping({ fileType, id }: Type) {
       method: 'GET',
       credentials: 'include',
     };
-    const apiUrl = `${BACKEND_API}/api/v1/files/${id}`;
+    const apiUrl = `${BACKEND_API}/api/v1/${tenantUuid()}/files/${id}`;
     fetch(apiUrl, options)
       .then((response) => response.json())
       .then((data1) => {

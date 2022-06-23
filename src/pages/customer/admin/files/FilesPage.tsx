@@ -12,6 +12,7 @@ import { ICellRendererParams } from 'ag-grid-community';
 import ColumnMapping from 'components/ColumnMapping/ColumnMapping';
 import './FilePage.scss';
 import { useSelector } from 'react-redux';
+import { tenantUuid } from 'state/tenants/helper';
 import {
   fetchFiles, getFiles,
   setContentTypeRequest, isLoadingSelector,
@@ -60,7 +61,7 @@ function ActionsRenderer({ params, onFileMappingClickCallback }: ActionsRenderer
       method: 'GET',
       credentials: 'include',
     };
-    const apiUrl = `${BACKEND_API}/api/v1/files/${params.data.id}/download`;
+    const apiUrl = `${BACKEND_API}/api/v1/${tenantUuid()}/files/${params.data.id}/download`;
     fetch(apiUrl, options)
       .then((response) => response.json())
       .then((data1) => {
@@ -170,7 +171,7 @@ export default function FilesPage() {
         method: 'GET',
         credentials: 'include',
       };
-      const apiUrl = `${BACKEND_API}/api/v1/files/${e}/download`;
+      const apiUrl = `${BACKEND_API}/api/v1/${tenantUuid()}/files/${e}/download`;
       fetch(apiUrl, options)
         .then((response) => response.json())
         .then(async (data1) => {
