@@ -22,8 +22,8 @@ function getS3Function(Key: any, uploadCount: any, uploadId: any) {
 }
 
 // PUT
-function putObjectsFunction(preSignedUrl: any, file: any, setProgress:any) {
-  return axios.put(preSignedUrl, file, { onUploadProgress: (e) => { const percent = Math.floor((e.loaded * 100) / e.total); setProgress(percent); } });
+function putObjectsFunction(preSignedUrl: any, file: any, onUploadProgress:any) {
+  return axios.put(preSignedUrl, file, { onUploadProgress });
 }
 // COMPLETE
 function completeFunction(Key: any, multiUploadArray: any, uploadId: any) {
@@ -35,7 +35,7 @@ function completeFunction(Key: any, multiUploadArray: any, uploadId: any) {
 }
 
 // FINAL API'S
-export async function MutPart({ setLoading, setProgress }, file: File) {
+export async function MutPart({ setLoading }, file: File, onUploadProgress:any) {
   try {
     const getUrl = await getIdFunction(file);
     const { uploadId, Key } = getUrl.data;
@@ -49,14 +49,13 @@ export async function MutPart({ setLoading, setProgress }, file: File) {
       const start = (uploadCount - 1) * chunkSize;
       const end = uploadCount * chunkSize;
       const fileBlob = uploadCount < chunkCount ? file.slice(start, end) : file.slice(start);
-
       //    GET URL
       /* eslint-disable no-await-in-loop */
       const getSignedUrlRes = await getS3Function(Key, uploadCount, uploadId);
       const { preSignedUrl } = getSignedUrlRes.data;
 
       // Upload S3 Url
-      const uploadChunck = await putObjectsFunction(preSignedUrl, fileBlob, setProgress);
+      const uploadChunck = await putObjectsFunction(preSignedUrl, fileBlob, onUploadProgress);
       const EtagHeader = uploadChunck.headers.etag;
       const uploadPartDetails = {
         ETag: EtagHeader,

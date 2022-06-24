@@ -11,10 +11,24 @@ function ReactFileUploder() {
   const [message, setMessage] = useState<any>([]);
   const progressInfosRef = useRef<any>([]);
   const modalId = 'add';
+  //   const chunkSize = 5 * 1024 * 1024; // 5MiB
+  //   const mapd = fileDropZone && fileDropZone.map((r:any) => Math.floor(r.size / chunkSize) + 1)
+  //  const chunkTotal = mapd &&mapd.reduce(
+  //       (prev: any, a: any) => a + (prev || 0),
+  //       0,
+  //     );
 
   // CALL API
   const UploadFile = async (i: any, file: File) => {
-    MutPart({ setLoading, setProgress }, file).then(() => {
+    const progressInf = [...progressInfosRef.current];
+    MutPart({ setLoading }, file, (event: any) => {
+      if (event.lengthComputable) {
+        progressInf[i].percentage = Math.round(
+          (100 * event.loaded) / event.total,
+        );
+        setProgress(progressInf);
+      }
+    }).then(() => {
       setMessage((prevMessage: any) => [
         ...prevMessage,
         `Uploaded the file successfully: ${file.name}`,
@@ -26,6 +40,11 @@ function ReactFileUploder() {
   const UploadFunction = () => {
     if (fileDropZone) {
       setLoading(true);
+      const progressInf = fileDropZone.map((file: File) => ({
+        percentage: 0,
+        fileName: file.name,
+      }));
+      progressInfosRef.current = progressInf;
       const uploadPromises = fileDropZone.map((file: File, i: any) => UploadFile(i, file));
       Promise.all(uploadPromises);
       setMessage([]);
@@ -33,28 +52,28 @@ function ReactFileUploder() {
   };
 
   // CALCULATE PROGRESS
-  // const mapProgress = progress.map((i: any) => i.percentage);
-  // const getSingleNumber = mapProgress.reduce(
-  //   (prev: any, a: any) => a + (prev || 0),
-  //   0,
-  // );
-  // const Total = Number(
-  //   progress.length > 0
-  //     ? (getSingleNumber / (progress.length > 0 ? progress.length : 0)).toFixed(
-  //       0,
-  //     )
-  //     : 0,
-  // );
+  const mapProgress = progress.map((i: any) => i.percentage);
+  const getSingleNumber = mapProgress.reduce(
+    (prev: any, a: any) => a + (prev || 0),
+    0,
+  );
+  const Total = Number(
+    progress.length > 0
+      ? (getSingleNumber / (progress.length > 0 ? progress.length : 0)).toFixed(
+        0,
+      )
+      : 0,
+  );
 
   // CLOSE MODEL
   const Close = () => {
     hideModal(modalId);
-    // if (Total === 100) {
-    setFileDropZone(null);
-    setProgress([]);
-    setLoading(false);
-    setMessage([]);
-    // }
+    if (Total === 100) {
+      setFileDropZone(null);
+      setProgress([]);
+      setLoading(false);
+      setMessage([]);
+    }
   };
 
   return (
@@ -86,7 +105,7 @@ function ReactFileUploder() {
             </div>
             <div className="modal-body">
               <UploadFileModel
-                progress={0}
+                progress={Total}
                 UploadFunction={UploadFunction}
                 loading={loading}
                 fileDropZone={fileDropZone}
