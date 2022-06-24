@@ -77,7 +77,7 @@ function ActionsRenderer({ params, onFileMappingClickCallback }: ActionsRenderer
         <option disabled value="">Select Content Type</option>
         <option value="2A">GSTR2A</option>
         <option value="2B">GSTR2B</option>
-		<option value="PR">Purchase Register</option>
+        <option value="PR">Purchase Register</option>
         <option value="InvoicePDF">Invoice PDF</option>
       </select>
       {
