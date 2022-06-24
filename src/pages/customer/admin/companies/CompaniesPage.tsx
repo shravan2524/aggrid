@@ -126,6 +126,16 @@ export default function CompaniesPage() {
           editable: false,
         },
         {
+          headerName: 'GSTIN',
+          field: 'gstin',
+          filter: 'agNumberColumnFilter',
+          onCellValueChanged: (event) => {
+            const { gstin, id } = event.data;
+            const payload = { data: { gstin }, id };
+            dispatch(updateCompanyRequest({ ...payload }));
+          },
+        },
+        {
           headerName: 'Name',
           field: 'name',
           filter: 'agTextColumnFilter',

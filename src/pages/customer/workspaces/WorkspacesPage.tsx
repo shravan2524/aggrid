@@ -65,23 +65,6 @@ function CustomActionsToolPanel(onRefreshCallback, isFetchLoading) {
   );
 }
 
-function ParentRenderer(params) {
-  let result = '---';
-
-  try {
-    const parentId = params.data.parent;
-    params.api.forEachNode((rowNode) => {
-      if (rowNode.data.id.toString() === parentId.toString()) {
-        result = rowNode.data.name;
-      }
-    });
-
-    return result;
-  } catch (e) {
-    return result;
-  }
-}
-
 export default function WorkspacesPage() {
   const dispatch = useAppDispatch();
   const gridRef = useRef<any>();

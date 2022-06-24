@@ -17,6 +17,7 @@ export interface CompaniesType {
   sysCompanyId: number,
   name: string,
   parent: number,
+  gstin: string,
   tenantId: number,
 }
 
@@ -24,6 +25,7 @@ export interface CompaniesAgGridType {
   id: number,
   name: string,
   parent: number,
+  gstin: string,
   tenantId: number,
 }
 

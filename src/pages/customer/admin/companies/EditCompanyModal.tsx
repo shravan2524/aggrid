@@ -19,6 +19,7 @@ import { CompaniesType } from 'services/companiesAPIService';
 interface EditCompanyFormProps {
   name: string;
   parent: number | undefined;
+  gstin: string | undefined;
 }
 
 interface EditCompanyModalProps {
@@ -35,6 +36,7 @@ export default function EditCompanyModal({ companyData }: EditCompanyModalProps)
   const schema = yup.object({
     name: yup.string().required(),
     parent: yup.string(),
+    gstin: yup.string(),
   }).required();
 
   const {
@@ -46,8 +48,13 @@ export default function EditCompanyModal({ companyData }: EditCompanyModalProps)
     resolver: yupResolver(schema),
   });
 
-  const onSubmit = ({ name, parent }: EditCompanyFormProps) => {
-    const payload = { data: { name, parent: Number(parent), customer_id: Number(selectedCustomer?.id) }, id: companyData?.id };
+  const onSubmit = ({ name, parent, gstin }: EditCompanyFormProps) => {
+    const payload = {
+      data: {
+        name, parent: Number(parent), customer_id: Number(selectedCustomer?.id), gstin,
+      },
+      id: companyData?.id,
+    };
     dispatch(updateCompanyRequest({ ...payload }));
   };
 
@@ -59,7 +66,7 @@ export default function EditCompanyModal({ companyData }: EditCompanyModalProps)
 
   useEffect(() => {
     const parentCom = companySelector.find((i) => i.parent === companyData?.parent);
-    reset({ name: companyData?.name, parent: parentCom?.parent });
+    reset({ name: companyData?.name, parent: parentCom?.parent, gstin: companyData?.gstin });
   }, [companyData]);
 
   return (
@@ -98,7 +105,20 @@ export default function EditCompanyModal({ companyData }: EditCompanyModalProps)
                   </div>
                 )}
               </div>
-
+              <div className="mb-3">
+                <label htmlFor="gstin" className="col-form-label">GSTIN:</label>
+                <input
+                  {...register('gstin')}
+                  id="gstin"
+                  className={classNames(['form-control form-control-sm', { 'is-invalid': errors.gstin }])}
+                  placeholder="Enter GSTIN gstin ..."
+                />
+                {errors.gstin && (
+                  <div id="validationTitleFeedback" className="invalid-feedback">
+                    <p>{errors.gstin?.message}</p>
+                  </div>
+                )}
+              </div>
               <div className="mb-3">
                 <label htmlFor="name" className="col-form-label">Title:</label>
                 <input
@@ -108,9 +128,9 @@ export default function EditCompanyModal({ companyData }: EditCompanyModalProps)
                   placeholder="Enter Company name ..."
                 />
                 {errors.name && (
-                  <div id="validationTitleFeedback" className="invalid-feedback">
-                    <p>{errors.name?.message}</p>
-                  </div>
+                <div id="validationTitleFeedback" className="invalid-feedback">
+                  <p>{errors.name?.message}</p>
+                </div>
                 )}
               </div>
 

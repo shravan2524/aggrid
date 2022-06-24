@@ -19,11 +19,13 @@ export function agGridCompaniesDTO(companies: CompaniesType[]): CompaniesAgGridT
     name,
     parent,
     tenantId,
+    gstin,
   }) => ({
     id,
     name,
     parent,
     tenantId,
+    gstin,
   }));
 }
 
