@@ -12,7 +12,7 @@ export default function ProfilePage() {
       method: 'GET',
       credentials: 'include',
     };
-    const apiUrl = `${BACKEND_API}/api/v1/${tenantUuid()}/me/`;
+    const apiUrl = `${BACKEND_API}/api/v1/me/`;
     fetch(apiUrl, options)
       .then((response) => response.json())
       .then((data) => setuserDetails(data));
