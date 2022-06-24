@@ -14,7 +14,7 @@ function ReactFileUploder() {
 
   // CALL API
   const UploadFile = async (i: any, file: File) => {
-    MutPart({ setLoading }, file).then(() => {
+    MutPart({ setLoading, setProgress }, file).then(() => {
       setMessage((prevMessage: any) => [
         ...prevMessage,
         `Uploaded the file successfully: ${file.name}`,
@@ -26,12 +26,6 @@ function ReactFileUploder() {
   const UploadFunction = () => {
     if (fileDropZone) {
       setLoading(true);
-      const progressInf = fileDropZone.map((file: File) => ({
-        percentage: 0,
-        fileName: file.name,
-      }));
-      progressInfosRef.current = progressInf;
-
       const uploadPromises = fileDropZone.map((file: File, i: any) => UploadFile(i, file));
       Promise.all(uploadPromises);
       setMessage([]);
