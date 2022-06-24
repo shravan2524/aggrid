@@ -22,8 +22,8 @@ function getS3Function(Key: any, uploadCount: any, uploadId: any) {
 }
 
 // PUT
-function putObjectsFunction(preSignedUrl: any, file: any) {
-  return axios.put(preSignedUrl, file);
+function putObjectsFunction(preSignedUrl: any, file: any, setProgress:any) {
+  return axios.put(preSignedUrl, file, { onUploadProgress: (e) => { const percent = Math.floor((e.loaded * 100) / e.total); setProgress(percent); } });
 }
 // COMPLETE
 function completeFunction(Key: any, multiUploadArray: any, uploadId: any) {
@@ -35,14 +35,14 @@ function completeFunction(Key: any, multiUploadArray: any, uploadId: any) {
 }
 
 // FINAL API'S
-export async function MutPart({ setLoading }, file: File) {
+export async function MutPart({ setLoading, setProgress }, file: File) {
   try {
     const getUrl = await getIdFunction(file);
     const { uploadId, Key } = getUrl.data;
     const multiUploadArray = <any>[];
     const chunkSize = 5 * 1024 * 1024; // 5MiB
     const chunkCount = Math.floor(file.size / chunkSize) + 1;
-    // console.log(`chunkCount: ${chunkCount}`);
+    console.log(`chunkCount: ${chunkCount}`);
 
     //   LOOP
     for (let uploadCount = 1; uploadCount < chunkCount + 1; uploadCount++) {
@@ -56,7 +56,7 @@ export async function MutPart({ setLoading }, file: File) {
       const { preSignedUrl } = getSignedUrlRes.data;
 
       // Upload S3 Url
-      const uploadChunck = await putObjectsFunction(preSignedUrl, fileBlob);
+      const uploadChunck = await putObjectsFunction(preSignedUrl, fileBlob, setProgress);
       const EtagHeader = uploadChunck.headers.etag;
       const uploadPartDetails = {
         ETag: EtagHeader,
