@@ -10,7 +10,7 @@ import {
   getTenants, setSelectedTenant, getSelectedTenant,
 } from 'state/tenants/tenantsSlice';
 import { agGridTenantsDTO } from 'app/utils/Helpers';
-import { TenantType } from 'services/tenantsAPIService';
+import { TenantAGGridType, TenantType } from 'services/tenantsAPIService';
 import { useSelector } from 'react-redux';
 import { ICellRendererParams } from 'ag-grid-community';
 import { setSelectedCompany, isLoadingSelector } from 'state/companies/companiesSlice';
@@ -91,7 +91,7 @@ export default function WorkspacesPage() {
   const isFetchLoading = useSelector(isLoadingSelector);
   const { height, width } = useWindowDimensions();
 
-  const [rowData, setRowData] = useState<any>();
+  const [rowData, setRowData] = useState<TenantAGGridType[] >([]);
 
   const containerStyle = useMemo(() => ({
     width: '100%',
@@ -203,7 +203,7 @@ export default function WorkspacesPage() {
 
   const onGridReady = useCallback((params) => {
     dispatch(fetchTenants());
-  }, []);
+  }, [dispatch]);
 
   useEffect(() => {
     if (gridRef.current?.api) {
@@ -212,10 +212,12 @@ export default function WorkspacesPage() {
   }, [width, rows]);
 
   useEffect(() => {
-    setRowData(agGridTenantsDTO(rows));
+    if (rows) {
+      setRowData(agGridTenantsDTO(rows));
 
-    if (gridRef.current?.api) {
-      gridRef.current?.api.sizeColumnsToFit();
+      if (gridRef.current?.api) {
+        gridRef.current?.api.sizeColumnsToFit();
+      }
     }
   }, [rows]);
 
@@ -250,8 +252,6 @@ export default function WorkspacesPage() {
           icons={icons}
           pagination
           onFirstDataRendered={onFirstDataRendered}
-          groupIncludeFooter
-          groupIncludeTotalFooter
           enableRangeSelection
           masterDetail
         />

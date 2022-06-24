@@ -272,8 +272,6 @@ export default function CompaniesPage() {
           icons={icons}
           pagination
           onFirstDataRendered={onFirstDataRendered}
-          groupIncludeFooter
-          groupIncludeTotalFooter
           enableRangeSelection
           masterDetail
         />
