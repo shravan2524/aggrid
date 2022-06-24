@@ -27,7 +27,7 @@ export function agGridCompaniesDTO(companies: CompaniesType[]): CompaniesAgGridT
   }));
 }
 
-export function agGridCustomersDTO(companies: TenantType[]): TenantAGGridType[] {
+export function agGridTenantsDTO(companies: TenantType[]): TenantAGGridType[] {
   return companies.map(({
     id,
     title,
