@@ -62,7 +62,7 @@ function ActionsRenderer({ params, onFileMappingClickCallback }: ActionsRenderer
       method: 'GET',
       credentials: 'include',
     };
-    const apiUrl = `https://beta.finkraft.ai/api/v1/${tenantUuid()}/files/${fileId}/download`;
+    const apiUrl = `${BACKEND_API}/api/v1/${tenantUuid()}/files/${fileId}/download`;
     fetch(apiUrl, options)
       .then((response) => response.json())
       .then((d) => {
