@@ -9,14 +9,14 @@ import {
   fetchTenants, updateTenantRequest,
   getTenants, setSelectedTenant, getSelectedTenant,
 } from 'state/tenants/tenantsSlice';
-import { agGridCustomersDTO } from 'app/utils/Helpers';
+import { agGridTenantsDTO } from 'app/utils/Helpers';
 import { TenantType } from 'services/tenantsAPIService';
 import { useSelector } from 'react-redux';
 import { ICellRendererParams } from 'ag-grid-community';
 import { setSelectedCompany, isLoadingSelector } from 'state/companies/companiesSlice';
 import classNames from 'classnames';
-import NewCustomerModal from './NewCustomerModal';
-import EditCustomerModal from './EditCustomerModal';
+import NewTenantModal from './NewTenantModal';
+import EditTenantModal from './EditTenantModal';
 
 type ActionsRendererProps = {
   params: ICellRendererParams;
@@ -47,7 +47,7 @@ function CustomActionsToolPanel(onRefreshCallback, isFetchLoading) {
         <button
           type="button"
           className="btn btn-sm btn-danger px-4 d-flex gap-2 align-items-center justify-content-center"
-          onClick={() => showModal('newCustomerModal')}
+          onClick={() => showModal('newTenantModal')}
         >
           <i className="fa-solid fa-circle-plus" />
           Add new Workspace
@@ -87,7 +87,7 @@ export default function WorkspacesPage() {
   const gridRef = useRef<any>();
   const rows = useSelector(getTenants);
   const selectedWorkspace = useSelector(getSelectedTenant);
-  const [customerToEdit, setCustomerToEdit] = useState<TenantType | null>(null);
+  const [tenantToEdit, setTenantToEdit] = useState<TenantType | null>(null);
   const isFetchLoading = useSelector(isLoadingSelector);
   const { height, width } = useWindowDimensions();
 
@@ -100,8 +100,8 @@ export default function WorkspacesPage() {
   }), [height, width]);
 
   const onEditClickCallback = (e, params) => {
-    setCustomerToEdit(params.data);
-    showModal('editCustomerModal');
+    setTenantToEdit(params.data);
+    showModal('editTenantModal');
   };
 
   const onSelectClickCallback = (e, params) => {
@@ -115,7 +115,7 @@ export default function WorkspacesPage() {
 
   const [columnDefs, setColumnDefs] = useState([
     {
-      headerName: 'Customers Details',
+      headerName: 'Tenants Details',
       children: [
         {
           headerName: 'ID',
@@ -212,7 +212,7 @@ export default function WorkspacesPage() {
   }, [width, rows]);
 
   useEffect(() => {
-    setRowData(agGridCustomersDTO(rows));
+    setRowData(agGridTenantsDTO(rows));
 
     if (gridRef.current?.api) {
       gridRef.current?.api.sizeColumnsToFit();
@@ -231,8 +231,8 @@ export default function WorkspacesPage() {
     <PageWrapper pageTitle="Workspaces" icon="fa-solid fa-building">
 
       <div className=" ag-theme-alpine grid-container-style">
-        <NewCustomerModal />
-        <EditCustomerModal customerToEdit={customerToEdit} />
+        <NewTenantModal />
+        <EditTenantModal tenantToEdit={tenantToEdit} />
         <AgGridReact
           containerStyle={containerStyle}
           ref={gridRef}
