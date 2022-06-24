@@ -15,8 +15,8 @@ export default function CustomerLayout() {
   const dispatch = useAppDispatch();
 
   const location = useLocation();
-  const customers = useSelector(getTenants);
-  const selectedCustomer = useSelector(getSelectedTenant);
+  const tenants = useSelector(getTenants);
+  const selectedTenant = useSelector(getSelectedTenant);
   const [menuResponsiveClass, setMenuResponsiveClass] = useState<string>('');
   const topMenuHeight = useCustomerTopMenuHeightDimension();
   const secondaryMenuItemVisible = useSelector(isSecondaryMenuItemVisible);
@@ -27,10 +27,12 @@ export default function CustomerLayout() {
   }, [dispatch]);
 
   useEffect(() => {
-    if (customers.length && !selectedCustomer) {
-      dispatch(setSelectedTenant(customers[0].id));
+    if (tenants.length && !selectedTenant) {
+      const tenantId = sessionStorage.getItem('tenantUuid') || tenants[0].id;
+
+      dispatch(setSelectedTenant(tenantId));
     }
-  }, [customers]);
+  }, [tenants]);
 
   // When we resize or use app in different screen sizes we need to automatically readjust some classes
   useEffect(() => {

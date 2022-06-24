@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from 'react';
+import React, { useEffect } from 'react';
 import * as yup from 'yup';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup/dist/yup';
@@ -6,25 +6,21 @@ import classNames from 'classnames';
 import { useSelector } from 'react-redux';
 import { useAppDispatch } from 'app/hooks';
 import CustomButton from 'components/CustomButton';
-import {
-  fetchTenants,
-  isPutLoadingSelector, updateTenantRequest,
-} from 'state/tenants/tenantsSlice';
-import { hideModal } from 'app/utils/Modal';
-import { TenantType } from 'services/tenantsAPIService';
 
-interface EditCustomerFormProps {
+import { hideModal } from 'app/utils/Modal';
+import {
+  fetchTenants, isPostLoadingSelector, newTenantRequest,
+} from 'state/tenants/tenantsSlice';
+
+interface NewTenantFormProps {
   title: string;
 }
 
-interface EditCustomerModalProps {
-  customerToEdit: TenantType | null;
-}
-export default function EditCustomerModal({ customerToEdit }: EditCustomerModalProps) {
+export default function NewTenantModal() {
   const dispatch = useAppDispatch();
-  const isLoading = useSelector(isPutLoadingSelector);
+  const isLoading = useSelector(isPostLoadingSelector);
 
-  const modalId = useMemo(() => 'editCustomerModal', []);
+  const modalId = 'newTenantModal';
 
   const schema = yup.object({
     title: yup.string().required(),
@@ -35,24 +31,20 @@ export default function EditCustomerModal({ customerToEdit }: EditCustomerModalP
     handleSubmit,
     reset,
     formState: { errors },
-  } = useForm<EditCustomerFormProps>({
+  } = useForm<NewTenantFormProps>({
     resolver: yupResolver(schema),
   });
 
-  const onSubmit = ({ title }: EditCustomerFormProps) => {
-    const payload = { data: { title }, id: customerToEdit?.id };
-    dispatch(updateTenantRequest({ ...payload }));
+  const onSubmit = ({ title }: NewTenantFormProps) => {
+    const body = { title };
+    dispatch(newTenantRequest(body));
   };
 
   useEffect(() => {
-    dispatch(fetchTenants()).then(() => {
-      hideModal(modalId);
-    });
+    hideModal(modalId);
+    reset({ title: '' });
+    dispatch(fetchTenants());
   }, [isLoading]);
-
-  useEffect(() => {
-    reset({ title: customerToEdit?.title });
-  }, [customerToEdit]);
 
   return (
     <div className="modal fade" id={modalId} aria-labelledby={`new${modalId}Label`} aria-hidden="true">
@@ -60,18 +52,18 @@ export default function EditCustomerModal({ customerToEdit }: EditCustomerModalP
         <div className="modal-content">
           <form onSubmit={handleSubmit(onSubmit)}>
             <div className="modal-header">
-              <h5 className="modal-title" id={`new${modalId}Label`}>New Customer</h5>
+              <h5 className="modal-title" id={`new${modalId}Label`}>New Tenant</h5>
               <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close" />
             </div>
             <div className="modal-body">
 
               <div className="mb-3">
-                <label htmlFor="title" className="col-form-label">Title:</label>
+                <label htmlFor="name" className="col-form-label">Title:</label>
                 <input
                   {...register('title')}
                   id="title"
                   className={classNames(['form-control form-control-sm', { 'is-invalid': errors.title }])}
-                  placeholder="Enter Customer title ..."
+                  placeholder="Enter Tenant name ..."
                 />
                 {errors.title && (
                   <div id="validationTitleFeedback" className="invalid-feedback">
@@ -90,7 +82,7 @@ export default function EditCustomerModal({ customerToEdit }: EditCustomerModalP
                 isSubmit
                 className="btn btn-sm btn-primary"
               >
-                Update
+                Save
               </CustomButton>
             </div>
           </form>

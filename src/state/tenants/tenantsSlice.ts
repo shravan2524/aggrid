@@ -14,7 +14,6 @@ type TenantsState = {
   isLoading: boolean;
   isPostLoading: boolean;
   isPutLoading: boolean;
-  selectedTenant: number | null;
   selectedTenantUuid: string | null;
   error: string | null | undefined;
 };
@@ -24,7 +23,6 @@ const initialState: TenantsState = {
   isLoading: false,
   isPostLoading: false,
   isPutLoading: false,
-  selectedTenant: null,
   selectedTenantUuid: null,
   error: undefined,
 };
@@ -42,7 +40,6 @@ export const TenantsSlice = createSlice({
     setSelectedTenant: (state: Draft<TenantsState>, action: PayloadAction<string | number>) => {
       console.log('selected Tenant ... ', action.payload);
       const selectedTenant = state.rows.find((i) => Number(i.id) === Number(action.payload));
-      state.selectedTenant = selectedTenant?.id ?? null;
       state.selectedTenantUuid = selectedTenant?.uuid ?? null;
       sessionStorage.setItem('tenantUuid', state.selectedTenantUuid || '');
       toast.success(`Workspace ${selectedTenant?.title} successfully selected.`);
@@ -122,15 +119,11 @@ export const getTenants = createSelector(
 export const getSelectedTenant = createSelector(
   TenantsSelector,
   (Tenants: TenantsState): TenantType | undefined => {
-    const TenantId = Tenants.selectedTenant;
+    const tenantUuid = sessionStorage.getItem('tenantUuid');
+    const tenantUuId = Tenants.selectedTenantUuid || tenantUuid;
 
-    return Tenants.rows.find((i) => (i.id === TenantId));
+    return Tenants.rows.find((i) => (i.uuid === tenantUuId));
   },
-);
-
-export const getSelectedTenantId = createSelector(
-  TenantsSelector,
-  (Tenants: TenantsState): number | null => Tenants.selectedTenant,
 );
 
 export const availableTenants = createSelector(

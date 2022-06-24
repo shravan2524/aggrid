@@ -1,4 +1,3 @@
-import { tenantUuid } from 'state/tenants/helper';
 import { BACKEND_API } from '../app/config';
 
 /*
@@ -58,7 +57,7 @@ export async function fetch2AData() :Promise<TwoAType[] | null | Error> {
     credentials: 'include',
   };
 
-  const apiUrl = `${BACKEND_API}/api/v1/${tenantUuid()}/2a`;
+  const apiUrl = `${BACKEND_API}/api/v1/2a`;
   const response = await fetch(apiUrl, options);
 
   if (!response.ok) {
