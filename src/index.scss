@@ -135,3 +135,6 @@ table {
 	height: 40px !important;
 }
 
+.ag-center-cols-container :last-child{
+	display: none;
+}

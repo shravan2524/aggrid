@@ -2,6 +2,7 @@ import React, {
   useCallback, useEffect, useMemo, useRef, useState,
 } from 'react';
 import { downloadZip } from 'client-zip';
+import { toast } from 'react-hot-toast';
 import { AgGridReact } from 'ag-grid-react';
 import { useAppDispatch, useWindowDimensions } from 'app/hooks';
 import PageWrapper from 'components/PageWrapper';
@@ -34,9 +35,6 @@ function SelectFiles({ params, onFileMappingClickCallback }: SelectActionsRender
     <div>
       <input
         type="checkbox"
-        id="vehicle1"
-        name="vehicle1"
-        value="Bike"
         onChange={(e) => onFileMappingClickCallback(params.data.id, params)}
       />
       <label> </label>
@@ -64,7 +62,7 @@ function ActionsRenderer({ params, onFileMappingClickCallback }: ActionsRenderer
       method: 'GET',
       credentials: 'include',
     };
-    const apiUrl = `${BACKEND_API}/api/v1/${tenantUuid()}/files/${fileId}/download`;
+    const apiUrl = `https://beta.finkraft.ai/api/v1/${tenantUuid()}/files/${fileId}/download`;
     fetch(apiUrl, options)
       .then((response) => response.json())
       .then((d) => {
@@ -112,8 +110,13 @@ function CustomActionsToolPanel(onRefreshCallback, ret, isFetchLoading) {
   }
   async function downloadTestZip() {
     const res = await ret();
+    console.log(res);
     setTimeout(() => {
-      test(res);
+      if (res.length) {
+        test(res);
+      } else {
+        toast.error('Please select files to download');
+      }
     }, 3000);
   }
   return (
