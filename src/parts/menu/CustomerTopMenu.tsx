@@ -7,7 +7,7 @@ import { selectSecondaryMenuItems } from 'state/settings/settingsSlice';
 import './CustomerTopMenu.scss';
 import { getAuthFullNameFromLocal } from 'services/authService';
 import { useAppDispatch, useCompanies } from 'app/hooks';
-
+import { tenantUuid } from 'state/tenants/helper';
 import {
   selectSelectedCompany,
   setSelectedCompany,
@@ -80,7 +80,7 @@ export default function CustomerTopMenu() {
     },
     {
       itemTitle: 'Logout',
-      itemPath: `${BACKEND_API}/api/v1/logout`,
+      itemPath: `${BACKEND_API}/api/v1/${tenantUuid()}/logout`,
       itemExternal: true,
       icon: 'fa-solid fa-right-from-bracket',
     },

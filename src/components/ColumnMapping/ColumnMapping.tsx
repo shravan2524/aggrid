@@ -8,6 +8,7 @@ import {
   fetchFiles, getFiles,
   setContentTypeRequest, setColumnMappingRequest,
 } from 'state/files/filesSlice';
+import { tenantUuid } from 'state/tenants/helper';
 import { BACKEND_API } from 'app/config';
 import { columns2A, columns2B, columnsPR } from './DBColumns';
 
@@ -43,12 +44,12 @@ export default function ColumnMapping({ fileType, id }: Type) {
       method: 'GET',
       credentials: 'include',
     };
-    const apiUrl = `${BACKEND_API}/api/v1/files/${id}`;
+    const apiUrl = `${BACKEND_API}/api/v1/${tenantUuid()}/files/${id}`;
     fetch(apiUrl, options)
       .then((response) => response.json())
       .then((data1) => {
-        setcontentPreview(data1.contentPreview);
-        setColumnMapping(data1.columnMapping);
+        setcontentPreview(data1.contentPreview || {});
+        setColumnMapping(data1.columnMapping || {});
       });
   };
 
@@ -78,7 +79,7 @@ export default function ColumnMapping({ fileType, id }: Type) {
             contentPreview
               ? (
                 Object.keys(contentPreview).map((keyName, i) => (
-                  <table key={i} className="columnMapping">
+                  <table key={i} className={`columnMapping ${columnMapping[keyName]?.columnName ? 'columnMappingActive' : ''}`}>
                     <tbody>
                       <tr>
                         <th>
@@ -94,11 +95,12 @@ export default function ColumnMapping({ fileType, id }: Type) {
                         </th>
                       </tr>
                       {
-                        contentPreview[keyName].map((e) => (
-                          e
-                            ? <tr><td>{e}</td></tr>
-                            : null
-                        ))
+                        contentPreview[keyName]?.map(
+                          (e, idx) => {
+                            e = e || ' ';
+                            return (<tr key={idx}><td>{e}</td></tr>);
+                          },
+                        )
                       }
                     </tbody>
                   </table>

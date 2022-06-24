@@ -1,4 +1,5 @@
 import { convertToObject } from 'typescript';
+import { tenantUuid } from 'state/tenants/helper';
 import { BACKEND_API } from '../app/config';
 
 export interface CommentType {
@@ -9,7 +10,7 @@ export async function fetchCommentsData(): Promise<Comment[]> {
     method: 'GET',
     credentials: 'include',
   };
-  const apiUrl = `${BACKEND_API}/api/v1/comments`;
+  const apiUrl = `${BACKEND_API}/api/v1/${tenantUuid()}/comments`;
   const response = await fetch(apiUrl, options);
   if (!response.ok) {
     const message = `An error has occurred: ${response.status}`;
@@ -28,7 +29,7 @@ export async function postComments(payload): Promise<Comment[]> {
     credentials: 'include',
     body: JSON.stringify({ ...payload.Comments }),
   };
-  const apiUrl = `${BACKEND_API}/api/v1/comments/`;
+  const apiUrl = `${BACKEND_API}/api/v1/${tenantUuid()}/comments/`;
   const response = await fetch(apiUrl, options);
   if (!response.ok) {
     const message = `An error has occurred: ${response.status}`;

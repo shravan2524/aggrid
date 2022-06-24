@@ -2,6 +2,7 @@ import React, {
   useCallback, useEffect, useMemo, useRef, useState,
 } from 'react';
 import PageTitle from 'components/PageTitle';
+import { tenantUuid } from 'state/tenants/helper';
 import { BACKEND_API } from 'app/config';
 
 export default function ProfilePage() {
@@ -11,7 +12,7 @@ export default function ProfilePage() {
       method: 'GET',
       credentials: 'include',
     };
-    const apiUrl = `${BACKEND_API}/api/v1/me/`;
+    const apiUrl = `${BACKEND_API}/api/v1/${tenantUuid()}/me/`;
     fetch(apiUrl, options)
       .then((response) => response.json())
       .then((data) => setuserDetails(data));
