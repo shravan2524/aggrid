@@ -59,7 +59,11 @@ export default function ColumnMapping({ fileType, id }: Type) {
     const fn = (e) => {
       const columnName = e.target.value;
       const newColumnMapping = { ...columnMapping };
-      newColumnMapping[k] = { columnName };
+      if (columnName) {
+        newColumnMapping[k] = { columnName };
+      } else {
+        delete newColumnMapping[k];
+      }
       // set the mapping
       setColumnMapping(newColumnMapping);
       // console.log(newColumnMapping);
@@ -86,7 +90,7 @@ export default function ColumnMapping({ fileType, id }: Type) {
                           <div>
                             <span>{keyName}</span>
                             <select onChange={setMapping(keyName)} value={columnMapping[keyName]?.columnName}>
-                              <option>-- select column --</option>
+                              <option value="">-- select column --</option>
                               {
                                 cols[fileType].map((e, idx) => (<option key={idx} value={e.columnName}>{e.columnTitle || e.columnName}</option>))
                               }

@@ -332,8 +332,6 @@ export default function FilesPage() {
           icons={icons}
           pagination
           onFirstDataRendered={onFirstDataRendered}
-          groupIncludeFooter
-          groupIncludeTotalFooter
           enableRangeSelection
           masterDetail
         />

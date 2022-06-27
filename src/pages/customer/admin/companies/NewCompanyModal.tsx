@@ -17,6 +17,7 @@ import { hideModal } from 'app/utils/Modal';
 
 interface NewCompanyFormProps {
   name: string;
+  gstin: string;
   parent: number | undefined;
 }
 
@@ -31,6 +32,7 @@ export default function NewCompanyModal() {
   const schema = yup.object({
     name: yup.string().required(),
     parent: yup.string(),
+    gstin: yup.string(),
   }).required();
 
   const {
@@ -42,11 +44,12 @@ export default function NewCompanyModal() {
     resolver: yupResolver(schema),
   });
 
-  const onSubmit = ({ name, parent }: NewCompanyFormProps) => {
+  const onSubmit = ({ name, parent, gstin }: NewCompanyFormProps) => {
     const body = {
       name,
       customer_id: Number(selectedCustomer?.id),
       parent: Number(parent),
+      gstin,
     };
 
     dispatch(newCompanyRequest(body));
@@ -54,7 +57,7 @@ export default function NewCompanyModal() {
 
   useEffect(() => {
     hideModal(modalId);
-    reset({ name: '' });
+    reset({ name: '', gstin: '' });
     dispatch(fetchCompanies());
   }, [isLoading]);
 
@@ -108,6 +111,20 @@ export default function NewCompanyModal() {
                   <div id="validationTitleFeedback" className="invalid-feedback">
                     <p>{errors.name?.message}</p>
                   </div>
+                )}
+              </div>
+              <div className="mb-3">
+                <label htmlFor="gstin" className="col-form-label">GSTIN:</label>
+                <input
+                  {...register('gstin')}
+                  id="gstin"
+                  className={classNames(['form-control form-control-sm', { 'is-invalid': errors.gstin }])}
+                  placeholder="Enter Company gstin ..."
+                />
+                {errors.gstin && (
+                <div id="validationGstinFeedback" className="invalid-feedback">
+                  <p>{errors.gstin?.message}</p>
+                </div>
                 )}
               </div>
 
