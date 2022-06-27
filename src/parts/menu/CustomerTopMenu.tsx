@@ -80,7 +80,7 @@ export default function CustomerTopMenu() {
     },
     {
       itemTitle: 'Logout',
-      itemPath: `${BACKEND_API}/api/v1/${tenantUuid()}/logout`,
+      itemPath: `${BACKEND_API}/api/v1/logout`,
       itemExternal: true,
       icon: 'fa-solid fa-right-from-bracket',
     },
