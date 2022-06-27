@@ -25,6 +25,8 @@ const AuthHandlerProcessorIndexPage = React.lazy(() => import('pages/public/auth
 const AuthLogoutProcessorIndexPage = React.lazy(() => import('pages/public/auth/AuthLogoutProcessorPage'));
 const QRHelper = React.lazy(() => import('pages/public/qr-helper/Import'));
 
+const RolesPage = React.lazy(() => import('pages/customer/admin/roles/Page'));
+
 const routes: any = [
 
   // Auth handler
@@ -130,6 +132,11 @@ const routes: any = [
                 text: 'Comments',
                 icon: 'fa-solid fa-file-arrow-up',
               },
+              {
+                path: '/customer/admin/roles',
+                text: 'Roles',
+                icon: 'fa-solid fa-flag',
+              },
             ]}
             />,
             children: [
@@ -148,6 +155,10 @@ const routes: any = [
               {
                 path: 'comments',
                 element: <Suspense fallback={<Loader />}><CommentsIndexPage /></Suspense>,
+              },
+              {
+                path: 'roles',
+                element: <Suspense fallback={<Loader />}><RolesPage /></Suspense>,
               },
             ],
           },
