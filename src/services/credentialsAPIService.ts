@@ -1,6 +1,5 @@
 import { tenantUuid } from 'state/tenants/helper';
 import { BACKEND_API } from '../app/config';
-import { tenantUuid } from '../state/tenants/helper';
 
 export interface CredentialsType {
   companyId: number,
