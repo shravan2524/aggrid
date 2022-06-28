@@ -9,7 +9,7 @@ import PageWrapper from 'components/PageWrapper';
 import { agGridFilesDTO } from 'app/utils/Helpers';
 import { BACKEND_API } from 'app/config';
 import ReactFileUploder from 'components/FileUploder/Main';
-import { ICellRendererParams } from 'ag-grid-community';
+import { CellRange, ICellRendererParams, RangeSelectionChangedEvent } from 'ag-grid-community';
 import ColumnMapping from 'components/ColumnMapping/ColumnMapping';
 import './FilePage.scss';
 import { useSelector } from 'react-redux';
@@ -218,7 +218,13 @@ export default function FilesPage() {
         {
           headerName: 'Name',
           field: 'fileName',
-          filter: 'agNumberColumnFilter',
+          filter: 'agTextColumnFilter',
+          editable: false,
+        },
+        {
+          headerName: 'Type',
+          field: 'fileType',
+          filter: 'agTextColumnFilter',
           editable: false,
         },
         {
@@ -298,6 +304,30 @@ export default function FilesPage() {
     dispatch(fetchFiles());
   }, []);
 
+  // TODO : Implement row range selection ...
+  const onRangeSelectionChanged = useCallback(
+    (event: RangeSelectionChangedEvent) => {
+      const cellRanges = gridRef.current!.api.getCellRanges();
+
+      // if no selection, clear all the results and do nothing more
+      if (!cellRanges || cellRanges.length === 0) {
+        return;
+      }
+
+      // set range count to the number of ranges selected
+      const api = gridRef.current!.api!;
+
+      if (cellRanges) {
+        cellRanges.forEach((range: CellRange) => {
+          // get starting and ending row, remember rowEnd could be before rowStart
+
+          console.log(range);
+        });
+      }
+    },
+    [],
+  );
+
   useEffect(() => {
     if (gridRef.current?.api) {
       gridRef.current?.api.sizeColumnsToFit();
@@ -305,6 +335,8 @@ export default function FilesPage() {
   }, [width, rows]);
 
   useEffect(() => {
+    console.log(rows);
+
     setRowData(agGridFilesDTO(rows));
 
     if (gridRef.current?.api) {
@@ -334,6 +366,7 @@ export default function FilesPage() {
           onFirstDataRendered={onFirstDataRendered}
           enableRangeSelection
           masterDetail
+          onRangeSelectionChanged={onRangeSelectionChanged}
         />
       </div>
     </PageWrapper>
