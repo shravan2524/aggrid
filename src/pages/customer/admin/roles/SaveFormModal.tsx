@@ -6,11 +6,8 @@ import classNames from 'classnames';
 import { useSelector } from 'react-redux';
 import { useAppDispatch } from 'app/hooks';
 import CustomButton from 'components/CustomButton';
-import { getSelectedTenant } from 'state/tenants/tenantsSlice';
 import {
   readAll,
-  readAllSelector,
-  isLoadingSelector,
   isPostLoadingSelector,
   isPutLoadingSelector, update, create,
 
@@ -21,6 +18,10 @@ import { pages } from './pages';
 
 interface ModalProps {
   itemData: RoleType | null;
+}
+
+interface SaveFormTypes extends Record<string, any> {
+  title: string;
 }
 
 export default function SaveFormModal({ itemData }: ModalProps) {
@@ -38,10 +39,9 @@ export default function SaveFormModal({ itemData }: ModalProps) {
   const {
     register,
     handleSubmit,
-    reset,
     formState: { errors },
     setValue,
-  } = useForm<any>({
+  } = useForm<SaveFormTypes>({
     resolver: yupResolver(schema),
   });
 
