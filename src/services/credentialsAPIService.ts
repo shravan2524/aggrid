@@ -1,15 +1,16 @@
+import { tenantUuid } from 'state/tenants/helper';
 import { BACKEND_API } from '../app/config';
 import { tenantUuid } from '../state/tenants/helper';
 
 export interface CredentialsType {
-  company_id: number,
+  companyId: number,
   credentials: {
     username: string,
     password: string,
   }
 }
 
-export async function fetchCompanyCredentialsData(companyId: number) :Promise<CredentialsType> {
+export async function fetchCompanyCredentialsData(companyId: number): Promise<CredentialsType> {
   const options: RequestInit = {
     method: 'GET',
     credentials: 'include',
@@ -25,7 +26,7 @@ export async function fetchCompanyCredentialsData(companyId: number) :Promise<Cr
   return response.json();
 }
 
-export async function postCompanyCredentialsData(companyId, data) :Promise<CredentialsType[]> {
+export async function postCompanyCredentialsData(companyId, data): Promise<CredentialsType[]> {
   const options: RequestInit = {
     headers: {
       Accept: 'application/json',
@@ -45,7 +46,7 @@ export async function postCompanyCredentialsData(companyId, data) :Promise<Crede
   return response.json();
 }
 
-export async function putCompanyCredentialsData(companyId, payload) :Promise<CredentialsType[]> {
+export async function putCompanyCredentialsData(companyId, payload): Promise<CredentialsType[]> {
   const options: RequestInit = {
     headers: {
       Accept: 'application/json',
