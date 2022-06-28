@@ -154,10 +154,11 @@ export default function FilesPage() {
   const rows = useSelector(getFiles);
   const isFetchLoading = useSelector(isLoadingSelector);
 
-  const containerStyle = useMemo(() => ({
-    width: '100%',
-    height: '25rem',
-  }), [height, width]);
+  const containerStyle = useMemo(
+    () => ({ width: '100%', height: '100vh' }),
+    [],
+  );
+  const gridStyle = useMemo(() => ({ height: '100vh', width: '100%' }), []);
 
   const [selectedFiles, setselectedFiles] = useState<any[]>([]);
   const onFileMappingClickCallback = (e, params) => {
@@ -189,10 +190,29 @@ export default function FilesPage() {
     });
     return tmp;
   };
+
+  const OnExpand = (i: any) => {
+    i.node.setExpanded(!i.node.expanded);
+  };
+
   const [columnDefs, setColumnDefs] = useState([
     {
       headerName: 'Files Details',
       children: [
+        {
+          field: '',
+          // eslint-disable-next-line react/no-unstable-nested-components
+          cellRenderer: (params) => (
+            <div aria-hidden="true" onClick={() => OnExpand(params)}>
+              <i className="fas fa-angle-right" />
+            </div>
+          ),
+          editable: false,
+          filter: false,
+          width: 40,
+          minWidth: 40,
+          maxWidth: 40,
+        },
         {
           field: '',
           // eslint-disable-next-line react/no-unstable-nested-components
@@ -344,30 +364,44 @@ export default function FilesPage() {
     }
   }, [rows]);
 
+  // sub Ig-Grid
+  const detailCellRendererParams = {
+    detailGridOptions: {
+      columnDefs: [{ field: 'columnName' }, { field: 'columnTitle' }],
+    },
+    getDetailRowData: (params: any) => {
+      params.successCallback(params.data.agGridColumns);
+    },
+  };
+
   return (
     <PageWrapper pageTitle="Files" icon="fa-solid fa-file-arrow-up">
-      <div className="ag-theme-alpine grid-container-style">
-        <AgGridReact
-          containerStyle={containerStyle}
-          ref={gridRef}
-          rowData={rowData}
-          columnDefs={columnDefs}
-          sideBar={sideBar}
-          rowSelection="multiple"
-          rowDragManaged
-          rowDragMultiRow
-          rowGroupPanelShow="always"
-          defaultColDef={defaultColDef}
-          groupDisplayType="multipleColumns"
-          animateRows
-          onGridReady={onGridReady}
-          icons={icons}
-          pagination
-          onFirstDataRendered={onFirstDataRendered}
-          enableRangeSelection
-          masterDetail
-          onRangeSelectionChanged={onRangeSelectionChanged}
-        />
+      <div style={containerStyle}>
+        <div style={gridStyle} className="ag-theme-alpine">
+          <AgGridReact
+            containerStyle={containerStyle}
+            ref={gridRef}
+            rowData={rowData}
+            columnDefs={columnDefs}
+            sideBar={sideBar}
+            rowSelection="multiple"
+            rowDragManaged
+            rowDragMultiRow
+            rowGroupPanelShow="always"
+            defaultColDef={defaultColDef}
+            groupDisplayType="multipleColumns"
+            animateRows
+            onGridReady={onGridReady}
+            icons={icons}
+            pagination
+            onFirstDataRendered={onFirstDataRendered}
+            enableRangeSelection
+            masterDetail
+            onRangeSelectionChanged={onRangeSelectionChanged}
+            detailCellRendererParams={detailCellRendererParams}
+            detailRowHeight={400}
+          />
+        </div>
       </div>
     </PageWrapper>
   );
