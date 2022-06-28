@@ -7,6 +7,7 @@ export interface FilesType {
   fileType: string,
   contentType: string,
   columnMapping: Object,
+  agGridColumns:any,
 }
 
 export interface FilesAgGridType {
@@ -21,7 +22,7 @@ export async function fetchFilesData(): Promise<FilesType[]> {
     method: 'GET',
     credentials: 'include',
   };
-  const apiUrl = `${BACKEND_API}/api/v1/${tenantUuid()}/files`;
+  const apiUrl = 'https://beta.finkraft.ai/api/v1/68241af6-924f-4c06-aa30-7e240d710a19/files/';
   const response = await fetch(apiUrl, options);
   if (!response.ok) {
     const message = `An error has occurreds: ${response.status}`;
