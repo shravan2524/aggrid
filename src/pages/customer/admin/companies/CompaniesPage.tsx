@@ -14,6 +14,7 @@ import { useSelector } from 'react-redux';
 import { availableTenants } from 'state/tenants/tenantsSlice';
 import { ICellRendererParams } from 'ag-grid-community';
 import classNames from 'classnames';
+import { toast } from 'react-hot-toast';
 import NewCompanyModal from './NewCompanyModal';
 import EditCompanyModal from './EditCompanyModal';
 import CompanyCredentialsModal from './CompanyCredentialsModal';
@@ -131,8 +132,15 @@ export default function CompaniesPage() {
           filter: 'agNumberColumnFilter',
           onCellValueChanged: (event) => {
             const { gstin, id } = event.data;
-            const payload = { data: { gstin }, id };
-            dispatch(updateCompanyRequest({ ...payload }));
+
+            const isValidGSTIN = /^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$/.test(gstin);
+
+            if (isValidGSTIN) {
+              const payload = { data: { gstin }, id };
+              dispatch(updateCompanyRequest({ ...payload }));
+            } else {
+              toast.error('Invalid GSTIN Format');
+            }
           },
         },
         {
@@ -243,8 +251,6 @@ export default function CompaniesPage() {
       gridRef.current?.api.sizeColumnsToFit();
     }
   }, [rows]);
-
-  // console.log(rows);
 
   if (!anyCustomer) {
     return (
