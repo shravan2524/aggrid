@@ -81,13 +81,6 @@ export default function EditCompanyModal({ companyData }: EditCompanyModalProps)
             <div className="modal-body">
 
               <div className="mb-3">
-                <label htmlFor="customer" className="col-form-label">
-                  Customer:
-                  {selectedCustomer?.title}
-                </label>
-              </div>
-
-              <div className="mb-3">
                 <label htmlFor="customer" className="col-form-label">Parent:</label>
                 <select
                   {...register('parent')}

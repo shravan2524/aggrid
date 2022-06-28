@@ -71,15 +71,6 @@ export default function NewCompanyModal() {
               <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close" />
             </div>
             <div className="modal-body">
-
-              <div className="mb-3">
-                <label htmlFor="customer_id" className="col-form-label">
-                  Selected Workspace:
-                  {' '}
-                  <strong>{selectedCustomer?.title}</strong>
-                </label>
-              </div>
-
               <div className="mb-3">
                 <label htmlFor="parent" className="col-form-label">Parent:</label>
                 <select
