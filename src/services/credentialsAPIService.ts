@@ -1,4 +1,5 @@
 import { BACKEND_API } from '../app/config';
+import { tenantUuid } from '../state/tenants/helper';
 
 export interface CredentialsType {
   company_id: number,
@@ -14,7 +15,7 @@ export async function fetchCompanyCredentialsData(companyId: number) :Promise<Cr
     credentials: 'include',
   };
 
-  const apiUrl = `${BACKEND_API}/api/v1/credentials/${companyId}/company`;
+  const apiUrl = `${BACKEND_API}/api/v1/${tenantUuid()}/company-credentials/${companyId}`;
   const response = await fetch(apiUrl, options);
 
   if (!response.ok) {
@@ -35,7 +36,7 @@ export async function postCompanyCredentialsData(companyId, data) :Promise<Crede
     body: JSON.stringify({ ...data }),
   };
 
-  const apiUrl = `${BACKEND_API}/api/v1/credentials/${companyId}/company`;
+  const apiUrl = `${BACKEND_API}/api/v1/${tenantUuid()}/company-credentials/${companyId}`;
   const response = await fetch(apiUrl, options);
   if (!response.ok) {
     const message = `An error has occurred: ${response.status}`;
@@ -55,7 +56,7 @@ export async function putCompanyCredentialsData(companyId, payload) :Promise<Cre
     body: JSON.stringify({ ...payload }),
   };
 
-  const apiUrl = `${BACKEND_API}/api/v1/credentials/${companyId}/company`;
+  const apiUrl = `${BACKEND_API}/api/v1/${tenantUuid()}/company-credentials/${companyId}`;
   const response = await fetch(apiUrl, options);
   if (!response.ok) {
     const message = `An error has occurred: ${response.status}`;
