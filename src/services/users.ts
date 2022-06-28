@@ -1,12 +1,18 @@
 import { BACKEND_API } from 'app/config';
 import { tenantUuid } from 'state/tenants/helper';
 
-export interface ItemType {
-  id?: number,
+interface Contact {
   email: string,
   firstName?: string,
   lastName?: string,
-  name?: string,
+  fullName?: string,
+  phoneNumber?: string,
+  profilePicture?: string,
+}
+export interface ItemType {
+  id?: number,
+  contact?: Contact,
+  email: string,
   status?: string,
   createdAt?: Date,
   createdBy?: number,

@@ -21,7 +21,7 @@ const modalIdentifier = `save${moduleName}Modal`;
 interface AGGridType {
   id: number,
   email: string,
-  firstName?: string,
+  fullName?: string,
   updatedAt?: Date,
   updator?: any,
   status?: string,
@@ -31,7 +31,8 @@ function agGridDTO(rows: Array<UserType>): Array<AGGridType> {
   return rows.map(
     (item: UserType) => ({
       id: item.id || -1,
-      email: item.email,
+      email: item?.contact?.email || '',
+      fullName: item?.contact?.fullName,
       status: item.status,
       updatedAt: item.updatedAt,
       updator: item.updator,
@@ -115,7 +116,7 @@ export default function Page() {
       children: [
         {
           headerName: 'E-mail',
-          field: 'title',
+          field: 'email',
           filter: 'agNumberColumnFilter',
           // onCellValueChanged: (event) => {
           //   const payload = { ...event.data };
@@ -123,8 +124,8 @@ export default function Page() {
           // },
         },
         {
-          headerName: 'First Name',
-          field: 'firstName',
+          headerName: 'Name',
+          field: 'fullName',
           filter: 'agNumberColumnFilter',
           // valueGetter: PoliciesRenderer,
           editable: false,
