@@ -13,7 +13,6 @@ export interface FilesAgGridType {
   id: number,
   fileName: string,
   fileType: string,
-  contentType: string | undefined,
   columnMapping: Object | undefined,
 }
 
