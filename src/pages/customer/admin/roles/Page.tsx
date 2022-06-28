@@ -227,7 +227,7 @@ export default function Page() {
   }, [rows]);
 
   return (
-    <PageWrapper pageTitle="Companies" icon="fa-solid fa-building">
+    <PageWrapper pageTitle={moduleTitle} icon="fa-solid fa-building">
 
       <div className=" ag-theme-alpine grid-container-style">
         <SaveFormModal itemData={itemData} />
