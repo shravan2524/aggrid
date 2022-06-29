@@ -81,7 +81,7 @@ function UploadButton({
                 setFileDropZone(null);
                 setMessage([]);
               }}
-              className="cancel btn flex-colo"
+              className="canceled btn flex-colo"
             >
               <p>Cancel</p>
             </button>
