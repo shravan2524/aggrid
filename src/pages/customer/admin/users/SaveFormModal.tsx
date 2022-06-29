@@ -40,8 +40,6 @@ export default function SaveFormModal({ itemData, modalIdentifier }: ModalProps)
     roles: yup.array(),
   }).required();
 
-  console.log(itemData);
-
   const {
     register,
     handleSubmit,
@@ -90,6 +88,8 @@ export default function SaveFormModal({ itemData, modalIdentifier }: ModalProps)
 
   const modalTitle = itemData?.id ? 'Edit User' : 'Invite User';
 
+  const selectedRoles = itemData?.roles?.map((itm) => String(itm));
+
   return (
     <div className="modal fade" id={modalId} aria-labelledby={`new${modalId}Label`} aria-hidden="true">
       <div className="modal-dialog modal-dialog-centered">
@@ -121,9 +121,10 @@ export default function SaveFormModal({ itemData, modalIdentifier }: ModalProps)
                   {...register('roles')}
                   className={classNames(['form-select form-select-sm', { 'is-invalid': errors.roles }])}
                   multiple
+                  value={selectedRoles}
                 >
                   {allRoles && allRoles.map((option) => (
-                    <option key={option.id} value={option.id} selected={!!itemData?.roles?.find((rl) => Number(rl) === Number(option.id))}>{option.title}</option>
+                    <option key={option.id} value={option.id}>{option.title}</option>
                   ))}
                 </select>
 
