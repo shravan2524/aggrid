@@ -1,0 +1,82 @@
+trigger: none
+
+pool:
+  vmImage: ubuntu-latest
+
+variables:
+  - group: "Production Env"
+  - name: webappname
+    value: finkraft-frontend-production
+  - name: azSub
+    value: "3a02d4a0-ea7b-40e2-b5ec-103f9f9fcb03"
+  - name: resourceGroupName
+    value: Finkraft-Production
+
+stages:
+  - stage: Build
+    jobs:
+      - job: Build
+        steps:
+          - script: exit 1
+            condition: ne(variables['Build.SourceBranch'], 'refs/heads/production')
+          - task: UseNode@1
+            inputs:
+              version: '16.x'
+
+          - script: "yarn install"
+
+     #     - script: "yarn test"
+
+          - script: "yarn build"
+
+          - publish: "build"
+            artifact: "reactapp"
+
+  - stage: Production
+    dependsOn: Build
+    jobs:
+      - job: Deploy
+        steps:
+          - task: DownloadPipelineArtifact@2
+            inputs:
+              artifact: "reactapp"
+              targetPath: './app/dist'
+
+          
+              
+          - task: AzureStaticWebApp@0
+            inputs:
+              skip_app_build: true
+              app_location: '/dist'
+              workingDirectory: $(Pipeline.Workspace)/app
+              azure_static_web_apps_api_token: $(token)
+
+
+          - task: AzureAppServiceSettings@1
+            inputs:
+              appName: $(webappname)
+              resourceGroupName: $(resourceGroupName)
+              azureSubscription: $(azSub)
+              appSettings: |
+                [
+                  {
+                    "name": "REACT_APP_AG_GRID_LICENCE_KEY",
+                    "value": "$(REACT_APP_AG_GRID_LICENCE_KEY)",
+                    "slotSetting": false
+                  },
+                  {
+                    "name": "REACT_APP_BACKEND_API",
+                    "value": "$(REACT_APP_BACKEND_API)",
+                    "slotSetting": false
+                  },
+                  {
+                    "name": "REACT_APP_DROMO_FRONTEND_API_KEY",
+                    "value": "$(REACT_APP_DROMO_FRONTEND_API_KEY)",
+                    "slotSetting": false
+                  },
+                  {
+                    "name": "AWS_SDK_LOAD_CONFIG",
+                    "value": "$(AWS_SDK_LOAD_CONFIG)",
+                    "slotSetting": false
+                  }
+                ]
