@@ -48,7 +48,7 @@ stages:
             inputs:
               skip_app_build: true
               app_location: '/dist'
-              workingDirectory: $(Pipeline.Workspace)/app
+              workingDirectory: $(Pipeline.Workspace)/s/app
               azure_static_web_apps_api_token: $(token)
 
 
