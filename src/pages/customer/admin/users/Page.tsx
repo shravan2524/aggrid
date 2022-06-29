@@ -12,6 +12,7 @@ import { ItemType as UserType } from 'services/users';
 import { useSelector } from 'react-redux';
 import { ICellRendererParams } from 'ag-grid-community';
 import classNames from 'classnames';
+import { readAllSelector as rolesReadAllSelector, readAll as rolesReadAll } from 'state/roles/slice';
 import SaveFormModal from './SaveFormModal';
 
 const moduleName = 'User';
@@ -25,6 +26,7 @@ interface AGGridType {
   updatedAt?: Date,
   updator?: any,
   status?: string,
+  roles?: Array<number>,
 }
 
 function agGridDTO(rows: Array<UserType>): Array<AGGridType> {
@@ -36,6 +38,7 @@ function agGridDTO(rows: Array<UserType>): Array<AGGridType> {
       status: item.status,
       updatedAt: item.updatedAt,
       updator: item.updator,
+      roles: item.roles || [],
     }),
   );
 }
@@ -84,8 +87,38 @@ function CustomActionsToolPanel(onRefreshCallback, isFetchLoading) {
   );
 }
 
-function PoliciesRenderer() {
-  return null;
+interface RolesRendererProps {
+  data: any,
+  allRoles: Array<any>
+}
+
+function RolesRenderer(props: RolesRendererProps) {
+  const { data, allRoles } = props;
+  const roles = data?.roles || [];
+
+  if (roles.length === 0) {
+    return null;
+  }
+
+  const result = roles.map((r: string, idx: number) => {
+    const i = parseInt(r, 10);
+    console.log('i', i, 'r', r, 'idx', idx, 'allRoles', allRoles);
+    const ar = allRoles.find((x) => x.id === i);
+    console.log('ar', ar);
+    if (!ar) {
+      return null;
+    }
+
+    return <p key={idx}>{ar.title}</p>;
+  });
+
+  console.log(result);
+
+  return (
+    <div>
+      {result}
+    </div>
+  );
 }
 
 export default function Page() {
@@ -96,12 +129,18 @@ export default function Page() {
   const rows = useSelector(readAllSelector);
   const [itemData, setItemData] = useState<UserType | null>(null);
   const isFetchLoading = useSelector(isLoadingSelector);
+  const allRoles = useSelector(rolesReadAllSelector);
 
   const containerStyle = useMemo(() => ({
     width: '100%',
     height: `${(height)}px`,
     minHeight: '600px',
   }), [height, width]);
+
+  const RolesRendererCb = useCallback(
+    ({ data }) => RolesRenderer({ data, allRoles }),
+    [allRoles],
+  );
 
   const onEditClickCallback = (e, params) => {
     setItemData(params.data);
@@ -128,6 +167,14 @@ export default function Page() {
           field: 'fullName',
           filter: 'agNumberColumnFilter',
           // valueGetter: PoliciesRenderer,
+          editable: false,
+        },
+        {
+          headerName: 'Roles',
+          field: 'roles',
+          // filter: 'agNumberColumnFilter',
+          // valueGetter: ({ data }) => ,
+          valueGetter: RolesRendererCb,
           editable: false,
         },
         {
@@ -212,13 +259,17 @@ export default function Page() {
 
   const onGridReady = useCallback((params) => {
     dispatch(readAll());
-  }, []);
+  }, [allRoles]);
 
   useEffect(() => {
     if (gridRef.current?.api) {
       gridRef.current?.api.sizeColumnsToFit();
     }
   }, [width, rows]);
+
+  useEffect(() => {
+    dispatch(rolesReadAll());
+  }, []);
 
   useEffect(() => {
     setRowData(agGridDTO(rows));

@@ -20,6 +20,8 @@ export interface ItemType {
   updatedAt?: Date,
   updatedBy?: number,
   updator?: any | null,
+  roles?: Array<number> | null,
+  groups?: Array<number> | null,
 }
 
 export async function readAll(): Promise<ItemType[]> {
