@@ -111,15 +111,16 @@ function RolesRenderer(props: RolesRendererProps) {
     return { key: idx, title: ar.title };
   }).filter((x) => x !== null);
 
-  console.log(result);
   return (
     <div>
-      {result.map((i) => (
-        <span key={i?.key}>
-          {i?.title}
-          {' | '}
-        </span>
-      ))}
+      {
+        result.map((i, idx) => (
+          <span key={i?.key}>
+            {i?.title}
+            {(idx < result.length - 1) && ' | '}
+          </span>
+        ))
+      }
     </div>
   );
 }
@@ -151,25 +152,50 @@ export default function Page() {
     });
   };
 
+  const statusCellClass = (params) => {
+    const { data } = params;
+
+    if (data.status === 'deactivated') {
+      return ['bg-danger text-white'];
+    }
+
+    if (data.status === 'invited') {
+      return ['bg-warning'];
+    }
+
+    return [];
+  };
+
   const [columnDefs, setColumnDefs] = useState([
     {
       headerName: `${moduleTitle} Details`,
       children: [
         {
+          headerName: 'Name',
+          field: 'fullName',
+          filter: 'agTextColumnFilter',
+          // valueGetter: PoliciesRenderer,
+          editable: false,
+        },
+        {
           headerName: 'E-mail',
           field: 'email',
-          filter: 'agNumberColumnFilter',
+          filter: 'agTextColumnFilter',
           // onCellValueChanged: (event) => {
           //   const payload = { ...event.data };
           //   dispatch(update({ ...payload }));
           // },
         },
         {
-          headerName: 'Name',
-          field: 'fullName',
-          filter: 'agNumberColumnFilter',
-          // valueGetter: PoliciesRenderer,
-          editable: false,
+          headerName: 'Status',
+          field: 'status',
+          filter: 'agTextColumnFilter',
+
+          cellClass: statusCellClass,
+          // onCellValueChanged: (event) => {
+          //   const payload = { ...event.data };
+          //   dispatch(update({ ...payload }));
+          // },
         },
         {
           headerName: 'Roles',
@@ -178,12 +204,13 @@ export default function Page() {
           // valueGetter: ({ data }) => ,
           //  valueGetter: RolesRendererCb,
           cellRenderer: RolesRendererCb,
+          filter: false,
           editable: false,
         },
         {
           headerName: 'Updated At',
           field: 'updatedAt',
-          filter: 'agNumberColumnFilter',
+          filter: 'agTextColumnFilter',
           // valueGetter: PoliciesRenderer,
           editable: false,
         },
