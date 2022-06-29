@@ -28,7 +28,7 @@ interface SaveFormTypes {
 
 export default function SaveFormModal({ itemData, modalIdentifier }: ModalProps) {
   const dispatch = useAppDispatch();
-  const [selectedRoles, setSelectedRoles] = useState<any>([]);
+  const [selectedRoles, setSelectedRoles] = useState<string[]>([]);
   const isPutLoading = useSelector(isPutLoadingSelector);
   const isPostLoading = useSelector(isPostLoadingSelector);
   const isLoading = isPostLoading || isPutLoading;
@@ -80,6 +80,7 @@ export default function SaveFormModal({ itemData, modalIdentifier }: ModalProps)
 
     return function cleanup() {
       setValue('email', '');
+      setValue('roles', []);
     };
   }, [itemData]);
 
@@ -87,19 +88,12 @@ export default function SaveFormModal({ itemData, modalIdentifier }: ModalProps)
     dispatch(rolesReadAll());
   }, []);
   useEffect(() => {
-    const selRoles = itemData?.roles?.map((itm) => String(itm));
+    const selRoles: string[] = itemData?.roles?.map((itm) => String(itm)) || [];
     setSelectedRoles(selRoles);
   }, [itemData]);
 
   const setSelectedRolesOnChange = (e) => {
-    const { options } = e.target;
-    const value: any = [];
-    for (let i = 0, l = options.length; i < l; i++) {
-      if (options[i].selected) {
-        value.push(options[i].value);
-      }
-    }
-
+    const value = Array.from(e.target.selectedOptions, (option: any) => option.value);
     setSelectedRoles(value);
   };
 
@@ -124,9 +118,9 @@ export default function SaveFormModal({ itemData, modalIdentifier }: ModalProps)
                   type="email"
                 />
                 {errors.email && (
-                  <div id="validationTitleFeedback" className="invalid-feedback">
-                    <p>{errors.email?.message}</p>
-                  </div>
+                <div id="validationTitleFeedback" className="invalid-feedback">
+                  <p>{errors.email?.message}</p>
+                </div>
                 )}
               </div>
 
