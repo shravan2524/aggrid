@@ -9,7 +9,18 @@ import PageWrapper from 'components/PageWrapper';
 import { agGridFilesDTO } from 'app/utils/Helpers';
 import { BACKEND_API } from 'app/config';
 import ReactFileUploder from 'components/FileUploder/Main';
-import { CellRange, ICellRendererParams, RangeSelectionChangedEvent } from 'ag-grid-community';
+import {
+  ColDef,
+  ColGroupDef,
+  FirstDataRenderedEvent,
+  Grid,
+  GridOptions,
+  GridReadyEvent,
+  IDetailCellRendererParams,
+  ICellRendererParams,
+  CellRange,
+  RangeSelectionChangedEvent,
+} from 'ag-grid-community';
 import ColumnMapping from 'components/ColumnMapping/ColumnMapping';
 import './FilePage.scss';
 import { useSelector } from 'react-redux';
@@ -224,6 +235,8 @@ export default function FilesPage() {
           ),
           editable: false,
           filter: false,
+          groupDefaultExpanded: 1,
+          masterDetail: true,
           cellStyle: (params) => {
             if (params.value === 'Actions') {
               // mark police cells as red
@@ -246,6 +259,7 @@ export default function FilesPage() {
           field: 'fileType',
           filter: 'agTextColumnFilter',
           editable: false,
+          cellRenderer: 'agGroupCellRenderer',
         },
         {
           field: 'actions',
@@ -363,45 +377,53 @@ export default function FilesPage() {
       gridRef.current?.api.sizeColumnsToFit();
     }
   }, [rows]);
-
-  // sub Ig-Grid
-  const detailCellRendererParams = {
+  const detailCellRendererParams = useMemo<any>(() => ({
     detailGridOptions: {
-      columnDefs: [{ field: 'columnName' }, { field: 'columnTitle' }],
+      rowSelection: 'multiple',
+      suppressRowClickSelection: true,
+      enableRangeSelection: true,
+      pagination: true,
+      paginationAutoPageSize: true,
+      columnDefs: [
+        { field: 'callId', checkboxSelection: true },
+        { field: 'direction' },
+        { field: 'number', minWidth: 150 },
+        { field: 'duration', valueFormatter: "x.toLocaleString() + 's'" },
+        { field: 'switchCode', minWidth: 150 },
+      ],
+      defaultColDef: {
+        sortable: true,
+        flex: 1,
+      },
     },
-    getDetailRowData: (params: any) => {
-      params.successCallback(params.data.agGridColumns);
+    getDetailRowData: (params) => {
+      params.successCallback(params.data.callRecords);
     },
-  };
-
+  } as IDetailCellRendererParams), []);
   return (
     <PageWrapper pageTitle="Files" icon="fa-solid fa-file-arrow-up">
-      <div style={containerStyle}>
-        <div style={gridStyle} className="ag-theme-alpine">
-          <AgGridReact
-            containerStyle={containerStyle}
-            ref={gridRef}
-            rowData={rowData}
-            columnDefs={columnDefs}
-            sideBar={sideBar}
-            rowSelection="multiple"
-            rowDragManaged
-            rowDragMultiRow
-            rowGroupPanelShow="always"
-            defaultColDef={defaultColDef}
-            groupDisplayType="multipleColumns"
-            animateRows
-            onGridReady={onGridReady}
-            icons={icons}
-            pagination
-            onFirstDataRendered={onFirstDataRendered}
-            enableRangeSelection
-            masterDetail
-            onRangeSelectionChanged={onRangeSelectionChanged}
-            detailCellRendererParams={detailCellRendererParams}
-            detailRowHeight={400}
-          />
-        </div>
+      <div className="ag-theme-alpine grid-container-style">
+        <AgGridReact
+          containerStyle={containerStyle}
+          ref={gridRef}
+          rowData={rowData}
+          columnDefs={columnDefs}
+          masterDetail
+          detailCellRendererParams={detailCellRendererParams}
+          sideBar={sideBar}
+          rowSelection="multiple"
+          rowDragManaged
+          rowDragMultiRow
+          rowGroupPanelShow="always"
+          defaultColDef={defaultColDef}
+          groupDisplayType="multipleColumns"
+          animateRows
+          onGridReady={onGridReady}
+          icons={icons}
+          pagination
+          onFirstDataRendered={onFirstDataRendered}
+          enableRangeSelection
+        />
       </div>
     </PageWrapper>
   );
