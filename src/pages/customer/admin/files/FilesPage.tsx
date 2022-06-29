@@ -30,6 +30,7 @@ import {
   setContentTypeRequest, isLoadingSelector,
 } from 'state/files/filesSlice';
 import classNames from 'classnames';
+import CommentsPage from '../comments/CommentsPage';
 
 type ActionsRendererProps = {
   params: ICellRendererParams;
@@ -106,6 +107,7 @@ function ActionsRenderer({ params, onFileMappingClickCallback }: ActionsRenderer
       >
         <i className="fa fa-download" />
       </button>
+      <CommentsPage />
     </div>
   );
 }
@@ -259,7 +261,6 @@ export default function FilesPage() {
           field: 'fileType',
           filter: 'agTextColumnFilter',
           editable: false,
-          cellRenderer: 'agGroupCellRenderer',
         },
         {
           field: 'actions',
