@@ -31,6 +31,7 @@ import {
 } from 'state/files/filesSlice';
 import classNames from 'classnames';
 import DetailCellRenderer from './Sub-Ag-Grid';
+import CommentsPage from '../comments/CommentsPage';
 
 type ActionsRendererProps = {
   params: ICellRendererParams;
@@ -107,6 +108,7 @@ function ActionsRenderer({ params, onFileMappingClickCallback }: ActionsRenderer
       >
         <i className="fa fa-download" />
       </button>
+      <CommentsPage />
     </div>
   );
 }
@@ -260,7 +262,6 @@ export default function FilesPage() {
           field: 'fileType',
           filter: 'agTextColumnFilter',
           editable: false,
-          cellRenderer: 'agGroupCellRenderer',
         },
         {
           field: 'actions',
