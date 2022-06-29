@@ -21,7 +21,7 @@ interface ModalProps {
 }
 
 interface SaveFormTypes extends Record<string, any> {
-  title: string;
+  email: string;
 }
 
 export default function SaveFormModal({ itemData, modalIdentifier }: ModalProps) {
