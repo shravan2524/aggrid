@@ -9,7 +9,16 @@ import PageWrapper from 'components/PageWrapper';
 import { agGridFilesDTO } from 'app/utils/Helpers';
 import { BACKEND_API } from 'app/config';
 import ReactFileUploder from 'components/FileUploder/Main';
-import { ICellRendererParams } from 'ag-grid-community';
+import {
+  ColDef,
+  ColGroupDef,
+  FirstDataRenderedEvent,
+  Grid,
+  GridOptions,
+  GridReadyEvent,
+  IDetailCellRendererParams,
+  ICellRendererParams,
+} from 'ag-grid-community';
 import ColumnMapping from 'components/ColumnMapping/ColumnMapping';
 import './FilePage.scss';
 import { useSelector } from 'react-redux';
@@ -204,6 +213,8 @@ export default function FilesPage() {
           ),
           editable: false,
           filter: false,
+          groupDefaultExpanded: 1,
+          masterDetail: true,
           cellStyle: (params) => {
             if (params.value === 'Actions') {
               // mark police cells as red
@@ -220,6 +231,7 @@ export default function FilesPage() {
           field: 'fileName',
           filter: 'agNumberColumnFilter',
           editable: false,
+          cellRenderer: 'agGroupCellRenderer',
         },
         {
           field: 'actions',
@@ -311,7 +323,29 @@ export default function FilesPage() {
       gridRef.current?.api.sizeColumnsToFit();
     }
   }, [rows]);
-
+  const detailCellRendererParams = useMemo<any>(() => ({
+    detailGridOptions: {
+      rowSelection: 'multiple',
+      suppressRowClickSelection: true,
+      enableRangeSelection: true,
+      pagination: true,
+      paginationAutoPageSize: true,
+      columnDefs: [
+        { field: 'callId', checkboxSelection: true },
+        { field: 'direction' },
+        { field: 'number', minWidth: 150 },
+        { field: 'duration', valueFormatter: "x.toLocaleString() + 's'" },
+        { field: 'switchCode', minWidth: 150 },
+      ],
+      defaultColDef: {
+        sortable: true,
+        flex: 1,
+      },
+    },
+    getDetailRowData: (params) => {
+      params.successCallback(params.data.callRecords);
+    },
+  } as IDetailCellRendererParams), []);
   return (
     <PageWrapper pageTitle="Files" icon="fa-solid fa-file-arrow-up">
       <div className="ag-theme-alpine grid-container-style">
@@ -320,6 +354,8 @@ export default function FilesPage() {
           ref={gridRef}
           rowData={rowData}
           columnDefs={columnDefs}
+          masterDetail
+          detailCellRendererParams={detailCellRendererParams}
           sideBar={sideBar}
           rowSelection="multiple"
           rowDragManaged
@@ -333,7 +369,6 @@ export default function FilesPage() {
           pagination
           onFirstDataRendered={onFirstDataRendered}
           enableRangeSelection
-          masterDetail
         />
       </div>
     </PageWrapper>
