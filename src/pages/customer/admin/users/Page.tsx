@@ -102,15 +102,15 @@ function RolesRenderer(props: RolesRendererProps) {
 
   const result = roles.map((r: string, idx: number) => {
     const i = parseInt(r, 10);
-    console.log('i', i, 'r', r, 'idx', idx, 'allRoles', allRoles);
+    // console.log('i', i, 'r', r, 'idx', idx, 'allRoles', allRoles);
     const ar = allRoles.find((x) => x.id === i);
-    console.log('ar', ar);
+    // console.log('ar', ar);
     if (!ar) {
       return null;
     }
 
     return <p key={idx}>{ar.title}</p>;
-  });
+  }).filter((x) => x !== null);
 
   console.log(result);
 
