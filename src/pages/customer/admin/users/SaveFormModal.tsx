@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import * as yup from 'yup';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup/dist/yup';
@@ -28,6 +28,7 @@ interface SaveFormTypes {
 
 export default function SaveFormModal({ itemData, modalIdentifier }: ModalProps) {
   const dispatch = useAppDispatch();
+  const [selectedRoles, setSelectedRoles] = useState<any>([]);
   const isPutLoading = useSelector(isPutLoadingSelector);
   const isPostLoading = useSelector(isPostLoadingSelector);
   const isLoading = isPostLoading || isPutLoading;
@@ -85,10 +86,24 @@ export default function SaveFormModal({ itemData, modalIdentifier }: ModalProps)
   useEffect(() => {
     dispatch(rolesReadAll());
   }, []);
+  useEffect(() => {
+    const selRoles = itemData?.roles?.map((itm) => String(itm));
+    setSelectedRoles(selRoles);
+  }, [itemData]);
+
+  const setSelectedRolesOnChange = (e) => {
+    const { options } = e.target;
+    const value: any = [];
+    for (let i = 0, l = options.length; i < l; i++) {
+      if (options[i].selected) {
+        value.push(options[i].value);
+      }
+    }
+
+    setSelectedRoles(value);
+  };
 
   const modalTitle = itemData?.id ? 'Edit User' : 'Invite User';
-
-  const selectedRoles = itemData?.roles?.map((itm) => String(itm));
 
   return (
     <div className="modal fade" id={modalId} aria-labelledby={`new${modalId}Label`} aria-hidden="true">
@@ -121,18 +136,13 @@ export default function SaveFormModal({ itemData, modalIdentifier }: ModalProps)
                   {...register('roles')}
                   className={classNames(['form-select form-select-sm', { 'is-invalid': errors.roles }])}
                   multiple
+                  onChange={setSelectedRolesOnChange}
                   value={selectedRoles}
                 >
                   {allRoles && allRoles.map((option) => (
                     <option key={option.id} value={option.id}>{option.title}</option>
                   ))}
                 </select>
-
-                {errors.roles && (
-                  <div id="validationTitleFeedback" className="invalid-feedback">
-                    <p>{errors.roles}</p>
-                  </div>
-                )}
               </div>
             </div>
             <div className="modal-footer">
