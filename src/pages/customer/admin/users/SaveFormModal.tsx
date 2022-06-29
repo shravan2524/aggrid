@@ -129,7 +129,7 @@ export default function SaveFormModal({ itemData, modalIdentifier }: ModalProps)
 
                 {errors.roles && (
                   <div id="validationTitleFeedback" className="invalid-feedback">
-                    <p>{errors.roles?.message}</p>
+                    <p>{errors.roles}</p>
                   </div>
                 )}
               </div>
