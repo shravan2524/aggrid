@@ -89,34 +89,37 @@ function CustomActionsToolPanel(onRefreshCallback, isFetchLoading) {
 
 interface RolesRendererProps {
   data: any,
-  allRoles: Array<any>
 }
 
 function RolesRenderer(props: RolesRendererProps) {
-  const { data, allRoles } = props;
-  const roles = data?.roles || [];
+  const allRoles = useSelector(rolesReadAllSelector);
 
-  if (roles.length === 0) {
+  const { data } = props;
+  const roles = data.value || [];
+
+  if (roles.length === 0 || allRoles.length === 0) {
     return null;
   }
 
   const result = roles.map((r: string, idx: number) => {
     const i = parseInt(r, 10);
-    // console.log('i', i, 'r', r, 'idx', idx, 'allRoles', allRoles);
     const ar = allRoles.find((x) => x.id === i);
-    // console.log('ar', ar);
     if (!ar) {
       return null;
     }
 
-    return <p key={idx}>{ar.title}</p>;
+    return { key: idx, title: ar.title };
   }).filter((x) => x !== null);
 
   console.log(result);
-
   return (
     <div>
-      {result}
+      {result.map((i) => (
+        <span key={i?.key}>
+          {i?.title}
+          {' | '}
+        </span>
+      ))}
     </div>
   );
 }
@@ -129,7 +132,6 @@ export default function Page() {
   const rows = useSelector(readAllSelector);
   const [itemData, setItemData] = useState<UserType | null>(null);
   const isFetchLoading = useSelector(isLoadingSelector);
-  const allRoles = useSelector(rolesReadAllSelector);
 
   const containerStyle = useMemo(() => ({
     width: '100%',
@@ -138,8 +140,8 @@ export default function Page() {
   }), [height, width]);
 
   const RolesRendererCb = useCallback(
-    ({ data }) => RolesRenderer({ data, allRoles }),
-    [allRoles],
+    (params) => (<RolesRenderer data={params} />),
+    [],
   );
 
   const onEditClickCallback = (e, params) => {
@@ -174,7 +176,8 @@ export default function Page() {
           field: 'roles',
           // filter: 'agNumberColumnFilter',
           // valueGetter: ({ data }) => ,
-          valueGetter: RolesRendererCb,
+          //  valueGetter: RolesRendererCb,
+          cellRenderer: RolesRendererCb,
           editable: false,
         },
         {
@@ -259,7 +262,7 @@ export default function Page() {
 
   const onGridReady = useCallback((params) => {
     dispatch(readAll());
-  }, [allRoles]);
+  }, []);
 
   useEffect(() => {
     if (gridRef.current?.api) {
