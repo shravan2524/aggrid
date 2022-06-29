@@ -26,7 +26,11 @@ interface RoleAGGridType {
   updator?: any,
 }
 
-function agGridDTO(rows: Array<RoleType>): Array<RoleAGGridType> {
+function agGridDTO(rows: Array<RoleType> | null): Array<RoleAGGridType> {
+  if (!rows) {
+    return [];
+  }
+
   return rows.map(
     (item: RoleType) => ({
       id: item.id || -1,

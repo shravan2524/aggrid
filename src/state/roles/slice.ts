@@ -13,7 +13,7 @@ const moduleTitle = 'Role';
 
 // Types ...
 export type State = {
-  rows: RoleType[];
+  rows: RoleType[] | null;
   isLoading: boolean;
   isPostLoading: boolean;
   isPutLoading: boolean;
@@ -22,7 +22,7 @@ export type State = {
 };
 
 const initialState: State = {
-  rows: [],
+  rows: null,
   isLoading: false,
   isPostLoading: false,
   isPutLoading: false,
@@ -42,7 +42,7 @@ export const slice = createSlice({
   initialState,
   reducers: {
     setSelectedItem: (state: Draft<State>, action: PayloadAction<string | number | null | undefined>) => {
-      const selectedItem = state.rows.find((i) => Number(i.id) === Number(action.payload));
+      const selectedItem = state?.rows?.find((i) => Number(i.id) === Number(action.payload));
       state.selectedItem = selectedItem?.id ?? null;
     },
     clearSelectedItem: (state: Draft<State>) => {
@@ -116,7 +116,7 @@ const Selector = (state) => state[moduleName];
 
 export const readAllSelector = createSelector(
   Selector,
-  (state: State): RoleType[] => state.rows,
+  (state: State): RoleType[] | null => state.rows,
 );
 
 export const isLoadingSelector = createSelector(

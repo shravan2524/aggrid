@@ -95,6 +95,10 @@ interface RolesRendererProps {
 function RolesRenderer(props: RolesRendererProps) {
   const allRoles = useSelector(rolesReadAllSelector);
 
+  if (!allRoles) {
+    return null;
+  }
+
   const { data } = props;
   const roles = data.value || [];
 
@@ -134,6 +138,7 @@ export default function Page() {
   const rows = useSelector(readAllSelector);
   const [itemData, setItemData] = useState<UserType | null>(null);
   const isFetchLoading = useSelector(isLoadingSelector);
+  const allRoles = useSelector(rolesReadAllSelector);
 
   const containerStyle = useMemo(() => ({
     width: '100%',
@@ -312,29 +317,32 @@ export default function Page() {
 
   return (
     <PageWrapper pageTitle={moduleTitle} icon="fa-solid fa-building">
-
       <div className=" ag-theme-alpine grid-container-style">
-        <SaveFormModal itemData={itemData} modalIdentifier={modalIdentifier} />
-        <AgGridReact
-          containerStyle={containerStyle}
-          ref={gridRef}
-          rowData={rowData}
-          columnDefs={columnDefs}
-          sideBar={sideBar}
-          rowSelection="multiple"
-          rowDragManaged
-          rowDragMultiRow
-          rowGroupPanelShow="always"
-          defaultColDef={defaultColDef}
-          groupDisplayType="multipleColumns"
-          animateRows
-          onGridReady={onGridReady}
-          icons={icons}
-          pagination
-          onFirstDataRendered={onFirstDataRendered}
-          enableRangeSelection
-          masterDetail
-        />
+        {(allRoles !== null) && (
+          <>
+            <SaveFormModal itemData={itemData} modalIdentifier={modalIdentifier} />
+            <AgGridReact
+              containerStyle={containerStyle}
+              ref={gridRef}
+              rowData={rowData}
+              columnDefs={columnDefs}
+              sideBar={sideBar}
+              rowSelection="multiple"
+              rowDragManaged
+              rowDragMultiRow
+              rowGroupPanelShow="always"
+              defaultColDef={defaultColDef}
+              groupDisplayType="multipleColumns"
+              animateRows
+              onGridReady={onGridReady}
+              icons={icons}
+              pagination
+              onFirstDataRendered={onFirstDataRendered}
+              enableRangeSelection
+              masterDetail
+            />
+          </>
+        )}
       </div>
 
     </PageWrapper>
