@@ -8,6 +8,7 @@ export interface FilesType {
   contentType: string,
   columnMapping: Object,
   agGridColumns:any,
+  contentPreview:any,
 }
 
 export interface FilesAgGridType {
