@@ -36,7 +36,7 @@ export default function EditCompanyModal({ companyData }: EditCompanyModalProps)
   const schema = yup.object({
     name: yup.string().required(),
     parent: yup.string(),
-    gstin: yup.string(),
+    gstin: yup.string().matches(/^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$/, 'Enter a valid GSTIN'),
   }).required();
 
   const {
@@ -79,13 +79,6 @@ export default function EditCompanyModal({ companyData }: EditCompanyModalProps)
               <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close" />
             </div>
             <div className="modal-body">
-
-              <div className="mb-3">
-                <label htmlFor="customer" className="col-form-label">
-                  Customer:
-                  {selectedCustomer?.title}
-                </label>
-              </div>
 
               <div className="mb-3">
                 <label htmlFor="customer" className="col-form-label">Parent:</label>

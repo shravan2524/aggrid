@@ -18,6 +18,8 @@ import {
   GridReadyEvent,
   IDetailCellRendererParams,
   ICellRendererParams,
+  CellRange,
+  RangeSelectionChangedEvent,
 } from 'ag-grid-community';
 import ColumnMapping from 'components/ColumnMapping/ColumnMapping';
 import './FilePage.scss';
@@ -163,10 +165,11 @@ export default function FilesPage() {
   const rows = useSelector(getFiles);
   const isFetchLoading = useSelector(isLoadingSelector);
 
-  const containerStyle = useMemo(() => ({
-    width: '100%',
-    height: '25rem',
-  }), [height, width]);
+  const containerStyle = useMemo(
+    () => ({ width: '100%', height: '100vh' }),
+    [],
+  );
+  const gridStyle = useMemo(() => ({ height: '100vh', width: '100%' }), []);
 
   const [selectedFiles, setselectedFiles] = useState<any[]>([]);
   const onFileMappingClickCallback = (e, params) => {
@@ -198,10 +201,29 @@ export default function FilesPage() {
     });
     return tmp;
   };
+
+  const OnExpand = (i: any) => {
+    i.node.setExpanded(!i.node.expanded);
+  };
+
   const [columnDefs, setColumnDefs] = useState([
     {
       headerName: 'Files Details',
       children: [
+        {
+          field: '',
+          // eslint-disable-next-line react/no-unstable-nested-components
+          cellRenderer: (params) => (
+            <div aria-hidden="true" onClick={() => OnExpand(params)}>
+              <i className="fas fa-angle-right" />
+            </div>
+          ),
+          editable: false,
+          filter: false,
+          width: 40,
+          minWidth: 40,
+          maxWidth: 40,
+        },
         {
           field: '',
           // eslint-disable-next-line react/no-unstable-nested-components
@@ -229,7 +251,13 @@ export default function FilesPage() {
         {
           headerName: 'Name',
           field: 'fileName',
-          filter: 'agNumberColumnFilter',
+          filter: 'agTextColumnFilter',
+          editable: false,
+        },
+        {
+          headerName: 'Type',
+          field: 'fileType',
+          filter: 'agTextColumnFilter',
           editable: false,
           cellRenderer: 'agGroupCellRenderer',
         },
@@ -310,6 +338,30 @@ export default function FilesPage() {
     dispatch(fetchFiles());
   }, []);
 
+  // TODO : Implement row range selection ...
+  const onRangeSelectionChanged = useCallback(
+    (event: RangeSelectionChangedEvent) => {
+      const cellRanges = gridRef.current!.api.getCellRanges();
+
+      // if no selection, clear all the results and do nothing more
+      if (!cellRanges || cellRanges.length === 0) {
+        return;
+      }
+
+      // set range count to the number of ranges selected
+      const api = gridRef.current!.api!;
+
+      if (cellRanges) {
+        cellRanges.forEach((range: CellRange) => {
+          // get starting and ending row, remember rowEnd could be before rowStart
+
+          console.log(range);
+        });
+      }
+    },
+    [],
+  );
+
   useEffect(() => {
     if (gridRef.current?.api) {
       gridRef.current?.api.sizeColumnsToFit();
@@ -317,6 +369,8 @@ export default function FilesPage() {
   }, [width, rows]);
 
   useEffect(() => {
+    console.log(rows);
+
     setRowData(agGridFilesDTO(rows));
 
     if (gridRef.current?.api) {

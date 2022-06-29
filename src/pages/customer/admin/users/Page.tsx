@@ -3,39 +3,55 @@ import React, {
 } from 'react';
 import { AgGridReact } from 'ag-grid-react';
 import { showModal } from 'app/utils/Modal';
-import { useAppDispatch, useCompanies, useWindowDimensions } from 'app/hooks';
+import { useAppDispatch, useWindowDimensions } from 'app/hooks';
 import PageWrapper from 'components/PageWrapper';
 import {
-  fetchCompanies, updateCompanyRequest, isLoadingSelector,
-} from 'state/companies/companiesSlice';
-import { agGridCompaniesDTO } from 'app/utils/Helpers';
-import { CompaniesType } from 'services/companiesAPIService';
+  readAll, isLoadingSelector, update, readAllSelector,
+} from 'state/users/slice';
+import { ItemType as UserType } from 'services/users';
 import { useSelector } from 'react-redux';
-import { availableTenants } from 'state/tenants/tenantsSlice';
 import { ICellRendererParams } from 'ag-grid-community';
 import classNames from 'classnames';
-import { toast } from 'react-hot-toast';
-import NewCompanyModal from './NewCompanyModal';
-import EditCompanyModal from './EditCompanyModal';
-import CompanyCredentialsModal from './CompanyCredentialsModal';
+import SaveFormModal from './SaveFormModal';
+
+const moduleName = 'User';
+const moduleTitle = 'Users';
+const modalIdentifier = `save${moduleName}Modal`;
+
+interface AGGridType {
+  id: number,
+  email: string,
+  fullName?: string,
+  updatedAt?: Date,
+  updator?: any,
+  status?: string,
+}
+
+function agGridDTO(rows: Array<UserType>): Array<AGGridType> {
+  return rows.map(
+    (item: UserType) => ({
+      id: item.id || -1,
+      email: item?.contact?.email || '',
+      fullName: item?.contact?.fullName,
+      status: item.status,
+      updatedAt: item.updatedAt,
+      updator: item.updator,
+    }),
+  );
+}
 
 type ActionsRendererProps = {
   params: ICellRendererParams;
   onEditClickCallback: (e: React.MouseEvent<HTMLButtonElement>, params: ICellRendererParams) => void;
-  onCredentialsClickCallback: (e: React.MouseEvent<HTMLButtonElement>, params: ICellRendererParams) => void;
 };
-function ActionsRenderer({ params, onEditClickCallback, onCredentialsClickCallback }: ActionsRendererProps) {
+
+function ActionsRenderer({ params, onEditClickCallback }: ActionsRendererProps) {
   return (
     <div className="d-flex justify-content-around align-items-center w-100 h-100">
       <button type="button" className="btn btn-sm btn-light" onClick={(e) => onEditClickCallback(e, params)}>
         <i className="fa-solid fa-pen-to-square" />
         {' '}
         Edit
-      </button>
-      <button type="button" className="btn btn-sm btn-danger" onClick={(e) => onCredentialsClickCallback(e, params)}>
-        <i className="fa-solid fa-key" />
-        {' '}
-        Credentials
       </button>
     </div>
   );
@@ -48,10 +64,11 @@ function CustomActionsToolPanel(onRefreshCallback, isFetchLoading) {
         <button
           type="button"
           className="btn btn-sm btn-danger px-4 d-flex gap-2 align-items-center justify-content-center"
-          onClick={() => showModal('newCompanyModal')}
+          onClick={() => showModal(modalIdentifier)}
         >
           <i className="fa-solid fa-circle-plus" />
-          Add Company
+          Add new
+          {moduleName}
         </button>
 
         <button
@@ -67,33 +84,17 @@ function CustomActionsToolPanel(onRefreshCallback, isFetchLoading) {
   );
 }
 
-function ParentRenderer(params) {
-  let result = '---';
-
-  try {
-    const parentId = params.data.parent;
-    params.api.forEachNode((rowNode) => {
-      if (rowNode.data.id.toString() === parentId.toString()) {
-        result = rowNode.data.name;
-      }
-    });
-
-    return result;
-  } catch (e) {
-    return result;
-  }
+function PoliciesRenderer() {
+  return null;
 }
 
-export default function CompaniesPage() {
+export default function Page() {
   const dispatch = useAppDispatch();
   const gridRef = useRef<any>();
-
   const [rowData, setRowData] = useState<any>();
-
-  const anyCustomer = useSelector(availableTenants);
   const { height, width } = useWindowDimensions();
-  const rows = useCompanies();
-  const [companyData, setCompanyData] = useState<CompaniesType | null>(null);
+  const rows = useSelector(readAllSelector);
+  const [itemData, setItemData] = useState<UserType | null>(null);
   const isFetchLoading = useSelector(isLoadingSelector);
 
   const containerStyle = useMemo(() => ({
@@ -103,61 +104,37 @@ export default function CompaniesPage() {
   }), [height, width]);
 
   const onEditClickCallback = (e, params) => {
-    setCompanyData(params.data);
-    showModal('editCompanyModal', () => {
-      setCompanyData(null);
-    });
-  };
-
-  const onCredentialsClickCallback = (e, params) => {
-    setCompanyData(params.data);
-    showModal('editCredentialsCompanyModal', () => {
-      setCompanyData(null);
+    setItemData(params.data);
+    showModal(`save${moduleName}Modal`, () => {
+      setItemData(null);
     });
   };
 
   const [columnDefs, setColumnDefs] = useState([
     {
-      headerName: 'Companies Details',
+      headerName: `${moduleTitle} Details`,
       children: [
         {
-          headerName: 'ID',
-          field: 'id',
+          headerName: 'E-mail',
+          field: 'email',
           filter: 'agNumberColumnFilter',
-          editable: false,
-        },
-        {
-          headerName: 'GSTIN',
-          field: 'gstin',
-          filter: 'agNumberColumnFilter',
-          onCellValueChanged: (event) => {
-            const { gstin, id } = event.data;
-
-            const isValidGSTIN = /^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$/.test(gstin);
-
-            if (isValidGSTIN) {
-              const payload = { data: { gstin }, id };
-              dispatch(updateCompanyRequest({ ...payload }));
-            } else {
-              toast.error('Invalid GSTIN Format');
-            }
-          },
+          // onCellValueChanged: (event) => {
+          //   const payload = { ...event.data };
+          //   dispatch(update({ ...payload }));
+          // },
         },
         {
           headerName: 'Name',
-          field: 'name',
-          filter: 'agTextColumnFilter',
-          onCellValueChanged: (event) => {
-            const { name, id } = event.data;
-            const payload = { data: { name }, id };
-            dispatch(updateCompanyRequest({ ...payload }));
-          },
+          field: 'fullName',
+          filter: 'agNumberColumnFilter',
+          // valueGetter: PoliciesRenderer,
+          editable: false,
         },
         {
-          headerName: 'Parent',
-          field: 'parent',
+          headerName: 'Updated At',
+          field: 'updatedAt',
           filter: 'agNumberColumnFilter',
-          valueGetter: ParentRenderer,
+          // valueGetter: PoliciesRenderer,
           editable: false,
         },
         {
@@ -167,7 +144,6 @@ export default function CompaniesPage() {
             <ActionsRenderer
               params={params}
               onEditClickCallback={(e) => onEditClickCallback(e, params)}
-              onCredentialsClickCallback={(e) => onCredentialsClickCallback(e, params)}
             />
           ),
           editable: false,
@@ -189,7 +165,7 @@ export default function CompaniesPage() {
   }), []);
 
   const onRefreshCallback = () => {
-    dispatch(fetchCompanies());
+    dispatch(readAll());
   };
 
   const sideBar = useMemo(() => ({
@@ -235,7 +211,7 @@ export default function CompaniesPage() {
   }, []);
 
   const onGridReady = useCallback((params) => {
-    dispatch(fetchCompanies());
+    dispatch(readAll());
   }, []);
 
   useEffect(() => {
@@ -245,32 +221,18 @@ export default function CompaniesPage() {
   }, [width, rows]);
 
   useEffect(() => {
-    setRowData(agGridCompaniesDTO(rows));
+    setRowData(agGridDTO(rows));
 
     if (gridRef.current?.api) {
       gridRef.current?.api.sizeColumnsToFit();
     }
   }, [rows]);
 
-  if (!anyCustomer) {
-    return (
-      <PageWrapper pageTitle="Companies" icon="fa-solid fa-building">
-        <div className="col">
-          <div className="alert alert-info" role="alert">
-            You have no Workspaces set, please set first at less one Workspace in order to use Companies .
-          </div>
-        </div>
-      </PageWrapper>
-    );
-  }
-
   return (
-    <PageWrapper pageTitle="Companies" icon="fa-solid fa-building">
+    <PageWrapper pageTitle={moduleTitle} icon="fa-solid fa-building">
 
       <div className=" ag-theme-alpine grid-container-style">
-        <NewCompanyModal />
-        <EditCompanyModal companyData={companyData} />
-        <CompanyCredentialsModal companyData={companyData} />
+        <SaveFormModal itemData={itemData} modalIdentifier={modalIdentifier} />
         <AgGridReact
           containerStyle={containerStyle}
           ref={gridRef}

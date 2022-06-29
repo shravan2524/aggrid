@@ -1,20 +1,21 @@
+import { tenantUuid } from 'state/tenants/helper';
 import { BACKEND_API } from '../app/config';
 
 export interface CredentialsType {
-  company_id: number,
+  companyId: number,
   credentials: {
     username: string,
     password: string,
   }
 }
 
-export async function fetchCompanyCredentialsData(companyId: number) :Promise<CredentialsType> {
+export async function fetchCompanyCredentialsData(companyId: number): Promise<CredentialsType> {
   const options: RequestInit = {
     method: 'GET',
     credentials: 'include',
   };
 
-  const apiUrl = `${BACKEND_API}/api/v1/credentials/${companyId}/company`;
+  const apiUrl = `${BACKEND_API}/api/v1/${tenantUuid()}/company-credentials/${companyId}`;
   const response = await fetch(apiUrl, options);
 
   if (!response.ok) {
@@ -24,7 +25,7 @@ export async function fetchCompanyCredentialsData(companyId: number) :Promise<Cr
   return response.json();
 }
 
-export async function postCompanyCredentialsData(companyId, data) :Promise<CredentialsType[]> {
+export async function postCompanyCredentialsData(companyId, data): Promise<CredentialsType[]> {
   const options: RequestInit = {
     headers: {
       Accept: 'application/json',
@@ -35,7 +36,7 @@ export async function postCompanyCredentialsData(companyId, data) :Promise<Crede
     body: JSON.stringify({ ...data }),
   };
 
-  const apiUrl = `${BACKEND_API}/api/v1/credentials/${companyId}/company`;
+  const apiUrl = `${BACKEND_API}/api/v1/${tenantUuid()}/company-credentials/${companyId}`;
   const response = await fetch(apiUrl, options);
   if (!response.ok) {
     const message = `An error has occurred: ${response.status}`;
@@ -44,7 +45,7 @@ export async function postCompanyCredentialsData(companyId, data) :Promise<Crede
   return response.json();
 }
 
-export async function putCompanyCredentialsData(companyId, payload) :Promise<CredentialsType[]> {
+export async function putCompanyCredentialsData(companyId, payload): Promise<CredentialsType[]> {
   const options: RequestInit = {
     headers: {
       Accept: 'application/json',
@@ -55,7 +56,7 @@ export async function putCompanyCredentialsData(companyId, payload) :Promise<Cre
     body: JSON.stringify({ ...payload }),
   };
 
-  const apiUrl = `${BACKEND_API}/api/v1/credentials/${companyId}/company`;
+  const apiUrl = `${BACKEND_API}/api/v1/${tenantUuid()}/company-credentials/${companyId}`;
   const response = await fetch(apiUrl, options);
   if (!response.ok) {
     const message = `An error has occurred: ${response.status}`;

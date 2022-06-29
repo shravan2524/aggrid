@@ -26,6 +26,7 @@ const AuthLogoutProcessorIndexPage = React.lazy(() => import('pages/public/auth/
 const QRHelper = React.lazy(() => import('pages/public/qr-helper/Import'));
 
 const RolesPage = React.lazy(() => import('pages/customer/admin/roles/Page'));
+const UsersPage = React.lazy(() => import('pages/customer/admin/users/Page'));
 
 const routes: any = [
 
@@ -137,6 +138,11 @@ const routes: any = [
                 text: 'Roles',
                 icon: 'fa-solid fa-flag',
               },
+              {
+                path: '/customer/admin/users',
+                text: 'Users',
+                icon: 'fa-solid fa-users',
+              },
             ]}
             />,
             children: [
@@ -159,6 +165,10 @@ const routes: any = [
               {
                 path: 'roles',
                 element: <Suspense fallback={<Loader />}><RolesPage /></Suspense>,
+              },
+              {
+                path: 'users',
+                element: <Suspense fallback={<Loader />}><UsersPage /></Suspense>,
               },
             ],
           },

@@ -48,13 +48,13 @@ export function agGridFilesDTO(items: FilesType[]): FilesAgGridType[] {
     id,
     fileName,
     fileType,
-    contentType,
     columnMapping,
+    agGridColumns,
   }) => ({
     id,
     fileName,
     fileType,
-    contentType,
     columnMapping,
+    agGridColumns,
   }));
 }

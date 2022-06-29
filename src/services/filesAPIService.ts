@@ -7,13 +7,13 @@ export interface FilesType {
   fileType: string,
   contentType: string,
   columnMapping: Object,
+  agGridColumns:any,
 }
 
 export interface FilesAgGridType {
   id: number,
   fileName: string,
   fileType: string,
-  contentType: string | undefined,
   columnMapping: Object | undefined,
 }
 

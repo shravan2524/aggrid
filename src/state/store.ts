@@ -4,6 +4,7 @@ import companiesReducer from 'state/companies/companiesSlice';
 import tenants from 'state/tenants/tenantsSlice';
 import filesReducer from 'state/files/filesSlice';
 import roles from 'state/roles/slice';
+import users from 'state/users/slice';
 
 export const store = configureStore({
   reducer: {
@@ -12,6 +13,7 @@ export const store = configureStore({
     tenants,
     files: filesReducer,
     roles,
+    users,
   },
 });
 

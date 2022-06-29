@@ -3,9 +3,7 @@ import * as yup from 'yup';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup/dist/yup';
 import classNames from 'classnames';
-import { useSelector } from 'react-redux';
 import CustomButton from 'components/CustomButton';
-import { getSelectedTenant } from 'state/tenants/tenantsSlice';
 import { CompaniesType } from 'services/companiesAPIService';
 import { CredentialsType, putCompanyCredentialsData } from 'services/credentialsAPIService';
 import { toast } from 'react-hot-toast';
@@ -25,7 +23,6 @@ interface CompanyEditCredentialsFormProps {
 export default function CompanyEditCredentialsForm({
   modalId, companyData, companyCredentials,
 }: CompanyEditCredentialsFormProps) {
-  const selectedCustomer = useSelector(getSelectedTenant);
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const schema = yup.object({
@@ -74,13 +71,6 @@ export default function CompanyEditCredentialsForm({
         <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close" />
       </div>
       <div className="modal-body">
-
-        <div className="mb-3">
-          <label htmlFor="customer" className="col-form-label">
-            Customer:
-            {selectedCustomer?.title}
-          </label>
-        </div>
         <div className="mb-3">
           <label htmlFor="customer" className="col-form-label">
             Company:
