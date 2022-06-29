@@ -1,6 +1,7 @@
 import React, {
   useCallback, useEffect, useMemo, useRef, useState,
 } from 'react';
+import { Button, Modal } from 'react-bootstrap';
 import { BACKEND_API } from 'app/config';
 import 'react-comments-section/dist/index.css';
 import { useAppDispatch, useWindowDimensions } from 'app/hooks';
@@ -65,6 +66,11 @@ export default function CommentsPage() {
       createdAt: '22:00',
     },
   ]);
+  const [show, setShow] = useState(false);
+  const handleClose = () => setShow(false);
+  const handleSubmit = () => {
+    setShow(false);
+  };
   const [state, setstate] = useState(true);
   const onSubmitAction = (e) => {
     e.preventDefault();
@@ -90,6 +96,9 @@ export default function CommentsPage() {
     dispatch(postComment({ Comments }));
     setstate(!state);
   };
+  const handleShow = () => {
+    setShow(true);
+  };
 
   useEffect(() => {
     const options: RequestInit = {
@@ -109,37 +118,24 @@ export default function CommentsPage() {
   }, []);
 
   return (
-    <div className="mta">
-      <div className="d-flex justify-content-center">
-        <div className="d-flex w-50 justify-content-between p-3">
-          <input type="text" className="w-75 px-5" onChange={(e) => settypedcomment(e.target.value)} value={typedcomment} />
-          <button type="button" className="btn btn-primary" onClick={(e) => onSubmitAction(e)}>Comment</button>
-        </div>
-      </div>
-      <div>
-        {
-          data
-            ? data.map((e) => (
-              <div className="card mb-4 w-50 d-flex justify-content-center" id="cards">
-                <div className="card-body">
-                  <div className="d-flex justify-content-between">
-                    <div className="d-flex flex-row align-items-center w-100">
-                      <div className="d-flex">
-                        <img className="rounded-circle" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSzHQv_th9wq3ivQ1CVk7UZRxhbPq64oQrg5Q&usqp=CAU" alt="avatar" width="25" height="25" />
-                      </div>
-                      <div className="d-flex justify-content-between w-100">
-                        <p className="small mb-0 ms-2">{e.title}</p>
-                        <Date date={e.createdAt} />
-                      </div>
-                    </div>
-                  </div>
-                  <p>{e.description}</p>
-                </div>
-              </div>
-            ))
-            : null
-        }
-      </div>
-    </div>
+    <>
+      <Button variant="primary" onClick={handleShow}><i className="fa fa-comment" /></Button>
+      <Modal show={show} onHide={handleClose} size="xl" scrollable>
+        <Modal.Header closeButton>
+          <Modal.Title>Comments</Modal.Title>
+        </Modal.Header>
+        <Modal.Body className="mapping">
+          <div>adnakdmadwa</div>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleClose}>
+            Close
+          </Button>
+          <Button variant="primary" onClick={handleSubmit}>
+            Save Changes
+          </Button>
+        </Modal.Footer>
+      </Modal>
+    </>
   );
 }
