@@ -40,6 +40,8 @@ export default function SaveFormModal({ itemData, modalIdentifier }: ModalProps)
     roles: yup.array(),
   }).required();
 
+  console.log(itemData);
+
   const {
     register,
     handleSubmit,
@@ -121,7 +123,7 @@ export default function SaveFormModal({ itemData, modalIdentifier }: ModalProps)
                   multiple
                 >
                   {allRoles && allRoles.map((option) => (
-                    <option key={option.id} value={option.id}>{option.title}</option>
+                    <option key={option.id} value={option.id} selected={!!itemData?.roles?.find((rl) => Number(rl) === Number(option.id))}>{option.title}</option>
                   ))}
                 </select>
 
