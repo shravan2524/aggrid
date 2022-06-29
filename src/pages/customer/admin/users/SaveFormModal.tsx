@@ -107,9 +107,9 @@ export default function SaveFormModal({ itemData, modalIdentifier }: ModalProps)
                   type="email"
                 />
                 {errors.email && (
-                <div id="validationTitleFeedback" className="invalid-feedback">
-                  <p>{errors.email?.message}</p>
-                </div>
+                  <div id="validationTitleFeedback" className="invalid-feedback">
+                    <p>{errors.email?.message}</p>
+                  </div>
                 )}
               </div>
 
@@ -126,9 +126,9 @@ export default function SaveFormModal({ itemData, modalIdentifier }: ModalProps)
                 </select>
 
                 {errors.roles && (
-                <div id="validationTitleFeedback" className="invalid-feedback">
-                  <p>{errors.roles?.message}</p>
-                </div>
+                  <div id="validationTitleFeedback" className="invalid-feedback">
+                    <p>{errors.roles?.message}</p>
+                  </div>
                 )}
               </div>
             </div>

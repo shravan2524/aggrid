@@ -22,7 +22,7 @@ export async function fetchFilesData(): Promise<FilesType[]> {
     method: 'GET',
     credentials: 'include',
   };
-  const apiUrl = `${BACKEND_API}/api/v1/${tenantUuid()}/files`;
+  const apiUrl = `${BACKEND_API}/api/v1/${tenantUuid()}/files/`;
   const response = await fetch(apiUrl, options);
   if (!response.ok) {
     const message = `An error has occurreds: ${response.status}`;
