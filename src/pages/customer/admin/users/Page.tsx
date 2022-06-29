@@ -6,7 +6,7 @@ import { showModal } from 'app/utils/Modal';
 import { useAppDispatch, useWindowDimensions } from 'app/hooks';
 import PageWrapper from 'components/PageWrapper';
 import {
-  readAll, isLoadingSelector, update, readAllSelector,
+  readAll, isLoadingSelector, readAllSelector,
 } from 'state/users/slice';
 import { ItemType as UserType } from 'services/users';
 import { useSelector } from 'react-redux';
@@ -14,6 +14,7 @@ import { ICellRendererParams } from 'ag-grid-community';
 import classNames from 'classnames';
 import { readAllSelector as rolesReadAllSelector, readAll as rolesReadAll } from 'state/roles/slice';
 import SaveFormModal from './SaveFormModal';
+import { agGridDateFormatter } from '../../../../app/utils/Helpers';
 
 const moduleName = 'User';
 const moduleTitle = 'Users';
@@ -210,8 +211,8 @@ export default function Page() {
         {
           headerName: 'Updated At',
           field: 'updatedAt',
-          filter: 'agTextColumnFilter',
-          // valueGetter: PoliciesRenderer,
+          filter: 'agNumberColumnFilter',
+          valueGetter: agGridDateFormatter,
           editable: false,
         },
         {
