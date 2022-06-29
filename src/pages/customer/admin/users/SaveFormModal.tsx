@@ -21,8 +21,9 @@ interface ModalProps {
   modalIdentifier: string;
 }
 
-interface SaveFormTypes extends Record<string, any> {
-  title: string;
+interface SaveFormTypes {
+  email: string;
+  roles: any[];
 }
 
 export default function SaveFormModal({ itemData, modalIdentifier }: ModalProps) {
@@ -53,7 +54,7 @@ export default function SaveFormModal({ itemData, modalIdentifier }: ModalProps)
       return;
     }
 
-    const data: Record<string, any> = {
+    const data: SaveFormTypes = {
       email: formData.email,
       roles: formData.roles,
     };
@@ -106,9 +107,9 @@ export default function SaveFormModal({ itemData, modalIdentifier }: ModalProps)
                   type="email"
                 />
                 {errors.email && (
-                  <div id="validationTitleFeedback" className="invalid-feedback">
-                    <p>{errors.email?.message}</p>
-                  </div>
+                <div id="validationTitleFeedback" className="invalid-feedback">
+                  <p>{errors.email?.message}</p>
+                </div>
                 )}
               </div>
 
@@ -125,9 +126,9 @@ export default function SaveFormModal({ itemData, modalIdentifier }: ModalProps)
                 </select>
 
                 {errors.roles && (
-                  <div id="validationTitleFeedback" className="invalid-feedback">
-                    <p>{errors.roles?.message}</p>
-                  </div>
+                <div id="validationTitleFeedback" className="invalid-feedback">
+                  <p>{errors.roles?.message}</p>
+                </div>
                 )}
               </div>
             </div>
