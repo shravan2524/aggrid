@@ -15,7 +15,6 @@ import classNames from 'classnames';
 import { readAllSelector as rolesReadAllSelector, readAll as rolesReadAll } from 'state/roles/slice';
 import { agGridDateFormatter } from 'app/utils/Helpers';
 import SaveFormModal from './SaveFormModal';
-import { agGridDateFormatter } from '../../../../app/utils/Helpers';
 
 const moduleName = 'User';
 const moduleTitle = 'Users';
