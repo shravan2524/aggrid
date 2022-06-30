@@ -1,0 +1,25 @@
+export const ColumnsDates = [
+  'invoiceDate',
+  'originalInvoiceDate',
+  'rowUpdateDate',
+  'extraColumns.Month',
+  'filingPeriod',
+];
+export const ColumnsNumber = [
+  'cgst',
+  'igst',
+  'invoiceNumber',
+  'sgst',
+  'taxRate',
+  'taxableAmount',
+  'totalAmount',
+  'totalGst',
+  'extraColumns.PO No',
+  'extraColumns.Quantity',
+  'extraColumns.Tax Code',
+  'extraColumns.CGST Rate',
+  'extraColumns.IGST Rate',
+  'extraColumns.SGST Rate',
+  'extraColumns.For GSTR-9',
+  'extraColumns.Rate of Tax',
+];
