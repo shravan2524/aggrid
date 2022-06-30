@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import * as yup from 'yup';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup/dist/yup';
@@ -28,6 +28,7 @@ interface SaveFormTypes {
 
 export default function SaveFormModal({ itemData, modalIdentifier }: ModalProps) {
   const dispatch = useAppDispatch();
+  const [selectedRoles, setSelectedRoles] = useState<string[]>([]);
   const isPutLoading = useSelector(isPutLoadingSelector);
   const isPostLoading = useSelector(isPostLoadingSelector);
   const isLoading = isPostLoading || isPutLoading;
@@ -39,8 +40,6 @@ export default function SaveFormModal({ itemData, modalIdentifier }: ModalProps)
     email: yup.string().required().email(),
     roles: yup.array(),
   }).required();
-
-  console.log(itemData);
 
   const {
     register,
@@ -81,12 +80,22 @@ export default function SaveFormModal({ itemData, modalIdentifier }: ModalProps)
 
     return function cleanup() {
       setValue('email', '');
+      setValue('roles', []);
     };
   }, [itemData]);
 
   useEffect(() => {
     dispatch(rolesReadAll());
   }, []);
+  useEffect(() => {
+    const selRoles: string[] = itemData?.roles?.map((itm) => String(itm)) || [];
+    setSelectedRoles(selRoles);
+  }, [itemData]);
+
+  const setSelectedRolesOnChange = (e) => {
+    const value = Array.from(e.target.selectedOptions, (option: any) => option.value);
+    setSelectedRoles(value);
+  };
 
   const modalTitle = itemData?.id ? 'Edit User' : 'Invite User';
 
@@ -109,9 +118,9 @@ export default function SaveFormModal({ itemData, modalIdentifier }: ModalProps)
                   type="email"
                 />
                 {errors.email && (
-                  <div id="validationTitleFeedback" className="invalid-feedback">
-                    <p>{errors.email?.message}</p>
-                  </div>
+                <div id="validationTitleFeedback" className="invalid-feedback">
+                  <p>{errors.email?.message}</p>
+                </div>
                 )}
               </div>
 
@@ -121,17 +130,13 @@ export default function SaveFormModal({ itemData, modalIdentifier }: ModalProps)
                   {...register('roles')}
                   className={classNames(['form-select form-select-sm', { 'is-invalid': errors.roles }])}
                   multiple
+                  onChange={setSelectedRolesOnChange}
+                  value={selectedRoles}
                 >
                   {allRoles && allRoles.map((option) => (
-                    <option key={option.id} value={option.id} selected={!!itemData?.roles?.find((rl) => Number(rl) === Number(option.id))}>{option.title}</option>
+                    <option key={option.id} value={option.id}>{option.title}</option>
                   ))}
                 </select>
-
-                {errors.roles && (
-                  <div id="validationTitleFeedback" className="invalid-feedback">
-                    <p>{errors.roles}</p>
-                  </div>
-                )}
               </div>
             </div>
             <div className="modal-footer">
