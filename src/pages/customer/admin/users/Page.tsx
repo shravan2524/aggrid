@@ -13,8 +13,8 @@ import { useSelector } from 'react-redux';
 import { ICellRendererParams } from 'ag-grid-community';
 import classNames from 'classnames';
 import { readAllSelector as rolesReadAllSelector, readAll as rolesReadAll } from 'state/roles/slice';
-import SaveFormModal from './SaveFormModal';
 import { agGridDateFormatter } from 'app/utils/Helpers';
+import SaveFormModal from './SaveFormModal';
 
 const moduleName = 'User';
 const moduleTitle = 'Users';
