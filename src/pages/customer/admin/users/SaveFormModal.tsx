@@ -14,14 +14,16 @@ import {
 } from 'state/users/slice';
 import { hideModal } from 'app/utils/Modal';
 import { ItemType } from 'services/users';
+import { readAllSelector as rolesReadAllSelector, readAll as rolesReadAll } from 'state/roles/slice';
 
 interface ModalProps {
   itemData: ItemType | null;
   modalIdentifier: string;
 }
 
-interface SaveFormTypes extends Record<string, any> {
+interface SaveFormTypes {
   email: string;
+  roles: any[];
 }
 
 export default function SaveFormModal({ itemData, modalIdentifier }: ModalProps) {
@@ -29,12 +31,16 @@ export default function SaveFormModal({ itemData, modalIdentifier }: ModalProps)
   const isPutLoading = useSelector(isPutLoadingSelector);
   const isPostLoading = useSelector(isPostLoadingSelector);
   const isLoading = isPostLoading || isPutLoading;
+  const allRoles = useSelector(rolesReadAllSelector);
 
   const modalId = useMemo(() => modalIdentifier, []);
 
   const schema = yup.object({
     email: yup.string().required().email(),
+    roles: yup.array(),
   }).required();
+
+  console.log(itemData);
 
   const {
     register,
@@ -50,14 +56,15 @@ export default function SaveFormModal({ itemData, modalIdentifier }: ModalProps)
       return;
     }
 
-    const data: Record<string, any> = {
+    const data: SaveFormTypes = {
       email: formData.email,
+      roles: formData.roles,
     };
 
     if (itemData?.id) {
-      // dispatch(update({ email: data.email, id: itemData.id }));
+      dispatch(update({ email: data.email, id: itemData.id, roles: data.roles }));
     } else {
-      dispatch(create({ email: data.email }));
+      dispatch(create({ email: data.email, roles: data.roles }));
     }
   };
 
@@ -76,6 +83,10 @@ export default function SaveFormModal({ itemData, modalIdentifier }: ModalProps)
       setValue('email', '');
     };
   }, [itemData]);
+
+  useEffect(() => {
+    dispatch(rolesReadAll());
+  }, []);
 
   const modalTitle = itemData?.id ? 'Edit User' : 'Invite User';
 
@@ -100,6 +111,25 @@ export default function SaveFormModal({ itemData, modalIdentifier }: ModalProps)
                 {errors.email && (
                   <div id="validationTitleFeedback" className="invalid-feedback">
                     <p>{errors.email?.message}</p>
+                  </div>
+                )}
+              </div>
+
+              <div className="mb-3">
+                <label htmlFor="parent" className="col-form-label">Roles:</label>
+                <select
+                  {...register('roles')}
+                  className={classNames(['form-select form-select-sm', { 'is-invalid': errors.roles }])}
+                  multiple
+                >
+                  {allRoles && allRoles.map((option) => (
+                    <option key={option.id} value={option.id} selected={!!itemData?.roles?.find((rl) => Number(rl) === Number(option.id))}>{option.title}</option>
+                  ))}
+                </select>
+
+                {errors.roles && (
+                  <div id="validationTitleFeedback" className="invalid-feedback">
+                    <p>{errors.roles}</p>
                   </div>
                 )}
               </div>

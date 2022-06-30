@@ -10,6 +10,7 @@ import { fetchCompanies } from 'state/companies/companiesSlice';
 import { useAppDispatch, useCustomerTopMenuHeightDimension } from 'app/hooks';
 import { useSelector } from 'react-redux';
 import { isSecondaryMenuItemVisible } from 'state/settings/settingsSlice';
+import { readAll } from 'state/roles/slice';
 
 export default function CustomerLayout() {
   const dispatch = useAppDispatch();
@@ -21,9 +22,13 @@ export default function CustomerLayout() {
   const topMenuHeight = useCustomerTopMenuHeightDimension();
   const secondaryMenuItemVisible = useSelector(isSecondaryMenuItemVisible);
 
-  // Fetch all companies and workspaces ...
+  // Fetch all global data that will be used across site ...
   useEffect(() => {
+    // Fetch Tenants and Companies ...
     dispatch(fetchTenants()).then(() => dispatch(fetchCompanies()));
+
+    // Fetch Roles ...
+    dispatch(readAll());
   }, [dispatch]);
 
   useEffect(() => {
