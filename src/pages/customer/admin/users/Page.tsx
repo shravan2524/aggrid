@@ -6,7 +6,7 @@ import { showModal } from 'app/utils/Modal';
 import { useAppDispatch, useWindowDimensions } from 'app/hooks';
 import PageWrapper from 'components/PageWrapper';
 import {
-  readAll, isLoadingSelector, update, readAllSelector,
+  readAll, isLoadingSelector, readAllSelector,
 } from 'state/users/slice';
 import { ItemType as UserType } from 'services/users';
 import { useSelector } from 'react-redux';
@@ -14,6 +14,7 @@ import { ICellRendererParams } from 'ag-grid-community';
 import classNames from 'classnames';
 import { readAllSelector as rolesReadAllSelector, readAll as rolesReadAll } from 'state/roles/slice';
 import SaveFormModal from './SaveFormModal';
+import { agGridDateFormatter } from 'app/utils/Helpers';
 
 const moduleName = 'User';
 const moduleTitle = 'Users';
@@ -94,6 +95,10 @@ interface RolesRendererProps {
 function RolesRenderer(props: RolesRendererProps) {
   const allRoles = useSelector(rolesReadAllSelector);
 
+  if (!allRoles) {
+    return null;
+  }
+
   const { data } = props;
   const roles = data.value || [];
 
@@ -111,15 +116,16 @@ function RolesRenderer(props: RolesRendererProps) {
     return { key: idx, title: ar.title };
   }).filter((x) => x !== null);
 
-  console.log(result);
   return (
     <div>
-      {result.map((i) => (
-        <span key={i?.key}>
-          {i?.title}
-          {' | '}
-        </span>
-      ))}
+      {
+        result.map((i, idx) => (
+          <span key={i?.key}>
+            {i?.title}
+            {(idx < result.length - 1) && ' | '}
+          </span>
+        ))
+      }
     </div>
   );
 }
@@ -132,6 +138,7 @@ export default function Page() {
   const rows = useSelector(readAllSelector);
   const [itemData, setItemData] = useState<UserType | null>(null);
   const isFetchLoading = useSelector(isLoadingSelector);
+  const allRoles = useSelector(rolesReadAllSelector);
 
   const containerStyle = useMemo(() => ({
     width: '100%',
@@ -151,25 +158,50 @@ export default function Page() {
     });
   };
 
+  const statusCellClass = (params) => {
+    const { data } = params;
+
+    if (data.status === 'deactivated') {
+      return ['bg-danger text-white'];
+    }
+
+    if (data.status === 'invited') {
+      return ['bg-warning'];
+    }
+
+    return [];
+  };
+
   const [columnDefs, setColumnDefs] = useState([
     {
       headerName: `${moduleTitle} Details`,
       children: [
         {
+          headerName: 'Name',
+          field: 'fullName',
+          filter: 'agTextColumnFilter',
+          // valueGetter: PoliciesRenderer,
+          editable: false,
+        },
+        {
           headerName: 'E-mail',
           field: 'email',
-          filter: 'agNumberColumnFilter',
+          filter: 'agTextColumnFilter',
           // onCellValueChanged: (event) => {
           //   const payload = { ...event.data };
           //   dispatch(update({ ...payload }));
           // },
         },
         {
-          headerName: 'Name',
-          field: 'fullName',
-          filter: 'agNumberColumnFilter',
-          // valueGetter: PoliciesRenderer,
-          editable: false,
+          headerName: 'Status',
+          field: 'status',
+          filter: 'agTextColumnFilter',
+
+          cellClass: statusCellClass,
+          // onCellValueChanged: (event) => {
+          //   const payload = { ...event.data };
+          //   dispatch(update({ ...payload }));
+          // },
         },
         {
           headerName: 'Roles',
@@ -178,13 +210,14 @@ export default function Page() {
           // valueGetter: ({ data }) => ,
           //  valueGetter: RolesRendererCb,
           cellRenderer: RolesRendererCb,
+          filter: false,
           editable: false,
         },
         {
           headerName: 'Updated At',
           field: 'updatedAt',
           filter: 'agNumberColumnFilter',
-          // valueGetter: PoliciesRenderer,
+          valueGetter: agGridDateFormatter,
           editable: false,
         },
         {
@@ -284,29 +317,32 @@ export default function Page() {
 
   return (
     <PageWrapper pageTitle={moduleTitle} icon="fa-solid fa-building">
-
       <div className=" ag-theme-alpine grid-container-style">
-        <SaveFormModal itemData={itemData} modalIdentifier={modalIdentifier} />
-        <AgGridReact
-          containerStyle={containerStyle}
-          ref={gridRef}
-          rowData={rowData}
-          columnDefs={columnDefs}
-          sideBar={sideBar}
-          rowSelection="multiple"
-          rowDragManaged
-          rowDragMultiRow
-          rowGroupPanelShow="always"
-          defaultColDef={defaultColDef}
-          groupDisplayType="multipleColumns"
-          animateRows
-          onGridReady={onGridReady}
-          icons={icons}
-          pagination
-          onFirstDataRendered={onFirstDataRendered}
-          enableRangeSelection
-          masterDetail
-        />
+        {(allRoles !== null) && (
+          <>
+            <SaveFormModal itemData={itemData} modalIdentifier={modalIdentifier} />
+            <AgGridReact
+              containerStyle={containerStyle}
+              ref={gridRef}
+              rowData={rowData}
+              columnDefs={columnDefs}
+              sideBar={sideBar}
+              rowSelection="multiple"
+              rowDragManaged
+              rowDragMultiRow
+              rowGroupPanelShow="always"
+              defaultColDef={defaultColDef}
+              groupDisplayType="multipleColumns"
+              animateRows
+              onGridReady={onGridReady}
+              icons={icons}
+              pagination
+              onFirstDataRendered={onFirstDataRendered}
+              enableRangeSelection
+              masterDetail
+            />
+          </>
+        )}
       </div>
 
     </PageWrapper>
