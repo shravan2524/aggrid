@@ -14,6 +14,7 @@ import { ICellRendererParams } from 'ag-grid-community';
 import classNames from 'classnames';
 import { readAllSelector as rolesReadAllSelector, readAll as rolesReadAll } from 'state/roles/slice';
 import { agGridDateFormatter } from 'app/utils/Helpers';
+import StatusFilter from './UsersAgGridStatusFilter';
 import SaveFormModal from './SaveFormModal';
 
 const moduleName = 'User';
@@ -195,13 +196,18 @@ export default function Page() {
         {
           headerName: 'Status',
           field: 'status',
-          filter: 'agTextColumnFilter',
+          // filter: 'agTextColumnFilter',
 
           cellClass: statusCellClass,
           // onCellValueChanged: (event) => {
           //   const payload = { ...event.data };
           //   dispatch(update({ ...payload }));
           // },
+
+          editable: false,
+
+          filter: StatusFilter,
+
         },
         {
           headerName: 'Roles',
