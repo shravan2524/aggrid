@@ -147,17 +147,27 @@ export default function Page() {
     minHeight: '600px',
   }), [height, width]);
 
-  const RolesRendererCb = useCallback(
-    (params) => (<RolesRenderer data={params} />),
-    [],
-  );
-
   const onEditClickCallback = (e, params) => {
     setItemData(params.data);
     showModal(`save${moduleName}Modal`, () => {
       setItemData(null);
     });
   };
+
+  const RolesRendererCb = useCallback(
+    (params) => (<RolesRenderer data={params} />),
+    [],
+  );
+
+  const ActionsRendererCb = useCallback(
+    (params) => (
+      <ActionsRenderer
+        params={params}
+        onEditClickCallback={(e) => onEditClickCallback(e, params)}
+      />
+    ),
+    [],
+  );
 
   const statusCellClass = (params) => {
     const { data } = params;
@@ -181,40 +191,23 @@ export default function Page() {
           headerName: 'Name',
           field: 'fullName',
           filter: 'agTextColumnFilter',
-          // valueGetter: PoliciesRenderer,
           editable: false,
         },
         {
           headerName: 'E-mail',
           field: 'email',
           filter: 'agTextColumnFilter',
-          // onCellValueChanged: (event) => {
-          //   const payload = { ...event.data };
-          //   dispatch(update({ ...payload }));
-          // },
         },
         {
           headerName: 'Status',
           field: 'status',
-          // filter: 'agTextColumnFilter',
-
           cellClass: statusCellClass,
-          // onCellValueChanged: (event) => {
-          //   const payload = { ...event.data };
-          //   dispatch(update({ ...payload }));
-          // },
-
           editable: false,
-
           filter: StatusFilter,
-
         },
         {
           headerName: 'Roles',
           field: 'roles',
-          // filter: 'agNumberColumnFilter',
-          // valueGetter: ({ data }) => ,
-          //  valueGetter: RolesRendererCb,
           cellRenderer: RolesRendererCb,
           filter: false,
           editable: false,
@@ -228,13 +221,7 @@ export default function Page() {
         },
         {
           field: 'actions',
-          // eslint-disable-next-line react/no-unstable-nested-components
-          cellRenderer: (params) => (
-            <ActionsRenderer
-              params={params}
-              onEditClickCallback={(e) => onEditClickCallback(e, params)}
-            />
-          ),
+          cellRenderer: ActionsRendererCb,
           editable: false,
           filter: false,
           cellStyle: (params) => {
