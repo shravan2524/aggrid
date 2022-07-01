@@ -10,11 +10,10 @@ import {
   readAll,
   isPostLoadingSelector,
   isPutLoadingSelector, update, create,
-
 } from 'state/users/slice';
-import { hideModal } from 'app/utils/Modal';
 import { ItemType } from 'services/users';
 import { readAllSelector as rolesReadAllSelector, readAll as rolesReadAll } from 'state/roles/slice';
+import { hideModal } from 'app/utils/Modal';
 
 interface ModalProps {
   itemData: ItemType | null;
@@ -68,8 +67,8 @@ export default function SaveFormModal({ itemData, modalIdentifier }: ModalProps)
   };
 
   useEffect(() => {
-    dispatch(readAll()).then(() => {
-      hideModal(modalId);
+    hideModal(modalId, () => {
+      dispatch(readAll());
     });
   }, [isLoading]);
 
@@ -87,6 +86,7 @@ export default function SaveFormModal({ itemData, modalIdentifier }: ModalProps)
   useEffect(() => {
     dispatch(rolesReadAll());
   }, []);
+
   useEffect(() => {
     const selRoles: string[] = itemData?.roles?.map((itm) => String(itm)) || [];
     setSelectedRoles(selRoles);

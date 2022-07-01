@@ -12,7 +12,7 @@ import { ItemType as UserType } from 'services/users';
 import { useSelector } from 'react-redux';
 import { ICellRendererParams } from 'ag-grid-community';
 import classNames from 'classnames';
-import { readAllSelector as rolesReadAllSelector, readAll as rolesReadAll } from 'state/roles/slice';
+import { readAllSelector as rolesReadAllSelector } from 'state/roles/slice';
 import { agGridDateFormatter } from 'app/utils/Helpers';
 import StatusFilter from './UsersAgGridStatusFilter';
 import SaveFormModal from './SaveFormModal';
@@ -154,6 +154,8 @@ export default function Page() {
     });
   };
 
+  console.log(rows);
+
   const RolesRendererCb = useCallback(
     (params) => (<RolesRenderer data={params} />),
     [],
@@ -169,19 +171,22 @@ export default function Page() {
     [],
   );
 
-  const statusCellClass = (params) => {
-    const { data } = params;
+  const statusCellClass = useCallback(
+    (params) => {
+      const { data } = params;
 
-    if (data.status === 'deactivated') {
-      return ['bg-danger text-white'];
-    }
+      if (data.status === 'deactivated') {
+        return ['bg-danger text-white'];
+      }
 
-    if (data.status === 'invited') {
-      return ['bg-warning'];
-    }
+      if (data.status === 'invited') {
+        return ['bg-warning'];
+      }
 
-    return [];
-  };
+      return [];
+    },
+    [],
+  );
 
   const [columnDefs, setColumnDefs] = useState([
     {
@@ -295,10 +300,6 @@ export default function Page() {
       gridRef.current?.api.sizeColumnsToFit();
     }
   }, [width, rows]);
-
-  useEffect(() => {
-    dispatch(rolesReadAll());
-  }, []);
 
   useEffect(() => {
     setRowData(agGridDTO(rows));
