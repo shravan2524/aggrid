@@ -111,7 +111,7 @@ export default function CommentsPage({ fileId }: File) {
       method: 'GET',
       credentials: 'include',
     };
-    const apiUrl = `${BACKEND_API}/api/v1/9a5f05a4-0076-46e0-8185-a0ebc8a1e8d0/comments/${fileId}/Files`;
+    const apiUrl = `${BACKEND_API}/api/v1/${tenantUuid()}/comments/${fileId}/Files`;
     fetch(apiUrl, options)
       .then((response) => response.json())
       .then((data1) => {
@@ -142,8 +142,8 @@ export default function CommentsPage({ fileId }: File) {
           <div>
             {
           data
-            ? data.map((e) => (
-              <div className="card mb-4 w-50 d-flex justify-content-center" id="cards">
+            ? data.map((e, i) => (
+              <div key={i} className="card mb-4 w-50 d-flex justify-content-center" id="cards">
                 <div className="card-body">
                   <div className="d-flex justify-content-between">
                     <div className="d-flex flex-row align-items-center w-100">

@@ -24,7 +24,7 @@ export async function fetchFilesData(): Promise<FilesType[]> {
     credentials: 'include',
   };
   // const apiUrl = 'https://beta.finkraft.ai/api/v1/d6478a54-cdb8-4774-99c2-6f0c43ba58d4/files/';
-  const apiUrl = `${BACKEND_API}/api/v1/${tenantUuid}/files/`;
+  const apiUrl = `${BACKEND_API}/api/v1/${tenantUuid()}/files/`;
   const response = await fetch(apiUrl, options);
   if (!response.ok) {
     const message = `An error has occurreds: ${response.status}`;
