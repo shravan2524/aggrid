@@ -63,7 +63,7 @@ export function PublicTopMenu() {
 
           <HideOnAuth>
             <div className="text-end ms-auto mb-2 mb-md-0">
-              <a href={`${BACKEND_API}/api/v1/login`} role="button" className="btn btn-warning me-2">
+              <a href={`${BACKEND_API}/api/v1/auth/login`} role="button" className="btn btn-warning me-2">
                 <i className="fa-solid fa-right-to-bracket" />
                 {' '}
                 Login
