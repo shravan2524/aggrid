@@ -147,14 +147,16 @@ export default function Page() {
     minHeight: '600px',
   }), [height, width]);
 
-  const onEditClickCallback = (e, params) => {
-    setItemData(params.data);
-    showModal(`save${moduleName}Modal`, () => {
-      setItemData(null);
-    });
-  };
-
-  console.log(rows);
+  const onEditClickCallback = useCallback(
+    (e, params) => {
+      setItemData(params.data);
+      showModal(`save${moduleName}Modal`, () => {
+        setItemData(null);
+        dispatch(readAll());
+      });
+    },
+    [],
+  );
 
   const RolesRendererCb = useCallback(
     (params) => (<RolesRenderer data={params} />),
@@ -245,9 +247,12 @@ export default function Page() {
     'custom-actions-tool': '<i class="fa-solid fa-screwdriver-wrench"></i>',
   }), []);
 
-  const onRefreshCallback = () => {
-    dispatch(readAll());
-  };
+  const onRefreshCallback = useCallback(
+    (params) => {
+      dispatch(readAll());
+    },
+    [],
+  );
 
   const sideBar = useMemo(() => ({
     toolPanels: [
@@ -309,34 +314,36 @@ export default function Page() {
     }
   }, [rows]);
 
+  if (!allRoles) {
+    return null;
+  }
+
   return (
     <PageWrapper pageTitle={moduleTitle} icon="fa-solid fa-building">
       <div className=" ag-theme-alpine grid-container-style">
-        {(allRoles !== null) && (
-          <>
-            <SaveFormModal itemData={itemData} modalIdentifier={modalIdentifier} />
-            <AgGridReact
-              containerStyle={containerStyle}
-              ref={gridRef}
-              rowData={rowData}
-              columnDefs={columnDefs}
-              sideBar={sideBar}
-              rowSelection="multiple"
-              rowDragManaged
-              rowDragMultiRow
-              rowGroupPanelShow="always"
-              defaultColDef={defaultColDef}
-              groupDisplayType="multipleColumns"
-              animateRows
-              onGridReady={onGridReady}
-              icons={icons}
-              pagination
-              onFirstDataRendered={onFirstDataRendered}
-              enableRangeSelection
-              masterDetail
-            />
-          </>
-        )}
+
+        <SaveFormModal itemData={itemData} modalIdentifier={modalIdentifier} />
+        <AgGridReact
+          containerStyle={containerStyle}
+          ref={gridRef}
+          rowData={rowData}
+          columnDefs={columnDefs}
+          sideBar={sideBar}
+          rowSelection="multiple"
+          rowDragManaged
+          rowDragMultiRow
+          rowGroupPanelShow="always"
+          defaultColDef={defaultColDef}
+          groupDisplayType="multipleColumns"
+          animateRows
+          onGridReady={onGridReady}
+          icons={icons}
+          pagination
+          onFirstDataRendered={onFirstDataRendered}
+          enableRangeSelection
+          masterDetail
+        />
+
       </div>
 
     </PageWrapper>

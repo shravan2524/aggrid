@@ -7,12 +7,11 @@ import { useSelector } from 'react-redux';
 import { useAppDispatch } from 'app/hooks';
 import CustomButton from 'components/CustomButton';
 import {
-  readAll,
   isPostLoadingSelector,
   isPutLoadingSelector, update, create,
 } from 'state/users/slice';
 import { ItemType } from 'services/users';
-import { readAllSelector as rolesReadAllSelector, readAll as rolesReadAll } from 'state/roles/slice';
+import { readAllSelector as rolesReadAllSelector } from 'state/roles/slice';
 import { hideModal } from 'app/utils/Modal';
 
 interface ModalProps {
@@ -67,9 +66,7 @@ export default function SaveFormModal({ itemData, modalIdentifier }: ModalProps)
   };
 
   useEffect(() => {
-    hideModal(modalId, () => {
-      dispatch(readAll());
-    });
+    hideModal(modalId);
   }, [isLoading]);
 
   useEffect(() => {
@@ -82,10 +79,6 @@ export default function SaveFormModal({ itemData, modalIdentifier }: ModalProps)
       setValue('roles', []);
     };
   }, [itemData]);
-
-  useEffect(() => {
-    dispatch(rolesReadAll());
-  }, []);
 
   useEffect(() => {
     const selRoles: string[] = itemData?.roles?.map((itm) => String(itm)) || [];
