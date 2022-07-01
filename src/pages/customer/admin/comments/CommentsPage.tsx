@@ -13,6 +13,9 @@ import { tenantUuid } from 'state/tenants/helper';
 interface Type {
   date: string;
 }
+interface File {
+  fileId: string;
+}
 
 function Date({ date }: Type) {
   const ret = date.slice(8, 10);
@@ -55,7 +58,7 @@ function Date({ date }: Type) {
   );
 }
 
-export default function CommentsPage() {
+export default function CommentsPage({ fileId }: File) {
   const dispatch = useAppDispatch();
   const [typedcomment, settypedcomment] = useState('');
   const [data, setdata] = useState([
@@ -78,8 +81,10 @@ export default function CommentsPage() {
     const Comments = {
       title: 'Finkraft',
       description: typedcomment,
-      created_by: 1,
+      createdBy: 1,
       parent: 1,
+      modelName: 'Files',
+      modelId: fileId,
     };
     const tComments = {
       title: 'Finkraft',
@@ -93,6 +98,7 @@ export default function CommentsPage() {
     const tempcomment = data;
     tempcomment.push(tComments);
     setdata(tempcomment);
+    console.log(tempcomment);
     dispatch(postComment({ Comments }));
     setstate(!state);
   };
@@ -105,12 +111,14 @@ export default function CommentsPage() {
       method: 'GET',
       credentials: 'include',
     };
-    const apiUrl = `${BACKEND_API}/api/v1/${tenantUuid()}/comments/`;
+    const apiUrl = `${BACKEND_API}/api/v1/9a5f05a4-0076-46e0-8185-a0ebc8a1e8d0/comments/${fileId}/Files`;
     fetch(apiUrl, options)
       .then((response) => response.json())
       .then((data1) => {
+        console.log(data1, apiUrl);
         setdata(data1);
       });
+    console.log(data);
   }, []);
 
   useEffect(() => {
@@ -125,14 +133,37 @@ export default function CommentsPage() {
           <Modal.Title>Comments</Modal.Title>
         </Modal.Header>
         <Modal.Body className="mapping">
-          <div>adnakdmadwa</div>
+          <div className="d-flex justify-content-center">
+            <div className="d-flex w-50 justify-content-between p-3">
+              <input type="text" className="w-75 px-5" onChange={(e) => settypedcomment(e.target.value)} value={typedcomment} />
+              <button type="button" className="btn btn-primary" onClick={(e) => onSubmitAction(e)}>Comment</button>
+            </div>
+          </div>
+          <div>
+            {
+          data
+            ? data.map((e) => (
+              <div className="card mb-4 w-50 d-flex justify-content-center" id="cards">
+                <div className="card-body">
+                  <div className="d-flex justify-content-between">
+                    <div className="d-flex flex-row align-items-center w-100">
+                      <div className="d-flex justify-content-between w-100">
+                        <p className="small mb-0 ms-2">{e.title}</p>
+                        <Date date={e.createdAt} />
+                      </div>
+                    </div>
+                  </div>
+                  <p>{e.description}</p>
+                </div>
+              </div>
+            ))
+            : null
+        }
+          </div>
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={handleClose}>
             Close
-          </Button>
-          <Button variant="primary" onClick={handleSubmit}>
-            Save Changes
           </Button>
         </Modal.Footer>
       </Modal>

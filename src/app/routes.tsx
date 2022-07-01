@@ -159,10 +159,6 @@ const routes: any = [
                 element: <Suspense fallback={<Loader />}><FilesIndexPage /></Suspense>,
               },
               {
-                path: 'comments',
-                element: <Suspense fallback={<Loader />}><CommentsIndexPage /></Suspense>,
-              },
-              {
                 path: 'roles',
                 element: <Suspense fallback={<Loader />}><RolesPage /></Suspense>,
               },
