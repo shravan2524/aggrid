@@ -10,7 +10,6 @@ import {
 } from 'state/roles/slice';
 import { RoleType, PolicyType as RolePolicyType } from 'services/roles';
 import { useSelector } from 'react-redux';
-import { availableTenants } from 'state/tenants/tenantsSlice';
 import { ICellRendererParams } from 'ag-grid-community';
 import classNames from 'classnames';
 import SaveFormModal from './SaveFormModal';
@@ -105,12 +104,16 @@ export default function Page() {
     minHeight: '600px',
   }), [height, width]);
 
-  const onEditClickCallback = (e, params) => {
-    setItemData(params.data);
-    showModal(`save${moduleName}Modal`, () => {
-      setItemData(null);
-    });
-  };
+  const onEditClickCallback = useCallback(
+    (e, params) => {
+      setItemData(params.data);
+      showModal(`save${moduleName}Modal`, () => {
+        setItemData(null);
+        dispatch(readAll());
+      });
+    },
+    [],
+  );
 
   const [columnDefs, setColumnDefs] = useState([
     {
@@ -166,9 +169,9 @@ export default function Page() {
     'custom-actions-tool': '<i class="fa-solid fa-screwdriver-wrench"></i>',
   }), []);
 
-  const onRefreshCallback = () => {
+  const onRefreshCallback = useCallback(() => {
     dispatch(readAll());
-  };
+  }, []);
 
   const sideBar = useMemo(() => ({
     toolPanels: [
