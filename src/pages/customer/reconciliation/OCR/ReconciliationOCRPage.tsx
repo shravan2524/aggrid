@@ -1,29 +1,27 @@
 import React, {
-  useCallback,
-  useMemo, useRef, useState,
+  useCallback, useState, useRef, useMemo,
 } from 'react';
-import { fetchQRData } from 'services/qrAPIService';
 import { AgGridReact } from 'ag-grid-react';
+import { AgGroupComponent } from '@ag-grid-community/core';
 import { agGridRowDrag } from 'app/utils/Helpers';
-import { toast } from 'react-hot-toast';
-import { useNavigate } from 'react-router-dom';
-import { useWindowDimensions } from 'app/hooks';
 import PageWrapper from 'components/PageWrapper';
-import { QRColums } from './QRColums';
+import { fetchOCRData } from 'services/OCRServiceAPI';
+import { useWindowDimensions } from 'app/hooks';
+import { OCRColums } from './OCRColums';
 
-export default function ReconciliationQrPage() {
+export default function ReconciliationOCRPage() {
   const gridRef = useRef<any>();
-  const navigate = useNavigate();
   const { height } = useWindowDimensions();
 
   const containerStyle = useMemo(() => ({ width: '100%', height: `${(height)}px`, minHeight: '600px' }), [height]);
 
   const [rowData, setRowData] = useState<any>();
 
-  const [columnDefs, setColumnDefs] = useState([{
-    headerName: 'QR Details',
-    children: QRColums(agGridRowDrag),
-  },
+  const [columnDefs, setColumnDefs] = useState([
+    {
+      headerName: 'OCR Details',
+      children: OCRColums(agGridRowDrag),
+    },
   ]);
 
   const sideBar = useMemo(() => ({
@@ -42,9 +40,8 @@ export default function ReconciliationQrPage() {
         iconKey: 'filter',
         toolPanel: 'agFiltersToolPanel',
       },
-
     ],
-    defaultToolPanel: 'customStats',
+    defaultToolPanel: 'customActionsTool',
   }), []);
 
   const defaultColDef = useMemo(() => ({
@@ -73,14 +70,15 @@ export default function ReconciliationQrPage() {
   }), []);
 
   const onGridReady = useCallback((params) => {
-    fetchQRData().then((twoAData) => {
+    fetchOCRData().then((twoAData) => {
+      console.log(twoAData);
       setRowData(twoAData);
     });
   }, []);
 
   return (
-    <PageWrapper pageTitle="QR">
-      <div className="container-fluid ag-theme-alpine grid-container-style">
+    <PageWrapper pageTitle="OCR">
+      <div className="ag-theme-alpine grid-container-style">
         <AgGridReact
           containerStyle={containerStyle}
           ref={gridRef}
