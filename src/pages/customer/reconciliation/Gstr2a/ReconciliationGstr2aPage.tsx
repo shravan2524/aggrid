@@ -5,7 +5,7 @@ import { AgGridReact } from 'ag-grid-react';
 import { agGridRowDrag } from 'app/utils/Helpers';
 import { useWindowDimensions } from 'app/hooks';
 import PageWrapper from 'components/PageWrapper';
-import { fetchGSTR2BData } from 'services/GSTR2BServiceAPI';
+import { fetchGSTR2AData } from 'services/GSTR2AServiceAPI';
 import { GSTR2AColums } from './Gstr2aColum';
 
 export default function ReconciliationGstr2aPage() {
@@ -80,7 +80,7 @@ export default function ReconciliationGstr2aPage() {
   );
 
   const onGridReady = useCallback((params) => {
-    fetchGSTR2BData().then((twoAData) => {
+    fetchGSTR2AData().then((twoAData) => {
       console.log(twoAData);
       setRowData(twoAData);
     });
