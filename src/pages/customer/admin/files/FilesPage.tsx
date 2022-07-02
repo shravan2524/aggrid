@@ -3,7 +3,7 @@ import React, {
 } from 'react';
 import { downloadZip } from 'client-zip';
 import { toast } from 'react-hot-toast';
-import { Button, Modal } from 'react-bootstrap';
+import { Button } from 'react-bootstrap';
 import { AgGridReact } from 'ag-grid-react';
 import { useAppDispatch, useWindowDimensions } from 'app/hooks';
 import PageWrapper from 'components/PageWrapper';
@@ -11,28 +11,22 @@ import { agGridFilesDTO } from 'app/utils/Helpers';
 import { BACKEND_API } from 'app/config';
 import ReactFileUploder from 'components/FileUploder/Main';
 import {
-  ColDef,
-  ColGroupDef,
-  FirstDataRenderedEvent,
-  Grid,
-  GridOptions,
-  GridReadyEvent,
-  IDetailCellRendererParams,
+  GetContextMenuItemsParams,
   ICellRendererParams,
-  CellRange,
-  RangeSelectionChangedEvent,
+  MenuItemDef,
 } from 'ag-grid-community';
 import ColumnMapping from 'components/ColumnMapping/ColumnMapping';
 import './FilePage.scss';
 import { useSelector } from 'react-redux';
 import { tenantUuid } from 'state/tenants/helper';
 import {
-  fetchFiles, getFiles,
-  setContentTypeRequest, isLoadingSelector,
+  fetchFiles, getFiles, isLoadingSelector, setContentTypeRequest,
 } from 'state/files/filesSlice';
 import classNames from 'classnames';
 import DetailCellRenderer from './Sub-Ag-Grid';
 import CommentsPage from '../comments/CommentsPage';
+import EditFilesTypeModal from './EditFilesTypeModal';
+import { showModal } from '../../../../app/utils/Modal';
 
 type ActionsRendererProps = {
   params: ICellRendererParams;
@@ -44,7 +38,6 @@ type SelectActionsRendererProps = {
 };
 
 function SelectFiles({ params, onFileMappingClickCallback }: SelectActionsRendererProps) {
-  // console.log(params.data);
   return (
     <div>
       <input
@@ -68,7 +61,7 @@ function ActionsRenderer({ params, onFileMappingClickCallback }: ActionsRenderer
   function onchange(e) {
     setcontentType(e.target.value);
     /* eslint-disable-next-line */
-    dispatch(setContentTypeRequest({ ...params.data, data: e.target.value }));
+        dispatch(setContentTypeRequest({...params.data, data: e.target.value}));
   }
 
   const downloadFile = (fileId) => {
@@ -95,13 +88,13 @@ function ActionsRenderer({ params, onFileMappingClickCallback }: ActionsRenderer
         <option value="InvoicePDF">Invoice PDF</option>
       </select>
       {
-        (params.data)
-          && (params.data.fileType === '2A' || params.data.fileType === '2B' || params.data.fileType === 'PR')
-          ? (
-            <ColumnMapping id={params.data.id} fileType={params.data.fileType} />
-          )
-          : <Button style={{ visibility: 'hidden' }} variant="primary">Column Mapping</Button>
-      }
+                (params.data)
+                && (params.data.fileType === '2A' || params.data.fileType === '2B' || params.data.fileType === 'PR')
+                  ? (
+                    <ColumnMapping id={params.data.id} fileType={params.data.fileType} />
+                  )
+                  : <Button style={{ visibility: 'hidden' }} variant="primary">Column Mapping</Button>
+            }
       <button
         type="button"
         onClick={() => downloadFile(params.data.id)}
@@ -123,6 +116,7 @@ function CustomActionsToolPanel(onRefreshCallback, ret, isFetchLoading) {
     link.click();
     link.remove();
   }
+
   async function downloadTestZip() {
     const res = await ret();
     console.log(res);
@@ -134,6 +128,7 @@ function CustomActionsToolPanel(onRefreshCallback, ret, isFetchLoading) {
       }
     }, 3000);
   }
+
   return (
     <div className="container-fluid">
       <div className="row p-2 gap-2">
@@ -165,6 +160,7 @@ export default function FilesPage() {
   const gridRef = useRef<any>();
 
   const [rowData, setRowData] = useState<any>();
+  const [selectedRows, setSelectedRows] = useState<any[]>([]);
   const { height, width } = useWindowDimensions();
   const rows = useSelector(getFiles);
   const isFetchLoading = useSelector(isLoadingSelector);
@@ -177,7 +173,6 @@ export default function FilesPage() {
 
   const [selectedFiles, setselectedFiles] = useState<any[]>([]);
   const onFileMappingClickCallback = (e, params) => {
-    // console.log('Do Mapping or something like show a modal etc here ...');
     const tselectfiles = selectedFiles;
     const ind = tselectfiles.findIndex((v) => v === e);
     if (ind === -1) {
@@ -345,29 +340,42 @@ export default function FilesPage() {
   }, []);
 
   // TODO : Implement row range selection ...
-  const onRangeSelectionChanged = useCallback(
-    (event: RangeSelectionChangedEvent) => {
-      const cellRanges = gridRef.current!.api.getCellRanges();
+  const onSelectionChanged = useCallback(() => {
+    const selRows = gridRef.current!.api.getSelectedRows();
 
-      // if no selection, clear all the results and do nothing more
-      if (!cellRanges || cellRanges.length === 0) {
-        return;
-      }
+    const selection: any = [];
+    selRows.forEach((selectedRow, index) => {
+      selection.push(selectedRow);
+    });
 
-      // set range count to the number of ranges selected
-      const api = gridRef.current!.api!;
+    setSelectedRows(selection);
+  }, []);
 
-      if (cellRanges) {
-        cellRanges.forEach((range: CellRange) => {
-          // get starting and ending row, remember rowEnd could be before rowStart
-
-          console.log(range);
-        });
-      }
+  const getContextMenuItems = useCallback((params: GetContextMenuItemsParams): (
+  | string
+  | MenuItemDef
+  )[] => [
+    {
+      // custom item
+      name: 'Edit Files type',
+      action: () => {
+        if (selectedRows.length) {
+          showModal('editFilesTypeModal');
+        } else {
+          toast.error('You need to select at less one row.');
+        }
+      },
+      icon: '<i class="fa-solid fa-file-pen" />',
     },
-    [],
-  );
+    'copy',
+    'separator',
+    'chartRange',
+  ], [selectedRows]);
 
+  // SUB AG-GRID
+  const detailCellRenderer = useMemo<any>(() => DetailCellRenderer, []);
+
+  // Effects ...
   useEffect(() => {
     if (gridRef.current?.api) {
       gridRef.current?.api.sizeColumnsToFit();
@@ -375,8 +383,6 @@ export default function FilesPage() {
   }, [width, rows]);
 
   useEffect(() => {
-    // console.log(rows);
-
     setRowData(agGridFilesDTO(rows));
 
     if (gridRef.current?.api) {
@@ -384,11 +390,10 @@ export default function FilesPage() {
     }
   }, [rows]);
 
-  // SUB AG-GRID
-  const detailCellRenderer = useMemo<any>(() => DetailCellRenderer, []);
   return (
     <PageWrapper pageTitle="Files" icon="fa-solid fa-file-arrow-up">
       <div style={containerStyle}>
+        <EditFilesTypeModal selectedRows={selectedRows} />
         <div style={gridStyle} className="ag-theme-alpine">
           <AgGridReact
             ref={gridRef}
@@ -409,7 +414,8 @@ export default function FilesPage() {
             icons={icons}
             pagination
             onFirstDataRendered={onFirstDataRendered}
-            enableRangeSelection
+            getContextMenuItems={getContextMenuItems}
+            onSelectionChanged={onSelectionChanged}
           />
         </div>
       </div>
