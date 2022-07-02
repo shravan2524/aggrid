@@ -1,4 +1,6 @@
-import React, { useCallback, useMemo, useRef, useState } from 'react';
+import React, {
+  useCallback, useMemo, useRef, useState,
+} from 'react';
 import { AgGridReact } from 'ag-grid-react';
 import { agGridRowDrag } from 'app/utils/Helpers';
 import { useWindowDimensions } from 'app/hooks';
@@ -12,7 +14,7 @@ export default function ReconciliationEwbPage() {
 
   const containerStyle = useMemo(
     () => ({ width: '100%', height: `${height}px`, minHeight: '600px' }),
-    [height]
+    [height],
   );
 
   const [rowData, setRowData] = useState<any>();
@@ -44,7 +46,7 @@ export default function ReconciliationEwbPage() {
       ],
       defaultToolPanel: 'customStats',
     }),
-    []
+    [],
   );
 
   const defaultColDef = useMemo(
@@ -58,7 +60,7 @@ export default function ReconciliationEwbPage() {
       enablePivot: true,
       enableValue: true,
     }),
-    []
+    [],
   );
 
   const onFirstDataRendered = useCallback((params) => {}, []);
@@ -74,7 +76,7 @@ export default function ReconciliationEwbPage() {
         },
       ],
     }),
-    []
+    [],
   );
 
   const onGridReady = useCallback((params) => {
