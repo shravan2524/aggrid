@@ -12,8 +12,9 @@ import { ItemType as UserType } from 'services/users';
 import { useSelector } from 'react-redux';
 import { ICellRendererParams } from 'ag-grid-community';
 import classNames from 'classnames';
-import { readAllSelector as rolesReadAllSelector, readAll as rolesReadAll } from 'state/roles/slice';
+import { readAllSelector as rolesReadAllSelector } from 'state/roles/slice';
 import { agGridDateFormatter } from 'app/utils/Helpers';
+import StatusFilter from './UsersAgGridStatusFilter';
 import SaveFormModal from './SaveFormModal';
 
 const moduleName = 'User';
@@ -146,31 +147,48 @@ export default function Page() {
     minHeight: '600px',
   }), [height, width]);
 
+  const onEditClickCallback = useCallback(
+    (e, params) => {
+      setItemData(params.data);
+      showModal(`save${moduleName}Modal`, () => {
+        setItemData(null);
+        dispatch(readAll());
+      });
+    },
+    [],
+  );
+
   const RolesRendererCb = useCallback(
     (params) => (<RolesRenderer data={params} />),
     [],
   );
 
-  const onEditClickCallback = (e, params) => {
-    setItemData(params.data);
-    showModal(`save${moduleName}Modal`, () => {
-      setItemData(null);
-    });
-  };
+  const ActionsRendererCb = useCallback(
+    (params) => (
+      <ActionsRenderer
+        params={params}
+        onEditClickCallback={(e) => onEditClickCallback(e, params)}
+      />
+    ),
+    [],
+  );
 
-  const statusCellClass = (params) => {
-    const { data } = params;
+  const statusCellClass = useCallback(
+    (params) => {
+      const { data } = params;
 
-    if (data.status === 'deactivated') {
-      return ['bg-danger text-white'];
-    }
+      if (data.status === 'deactivated') {
+        return ['bg-danger text-white'];
+      }
 
-    if (data.status === 'invited') {
-      return ['bg-warning'];
-    }
+      if (data.status === 'invited') {
+        return ['bg-warning'];
+      }
 
-    return [];
-  };
+      return [];
+    },
+    [],
+  );
 
   const [columnDefs, setColumnDefs] = useState([
     {
@@ -180,35 +198,23 @@ export default function Page() {
           headerName: 'Name',
           field: 'fullName',
           filter: 'agTextColumnFilter',
-          // valueGetter: PoliciesRenderer,
           editable: false,
         },
         {
           headerName: 'E-mail',
           field: 'email',
           filter: 'agTextColumnFilter',
-          // onCellValueChanged: (event) => {
-          //   const payload = { ...event.data };
-          //   dispatch(update({ ...payload }));
-          // },
         },
         {
           headerName: 'Status',
           field: 'status',
-          filter: 'agTextColumnFilter',
-
           cellClass: statusCellClass,
-          // onCellValueChanged: (event) => {
-          //   const payload = { ...event.data };
-          //   dispatch(update({ ...payload }));
-          // },
+          editable: false,
+          filter: StatusFilter,
         },
         {
           headerName: 'Roles',
           field: 'roles',
-          // filter: 'agNumberColumnFilter',
-          // valueGetter: ({ data }) => ,
-          //  valueGetter: RolesRendererCb,
           cellRenderer: RolesRendererCb,
           filter: false,
           editable: false,
@@ -222,13 +228,7 @@ export default function Page() {
         },
         {
           field: 'actions',
-          // eslint-disable-next-line react/no-unstable-nested-components
-          cellRenderer: (params) => (
-            <ActionsRenderer
-              params={params}
-              onEditClickCallback={(e) => onEditClickCallback(e, params)}
-            />
-          ),
+          cellRenderer: ActionsRendererCb,
           editable: false,
           filter: false,
           cellStyle: (params) => {
@@ -247,9 +247,12 @@ export default function Page() {
     'custom-actions-tool': '<i class="fa-solid fa-screwdriver-wrench"></i>',
   }), []);
 
-  const onRefreshCallback = () => {
-    dispatch(readAll());
-  };
+  const onRefreshCallback = useCallback(
+    (params) => {
+      dispatch(readAll());
+    },
+    [],
+  );
 
   const sideBar = useMemo(() => ({
     toolPanels: [
@@ -304,10 +307,6 @@ export default function Page() {
   }, [width, rows]);
 
   useEffect(() => {
-    dispatch(rolesReadAll());
-  }, []);
-
-  useEffect(() => {
     setRowData(agGridDTO(rows));
 
     if (gridRef.current?.api) {
@@ -315,34 +314,36 @@ export default function Page() {
     }
   }, [rows]);
 
+  if (!allRoles) {
+    return null;
+  }
+
   return (
     <PageWrapper pageTitle={moduleTitle} icon="fa-solid fa-building">
       <div className=" ag-theme-alpine grid-container-style">
-        {(allRoles !== null) && (
-          <>
-            <SaveFormModal itemData={itemData} modalIdentifier={modalIdentifier} />
-            <AgGridReact
-              containerStyle={containerStyle}
-              ref={gridRef}
-              rowData={rowData}
-              columnDefs={columnDefs}
-              sideBar={sideBar}
-              rowSelection="multiple"
-              rowDragManaged
-              rowDragMultiRow
-              rowGroupPanelShow="always"
-              defaultColDef={defaultColDef}
-              groupDisplayType="multipleColumns"
-              animateRows
-              onGridReady={onGridReady}
-              icons={icons}
-              pagination
-              onFirstDataRendered={onFirstDataRendered}
-              enableRangeSelection
-              masterDetail
-            />
-          </>
-        )}
+
+        <SaveFormModal itemData={itemData} modalIdentifier={modalIdentifier} />
+        <AgGridReact
+          containerStyle={containerStyle}
+          ref={gridRef}
+          rowData={rowData}
+          columnDefs={columnDefs}
+          sideBar={sideBar}
+          rowSelection="multiple"
+          rowDragManaged
+          rowDragMultiRow
+          rowGroupPanelShow="always"
+          defaultColDef={defaultColDef}
+          groupDisplayType="multipleColumns"
+          animateRows
+          onGridReady={onGridReady}
+          icons={icons}
+          pagination
+          onFirstDataRendered={onFirstDataRendered}
+          enableRangeSelection
+          masterDetail
+        />
+
       </div>
 
     </PageWrapper>

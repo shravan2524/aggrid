@@ -3,6 +3,7 @@ import React, {
 } from 'react';
 import { downloadZip } from 'client-zip';
 import { toast } from 'react-hot-toast';
+import { Button, Modal } from 'react-bootstrap';
 import { AgGridReact } from 'ag-grid-react';
 import { useAppDispatch, useWindowDimensions } from 'app/hooks';
 import PageWrapper from 'components/PageWrapper';
@@ -99,7 +100,7 @@ function ActionsRenderer({ params, onFileMappingClickCallback }: ActionsRenderer
           ? (
             <ColumnMapping id={params.data.id} fileType={params.data.fileType} />
           )
-          : null
+          : <Button style={{ visibility: 'hidden' }} variant="primary">Column Mapping</Button>
       }
       <button
         type="button"
@@ -108,7 +109,7 @@ function ActionsRenderer({ params, onFileMappingClickCallback }: ActionsRenderer
       >
         <i className="fa fa-download" />
       </button>
-      <CommentsPage />
+      <CommentsPage fileId={params.data.id} />
     </div>
   );
 }
@@ -262,6 +263,9 @@ export default function FilesPage() {
           field: 'fileType',
           filter: 'agTextColumnFilter',
           editable: false,
+          width: 120,
+          minWidth: 120,
+          maxWidth: 120,
         },
         {
           field: 'actions',
@@ -371,7 +375,7 @@ export default function FilesPage() {
   }, [width, rows]);
 
   useEffect(() => {
-    console.log(rows);
+    // console.log(rows);
 
     setRowData(agGridFilesDTO(rows));
 

@@ -10,7 +10,7 @@ export async function fetchCommentsData(): Promise<Comment[]> {
     method: 'GET',
     credentials: 'include',
   };
-  const apiUrl = `${BACKEND_API}/api/v1/${tenantUuid()}/comments`;
+  const apiUrl = `${BACKEND_API}/api/v1/${tenantUuid()}/comments//Files`;
   const response = await fetch(apiUrl, options);
   if (!response.ok) {
     const message = `An error has occurred: ${response.status}`;
@@ -30,6 +30,7 @@ export async function postComments(payload): Promise<Comment[]> {
     body: JSON.stringify({ ...payload.Comments }),
   };
   const apiUrl = `${BACKEND_API}/api/v1/${tenantUuid()}/comments/`;
+  // const apiUrl = 'https://beta.finkraft.ai/api/v1//comments/';
   const response = await fetch(apiUrl, options);
   if (!response.ok) {
     const message = `An error has occurred: ${response.status}`;

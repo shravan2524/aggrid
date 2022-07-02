@@ -28,9 +28,12 @@ export function showModal(
   }
 }
 
-export function hideModal(modalId: string) {
+export function hideModal(modalId: string, callback: () => void = () => null) {
   if (currentOpenedModal[modalId]) {
     currentOpenedModal[modalId].hide();
     delete (currentOpenedModal[modalId]);
+    if (callback) {
+      callback();
+    }
   }
 }

@@ -7,7 +7,6 @@ import { useSelector } from 'react-redux';
 import { useAppDispatch } from 'app/hooks';
 import CustomButton from 'components/CustomButton';
 import {
-  readAll,
   isPostLoadingSelector,
   isPutLoadingSelector, update, create,
 
@@ -69,9 +68,7 @@ export default function SaveFormModal({ itemData }: ModalProps) {
   };
 
   useEffect(() => {
-    dispatch(readAll()).then(() => {
-      hideModal(modalId);
-    });
+    hideModal(modalId);
   }, [isLoading]);
 
   useEffect(() => {
