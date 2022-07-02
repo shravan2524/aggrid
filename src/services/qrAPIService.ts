@@ -1,3 +1,4 @@
+import { tenantUuid } from 'state/tenants/helper';
 import { BACKEND_API } from '../app/config';
 
 /*
@@ -53,7 +54,7 @@ export async function fetchQRData() :Promise<QRType[] | null | Error> {
     credentials: 'include',
   };
 
-  const apiUrl = `${BACKEND_API}/api/v1/qr`;
+  const apiUrl = `${BACKEND_API}/api/v1/${tenantUuid()}/qr`;
   const response = await fetch(apiUrl, options);
 
   if (!response.ok) {

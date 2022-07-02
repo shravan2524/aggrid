@@ -1,0 +1,42 @@
+import { tenantUuid } from 'state/tenants/helper';
+import { BACKEND_API } from '../app/config';
+
+export interface GSTR2AType {
+  id: number;
+  fileId: number;
+  invoice_number: string;
+  invoice_date: Record<any, never> | string | Date | null;
+  seller_gstin: string;
+  buyer_gstin: string;
+  filing_period: Record<any, never> | string | Date | null;
+  document_type: string;
+  original_invoice_number: string;
+  original_invoice_date: Record<any, never> | string | Date | null;
+  total_amount: number;
+  igst: number;
+  cgst: number;
+  sgst: number;
+  total_gst: number;
+  taxable_amount: number;
+  tax_rate: number;
+  irn: string;
+  irnDate: string;
+  rowUpdateDate: string;
+  extraColumns: any;
+}
+
+export async function fetchGSTR2AData(): Promise<GSTR2AType[] | null | Error> {
+  const options: RequestInit = {
+    method: 'GET',
+    credentials: 'include',
+  };
+
+  const apiUrl = `${BACKEND_API}/api/v1/${tenantUuid()}/gstr2a`;
+  const response = await fetch(apiUrl, options);
+
+  if (!response.ok) {
+    const message = `An error has occurred: ${response.status}`;
+    throw new Error(message);
+  }
+  return response.json();
+}

@@ -10,9 +10,12 @@ const ProtectedRoute = React.lazy(() => import('components/ProtectedRoute'));
 
 const CustomerHomeIndexPage = React.lazy(() => import('pages/customer/za/HomeZAPage'));
 const ReconciliationIndexPage = React.lazy(() => import('pages/customer/reconciliation/ReconciliationPage'));
-const Reconciliation2AIndexPage = React.lazy(() => import('pages/customer/reconciliation/2a/Reconciliation2APage'));
+const ReconciliationOCRIndexPage = React.lazy(() => import('pages/customer/reconciliation/OCR/ReconciliationOCRPage'));
 const ReconciliationQrIndexPage = React.lazy(() => import('pages/customer/reconciliation/qr/ReconciliationQrPage'));
 const ReconciliationPrIndexPage = React.lazy(() => import('pages/customer/reconciliation/pr/ReconciliationPrPage'));
+const ReconciliationEwbPage = React.lazy(() => import('pages/customer/reconciliation/Ewb/ReconciliationEwbPage'));
+const ReconciliationGstr2aPage = React.lazy(() => import('pages/customer/reconciliation/Gstr2a/ReconciliationGstr2aPage'));
+const ReconciliationGstr2BPage = React.lazy(() => import('pages/customer/reconciliation/Gstr2B/ReconciliationGstr2BPage'));
 const AdminIndexPage = React.lazy(() => import('pages/customer/admin/AdminPage'));
 const NotificationsIndexPage = React.lazy(() => import('pages/customer/notifications/NotificationsPage'));
 const ProfileIndexPage = React.lazy(() => import('pages/customer/profile/ProfilePage'));
@@ -83,16 +86,28 @@ const routes: any = [
                 text: 'Reconciliation',
               },
               {
-                path: '/customer/reconciliation/2a',
-                text: '2A',
-              },
-              {
                 path: '/customer/reconciliation/qr',
                 text: 'QR',
               },
               {
                 path: '/customer/reconciliation/pr',
                 text: 'PR',
+              },
+              {
+                path: '/customer/reconciliation/gstr2a',
+                text: '2A',
+              },
+              {
+                path: '/customer/reconciliation/gstr2b',
+                text: '2B',
+              },
+              {
+                path: '/customer/reconciliation/ewb',
+                text: 'EWB',
+              },
+              {
+                path: '/customer/reconciliation/ocr',
+                text: 'OCR',
               },
             ]}
             />,
@@ -102,8 +117,8 @@ const routes: any = [
                 element: <Suspense fallback={<Loader />}><ReconciliationIndexPage /></Suspense>,
               },
               {
-                path: '2a',
-                element: <Suspense fallback={<Loader />}><Reconciliation2AIndexPage /></Suspense>,
+                path: 'ocr',
+                element: <Suspense fallback={<Loader />}><ReconciliationOCRIndexPage /></Suspense>,
               },
               {
                 path: 'qr',
@@ -112,6 +127,18 @@ const routes: any = [
               {
                 path: 'pr',
                 element: <Suspense fallback={<Loader />}><ReconciliationPrIndexPage /></Suspense>,
+              },
+              {
+                path: 'ewb',
+                element: <Suspense fallback={<Loader />}><ReconciliationEwbPage /></Suspense>,
+              },
+              {
+                path: 'gstr2a',
+                element: <Suspense fallback={<Loader />}><ReconciliationGstr2aPage /></Suspense>,
+              },
+              {
+                path: 'gstr2b',
+                element: <Suspense fallback={<Loader />}><ReconciliationGstr2BPage /></Suspense>,
               },
             ],
           },
