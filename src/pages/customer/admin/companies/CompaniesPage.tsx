@@ -2,7 +2,7 @@ import React, {
   useCallback, useEffect, useMemo, useRef, useState,
 } from 'react';
 import { AgGridReact } from 'ag-grid-react';
-import { showModal } from 'app/utils/Modal';
+import { onModalHidden, showModal } from 'app/utils/Modal';
 import { useAppDispatch, useCompanies, useWindowDimensions } from 'app/hooks';
 import PageWrapper from 'components/PageWrapper';
 import {
@@ -24,6 +24,7 @@ type ActionsRendererProps = {
   onEditClickCallback: (e: React.MouseEvent<HTMLButtonElement>, params: ICellRendererParams) => void;
   onCredentialsClickCallback: (e: React.MouseEvent<HTMLButtonElement>, params: ICellRendererParams) => void;
 };
+
 function ActionsRenderer({ params, onEditClickCallback, onCredentialsClickCallback }: ActionsRendererProps) {
   return (
     <div className="d-flex justify-content-around align-items-center w-100 h-100">
@@ -32,7 +33,11 @@ function ActionsRenderer({ params, onEditClickCallback, onCredentialsClickCallba
         {' '}
         Edit
       </button>
-      <button type="button" className="btn btn-sm btn-danger" onClick={(e) => onCredentialsClickCallback(e, params)}>
+      <button
+        type="button"
+        className="btn btn-sm btn-danger"
+        onClick={(e) => onCredentialsClickCallback(e, params)}
+      >
         <i className="fa-solid fa-key" />
         {' '}
         Credentials
@@ -92,7 +97,7 @@ export default function CompaniesPage() {
 
   const anyCustomer = useSelector(availableTenants);
   const { height, width } = useWindowDimensions();
-  const rows = useCompanies();
+  const rows: any = useCompanies();
   const [companyData, setCompanyData] = useState<CompaniesType | null>(null);
   const isFetchLoading = useSelector(isLoadingSelector);
 
@@ -106,6 +111,7 @@ export default function CompaniesPage() {
     setCompanyData(params.data);
     showModal('editCompanyModal', () => {
       setCompanyData(null);
+      dispatch(fetchCompanies());
     });
   };
 
@@ -188,9 +194,9 @@ export default function CompaniesPage() {
     'custom-actions-tool': '<i class="fa-solid fa-screwdriver-wrench"></i>',
   }), []);
 
-  const onRefreshCallback = () => {
+  const onRefreshCallback = () => useCallback(() => {
     dispatch(fetchCompanies());
-  };
+  }, []);
 
   const sideBar = useMemo(() => ({
     toolPanels: [
@@ -234,9 +240,7 @@ export default function CompaniesPage() {
     gridRef.current?.api.sizeColumnsToFit();
   }, []);
 
-  const onGridReady = useCallback((params) => {
-    dispatch(fetchCompanies());
-  }, []);
+  const onNewCompanyHiddenCache = useCallback(() => onModalHidden('newCompanyModal', () => dispatch(fetchCompanies())), []);
 
   useEffect(() => {
     if (gridRef.current?.api) {
@@ -245,12 +249,18 @@ export default function CompaniesPage() {
   }, [width, rows]);
 
   useEffect(() => {
-    setRowData(agGridCompaniesDTO(rows));
+    if (rows.length) {
+      setRowData(agGridCompaniesDTO(rows));
+    }
 
     if (gridRef.current?.api) {
       gridRef.current?.api.sizeColumnsToFit();
     }
   }, [rows]);
+
+  useEffect(() => {
+    onNewCompanyHiddenCache();
+  }, []);
 
   if (!anyCustomer) {
     return (
@@ -284,7 +294,6 @@ export default function CompaniesPage() {
           defaultColDef={defaultColDef}
           groupDisplayType="multipleColumns"
           animateRows
-          onGridReady={onGridReady}
           icons={icons}
           pagination
           onFirstDataRendered={onFirstDataRendered}

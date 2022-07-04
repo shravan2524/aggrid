@@ -59,9 +59,7 @@ export default function EditCompanyModal({ companyData }: EditCompanyModalProps)
   };
 
   useEffect(() => {
-    dispatch(fetchCompanies()).then(() => {
-      hideModal(modalId);
-    });
+    hideModal(modalId);
   }, [isLoading]);
 
   useEffect(() => {

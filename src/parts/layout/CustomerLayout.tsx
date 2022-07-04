@@ -7,7 +7,7 @@ import {
   fetchTenants, getTenants, getSelectedTenant, setSelectedTenant,
 } from 'state/tenants/tenantsSlice';
 import { fetchCompanies } from 'state/companies/companiesSlice';
-import { useAppDispatch, useCustomerTopMenuHeightDimension } from 'app/hooks';
+import { useAppDispatch, useCompanies, useCustomerTopMenuHeightDimension } from 'app/hooks';
 import { useSelector } from 'react-redux';
 import { isSecondaryMenuItemVisible } from 'state/settings/settingsSlice';
 import { readAll } from 'state/roles/slice';
@@ -17,6 +17,7 @@ export default function CustomerLayout() {
 
   const location = useLocation();
   const tenants = useSelector(getTenants);
+  const companies: any = useCompanies();
   const selectedTenant = useSelector(getSelectedTenant);
   const [menuResponsiveClass, setMenuResponsiveClass] = useState<string>('');
   const topMenuHeight = useCustomerTopMenuHeightDimension();
@@ -24,8 +25,8 @@ export default function CustomerLayout() {
 
   // Fetch all global data that will be used across site ...
   useEffect(() => {
-    // Fetch Tenants and Companies ...
-    dispatch(fetchTenants()).then(() => dispatch(fetchCompanies()));
+    // Fetch Tenants ...
+    dispatch(fetchTenants());
 
     // Fetch Roles ...
     dispatch(readAll());
@@ -54,7 +55,7 @@ export default function CustomerLayout() {
   return (
     <>
       <header>
-        <CustomerTopMenu />
+        <CustomerTopMenu companies={companies} />
       </header>
       <main className={menuResponsiveClass}>
         <Outlet />

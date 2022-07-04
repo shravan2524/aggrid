@@ -58,7 +58,6 @@ export default function NewCompanyModal() {
   useEffect(() => {
     hideModal(modalId);
     reset({ name: '', gstin: '' });
-    dispatch(fetchCompanies());
   }, [isLoading]);
 
   return (

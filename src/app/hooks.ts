@@ -83,7 +83,7 @@ export const useCompanies = () => {
 
   useEffect(() => {
     dispatch(fetchCompanies());
-  }, [selectedCustomer]);
+  }, []);
 
   useEffect(() => {
     if (selectedCustomer) {
