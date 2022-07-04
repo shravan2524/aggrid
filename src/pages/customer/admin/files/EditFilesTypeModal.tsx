@@ -61,6 +61,10 @@ export default function EditFilesTypeModal({ selectedRows }: EditFilesTypeModalP
       label: '2A',
     },
     {
+      type: '2B',
+      label: '2B',
+    },
+    {
       type: 'PR',
       label: 'PR',
     },
