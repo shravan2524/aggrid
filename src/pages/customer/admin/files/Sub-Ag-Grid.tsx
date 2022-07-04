@@ -16,6 +16,7 @@ export default function DetailCellRenderer({
   api,
 }: ICellRendererParams) {
   const gridRef = useRef<any>();
+  const [hide, setHide] = useState<boolean>(false);
   const [rowData, setRowData] = useState<any>();
   const gridStyle = useMemo(() => ({ height: '400px', width: '90%' }), []);
   // columns
@@ -49,16 +50,44 @@ export default function DetailCellRenderer({
       if (res.rows) {
         setRowData(res.rows);
       }
+      if (res.count > 0) {
+        setHide(true);
+      }
     });
   }, []);
+
+  // export button
+  const onBtExport = useCallback(() => {
+    gridRef.current!.api.exportDataAsExcel({
+      author: 'Finkraft',
+      fontSize: 13,
+      sheetName: 'Finkraft',
+      fileName: 'finkraft-datas.xlsx',
+    });
+  }, []);
+
   return (
-    <div className="d-flex justify-content-center align-items-center">
-      <div style={gridStyle} className="ag-theme-alpine py-4">
+    <div className="d-flex flex-column justify-content-center align-items-center">
+      <div
+        className="d-flex justify-content-end pb-2 pt-4"
+        style={{ width: '90%' }}
+      >
+        {hide && (
+          <button
+            onClick={onBtExport}
+            className="btn btn-outline-success btn-sm"
+            type="button"
+          >
+            <i className="fas fa-sign-out-alt mr-2" />
+            Export to Excel
+          </button>
+        )}
+      </div>
+      <div style={gridStyle} className="ag-theme-alpine py-2">
         <AgGridReact
           ref={gridRef}
           rowData={rowData}
           columnDefs={columnDefs}
-          detailRowHeight={400}
           defaultColDef={defaultColDef}
           animateRows
           onGridReady={onGridReady}
