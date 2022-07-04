@@ -78,7 +78,8 @@ export default function DetailCellRenderer({
             className="btn btn-outline-success btn-sm"
             type="button"
           >
-            <i className="fas fa-sign-out-alt mr-2" />
+            <i className="fas fa-sign-out-alt" />
+            {' '}
             Export to Excel
           </button>
         )}
