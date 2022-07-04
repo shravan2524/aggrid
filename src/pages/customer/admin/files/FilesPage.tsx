@@ -132,8 +132,15 @@ function CustomActionsToolPanel(onRefreshCallback, ret, isFetchLoading) {
   return (
     <div className="container-fluid">
       <div className="row p-2 gap-2">
+        <button
+          type="button"
+          className="btn btn-sm btn-info px-4 d-flex gap-2 align-items-center justify-content-center"
+          onClick={() => showModal('editFilesTypeModal')}
+        >
+          <i className="fa-solid fa-file-pen" />
+          Edit File Type
+        </button>
         <ReactFileUploder />
-
         <button
           type="button"
           className="btn btn-sm btn-info px-4 d-flex gap-2 align-items-center justify-content-center"

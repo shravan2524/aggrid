@@ -53,7 +53,7 @@ export default function EditFilesTypeModal({ selectedRows }: EditFilesTypeModalP
   const onSubmit = ({ type }: EditFilesTypeFormProps) => {
     selectedRows.forEach((sr) => {
       const payload = {
-        data: { type },
+        data: { fileType: type },
         id: sr?.id,
       };
       dispatch(updateFileRequest({ ...payload })).then(() => toast.success('File Successfully Updated !'));
