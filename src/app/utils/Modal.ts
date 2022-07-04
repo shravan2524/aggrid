@@ -37,3 +37,28 @@ export function hideModal(modalId: string, callback: () => void = () => null) {
     }
   }
 }
+
+export function onModalShown(modalId: string, callback: () => void = () => null) {
+  if (callback) {
+    const myModalEl = document.getElementById(modalId);
+    if (myModalEl) {
+      myModalEl.addEventListener('shown.bs.modal', () => {
+        callback();
+      });
+    }
+  }
+}
+
+export function onModalHidden(modalId: string, callback: () => void = () => null) {
+  if (callback) {
+    const myModalEl = document.getElementById(modalId);
+    if (myModalEl) {
+      myModalEl.addEventListener('hidden.bs.modal', () => {
+        callback();
+        if (currentOpenedModal[modalId]) {
+          delete (currentOpenedModal[modalId]);
+        }
+      });
+    }
+  }
+}
