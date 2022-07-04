@@ -9,39 +9,82 @@ import { useWindowDimensions } from 'app/hooks';
 import PageWrapper from 'components/PageWrapper';
 import { PRColums } from './PRColums';
 
+function CustomActionsToolPanel(onBtExport:any) {
+  return (
+    <div className="container-fluid">
+      <div className="row p-2 gap-2">
+        <button
+          onClick={onBtExport}
+          type="button"
+          className="btn btn-sm btn-success d-flex gap-2 align-items-center justify-content-center"
+        >
+          <i className="fas fa-sign-out-alt" />
+          Export to Excel
+        </button>
+      </div>
+    </div>
+  );
+}
+
 export default function ReconciliationPrPage() {
   const gridRef = useRef<any>();
   const { height } = useWindowDimensions();
-
   const containerStyle = useMemo(() => ({ width: '100%', height: `${(height)}px`, minHeight: '600px' }), [height]);
-
   const [rowData, setRowData] = useState<any>();
-
   const [columnDefs, setColumnDefs] = useState([{
     headerName: 'PR Details',
     children: PRColums(agGridRowDrag),
   },
   ]);
 
-  const sideBar = useMemo(() => ({
-    toolPanels: [
-      {
-        id: 'columns',
-        labelDefault: 'Columns',
-        labelKey: 'columns',
-        iconKey: 'columns',
-        toolPanel: 'agColumnsToolPanel',
-      },
-      {
-        id: 'filters',
-        labelDefault: 'Filters',
-        labelKey: 'filters',
-        iconKey: 'filter',
-        toolPanel: 'agFiltersToolPanel',
-      },
-    ],
-    defaultToolPanel: 'customStats',
-  }), []);
+  // CUSTOM ICON
+  const icons = useMemo<{ [key: string]: Function | string }>(
+    () => ({
+      'custom-actions-tool': '<i class="fa-solid fa-screwdriver-wrench"></i>',
+    }),
+    [],
+  );
+
+  // EXPORT BUTTON
+  const onBtExport = useCallback(() => {
+    gridRef.current!.api.exportDataAsExcel({
+      author: 'Finkraft',
+      fontSize: 13,
+      sheetName: 'PR Details',
+      fileName: 'Datas.xlsx',
+    });
+  }, []);
+
+  // SIDE BAR
+  const sideBar = useMemo(
+    () => ({
+      toolPanels: [
+        {
+          id: 'customActionsTool',
+          labelDefault: 'Actions',
+          labelKey: 'customActionsTool',
+          iconKey: 'custom-actions-tool',
+          toolPanel: () => CustomActionsToolPanel(onBtExport),
+        },
+        {
+          id: 'columns',
+          labelDefault: 'Columns',
+          labelKey: 'columns',
+          iconKey: 'columns',
+          toolPanel: 'agColumnsToolPanel',
+        },
+        {
+          id: 'filters',
+          labelDefault: 'Filters',
+          labelKey: 'filters',
+          iconKey: 'filter',
+          toolPanel: 'agFiltersToolPanel',
+        },
+      ],
+      defaultToolPanel: 'customActionsTool',
+    }),
+    [],
+  );
 
   const defaultColDef = useMemo(() => ({
     sortable: true,
@@ -54,23 +97,8 @@ export default function ReconciliationPrPage() {
     enableValue: true,
   }), []);
 
-  const onFirstDataRendered = useCallback((params) => {
-  }, []);
-
-  const statusBar = useMemo(() => ({
-    statusPanels: [
-      {
-        statusPanel: 'agAggregationComponent',
-        statusPanelParams: {
-          aggFuncs: ['count', 'sum'],
-        },
-      },
-    ],
-  }), []);
-
   const onGridReady = useCallback((params) => {
     fetchPRData().then((twoAData) => {
-      console.log(twoAData);
       setRowData(twoAData);
     });
   }, []);
@@ -84,6 +112,7 @@ export default function ReconciliationPrPage() {
           rowData={rowData}
           columnDefs={columnDefs}
           sideBar={sideBar}
+          icons={icons}
           rowSelection="multiple"
           rowDragManaged
           rowDragMultiRow
@@ -94,11 +123,6 @@ export default function ReconciliationPrPage() {
           animateRows
           onGridReady={onGridReady}
           pagination
-          onFirstDataRendered={onFirstDataRendered}
-          groupIncludeFooter
-          groupIncludeTotalFooter
-          enableRangeSelection
-          statusBar={statusBar}
           masterDetail
         />
       </div>
