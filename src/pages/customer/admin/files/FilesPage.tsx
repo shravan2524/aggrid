@@ -408,7 +408,7 @@ export default function FilesPage() {
             columnDefs={columnDefs}
             masterDetail
             detailCellRenderer={detailCellRenderer}
-            detailRowHeight={400}
+            detailRowHeight={500}
             sideBar={sideBar}
             rowSelection="multiple"
             rowDragManaged
