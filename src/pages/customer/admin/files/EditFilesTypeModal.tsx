@@ -1,4 +1,7 @@
-import React, { useMemo } from 'react';
+import React, {
+  useCallback,
+  useEffect, useMemo, useRef, useState,
+} from 'react';
 import * as yup from 'yup';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup/dist/yup';
@@ -8,6 +11,8 @@ import CustomButton from 'components/CustomButton';
 import { useSelector } from 'react-redux';
 import { isPutLoadingSelector, updateFileRequest } from 'state/files/filesSlice';
 import { toast } from 'react-hot-toast';
+import { AgGridReact } from 'ag-grid-react';
+import { onModalHidden, onModalShown } from 'app/utils/Modal';
 
 interface EditFilesTypeFormProps {
   type: string;
@@ -16,11 +21,35 @@ interface EditFilesTypeFormProps {
 interface EditFilesTypeModalProps {
   selectedRows: any[];
 }
-export default function EditFilesTypeModal({ selectedRows }: EditFilesTypeModalProps) {
-  const dispatch = useAppDispatch();
 
+export default function EditFilesTypeModal({ selectedRows }: EditFilesTypeModalProps) {
+  const gridRef = useRef<any>();
+  const [rowData, setRowData] = useState<any>();
+  const [isModalShown, setIsModalShown] = useState<boolean>();
+
+  const dispatch = useAppDispatch();
   const isLoading = useSelector(isPutLoadingSelector);
+  const [columnDefs, setColumnDefs] = useState([
+    {
+      headerName: 'File Name',
+      field: 'fileName',
+      filter: 'agTextColumnFilter',
+      editable: false,
+    },
+    {
+      headerName: 'File Type',
+      field: 'fileType',
+      filter: 'agTextColumnFilter',
+      editable: false,
+    },
+  ]);
   const modalId = useMemo(() => 'editFilesTypeModal', []);
+
+  const containerStyle = useMemo(() => ({
+    width: '100%',
+    height: '350px !important',
+
+  }), []);
 
   const availableFilesTypes = useMemo(() => ([
     {
@@ -32,10 +61,31 @@ export default function EditFilesTypeModal({ selectedRows }: EditFilesTypeModalP
       label: '2A',
     },
     {
+      type: '2B',
+      label: '2B',
+    },
+    {
       type: 'PR',
       label: 'PR',
     },
   ]), []);
+
+  const defaultColDef = useMemo(() => ({
+    sortable: true,
+    filter: true,
+    resizable: true,
+    floatingFilter: true,
+    enableRowGroup: true,
+    editable: true,
+    enablePivot: true,
+    enableValue: true,
+  }), []);
+
+  const onFirstDataRendered = useCallback(() => {
+    if (gridRef.current?.api) {
+      gridRef.current?.api.sizeColumnsToFit();
+    }
+  }, []);
 
   const schema = yup.object({
     type: yup.string().required(),
@@ -50,6 +100,23 @@ export default function EditFilesTypeModal({ selectedRows }: EditFilesTypeModalP
     resolver: yupResolver(schema),
   });
 
+  // Effects ...
+  useEffect(() => {
+    if (rowData) {
+      if (gridRef.current?.api) {
+        gridRef.current?.api.sizeColumnsToFit();
+      }
+    }
+  }, [rowData]);
+
+  useEffect(() => {
+    setRowData(selectedRows);
+
+    if (gridRef.current?.api) {
+      gridRef.current?.api.sizeColumnsToFit();
+    }
+  }, [selectedRows]);
+
   const onSubmit = ({ type }: EditFilesTypeFormProps) => {
     selectedRows.forEach((sr) => {
       const payload = {
@@ -60,9 +127,22 @@ export default function EditFilesTypeModal({ selectedRows }: EditFilesTypeModalP
     });
   };
 
+  const onModalShownCached = useCallback(() => onModalShown(modalId, () => {
+    setIsModalShown(true);
+  }), []);
+
+  const onModalHiddenCached = useCallback(() => onModalHidden(modalId, () => {
+    setIsModalShown(false);
+  }), []);
+
+  useEffect(() => {
+    onModalShownCached();
+    onModalHiddenCached();
+  }, []);
+
   return (
     <div className="modal fade" id={modalId} aria-labelledby={`new${modalId}Label`} aria-hidden="true">
-      <div className="modal-dialog modal-dialog-centered">
+      <div className="modal-dialog modal-dialog-centered modal-xl">
         <div className="modal-content">
           <form onSubmit={handleSubmit(onSubmit)}>
             <div className="modal-header">
@@ -70,23 +150,21 @@ export default function EditFilesTypeModal({ selectedRows }: EditFilesTypeModalP
               <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close" />
             </div>
             <div className="modal-body">
-
-              {selectedRows.map((sr, i) => (
-                <>
-                  <div key={sr.id} className="row gy-3">
-                    <div className="col-md-6">
-                      <p className="m-0 p-0 text-small text-muted">File Name: </p>
-                      <p className="text-small">{sr.fileName}</p>
-                    </div>
-                    <div className="col-md-6">
-                      <p className="m-0 p-0 text-small text-muted">File Type:</p>
-                      <p className="text-small">{sr.fileType}</p>
-                    </div>
-                  </div>
-                  <hr className="my-1" />
-                </>
-              ))}
-
+              {isModalShown && (
+                <div className=" ag-theme-alpine grid-container-style">
+                  <AgGridReact
+                    ref={gridRef}
+                    containerStyle={containerStyle}
+                    rowData={rowData}
+                    animateRows
+                    pagination
+                    columnDefs={columnDefs}
+                    defaultColDef={defaultColDef}
+                    onFirstDataRendered={onFirstDataRendered}
+                    colResizeDefault="shift"
+                  />
+                </div>
+              )}
               <div className="mb-3">
                 <label htmlFor="customer" className="col-form-label">Available File Types:</label>
                 <select
@@ -100,9 +178,9 @@ export default function EditFilesTypeModal({ selectedRows }: EditFilesTypeModalP
                 </select>
 
                 {errors.type && (
-                  <div id="validationTitleFeedback" className="invalid-feedback">
-                    <p>{errors.type?.message}</p>
-                  </div>
+                <div id="validationTitleFeedback" className="invalid-feedback">
+                  <p>{errors.type?.message}</p>
+                </div>
                 )}
               </div>
 
