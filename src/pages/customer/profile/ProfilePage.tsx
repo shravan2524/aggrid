@@ -1,21 +1,13 @@
 import React, {
-  useCallback, useEffect, useMemo, useRef, useState,
+  useEffect, useState,
 } from 'react';
 import PageTitle from 'components/PageTitle';
-import { tenantUuid } from 'state/tenants/helper';
-import { BACKEND_API } from 'app/config';
+import { fetchUserMeData } from 'services/userAPIService';
 
 export default function ProfilePage() {
   const [userDetails, setuserDetails] = useState<any>({});
   useEffect(() => {
-    const options: RequestInit = {
-      method: 'GET',
-      credentials: 'include',
-    };
-    const apiUrl = `${BACKEND_API}/api/v1/me/`;
-    fetch(apiUrl, options)
-      .then((response) => response.json())
-      .then((data) => setuserDetails(data));
+    fetchUserMeData().then((data) => setuserDetails(data));
   }, []);
   return (
     <>
