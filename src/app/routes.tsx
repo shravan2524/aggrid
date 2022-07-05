@@ -13,6 +13,7 @@ const ReconciliationIndexPage = React.lazy(() => import('pages/customer/reconcil
 const ReconciliationOCRIndexPage = React.lazy(() => import('pages/customer/reconciliation/OCR/ReconciliationOCRPage'));
 const ReconciliationQrIndexPage = React.lazy(() => import('pages/customer/reconciliation/qr/ReconciliationQrPage'));
 const ReconciliationPrIndexPage = React.lazy(() => import('pages/customer/reconciliation/pr/ReconciliationPrPage'));
+const ColumnGrouping = React.lazy(() => import('pages/customer/admin/columngrouping/columnGrouping'));
 const ReconciliationEwbPage = React.lazy(() => import('pages/customer/reconciliation/Ewb/ReconciliationEwbPage'));
 const ReconciliationGstr2aPage = React.lazy(() => import('pages/customer/reconciliation/Gstr2a/ReconciliationGstr2aPage'));
 const ReconciliationGstr2BPage = React.lazy(() => import('pages/customer/reconciliation/Gstr2B/ReconciliationGstr2BPage'));
@@ -21,7 +22,6 @@ const NotificationsIndexPage = React.lazy(() => import('pages/customer/notificat
 const ProfileIndexPage = React.lazy(() => import('pages/customer/profile/ProfilePage'));
 const CompaniesIndexPage = React.lazy(() => import('pages/customer/admin/companies/CompaniesPage'));
 const FilesIndexPage = React.lazy(() => import('pages/customer/admin/files/FilesPage'));
-const CommentsIndexPage = React.lazy(() => import('pages/customer/admin/comments/CommentsPage'));
 const WorkspacesIndexPage = React.lazy(() => import('pages/customer/workspaces/WorkspacesPage'));
 const SignInIndexPage = React.lazy(() => import('pages/public/auth/SignInPage'));
 const AuthHandlerProcessorIndexPage = React.lazy(() => import('pages/public/auth/AuthHandlerProcessorPage'));
@@ -156,9 +156,9 @@ const routes: any = [
                 icon: 'fa-solid fa-file-arrow-up',
               },
               {
-                path: '/customer/admin/comments',
-                text: 'Comments',
-                icon: 'fa-solid fa-file-arrow-up',
+                path: '/customer/admin/column',
+                text: 'Column Grouping',
+                icon: 'fa-solid fa-object-group',
               },
               {
                 path: '/customer/admin/roles',
@@ -184,6 +184,10 @@ const routes: any = [
               {
                 path: 'files',
                 element: <Suspense fallback={<Loader />}><FilesIndexPage /></Suspense>,
+              },
+              {
+                path: 'column',
+                element: <Suspense fallback={<Loader />}><ColumnGrouping /></Suspense>,
               },
               {
                 path: 'roles',

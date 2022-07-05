@@ -10,7 +10,7 @@ export async function fetchCommentsData(): Promise<Comment[]> {
     method: 'GET',
     credentials: 'include',
   };
-  const apiUrl = `${BACKEND_API}/api/v1/${tenantUuid()}/comments//Files`;
+  const apiUrl = `${BACKEND_API}/api/v1/${tenantUuid()}/comments/Files`;
   const response = await fetch(apiUrl, options);
   if (!response.ok) {
     const message = `An error has occurred: ${response.status}`;

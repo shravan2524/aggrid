@@ -157,7 +157,7 @@ export default function CommentsPage({ fileId }: File) {
                 </div>
               </div>
             ))
-            : null
+            : <div><p>No Commments</p></div>
         }
           </div>
         </Modal.Body>
