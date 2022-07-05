@@ -1,3 +1,4 @@
+import { tenantUuid } from 'state/tenants/helper';
 import { BACKEND_API } from '../app/config';
 
 export async function fetchUserMeData() {
