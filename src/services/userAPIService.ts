@@ -1,4 +1,4 @@
-import { tenantUuid } from 'state/tenants/helper';
+import { tenantUuid as tenantUuidFn } from 'state/tenants/helper';
 import { BACKEND_API } from '../app/config';
 import { handleRequestError } from '../app/utils/ApiRequests';
 
@@ -16,11 +16,13 @@ export async function fetchUserMeData() {
   return response.json();
 }
 
-export async function fetchUserDataForTenant(tenantUuid) {
+export async function fetchUserDataForTenant(tenantUuid = '') {
   const options: RequestInit = {
     method: 'GET',
     credentials: 'include',
   };
+
+  tenantUuid = tenantUuid || tenantUuidFn();
 
   const response = await fetch(`${BACKEND_API}/api/v1/auth/me/${tenantUuid}`, options);
 
