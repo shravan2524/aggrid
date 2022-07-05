@@ -46,14 +46,16 @@ function SecondaryCustomerTopMenu() {
   );
 }
 
-export default function CustomerTopMenu() {
+interface CustomerTopMenuProps {
+  companies: any[]
+}
+
+export default function CustomerTopMenu({ companies }:CustomerTopMenuProps) {
   const dispatch = useAppDispatch();
   const selectedWorkspace = useSelector(getSelectedTenant);
 
   const userFullName = useMemo(() => getAuthFullNameFromLocal(), []);
 
-  // Companies ....
-  const companies = useCompanies();
   const selectedCompany = useSelector(selectSelectedCompany);
 
   const profileItems = useMemo(() => [
@@ -88,8 +90,10 @@ export default function CustomerTopMenu() {
 
   const setSelectedCompanyOption = (e) => {
     const companyId = e.value;
-    const selectedComp = companies.find((i) => i.id === companyId);
-    dispatch(setSelectedCompany(selectedComp ? selectedComp.id : null));
+    if (companies) {
+      const selectedComp = companies.find((i) => i.id === companyId);
+      dispatch(setSelectedCompany(selectedComp ? selectedComp.id : null));
+    }
   };
 
   return (
