@@ -1,25 +1,21 @@
 import React, {
   useCallback, useEffect, useMemo, useRef, useState,
 } from 'react';
-import { downloadZip } from 'client-zip';
 import { toast } from 'react-hot-toast';
-import { Button, Container, Modal } from 'react-bootstrap';
+import { Button, Modal } from 'react-bootstrap';
 import { AgGridReact } from 'ag-grid-react';
 import { useAppDispatch, useWindowDimensions } from 'app/hooks';
 import PageWrapper from 'components/PageWrapper';
 import { agGridFilesDTO } from 'app/utils/Helpers';
 import { BACKEND_API } from 'app/config';
-import ReactFileUploder from 'components/FileUploder/Main';
 import {
   GetContextMenuItemsParams,
-  ICellRendererParams,
   MenuItemDef,
 } from 'ag-grid-community';
-import ColumnMapping from 'components/ColumnMapping/ColumnMapping';
 import { useSelector } from 'react-redux';
 import { tenantUuid } from 'state/tenants/helper';
 import {
-  fetchFiles, getFiles, isLoadingSelector, setContentTypeRequest,
+  fetchFiles, getFiles, isLoadingSelector,
 } from 'state/files/filesSlice';
 import classNames from 'classnames';
 import DetailCellRenderer from '../files/Sub-Ag-Grid';
