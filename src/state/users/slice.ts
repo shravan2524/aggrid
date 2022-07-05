@@ -60,10 +60,6 @@ export const slice = createSlice({
       ProgressBar.done();
     });
     builder.addCase(readAll.rejected, (state, action) => {
-      const error = action.error.message;
-      if (error) {
-        toast.error(error);
-      }
       state.isLoading = false;
       ProgressBar.done();
     });
@@ -79,10 +75,6 @@ export const slice = createSlice({
       ProgressBar.done();
     });
     builder.addCase(create.rejected, (state, action) => {
-      const error = action.error.message;
-      if (error) {
-        toast.error(error);
-      }
       state.isPostLoading = false;
       ProgressBar.done();
     });
@@ -98,10 +90,6 @@ export const slice = createSlice({
       ProgressBar.done();
     });
     builder.addCase(update.rejected, (state, action) => {
-      const error = action.error.message;
-      if (error) {
-        toast.error(error);
-      }
       state.isPutLoading = false;
       ProgressBar.done();
     });

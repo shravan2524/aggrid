@@ -1,5 +1,6 @@
 import { tenantUuid } from 'state/tenants/helper';
 import { BACKEND_API } from '../app/config';
+import { handleRequestError } from '../app/utils/ApiRequests';
 
 export async function fetchUserMeData() {
   const options: RequestInit = {
@@ -10,8 +11,7 @@ export async function fetchUserMeData() {
   const response = await fetch(`${BACKEND_API}/api/v1/me`, options);
 
   if (!response.ok) {
-    const message = `An error has occurred: ${response.status}`;
-    throw new Error(message);
+    await handleRequestError(response);
   }
   return response.json();
 }

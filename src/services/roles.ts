@@ -1,5 +1,6 @@
 import { BACKEND_API } from 'app/config';
 import { tenantUuid } from 'state/tenants/helper';
+import { handleRequestError } from '../app/utils/ApiRequests';
 
 export interface PolicyType {
   // action: "crud" or "cru" or "r" or "cr" or "rd" ... meaning c(reate), r(ead), u(pdate), d(delete)
@@ -32,8 +33,7 @@ export async function readAll(): Promise<RoleType[]> {
   const response = await fetch(apiUrl, options);
 
   if (!response.ok) {
-    const message = `An error has occurr: ${response.status}`;
-    throw new Error(message);
+    await handleRequestError(response);
   }
   return response.json();
 }
@@ -48,8 +48,7 @@ export async function readOne(id: number): Promise<RoleType[]> {
   const response = await fetch(apiUrl, options);
 
   if (!response.ok) {
-    const message = `An error has occurr: ${response.status}`;
-    throw new Error(message);
+    await handleRequestError(response);
   }
   return response.json();
 }
@@ -68,8 +67,7 @@ export async function create(data: RoleType): Promise<RoleType> {
   const apiUrl = `${BACKEND_API}/api/v1/${tenantUuid()}/roles`;
   const response = await fetch(apiUrl, options);
   if (!response.ok) {
-    const message = `An error has occurred: ${response.status}`;
-    throw new Error(message);
+    await handleRequestError(response);
   }
   return response.json();
 }
@@ -88,8 +86,7 @@ export async function update(payload: RoleType): Promise<RoleType> {
   const apiUrl = `${BACKEND_API}/api/v1/${tenantUuid()}/roles/${payload.id}`;
   const response = await fetch(apiUrl, options);
   if (!response.ok) {
-    const message = `An error has occurred: ${response.status}`;
-    throw new Error(message);
+    await handleRequestError(response);
   }
   return response.json();
 }
@@ -108,8 +105,7 @@ export async function patch(payload: RoleType): Promise<RoleType> {
   const apiUrl = `${BACKEND_API}/api/v1/${tenantUuid()}/roles/${payload.id}`;
   const response = await fetch(apiUrl, options);
   if (!response.ok) {
-    const message = `An error has occurred: ${response.status}`;
-    throw new Error(message);
+    await handleRequestError(response);
   }
   return response.json();
 }

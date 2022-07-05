@@ -58,10 +58,6 @@ export const TenantsSlice = createSlice({
       ProgressBar.done();
     });
     builder.addCase(fetchTenants.rejected, (state, action) => {
-      const error = action.error.message;
-      if (error) {
-        toast.error(error);
-      }
       state.isLoading = false;
       ProgressBar.done();
     });
@@ -77,10 +73,6 @@ export const TenantsSlice = createSlice({
       ProgressBar.done();
     });
     builder.addCase(newTenantRequest.rejected, (state, action) => {
-      const error = action.error.message;
-      if (error) {
-        toast.error(error);
-      }
       state.isPostLoading = false;
       ProgressBar.done();
     });
@@ -96,10 +88,6 @@ export const TenantsSlice = createSlice({
       ProgressBar.done();
     });
     builder.addCase(updateTenantRequest.rejected, (state, action) => {
-      const error = action.error.message;
-      if (error) {
-        toast.error(error);
-      }
       state.isPutLoading = false;
       ProgressBar.done();
     });

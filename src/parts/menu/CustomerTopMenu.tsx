@@ -6,15 +6,14 @@ import { selectSecondaryMenuItems } from 'state/settings/settingsSlice';
 
 import './CustomerTopMenu.scss';
 import { getAuthFullNameFromLocal } from 'services/authService';
-import { useAppDispatch, useCompanies } from 'app/hooks';
-import { tenantUuid } from 'state/tenants/helper';
+import { useAppDispatch } from 'app/hooks';
 import {
   selectSelectedCompany,
   setSelectedCompany,
 } from 'state/companies/companiesSlice';
 
 import { getSelectedTenant } from 'state/tenants/tenantsSlice';
-import { BACKEND_API } from 'app/config';
+import { LOGOUT_LINK } from 'app/config';
 import CustomerTopMenuDropDown from './CustomerTopMenuDropDown';
 import CustomerTopMenuSelect from './CustomerTopMenuSelect';
 
@@ -82,7 +81,7 @@ export default function CustomerTopMenu({ companies }:CustomerTopMenuProps) {
     },
     {
       itemTitle: 'Logout',
-      itemPath: `${BACKEND_API}/api/v1/auth/logout`,
+      itemPath: LOGOUT_LINK,
       itemExternal: true,
       icon: 'fa-solid fa-right-from-bracket',
     },

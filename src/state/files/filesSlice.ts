@@ -1,5 +1,5 @@
 import {
-  createAsyncThunk, createSelector, createSlice, Draft, PayloadAction,
+  createAsyncThunk, createSelector, createSlice, Draft,
 } from '@reduxjs/toolkit';
 import {
   FilesType,
@@ -8,7 +8,6 @@ import {
 } from 'services/filesAPIService';
 import ProgressBar from 'app/utils/ProgressBar';
 import { toast } from 'react-hot-toast';
-import { CustomerTopMenuSelectItemType } from 'parts/menu/CustomerTopMenuSelect';
 
 // Types ...
 export type FilesState = {
@@ -51,10 +50,6 @@ export const filesSlice = createSlice({
       ProgressBar.done();
     });
     builder.addCase(fetchFiles.rejected, (state, action) => {
-      const error = action.error.message;
-      if (error) {
-        toast.error(error);
-      }
       state.isLoading = false;
       ProgressBar.done();
     });
@@ -70,10 +65,6 @@ export const filesSlice = createSlice({
       ProgressBar.done();
     });
     builder.addCase(updateFileRequest.rejected, (state, action) => {
-      const error = action.error.message;
-      if (error) {
-        toast.error(error);
-      }
       state.isPutLoading = false;
       ProgressBar.done();
     });
@@ -89,10 +80,6 @@ export const filesSlice = createSlice({
       ProgressBar.done();
     });
     builder.addCase(setContentTypeRequest.rejected, (state, action) => {
-      const error = action.error.message;
-      if (error) {
-        toast.error(error);
-      }
       state.isPutLoading = false;
       ProgressBar.done();
     });
@@ -108,10 +95,6 @@ export const filesSlice = createSlice({
       ProgressBar.done();
     });
     builder.addCase(setColumnMappingRequest.rejected, (state, action) => {
-      const error = action.error.message;
-      if (error) {
-        toast.error(error);
-      }
       state.isPutLoading = false;
       ProgressBar.done();
     });
