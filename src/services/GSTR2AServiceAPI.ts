@@ -1,5 +1,6 @@
 import { tenantUuid } from 'state/tenants/helper';
 import { BACKEND_API } from '../app/config';
+import { handleRequestError } from '../app/utils/ApiRequests';
 
 export interface GSTR2AType {
   id: number;
@@ -35,8 +36,7 @@ export async function fetchGSTR2AData(): Promise<GSTR2AType[] | null | Error> {
   const response = await fetch(apiUrl, options);
 
   if (!response.ok) {
-    const message = `An error has occurred: ${response.status}`;
-    throw new Error(message);
+    await handleRequestError(response);
   }
   return response.json();
 }

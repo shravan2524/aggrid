@@ -1,5 +1,6 @@
 import { tenantUuid } from 'state/tenants/helper';
 import { BACKEND_API } from '../app/config';
+import { handleRequestError } from '../app/utils/ApiRequests';
 
 export interface CredentialsType {
   companyId: number,
@@ -19,8 +20,7 @@ export async function fetchCompanyCredentialsData(companyId: number): Promise<Cr
   const response = await fetch(apiUrl, options);
 
   if (!response.ok) {
-    const message = `An error has occurred: ${response.status}`;
-    throw new Error(message);
+    await handleRequestError(response);
   }
   return response.json();
 }
@@ -39,8 +39,7 @@ export async function postCompanyCredentialsData(companyId, data): Promise<Crede
   const apiUrl = `${BACKEND_API}/api/v1/${tenantUuid()}/company-credentials/${companyId}`;
   const response = await fetch(apiUrl, options);
   if (!response.ok) {
-    const message = `An error has occurred: ${response.status}`;
-    throw new Error(message);
+    await handleRequestError(response);
   }
   return response.json();
 }
@@ -59,8 +58,7 @@ export async function putCompanyCredentialsData(companyId, payload): Promise<Cre
   const apiUrl = `${BACKEND_API}/api/v1/${tenantUuid()}/company-credentials/${companyId}`;
   const response = await fetch(apiUrl, options);
   if (!response.ok) {
-    const message = `An error has occurred: ${response.status}`;
-    throw new Error(message);
+    await handleRequestError(response);
   }
   return response.json();
 }

@@ -57,10 +57,6 @@ export const companiesSlice = createSlice({
       ProgressBar.done();
     });
     builder.addCase(fetchCompanies.rejected, (state, action) => {
-      const error = action.error.message;
-      if (error) {
-        toast.error(error);
-      }
       state.isLoading = false;
       ProgressBar.done();
     });
@@ -76,10 +72,6 @@ export const companiesSlice = createSlice({
       ProgressBar.done();
     });
     builder.addCase(newCompanyRequest.rejected, (state, action) => {
-      const error = action.error.message;
-      if (error) {
-        toast.error(error);
-      }
       state.isPostLoading = false;
       ProgressBar.done();
     });
@@ -95,10 +87,6 @@ export const companiesSlice = createSlice({
       ProgressBar.done();
     });
     builder.addCase(updateCompanyRequest.rejected, (state, action) => {
-      const error = action.error.message;
-      if (error) {
-        toast.error(error);
-      }
       state.isPutLoading = false;
       ProgressBar.done();
     });

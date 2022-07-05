@@ -8,17 +8,31 @@ import PageWrapper from 'components/PageWrapper';
 import { fetchGSTR2BData } from 'services/GSTR2BServiceAPI';
 import { GSTR2BColums } from './Gstr2BColum';
 
+function CustomActionsToolPanel(onBtExport: any) {
+  return (
+    <div className="container-fluid">
+      <div className="row p-2 gap-2">
+        <button
+          onClick={onBtExport}
+          type="button"
+          className="btn btn-sm btn-success d-flex gap-2 align-items-center justify-content-center"
+        >
+          <i className="fas fa-sign-out-alt" />
+          Export to Excel
+        </button>
+      </div>
+    </div>
+  );
+}
+
 export default function ReconciliationGstr2BPage() {
   const gridRef = useRef<any>();
   const { height } = useWindowDimensions();
-
   const containerStyle = useMemo(
     () => ({ width: '100%', height: `${height}px`, minHeight: '600px' }),
     [height],
   );
-
   const [rowData, setRowData] = useState<any>();
-
   const [columnDefs, setColumnDefs] = useState([
     {
       headerName: '2B Details',
@@ -26,9 +40,33 @@ export default function ReconciliationGstr2BPage() {
     },
   ]);
 
+  // CUSTOM ICON
+  const icons = useMemo<{ [key: string]: Function | string }>(
+    () => ({
+      'custom-actions-tool': '<i class="fa-solid fa-screwdriver-wrench"></i>',
+    }),
+    [],
+  );
+  // EXPORT BUTTON
+  const onBtExport = useCallback(() => {
+    gridRef.current!.api.exportDataAsExcel({
+      author: 'Finkraft',
+      fontSize: 13,
+      sheetName: '2B Details',
+      fileName: 'Datas.xlsx',
+    });
+  }, []);
+  // SIDE BAR
   const sideBar = useMemo(
     () => ({
       toolPanels: [
+        {
+          id: 'customActionsTool',
+          labelDefault: 'Actions',
+          labelKey: 'customActionsTool',
+          iconKey: 'custom-actions-tool',
+          toolPanel: () => CustomActionsToolPanel(onBtExport),
+        },
         {
           id: 'columns',
           labelDefault: 'Columns',
@@ -44,11 +82,11 @@ export default function ReconciliationGstr2BPage() {
           toolPanel: 'agFiltersToolPanel',
         },
       ],
-      defaultToolPanel: 'customStats',
+      defaultToolPanel: 'customActionsTool',
     }),
     [],
   );
-
+  // COLUMS
   const defaultColDef = useMemo(
     () => ({
       sortable: true,
@@ -59,22 +97,6 @@ export default function ReconciliationGstr2BPage() {
       editable: true,
       enablePivot: true,
       enableValue: true,
-    }),
-    [],
-  );
-
-  const onFirstDataRendered = useCallback((params) => {}, []);
-
-  const statusBar = useMemo(
-    () => ({
-      statusPanels: [
-        {
-          statusPanel: 'agAggregationComponent',
-          statusPanelParams: {
-            aggFuncs: ['count', 'sum'],
-          },
-        },
-      ],
     }),
     [],
   );
@@ -95,6 +117,7 @@ export default function ReconciliationGstr2BPage() {
           rowData={rowData}
           columnDefs={columnDefs}
           sideBar={sideBar}
+          icons={icons}
           rowSelection="multiple"
           rowDragManaged
           rowDragMultiRow
@@ -105,11 +128,6 @@ export default function ReconciliationGstr2BPage() {
           animateRows
           onGridReady={onGridReady}
           pagination
-          onFirstDataRendered={onFirstDataRendered}
-          groupIncludeFooter
-          groupIncludeTotalFooter
-          enableRangeSelection
-          statusBar={statusBar}
           masterDetail
         />
       </div>

@@ -1,4 +1,5 @@
 import { BACKEND_API } from '../app/config';
+import { handleRequestError } from '../app/utils/ApiRequests';
 
 export interface ReconciliationType {
 
@@ -15,8 +16,7 @@ export async function fetchReconciliationData() :Promise<ReconciliationType[] | 
   const response = await fetch(apiUrl, options);
 
   if (!response.ok) {
-    const message = `An error has occurred: ${response.status}`;
-    throw new Error(message);
+    await handleRequestError(response);
   }
   return response.json();
 }

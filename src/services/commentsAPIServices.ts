@@ -1,6 +1,6 @@
-import { convertToObject } from 'typescript';
 import { tenantUuid } from 'state/tenants/helper';
 import { BACKEND_API } from '../app/config';
+import { handleRequestError } from '../app/utils/ApiRequests';
 
 export interface CommentType {
 }
@@ -13,8 +13,7 @@ export async function fetchCommentsData(): Promise<Comment[]> {
   const apiUrl = `${BACKEND_API}/api/v1/${tenantUuid()}/comments/Files`;
   const response = await fetch(apiUrl, options);
   if (!response.ok) {
-    const message = `An error has occurred: ${response.status}`;
-    throw new Error(message);
+    await handleRequestError(response);
   }
   return response.json();
 }
@@ -30,11 +29,9 @@ export async function postComments(payload): Promise<Comment[]> {
     body: JSON.stringify({ ...payload.Comments }),
   };
   const apiUrl = `${BACKEND_API}/api/v1/${tenantUuid()}/comments/`;
-  // const apiUrl = 'https://beta.finkraft.ai/api/v1//comments/';
   const response = await fetch(apiUrl, options);
   if (!response.ok) {
-    const message = `An error has occurred: ${response.status}`;
-    throw new Error(message);
+    await handleRequestError(response);
   }
   return response.json();
 }

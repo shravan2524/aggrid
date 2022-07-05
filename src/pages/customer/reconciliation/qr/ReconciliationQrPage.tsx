@@ -1,76 +1,108 @@
 import React, {
-  useCallback,
-  useMemo, useRef, useState,
+  useCallback, useMemo, useRef, useState,
 } from 'react';
 import { fetchQRData } from 'services/qrAPIService';
 import { AgGridReact } from 'ag-grid-react';
 import { agGridRowDrag } from 'app/utils/Helpers';
-import { toast } from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
 import { useWindowDimensions } from 'app/hooks';
 import PageWrapper from 'components/PageWrapper';
 import { QRColums } from './QRColums';
 
+function CustomActionsToolPanel(onBtExport) {
+  return (
+    <div className="container-fluid">
+      <div className="row p-2 gap-2">
+        <button
+          onClick={onBtExport}
+          type="button"
+          className="btn btn-sm btn-success d-flex gap-2 align-items-center justify-content-center"
+        >
+          <i className="fas fa-sign-out-alt" />
+          Export to Excel
+        </button>
+      </div>
+    </div>
+  );
+}
+
 export default function ReconciliationQrPage() {
   const gridRef = useRef<any>();
-  const navigate = useNavigate();
   const { height } = useWindowDimensions();
-
-  const containerStyle = useMemo(() => ({ width: '100%', height: `${(height)}px`, minHeight: '600px' }), [height]);
-
+  const containerStyle = useMemo(
+    () => ({ width: '100%', height: `${height}px`, minHeight: '600px' }),
+    [height],
+  );
   const [rowData, setRowData] = useState<any>();
-
-  const [columnDefs, setColumnDefs] = useState([{
-    headerName: 'QR Details',
-    children: QRColums(agGridRowDrag),
-  },
+  const [columnDefs, setColumnDefs] = useState([
+    {
+      headerName: 'QR Details',
+      children: QRColums(agGridRowDrag),
+    },
   ]);
 
-  const sideBar = useMemo(() => ({
-    toolPanels: [
-      {
-        id: 'columns',
-        labelDefault: 'Columns',
-        labelKey: 'columns',
-        iconKey: 'columns',
-        toolPanel: 'agColumnsToolPanel',
-      },
-      {
-        id: 'filters',
-        labelDefault: 'Filters',
-        labelKey: 'filters',
-        iconKey: 'filter',
-        toolPanel: 'agFiltersToolPanel',
-      },
+  // CUSTOM ICON
+  const icons = useMemo<{ [key: string]: Function | string }>(
+    () => ({
+      'custom-actions-tool': '<i class="fa-solid fa-screwdriver-wrench"></i>',
+    }),
+    [],
+  );
 
-    ],
-    defaultToolPanel: 'customStats',
-  }), []);
-
-  const defaultColDef = useMemo(() => ({
-    sortable: true,
-    filter: true,
-    resizable: true,
-    floatingFilter: true,
-    enableRowGroup: true,
-    editable: true,
-    enablePivot: true,
-    enableValue: true,
-  }), []);
-
-  const onFirstDataRendered = useCallback((params) => {
+  // EXPORT BUTTON
+  const onBtExport = useCallback(() => {
+    gridRef.current!.api.exportDataAsExcel({
+      author: 'Finkraft',
+      fontSize: 13,
+      sheetName: 'QR Details',
+      fileName: 'Datas.xlsx',
+    });
   }, []);
 
-  const statusBar = useMemo(() => ({
-    statusPanels: [
-      {
-        statusPanel: 'agAggregationComponent',
-        statusPanelParams: {
-          aggFuncs: ['count', 'sum'],
+  // SIDE BAR
+  const sideBar = useMemo(
+    () => ({
+      toolPanels: [
+        {
+          id: 'customActionsTool',
+          labelDefault: 'Actions',
+          labelKey: 'customActionsTool',
+          iconKey: 'custom-actions-tool',
+          toolPanel: () => CustomActionsToolPanel(onBtExport),
         },
-      },
-    ],
-  }), []);
+        {
+          id: 'columns',
+          labelDefault: 'Columns',
+          labelKey: 'columns',
+          iconKey: 'columns',
+          toolPanel: 'agColumnsToolPanel',
+        },
+        {
+          id: 'filters',
+          labelDefault: 'Filters',
+          labelKey: 'filters',
+          iconKey: 'filter',
+          toolPanel: 'agFiltersToolPanel',
+        },
+      ],
+      defaultToolPanel: 'customActionsTool',
+    }),
+    [],
+  );
+
+  const defaultColDef = useMemo(
+    () => ({
+      sortable: true,
+      filter: true,
+      resizable: true,
+      floatingFilter: true,
+      enableRowGroup: true,
+      editable: true,
+      enablePivot: true,
+      enableValue: true,
+    }),
+    [],
+  );
 
   const onGridReady = useCallback((params) => {
     fetchQRData().then((twoAData) => {
@@ -92,16 +124,11 @@ export default function ReconciliationQrPage() {
           rowDragMultiRow
           rowGroupPanelShow="always"
           defaultColDef={defaultColDef}
-          enableCharts
           groupDisplayType="multipleColumns"
           animateRows
           onGridReady={onGridReady}
           pagination
-          onFirstDataRendered={onFirstDataRendered}
-          groupIncludeFooter
-          groupIncludeTotalFooter
-          enableRangeSelection
-          statusBar={statusBar}
+          icons={icons}
           masterDetail
         />
       </div>

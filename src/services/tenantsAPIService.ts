@@ -1,4 +1,5 @@
 import { BACKEND_API } from '../app/config';
+import { handleRequestError } from '../app/utils/ApiRequests';
 
 /*
 [
@@ -37,8 +38,7 @@ export async function fetchTenantsData(): Promise<TenantType[]> {
   const response = await fetch(apiUrl, options);
 
   if (!response.ok) {
-    const message = `An error has occurred: ${response.status}`;
-    throw new Error(message);
+    await handleRequestError(response);
   }
   return response.json();
 }
@@ -57,8 +57,7 @@ export async function postTenantsData(data): Promise<TenantType[]> {
   const apiUrl = `${BACKEND_API}/api/v1/tenants`;
   const response = await fetch(apiUrl, options);
   if (!response.ok) {
-    const message = `An error has occurred: ${response.status}`;
-    throw new Error(message);
+    await handleRequestError(response);
   }
   return response.json();
 }
@@ -77,8 +76,7 @@ export async function putTenantsData(payload): Promise<TenantType[]> {
   const apiUrl = `${BACKEND_API}/api/v1/tenants/${payload.id}`;
   const response = await fetch(apiUrl, options);
   if (!response.ok) {
-    const message = `An error has occurred: ${response.status}`;
-    throw new Error(message);
+    await handleRequestError(response);
   }
   return response.json();
 }

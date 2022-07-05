@@ -6,15 +6,14 @@ import { selectSecondaryMenuItems } from 'state/settings/settingsSlice';
 
 import './CustomerTopMenu.scss';
 import { getAuthFullNameFromLocal } from 'services/authService';
-import { useAppDispatch, useCompanies } from 'app/hooks';
-import { tenantUuid } from 'state/tenants/helper';
+import { useAppDispatch } from 'app/hooks';
 import {
   selectSelectedCompany,
   setSelectedCompany,
 } from 'state/companies/companiesSlice';
 
 import { getSelectedTenant } from 'state/tenants/tenantsSlice';
-import { BACKEND_API } from 'app/config';
+import { LOGOUT_LINK } from 'app/config';
 import CustomerTopMenuDropDown from './CustomerTopMenuDropDown';
 import CustomerTopMenuSelect from './CustomerTopMenuSelect';
 
@@ -46,14 +45,16 @@ function SecondaryCustomerTopMenu() {
   );
 }
 
-export default function CustomerTopMenu() {
+interface CustomerTopMenuProps {
+  companies: any[]
+}
+
+export default function CustomerTopMenu({ companies }:CustomerTopMenuProps) {
   const dispatch = useAppDispatch();
   const selectedWorkspace = useSelector(getSelectedTenant);
 
   const userFullName = useMemo(() => getAuthFullNameFromLocal(), []);
 
-  // Companies ....
-  const companies = useCompanies();
   const selectedCompany = useSelector(selectSelectedCompany);
 
   const profileItems = useMemo(() => [
@@ -80,7 +81,7 @@ export default function CustomerTopMenu() {
     },
     {
       itemTitle: 'Logout',
-      itemPath: `${BACKEND_API}/api/v1/auth/logout`,
+      itemPath: LOGOUT_LINK,
       itemExternal: true,
       icon: 'fa-solid fa-right-from-bracket',
     },
@@ -88,8 +89,10 @@ export default function CustomerTopMenu() {
 
   const setSelectedCompanyOption = (e) => {
     const companyId = e.value;
-    const selectedComp = companies.find((i) => i.id === companyId);
-    dispatch(setSelectedCompany(selectedComp ? selectedComp.id : null));
+    if (companies) {
+      const selectedComp = companies.find((i) => i.id === companyId);
+      dispatch(setSelectedCompany(selectedComp ? selectedComp.id : null));
+    }
   };
 
   return (

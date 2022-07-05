@@ -1,5 +1,6 @@
 import { BACKEND_API } from 'app/config';
 import { tenantUuid } from 'state/tenants/helper';
+import { handleRequestError } from '../app/utils/ApiRequests';
 
 /*
 [
@@ -39,8 +40,7 @@ export async function fetchCompaniesData(): Promise<CompaniesType[]> {
   const response = await fetch(apiUrl, options);
 
   if (!response.ok) {
-    const message = `An error has occurr: ${response.status}`;
-    throw new Error(message);
+    await handleRequestError(response);
   }
   return response.json();
 }
@@ -59,8 +59,7 @@ export async function postCompaniesData(data): Promise<CompaniesType[]> {
   const apiUrl = `${BACKEND_API}/api/v1/${tenantUuid()}/companies`;
   const response = await fetch(apiUrl, options);
   if (!response.ok) {
-    const message = `An error has occurred: ${response.status}`;
-    throw new Error(message);
+    await handleRequestError(response);
   }
   return response.json();
 }
@@ -79,8 +78,7 @@ export async function putCompaniesData(payload): Promise<CompaniesType[]> {
   const apiUrl = `${BACKEND_API}/api/v1/${tenantUuid()}/companies/${payload.id}`;
   const response = await fetch(apiUrl, options);
   if (!response.ok) {
-    const message = `An error has occurred: ${response.status}`;
-    throw new Error(message);
+    await handleRequestError(response);
   }
   return response.json();
 }
