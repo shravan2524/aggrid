@@ -39,6 +39,10 @@
 	  "import/prefer-default-export": "off",
 	  "jsx-a11y/img-redundant-alt": "off",
 	  "linebreak-style": 0,
-	  "import/no-extraneous-dependencies": ["error", {"devDependencies": true}]
+	  "import/no-extraneous-dependencies": ["error", {"devDependencies": true}],
+    "indent": "off",
+    "@typescript-eslint/indent": [
+      "error"
+    ]
 	}
-  }
+}
