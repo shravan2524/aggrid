@@ -6,7 +6,10 @@ import React, {
   useState,
 } from 'react';
 import { AgGridReact } from 'ag-grid-react';
-import { ColDef, ICellRendererParams } from 'ag-grid-community';
+import 'ag-grid-enterprise';
+import {
+  ColDef, GridReadyEvent, ICellRendererParams, IServerSideDatasource,
+} from 'ag-grid-community';
 import { fetchFileContentData } from 'services/filesAPIService';
 
 // main Function
@@ -17,7 +20,6 @@ export default function DetailCellRenderer({
 }: ICellRendererParams) {
   const gridRef = useRef<any>();
   const [hide, setHide] = useState<boolean>(false);
-  const [rowData, setRowData] = useState<any>();
   const gridStyle = useMemo(() => ({ height: '400px', width: '90%' }), []);
   // columns
   const Columns = data.agGridColumns.map((f: any) => ({
@@ -34,27 +36,35 @@ export default function DetailCellRenderer({
       minWidth: 250,
       sortable: true,
       filter: true,
-      resizable: true,
       floatingFilter: true,
-      enableRowGroup: true,
-      editable: true,
-      enablePivot: true,
-      enableValue: true,
     }),
     [],
   );
 
   // rows
-  const onGridReady = useCallback((params) => {
-    fetchFileContentData({ id: data.id }).then((res) => {
-      if (res.rows) {
-        setRowData(res.rows);
-      }
-      if (res.count > 0) {
-        setHide(true);
-      }
-    });
-  }, []);
+  const onGridReady = useCallback((params: GridReadyEvent) => {
+    const dataSource: IServerSideDatasource = {
+      getRows: (prms) => {
+        console.log(prms.request);
+
+        fetchFileContentData({ id: data.id, dataRequest: { ...prms.request } }).then((res) => {
+          if (res.rows) {
+            prms.success({
+              rowData: res.rows,
+              rowCount: res.count,
+            });
+          }
+          if (res.count > 0) {
+            setHide(true);
+          }
+        }).catch((e) => {
+          prms.fail();
+        });
+      },
+    };
+
+    params.api!.setServerSideDatasource(dataSource);
+  }, [data]);
 
   // export button
   const onBtExport = useCallback(() => {
@@ -87,11 +97,13 @@ export default function DetailCellRenderer({
       <div style={gridStyle} className="ag-theme-alpine py-2">
         <AgGridReact
           ref={gridRef}
-          rowData={rowData}
           columnDefs={columnDefs}
           defaultColDef={defaultColDef}
-          animateRows
           onGridReady={onGridReady}
+          rowModelType="serverSide"
+          paginationPageSize={10}
+          cacheBlockSize={10}
+          serverSideStoreType="partial"
           pagination
         />
       </div>
