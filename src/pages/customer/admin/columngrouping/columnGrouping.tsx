@@ -6,11 +6,11 @@ import { Button, Modal } from 'react-bootstrap';
 import { AgGridReact } from 'ag-grid-react';
 import { useAppDispatch, useWindowDimensions } from 'app/hooks';
 import PageWrapper from 'components/PageWrapper';
-import { agGridFilesDTO } from 'app/utils/Helpers';
 import { BACKEND_API } from 'app/config';
 import {
   GetContextMenuItemsParams,
   MenuItemDef,
+  ICellRendererParams,
 } from 'ag-grid-community';
 import { useSelector } from 'react-redux';
 import { tenantUuid } from 'state/tenants/helper';
@@ -24,6 +24,102 @@ interface Type {
   btnName: string;
 }
 
+interface AGGridType {
+  id?: number,
+  title?: string,
+  createdAt?: Date,
+  updatedAt?: Date,
+}
+interface ItemType {
+  id?: number,
+  title?: string,
+  createdAt?: Date,
+  updatedAt?: Date,
+}
+type ActionsRendererProps = {
+  title: string;
+  id: string;
+};
+
+function ActionsRenderer({ title, id }: ActionsRendererProps) {
+  const [show, setShow] = useState(false);
+  const [colgroup, setcolgroup] = useState(title);
+  const handleShow = () => {
+    setShow(true);
+  };
+  const onSubmitAction = (e) => {
+    e.preventDefault();
+    setShow(false);
+    const ColumnGroup = {
+      title: '1',
+      description: colgroup,
+      createdBy: 1,
+      parent: 1,
+    };
+    const options: RequestInit = {
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      method: 'PUT',
+      credentials: 'include',
+      body: JSON.stringify({
+        title: colgroup,
+        description: '1',
+        createdBy: 1,
+        parent: 1,
+      }),
+    };
+    const apiUrl = `${BACKEND_API}/api/v1/${tenantUuid()}/columngroups/${id}`;
+    fetch(apiUrl, options)
+      .then((response) => response.json())
+      .then((data) => {
+        // console.log(data);
+        toast.success('Column Group Updated');
+      });
+  };
+  const handleClose = () => setShow(false);
+  return (
+    <>
+      <Button variant="primary" className="btn btn-sm btn-light" onClick={handleShow}>
+        <i className="fa-solid fa-pen-to-square" />
+        {' '}
+        Edit
+      </Button>
+      <Modal show={show} onHide={handleClose} size="xl" scrollable>
+        <Modal.Header closeButton>
+          <Modal.Title>Edit Column Group</Modal.Title>
+        </Modal.Header>
+        <Modal.Body className="mapping">
+          <div className="d-flex justify-content-center">
+            <div className="d-flex w-50 justify-content-between p-3">
+              <label className="h6">Column Group Name : </label>
+              <input type="text" className="w-60 px-5" onChange={(e) => setcolgroup(e.target.value)} value={colgroup} />
+            </div>
+          </div>
+        </Modal.Body>
+        <Modal.Footer>
+          <button type="button" className="btn btn-primary" onClick={(e) => onSubmitAction(e)}>Save</button>
+          <Button variant="secondary" onClick={handleClose}>
+            Close
+          </Button>
+        </Modal.Footer>
+      </Modal>
+    </>
+  );
+}
+
+function agGridDTO(rows: Array<ItemType>): Array<AGGridType> {
+  return rows.map(
+    (item: ItemType) => ({
+      id: item.id || -1,
+      title: item?.title || '',
+      createdAt: item.createdAt,
+      updatedAt: item.updatedAt,
+    }),
+  );
+}
+
 function Container1({ btnName }: Type) {
   const [show, setShow] = useState(false);
   const handleShow = () => {
@@ -32,15 +128,15 @@ function Container1({ btnName }: Type) {
   const handleClose = () => setShow(false);
   const [colgroup, setcolgroup] = useState('');
   const onSubmitAction = (e) => {
-    const dt = {
-      ColumnGroup: {
-        title: '1',
-        description: colgroup,
-        createdBy: 1,
-        parent: 1,
-      },
+    e.preventDefault();
+    setShow(false);
+    const ColumnGroup = {
+      title: '1',
+      description: colgroup,
+      createdBy: 1,
+      parent: 1,
     };
-    console.log(dt);
+    console.log(ColumnGroup);
     const options: RequestInit = {
       headers: {
         Accept: 'application/json',
@@ -48,13 +144,19 @@ function Container1({ btnName }: Type) {
       },
       method: 'POST',
       credentials: 'include',
-      body: JSON.stringify({ dt }),
+      body: JSON.stringify({
+        title: colgroup,
+        description: '1',
+        createdBy: 1,
+        parent: 1,
+      }),
     };
     const apiUrl = `${BACKEND_API}/api/v1/${tenantUuid()}/columngroups/`;
     fetch(apiUrl, options)
       .then((response) => response.json())
       .then((data) => {
-        console.log(data);
+        // console.log(data);
+        toast.success('Column Group added');
       });
   };
   return (
@@ -67,6 +169,7 @@ function Container1({ btnName }: Type) {
         <Modal.Body className="mapping">
           <div className="d-flex justify-content-center">
             <div className="d-flex w-50 justify-content-between p-3">
+              <label className="h6">Column Group Name : </label>
               <input type="text" className="w-75 px-5" onChange={(e) => setcolgroup(e.target.value)} value={colgroup} />
               <button type="button" className="btn btn-primary" onClick={(e) => onSubmitAction(e)}>Save</button>
             </div>
@@ -87,7 +190,6 @@ function CustomActionsToolPanel(onRefreshCallback, isFetchLoading) {
     <div className="container-fluid">
       <div className="row p-2 gap-2">
         <Container1 btnName="Create Column Group" />
-        <Container1 btnName="Update Column Group" />
         <button
           type="button"
           className="btn btn-sm btn-info px-4 d-flex gap-2 align-items-center justify-content-center"
@@ -124,20 +226,29 @@ export default function columnGrouping() {
       headerName: 'Column Grouping Details',
       children: [
         {
-          headerName: 'Name',
-          field: 'fileName',
+          headerName: 'Title',
+          field: 'title',
           filter: 'agTextColumnFilter',
           editable: false,
         },
         {
-          headerName: 'updated At',
-          field: 'updated At',
+          headerName: 'Created At',
+          field: 'createdAt',
+          filter: 'agTextColumnFilter',
+          editable: false,
+        },
+        {
+          headerName: 'Updated At',
+          field: 'updatedAt',
           filter: 'agTextColumnFilter',
           editable: false,
         },
         {
           field: 'actions',
           // eslint-disable-next-line react/no-unstable-nested-components
+          cellRenderer: (params) => (
+            <ActionsRenderer title={params.data.title} id={params.data.id} />
+          ),
           editable: false,
           filter: false,
           cellStyle: (params) => {
@@ -157,6 +268,17 @@ export default function columnGrouping() {
   }), []);
 
   const onRefreshCallback = () => {
+    const options: RequestInit = {
+      method: 'GET',
+      credentials: 'include',
+    };
+    const apiUrl = `${BACKEND_API}/api/v1/${tenantUuid()}/columngroups/`;
+    fetch(apiUrl, options)
+      .then((response) => response.json())
+      .then((data) => {
+        console.log(data);
+        setRowData(data);
+      });
   };
 
   const sideBar = useMemo(() => ({
@@ -201,23 +323,18 @@ export default function columnGrouping() {
     gridRef.current?.api.sizeColumnsToFit();
   }, []);
 
-  async function fetchFilesData() {
+  const onGridReady = useCallback((params) => {
     const options: RequestInit = {
       method: 'GET',
       credentials: 'include',
     };
     const apiUrl = `${BACKEND_API}/api/v1/${tenantUuid()}/columngroups/`;
-    // const apiUrl = 'https://beta.finkraft.ai/api/v1/f3b4a42c-9ac8-42c3-a5ff-1a6e6da8f5c0/columngroups/';
-    const response = await fetch(apiUrl, options);
-    if (!response.ok) {
-      const message = `An error has occurreds: ${response.status}`;
-      throw new Error(message);
-    }
-    console.log(response.json());
-    return response.json();
-  }
-  const onGridReady = useCallback((params) => {
-    fetchFilesData();
+    fetch(apiUrl, options)
+      .then((response) => response.json())
+      .then((data) => {
+        console.log(data);
+        setRowData(data);
+      });
   }, []);
 
   // TODO : Implement row range selection ...
@@ -263,7 +380,7 @@ export default function columnGrouping() {
   }, [width, rows]);
 
   useEffect(() => {
-    setRowData(agGridFilesDTO(rows));
+    setRowData(agGridDTO(rows));
 
     if (gridRef.current?.api) {
       gridRef.current?.api.sizeColumnsToFit();
