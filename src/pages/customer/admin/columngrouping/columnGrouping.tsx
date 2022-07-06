@@ -12,13 +12,19 @@ import {
   MenuItemDef,
   ICellRendererParams,
 } from 'ag-grid-community';
+import CustomButton from 'components/CustomButton';
 import { useSelector } from 'react-redux';
 import { tenantUuid } from 'state/tenants/helper';
 import {
   fetchFiles, getFiles, isLoadingSelector,
 } from 'state/files/filesSlice';
+import { showModal } from 'app/utils/Modal';
 import classNames from 'classnames';
 import DetailCellRenderer from '../files/Sub-Ag-Grid';
+
+const moduleName = 'Column';
+const moduleTitle = 'Column';
+const modalIdentifier = `save${moduleName}Modal`;
 
 interface Type {
   btnName: string;
@@ -86,23 +92,26 @@ function ActionsRenderer({ title, id }: ActionsRendererProps) {
         {' '}
         Edit
       </Button>
-      <Modal show={show} onHide={handleClose} size="xl" scrollable>
+      <Modal
+        show={show}
+        onHide={handleClose}
+        aria-labelledby="contained-modal-title-vcenter"
+        centered
+      >
         <Modal.Header closeButton>
           <Modal.Title>Edit Column Group</Modal.Title>
         </Modal.Header>
         <Modal.Body className="mapping">
-          <div className="d-flex justify-content-center">
-            <div className="d-flex w-50 justify-content-between p-3">
-              <label className="h6">Column Group Name : </label>
-              <input type="text" className="w-60 px-5" onChange={(e) => setcolgroup(e.target.value)} value={colgroup} />
-            </div>
+          <div className="mb-3">
+            <label className="col-form-label required" style={{ fontSize: '13px' }}>Column Group Name (*) </label>
+            <input type="text" className={classNames(['form-control form-control-sm'])} onChange={(e) => setcolgroup(e.target.value)} value={colgroup} />
           </div>
         </Modal.Body>
         <Modal.Footer>
-          <button type="button" className="btn btn-primary" onClick={(e) => onSubmitAction(e)}>Save</button>
-          <Button variant="secondary" onClick={handleClose}>
+          <Button variant="secondary" className="btn btn-sm btn-danger" onClick={handleClose}>
             Close
           </Button>
+          <button type="button" className="btn btn-sm btn-primary" onClick={(e) => onSubmitAction(e)}>Save</button>
         </Modal.Footer>
       </Modal>
     </>
@@ -159,26 +168,34 @@ function Container1({ btnName }: Type) {
         toast.success('Column Group added');
       });
   };
+  const modalId = 'ColunGroup';
   return (
     <>
-      <Button variant="primary" className="btn btn-sm btn-info px-4 d-flex gap-2 align-items-center justify-content-center" onClick={handleShow}>{btnName}</Button>
-      <Modal show={show} onHide={handleClose} size="xl" scrollable>
+      <Button variant="primary" className="btn btn-sm btn-danger px-4 d-flex gap-2 align-items-center justify-content-center" onClick={handleShow}>
+        <i className="fa-solid fa-circle-plus" />
+        {' '}
+        {btnName}
+      </Button>
+      <Modal
+        show={show}
+        onHide={handleClose}
+        aria-labelledby="contained-modal-title-vcenter"
+        centered
+      >
         <Modal.Header closeButton>
           <Modal.Title>{btnName}</Modal.Title>
         </Modal.Header>
         <Modal.Body className="mapping">
-          <div className="d-flex justify-content-center">
-            <div className="d-flex w-50 justify-content-between p-3">
-              <label className="h6">Column Group Name : </label>
-              <input type="text" className="w-75 px-5" onChange={(e) => setcolgroup(e.target.value)} value={colgroup} />
-              <button type="button" className="btn btn-primary" onClick={(e) => onSubmitAction(e)}>Save</button>
-            </div>
+          <div className="mb-3">
+            <label className="col-form-label" style={{ fontSize: '13px' }}>Column Group Name (*) </label>
+            <input type="text" className={classNames(['form-control form-control-sm'])} onChange={(e) => setcolgroup(e.target.value)} value={colgroup} />
           </div>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={handleClose}>
+          <Button variant="secondary" className="btn btn-sm btn-danger" onClick={handleClose}>
             Close
           </Button>
+          <button type="button" className="btn btn-sm btn-primary" onClick={(e) => onSubmitAction(e)}>Save</button>
         </Modal.Footer>
       </Modal>
     </>
@@ -264,7 +281,7 @@ export default function columnGrouping() {
   ]);
 
   const icons = useMemo<{ [key: string]: Function | string; }>(() => ({
-    'custom-actions-tool': '<i class="fa-solid fa-screwdriver-wrench"></i>',
+    'custom-actions-tool': '<i className="fa-solid fa-screwdriver-wrench"></i>',
   }), []);
 
   const onRefreshCallback = () => {
@@ -362,7 +379,7 @@ export default function columnGrouping() {
           toast.error('You need to select at less one row.');
         }
       },
-      icon: '<i class="fa-solid fa-file-pen" />',
+      icon: '<i className="fa-solid fa-file-pen" />',
     },
     'copy',
     'separator',
