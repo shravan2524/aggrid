@@ -36,7 +36,7 @@ function Container1({ btnName }: Type) {
       ColumnGroup: {
         title: '1',
         description: colgroup,
-        created_by: 1,
+        createdBy: 1,
         parent: 1,
       },
     };
@@ -50,7 +50,7 @@ function Container1({ btnName }: Type) {
       credentials: 'include',
       body: JSON.stringify({ dt }),
     };
-    const apiUrl = `https://beta.finkraft.ai/api/v1/${tenantUuid()}/columngroups/`;
+    const apiUrl = `${BACKEND_API}/api/v1/${tenantUuid()}/columngroups/`;
     fetch(apiUrl, options)
       .then((response) => response.json())
       .then((data) => {
@@ -68,7 +68,7 @@ function Container1({ btnName }: Type) {
           <div className="d-flex justify-content-center">
             <div className="d-flex w-50 justify-content-between p-3">
               <input type="text" className="w-75 px-5" onChange={(e) => setcolgroup(e.target.value)} value={colgroup} />
-              <button type="button" className="btn btn-primary" onClick={(e) => onSubmitAction(e)}>Comment</button>
+              <button type="button" className="btn btn-primary" onClick={(e) => onSubmitAction(e)}>Save</button>
             </div>
           </div>
         </Modal.Body>
@@ -126,6 +126,12 @@ export default function columnGrouping() {
         {
           headerName: 'Name',
           field: 'fileName',
+          filter: 'agTextColumnFilter',
+          editable: false,
+        },
+        {
+          headerName: 'updated At',
+          field: 'updated At',
           filter: 'agTextColumnFilter',
           editable: false,
         },
@@ -195,7 +201,23 @@ export default function columnGrouping() {
     gridRef.current?.api.sizeColumnsToFit();
   }, []);
 
+  async function fetchFilesData() {
+    const options: RequestInit = {
+      method: 'GET',
+      credentials: 'include',
+    };
+    const apiUrl = `${BACKEND_API}/api/v1/${tenantUuid()}/columngroups/`;
+    // const apiUrl = 'https://beta.finkraft.ai/api/v1/f3b4a42c-9ac8-42c3-a5ff-1a6e6da8f5c0/columngroups/';
+    const response = await fetch(apiUrl, options);
+    if (!response.ok) {
+      const message = `An error has occurreds: ${response.status}`;
+      throw new Error(message);
+    }
+    console.log(response.json());
+    return response.json();
+  }
   const onGridReady = useCallback((params) => {
+    fetchFilesData();
   }, []);
 
   // TODO : Implement row range selection ...
