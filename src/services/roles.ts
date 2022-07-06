@@ -1,6 +1,4 @@
-import { BACKEND_API } from 'app/config';
-import { tenantUuid } from 'state/tenants/helper';
-import { handleRequestError } from '../app/utils/ApiRequests';
+import { TenantApiRequest } from '../app/utils/ApiRequests';
 
 export interface PolicyType {
   // action: "crud" or "cru" or "r" or "cr" or "rd" ... meaning c(reate), r(ead), u(pdate), d(delete)
@@ -24,88 +22,21 @@ export interface RoleType {
 }
 
 export async function readAll(): Promise<RoleType[]> {
-  const options: RequestInit = {
-    method: 'GET',
-    credentials: 'include',
-  };
-
-  const apiUrl = `${BACKEND_API}/api/v1/${tenantUuid()}/roles`;
-  const response = await fetch(apiUrl, options);
-
-  if (!response.ok) {
-    await handleRequestError(response);
-  }
-  return response.json();
+  return TenantApiRequest('roles');
 }
 
 export async function readOne(id: number): Promise<RoleType[]> {
-  const options: RequestInit = {
-    method: 'GET',
-    credentials: 'include',
-  };
-
-  const apiUrl = `${BACKEND_API}/api/v1/${tenantUuid()}/roles/${id}`;
-  const response = await fetch(apiUrl, options);
-
-  if (!response.ok) {
-    await handleRequestError(response);
-  }
-  return response.json();
+  return TenantApiRequest(`roles/${id}`);
 }
 
 export async function create(data: RoleType): Promise<RoleType> {
-  const options: RequestInit = {
-    headers: {
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
-    },
-    method: 'POST',
-    credentials: 'include',
-    body: JSON.stringify({ ...data }),
-  };
-
-  const apiUrl = `${BACKEND_API}/api/v1/${tenantUuid()}/roles`;
-  const response = await fetch(apiUrl, options);
-  if (!response.ok) {
-    await handleRequestError(response);
-  }
-  return response.json();
+  return TenantApiRequest('roles', 'POST', data);
 }
 
 export async function update(payload: RoleType): Promise<RoleType> {
-  const options: RequestInit = {
-    headers: {
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
-    },
-    method: 'PUT',
-    credentials: 'include',
-    body: JSON.stringify({ ...payload }),
-  };
-
-  const apiUrl = `${BACKEND_API}/api/v1/${tenantUuid()}/roles/${payload.id}`;
-  const response = await fetch(apiUrl, options);
-  if (!response.ok) {
-    await handleRequestError(response);
-  }
-  return response.json();
+  return TenantApiRequest(`roles/${payload.id}`, 'PUT', payload);
 }
 
 export async function patch(payload: RoleType): Promise<RoleType> {
-  const options: RequestInit = {
-    headers: {
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
-    },
-    method: 'PATCH',
-    credentials: 'include',
-    body: JSON.stringify({ ...payload }),
-  };
-
-  const apiUrl = `${BACKEND_API}/api/v1/${tenantUuid()}/roles/${payload.id}`;
-  const response = await fetch(apiUrl, options);
-  if (!response.ok) {
-    await handleRequestError(response);
-  }
-  return response.json();
+  return TenantApiRequest(`roles/${payload.id}`, 'PATCH', payload);
 }

@@ -1,6 +1,4 @@
-import { BACKEND_API } from 'app/config';
-import { tenantUuid } from 'state/tenants/helper';
-import { handleRequestError } from '../app/utils/ApiRequests';
+import { TenantApiRequest } from '../app/utils/ApiRequests';
 
 export interface FilesType {
   id: number,
@@ -20,91 +18,21 @@ export interface FilesAgGridType {
 }
 
 export async function fetchFilesData(): Promise<FilesType[]> {
-  const options: RequestInit = {
-    method: 'GET',
-    credentials: 'include',
-  };
-  const apiUrl = `${BACKEND_API}/api/v1/${tenantUuid()}/files/`;
-  const response = await fetch(apiUrl, options);
-  if (!response.ok) {
-    const message = `An error has occurreds: ${response.status}`;
-    throw new Error(message);
-  }
-  return response.json();
+  return TenantApiRequest('files');
 }
 
 export async function fetchFileContentData(payload): Promise<any> {
-  const options: RequestInit = {
-    headers: {
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
-    },
-    method: 'POST',
-    credentials: 'include',
-    body: JSON.stringify({ ...payload.data }),
-  };
-
-  const apiUrl = `${BACKEND_API}/api/v1/${tenantUuid()}/files/${payload.id}/content`;
-  const response = await fetch(apiUrl, options);
-  if (!response.ok) {
-    const message = `An error has occurred: ${response.status}`;
-    throw new Error(message);
-  }
-  return response.json();
+  return TenantApiRequest(`files/${payload.id}/content`, 'POST', payload.data);
 }
 
 export async function putFilesData(payload): Promise<FilesType[]> {
-  const options: RequestInit = {
-    headers: {
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
-    },
-    method: 'PUT',
-    credentials: 'include',
-    body: JSON.stringify({ ...payload.data }),
-  };
-
-  const apiUrl = `${BACKEND_API}/api/v1/${tenantUuid()}/files/${payload.id}`;
-  const response = await fetch(apiUrl, options);
-  if (!response.ok) {
-    await handleRequestError(response);
-  }
-  return response.json();
+  return TenantApiRequest(`files/${payload.id}`, 'PUT', payload.data);
 }
 
 export async function setContentType(payload): Promise<FilesType[]> {
-  const options: RequestInit = {
-    headers: {
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
-    },
-    method: 'PUT',
-    credentials: 'include',
-    body: JSON.stringify({ fileType: payload.data }),
-  };
-
-  const apiUrl = `${BACKEND_API}/api/v1/${tenantUuid()}/files/${payload.id}/content-type`;
-  const response = await fetch(apiUrl, options);
-  if (!response.ok) {
-    await handleRequestError(response);
-  }
-  return response.json();
+  return TenantApiRequest(`files/${payload.id}/content-type`, 'PUT', payload.data);
 }
 
 export async function setColumnMapping(payload): Promise<FilesType[]> {
-  const options: RequestInit = {
-    headers: {
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
-    },
-    method: 'PUT',
-    credentials: 'include',
-    body: JSON.stringify({ columnMapping: payload.columnMapping }),
-  };
-  const apiUrl = `${BACKEND_API}/api/v1/${tenantUuid()}/files/${payload.data}/column-mapping`;
-  const response = await fetch(apiUrl, options);
-  if (!response.ok) {
-    await handleRequestError(response);
-  }
-  return response.json();
+  return TenantApiRequest(`files/${payload.data}/column-mapping`, 'PUT', { columnMapping: payload.columnMapping });
 }
