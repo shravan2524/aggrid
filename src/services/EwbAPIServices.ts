@@ -1,6 +1,4 @@
-import { tenantUuid } from 'state/tenants/helper';
-import { BACKEND_API } from '../app/config';
-import { handleRequestError } from '../app/utils/ApiRequests';
+import { TenantApiRequest } from '../app/utils/ApiRequests';
 
 export interface EWBType {
   id: number;
@@ -27,16 +25,5 @@ export interface EWBType {
 }
 
 export async function fetchEWBData(): Promise<EWBType[] | null | Error> {
-  const options: RequestInit = {
-    method: 'GET',
-    credentials: 'include',
-  };
-
-  const apiUrl = `${BACKEND_API}/api/v1/${tenantUuid()}/ewb`;
-  const response = await fetch(apiUrl, options);
-
-  if (!response.ok) {
-    await handleRequestError(response);
-  }
-  return response.json();
+  return TenantApiRequest('ewb');
 }

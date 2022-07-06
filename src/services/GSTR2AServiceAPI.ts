@@ -1,6 +1,4 @@
-import { tenantUuid } from 'state/tenants/helper';
-import { BACKEND_API } from '../app/config';
-import { handleRequestError } from '../app/utils/ApiRequests';
+import { TenantApiRequest } from '../app/utils/ApiRequests';
 
 export interface GSTR2AType {
   id: number;
@@ -27,16 +25,5 @@ export interface GSTR2AType {
 }
 
 export async function fetchGSTR2AData(): Promise<GSTR2AType[] | null | Error> {
-  const options: RequestInit = {
-    method: 'GET',
-    credentials: 'include',
-  };
-
-  const apiUrl = `${BACKEND_API}/api/v1/${tenantUuid()}/gstr2a`;
-  const response = await fetch(apiUrl, options);
-
-  if (!response.ok) {
-    await handleRequestError(response);
-  }
-  return response.json();
+  return TenantApiRequest('gstr2a');
 }

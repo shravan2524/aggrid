@@ -1,6 +1,4 @@
-import { BACKEND_API } from 'app/config';
-import { tenantUuid } from 'state/tenants/helper';
-import { handleRequestError } from '../app/utils/ApiRequests';
+import { TenantApiRequest } from '../app/utils/ApiRequests';
 
 /*
 [
@@ -31,54 +29,13 @@ export interface CompaniesAgGridType {
 }
 
 export async function fetchCompaniesData(): Promise<CompaniesType[]> {
-  const options: RequestInit = {
-    method: 'GET',
-    credentials: 'include',
-  };
-
-  const apiUrl = `${BACKEND_API}/api/v1/${tenantUuid()}/companies`;
-  const response = await fetch(apiUrl, options);
-
-  if (!response.ok) {
-    await handleRequestError(response);
-  }
-  return response.json();
+  return TenantApiRequest('companies');
 }
 
-export async function postCompaniesData(data): Promise<CompaniesType[]> {
-  const options: RequestInit = {
-    headers: {
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
-    },
-    method: 'POST',
-    credentials: 'include',
-    body: JSON.stringify({ ...data }),
-  };
-
-  const apiUrl = `${BACKEND_API}/api/v1/${tenantUuid()}/companies`;
-  const response = await fetch(apiUrl, options);
-  if (!response.ok) {
-    await handleRequestError(response);
-  }
-  return response.json();
+export async function postCompaniesData(payload): Promise<CompaniesType[]> {
+  return TenantApiRequest('companies', 'POST', payload);
 }
 
-export async function putCompaniesData(payload): Promise<CompaniesType[]> {
-  const options: RequestInit = {
-    headers: {
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
-    },
-    method: 'PUT',
-    credentials: 'include',
-    body: JSON.stringify({ ...payload.data }),
-  };
-
-  const apiUrl = `${BACKEND_API}/api/v1/${tenantUuid()}/companies/${payload.id}`;
-  const response = await fetch(apiUrl, options);
-  if (!response.ok) {
-    await handleRequestError(response);
-  }
-  return response.json();
+export async function putCompaniesData(payload): Promise<number[]> {
+  return TenantApiRequest(`companies/${payload.id}`, 'PUT', payload.data);
 }

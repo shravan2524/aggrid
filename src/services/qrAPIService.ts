@@ -1,6 +1,6 @@
 import { tenantUuid } from 'state/tenants/helper';
 import { BACKEND_API } from '../app/config';
-import { handleRequestError } from '../app/utils/ApiRequests';
+import { handleRequestError, TenantApiRequest } from '../app/utils/ApiRequests';
 
 /*
 [
@@ -50,16 +50,5 @@ export interface QRType {
 }
 
 export async function fetchQRData() :Promise<QRType[] | null | Error> {
-  const options: RequestInit = {
-    method: 'GET',
-    credentials: 'include',
-  };
-
-  const apiUrl = `${BACKEND_API}/api/v1/${tenantUuid()}/qr`;
-  const response = await fetch(apiUrl, options);
-
-  if (!response.ok) {
-    await handleRequestError(response);
-  }
-  return response.json();
+  return TenantApiRequest('qr');
 }
