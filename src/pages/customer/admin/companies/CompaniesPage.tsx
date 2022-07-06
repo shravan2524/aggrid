@@ -93,7 +93,7 @@ export default function CompaniesPage() {
   const dispatch = useAppDispatch();
   const gridRef = useRef<any>();
 
-  const [rowData, setRowData] = useState<any>();
+  const [rowData, setRowData] = useState<any[]>([]);
 
   const anyCustomer = useSelector(availableTenants);
   const { height, width } = useWindowDimensions();
@@ -194,7 +194,7 @@ export default function CompaniesPage() {
     'custom-actions-tool': '<i class="fa-solid fa-screwdriver-wrench"></i>',
   }), []);
 
-  const onRefreshCallback = () => useCallback(() => {
+  const onRefreshCallback = useCallback(() => {
     dispatch(fetchCompanies());
   }, []);
 
