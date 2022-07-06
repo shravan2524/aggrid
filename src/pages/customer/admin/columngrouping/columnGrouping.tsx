@@ -33,10 +33,12 @@ function Container1({ btnName }: Type) {
   const [colgroup, setcolgroup] = useState('');
   const onSubmitAction = (e) => {
     const dt = {
-      title: '1',
-      description: colgroup,
-      created_by: 1,
-      parent: 1,
+      ColumnGroup: {
+        title: '1',
+        description: colgroup,
+        created_by: 1,
+        parent: 1,
+      },
     };
     console.log(dt);
     const options: RequestInit = {
@@ -48,7 +50,7 @@ function Container1({ btnName }: Type) {
       credentials: 'include',
       body: JSON.stringify({ dt }),
     };
-    const apiUrl = `${BACKEND_API}/api/v1/${tenantUuid()}/columngroups/`;
+    const apiUrl = `https://beta.finkraft.ai/api/v1/${tenantUuid()}/columngroups/`;
     fetch(apiUrl, options)
       .then((response) => response.json())
       .then((data) => {
