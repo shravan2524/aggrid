@@ -6,6 +6,7 @@ import React, {
   useState,
 } from 'react';
 import { AgGridReact } from 'ag-grid-react';
+import 'ag-grid-enterprise';
 import {
   ColDef, GridReadyEvent, ICellRendererParams, IServerSideDatasource,
 } from 'ag-grid-community';
@@ -35,40 +36,35 @@ export default function DetailCellRenderer({
       minWidth: 250,
       sortable: true,
       filter: true,
-      resizable: true,
       floatingFilter: true,
-      enableRowGroup: false,
-      editable: false,
-      enablePivot: false,
-      enableValue: true,
     }),
     [],
   );
 
-  const dataSource: IServerSideDatasource = {
-    getRows: (params) => {
-      console.log(params.request);
-
-      fetchFileContentData({ id: data.id, dataRequest: { ...params.request } }).then((res) => {
-        if (res.rows) {
-          params.success({
-            rowData: res.rows,
-            rowCount: res.lastRow,
-          });
-        }
-        if (res.count > 0) {
-          setHide(true);
-        }
-      }).catch((e) => {
-        params.fail();
-      });
-    },
-  };
-
   // rows
   const onGridReady = useCallback((params: GridReadyEvent) => {
-    params.api.setServerSideDatasource(dataSource);
-  }, []);
+    const dataSource: IServerSideDatasource = {
+      getRows: (prms) => {
+        console.log(prms.request);
+
+        fetchFileContentData({ id: data.id, dataRequest: { ...prms.request } }).then((res) => {
+          if (res.rows) {
+            prms.success({
+              rowData: res.rows,
+              rowCount: res.count,
+            });
+          }
+          if (res.count > 0) {
+            setHide(true);
+          }
+        }).catch((e) => {
+          prms.fail();
+        });
+      },
+    };
+
+    params.api!.setServerSideDatasource(dataSource);
+  }, [data]);
 
   // export button
   const onBtExport = useCallback(() => {
@@ -103,12 +99,11 @@ export default function DetailCellRenderer({
           ref={gridRef}
           columnDefs={columnDefs}
           defaultColDef={defaultColDef}
-          animateRows
-          domLayout="autoHeight"
           onGridReady={onGridReady}
           rowModelType="serverSide"
           paginationPageSize={10}
           cacheBlockSize={10}
+          serverSideStoreType="partial"
           pagination
         />
       </div>

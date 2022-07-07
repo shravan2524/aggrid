@@ -22,7 +22,7 @@ export async function fetchFilesData(): Promise<FilesType[]> {
 }
 
 export async function fetchFileContentData(payload): Promise<any> {
-  return TenantApiRequest(`files/${payload.id}/content`, 'POST', payload.data);
+  return TenantApiRequest(`files/${payload.id}/content`, 'POST', payload.dataRequest);
 }
 
 export async function putFilesData(payload): Promise<FilesType[]> {
