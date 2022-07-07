@@ -37,6 +37,8 @@ export default function DetailCellRenderer({
       sortable: true,
       filter: true,
       floatingFilter: true,
+      enableRowGroup: true,
+      enableValue: true,
     }),
     [],
   );
@@ -101,6 +103,8 @@ export default function DetailCellRenderer({
           defaultColDef={defaultColDef}
           onGridReady={onGridReady}
           rowModelType="serverSide"
+          groupDisplayType="multipleColumns"
+          rowGroupPanelShow="always"
           paginationPageSize={10}
           cacheBlockSize={10}
           serverSideStoreType="partial"
