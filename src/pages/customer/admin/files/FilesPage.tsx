@@ -107,7 +107,8 @@ function ActionsRenderer({ params, onFileMappingClickCallback }: ActionsRenderer
   );
 }
 
-function CustomActionsToolPanel(onRefreshCallback, ret, isFetchLoading) {
+function CustomActionsToolPanel(onRefreshCallback, selectedFiles, isFetchLoading) {
+  const [downloadLoading, setDownloadLoading] = useState<boolean>(false);
   async function test(temp) {
     const link = document.createElement('a');
     const blob = await downloadZip(temp).blob();
@@ -117,16 +118,54 @@ function CustomActionsToolPanel(onRefreshCallback, ret, isFetchLoading) {
     link.remove();
   }
 
-  async function downloadTestZip() {
-    const res = await ret();
-    console.log(res);
-    setTimeout(() => {
-      if (res.length) {
-        test(res);
-      } else {
-        toast.error('Please select files to download');
-      }
-    }, 3000);
+  async function downloadTestZip(selFiles: any[]) {
+    const promises : any = [];
+    setDownloadLoading(true);
+    // eslint-disable-next-line react/destructuring-assignment
+    await selFiles.forEach((e) => {
+      const newPromise = new Promise((resolve, reject) => {
+        const options: RequestInit = {
+          method: 'GET',
+          credentials: 'include',
+        };
+        const apiUrl = `${BACKEND_API}/api/v1/${tenantUuid()}/files/${e}/download`;
+        fetch(apiUrl, options)
+            .then((response) => response.json())
+            .then(async (data1) => {
+              resolve(data1.url);
+            });
+      });
+      promises.push(newPromise);
+    });
+
+    let urls: any = [];
+    await Promise.all(promises).then(async (values: any) => {
+      urls = values;
+    });
+
+    if (urls) {
+      const urlsContentsPromise: any = [];
+      urls.forEach((i) => {
+        const np = new Promise((resolve, reject) => {
+          fetch(i).then(async (response) => {
+                resolve(response);
+              });
+        });
+        urlsContentsPromise.push(np);
+      });
+
+      await Promise.all(urlsContentsPromise).then(async (v: any) => {
+        const link = document.createElement('a');
+        const blob = await downloadZip(v).blob();
+        link.href = URL.createObjectURL(blob);
+        link.download = 'files.zip';
+        link.click();
+        link.remove();
+        setDownloadLoading(false);
+      });
+    } else {
+      setDownloadLoading(false);
+    }
   }
 
   return (
@@ -151,10 +190,11 @@ function CustomActionsToolPanel(onRefreshCallback, ret, isFetchLoading) {
         </button>
         <button
           type="button"
+          disabled={downloadLoading}
           className="btn btn-sm btn-info px-4 d-flex gap-2 align-items-center justify-content-center"
-          onClick={downloadTestZip}
+          onClick={() => downloadTestZip(selectedFiles)}
         >
-          <i className="fa fa-download" />
+          {downloadLoading ? (<i className="fas fa-circle-notch fa-spin" />) : <i className="fa fa-download" /> }
           Download Files
         </button>
       </div>
@@ -188,24 +228,6 @@ export default function FilesPage() {
       tselectfiles.splice(ind, 1);
     }
     setselectedFiles(tselectfiles);
-  };
-  const [tmp, settmp] = useState<any[]>([]);
-  const ret = async () => {
-    await selectedFiles.map((e) => {
-      const options: RequestInit = {
-        method: 'GET',
-        credentials: 'include',
-      };
-      const apiUrl = `${BACKEND_API}/api/v1/${tenantUuid()}/files/${e}/download`;
-      fetch(apiUrl, options)
-        .then((response) => response.json())
-        .then(async (data1) => {
-          const temp = await fetch(data1);
-          tmp.push(temp);
-        });
-      return 1;
-    });
-    return tmp;
   };
 
   const OnExpand = (i: any) => {
@@ -307,7 +329,7 @@ export default function FilesPage() {
         labelDefault: 'Actions',
         labelKey: 'customActionsTool',
         iconKey: 'custom-actions-tool',
-        toolPanel: () => CustomActionsToolPanel(onRefreshCallback, ret, isFetchLoading),
+        toolPanel: () => CustomActionsToolPanel(onRefreshCallback, selectedFiles, isFetchLoading),
       },
       {
         id: 'columns',
