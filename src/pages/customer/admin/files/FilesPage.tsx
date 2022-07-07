@@ -109,15 +109,8 @@ function ActionsRenderer({ params, onFileMappingClickCallback }: ActionsRenderer
 
 function CustomActionsToolPanel(onRefreshCallback, selectedFiles, isFetchLoading) {
   const [downloadLoading, setDownloadLoading] = useState<boolean>(false);
-  async function test(temp) {
-    const link = document.createElement('a');
-    const blob = await downloadZip(temp).blob();
-    link.href = URL.createObjectURL(blob);
-    link.download = 'files.zip';
-    link.click();
-    link.remove();
-  }
 
+  // TODO: This code needs some refactoring work ...
   async function downloadTestZip(selFiles: any[]) {
     const promises : any = [];
     setDownloadLoading(true);
