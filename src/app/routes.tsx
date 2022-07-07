@@ -156,7 +156,7 @@ const routes: any = [
                 icon: 'fa-solid fa-file-arrow-up',
               },
               {
-                path: '/customer/admin/column',
+                path: '/customer/admin/column-groups',
                 text: 'Column Grouping',
                 icon: 'fa-solid fa-object-group',
               },
@@ -186,7 +186,7 @@ const routes: any = [
                 element: <Suspense fallback={<Loader />}><FilesIndexPage /></Suspense>,
               },
               {
-                path: 'column',
+                path: 'column-groups',
                 element: <Suspense fallback={<Loader />}><ColumnGrouping /></Suspense>,
               },
               {
