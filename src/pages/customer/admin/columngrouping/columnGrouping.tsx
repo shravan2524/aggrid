@@ -76,7 +76,7 @@ function ActionsRenderer({ title, id }: ActionsRendererProps) {
         parent: 1,
       }),
     };
-    const apiUrl = `${BACKEND_API}/api/v1/${tenantUuid()}/columngroups/${id}`;
+    const apiUrl = `${BACKEND_API}/api/v1/${tenantUuid()}/column-groups/${id}`;
     fetch(apiUrl, options)
       .then((response) => response.json())
       .then((data) => {
@@ -145,7 +145,7 @@ function Container1({ btnName }: Type) {
       createdBy: 1,
       parent: 1,
     };
-    console.log(ColumnGroup);
+
     const options: RequestInit = {
       headers: {
         Accept: 'application/json',
@@ -160,7 +160,7 @@ function Container1({ btnName }: Type) {
         parent: 1,
       }),
     };
-    const apiUrl = `${BACKEND_API}/api/v1/${tenantUuid()}/columngroups/`;
+    const apiUrl = `${BACKEND_API}/api/v1/${tenantUuid()}/column-groups`;
     fetch(apiUrl, options)
       .then((response) => response.json())
       .then((data) => {
@@ -289,11 +289,10 @@ export default function columnGrouping() {
       method: 'GET',
       credentials: 'include',
     };
-    const apiUrl = `${BACKEND_API}/api/v1/${tenantUuid()}/columngroups/`;
+    const apiUrl = `${BACKEND_API}/api/v1/${tenantUuid()}/column-groups`;
     fetch(apiUrl, options)
       .then((response) => response.json())
       .then((data) => {
-        console.log(data);
         setRowData(data);
       });
   };
@@ -345,11 +344,10 @@ export default function columnGrouping() {
       method: 'GET',
       credentials: 'include',
     };
-    const apiUrl = `${BACKEND_API}/api/v1/${tenantUuid()}/columngroups/`;
+    const apiUrl = `${BACKEND_API}/api/v1/${tenantUuid()}/column-groups`;
     fetch(apiUrl, options)
       .then((response) => response.json())
       .then((data) => {
-        console.log(data);
         setRowData(data);
       });
   }, []);
@@ -366,25 +364,25 @@ export default function columnGrouping() {
   }, []);
 
   const getContextMenuItems = useCallback((params: GetContextMenuItemsParams): (
-  | string
-  | MenuItemDef
+    | string
+    | MenuItemDef
   )[] => [
-    {
-      // custom item
-      name: 'Edit Files type',
-      action: () => {
-        if (selectedRows.length) {
-          // showModal('editFilesTypeModal');
-        } else {
-          toast.error('You need to select at less one row.');
-        }
+      {
+        // custom item
+        name: 'Edit Files type',
+        action: () => {
+          if (selectedRows.length) {
+            // showModal('editFilesTypeModal');
+          } else {
+            toast.error('You need to select at less one row.');
+          }
+        },
+        icon: '<i className="fa-solid fa-file-pen" />',
       },
-      icon: '<i className="fa-solid fa-file-pen" />',
-    },
-    'copy',
-    'separator',
-    'chartRange',
-  ], [selectedRows]);
+      'copy',
+      'separator',
+      'chartRange',
+    ], [selectedRows]);
 
   // SUB AG-GRID
   const detailCellRenderer = useMemo<any>(() => DetailCellRenderer, []);
