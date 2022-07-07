@@ -61,7 +61,7 @@ function ActionsRenderer({ params, onFileMappingClickCallback }: ActionsRenderer
   function onchange(e) {
     setcontentType(e.target.value);
     /* eslint-disable-next-line */
-        dispatch(setContentTypeRequest({...params.data, data: e.target.value}));
+    dispatch(setContentTypeRequest({ ...params.data, data: e.target.value }));
   }
 
   const downloadFile = (fileId) => {
@@ -88,13 +88,13 @@ function ActionsRenderer({ params, onFileMappingClickCallback }: ActionsRenderer
         <option value="InvoicePDF">Invoice PDF</option>
       </select>
       {
-                (params.data)
-                && (params.data.fileType === '2A' || params.data.fileType === '2B' || params.data.fileType === 'PR')
-                  ? (
-                    <ColumnMapping id={params.data.id} fileType={params.data.fileType} />
-                  )
-                  : <Button style={{ visibility: 'hidden' }} variant="primary">Column Mapping</Button>
-            }
+        (params.data)
+          && (params.data.fileType === '2A' || params.data.fileType === '2B' || params.data.fileType === 'PR')
+          ? (
+            <ColumnMapping id={params.data.id} fileType={params.data.fileType} />
+          )
+          : <Button style={{ visibility: 'hidden' }} variant="primary">Column Mapping</Button>
+      }
       <button
         type="button"
         onClick={() => downloadFile(params.data.id)}
@@ -359,25 +359,25 @@ export default function FilesPage() {
   }, []);
 
   const getContextMenuItems = useCallback((params: GetContextMenuItemsParams): (
-  | string
-  | MenuItemDef
+    | string
+    | MenuItemDef
   )[] => [
-    {
-      // custom item
-      name: 'Edit Files type',
-      action: () => {
-        if (selectedRows.length) {
-          showModal('editFilesTypeModal');
-        } else {
-          toast.error('You need to select at less one row.');
-        }
+      {
+        // custom item
+        name: 'Edit Files type',
+        action: () => {
+          if (selectedRows.length) {
+            showModal('editFilesTypeModal');
+          } else {
+            toast.error('You need to select at less one row.');
+          }
+        },
+        icon: '<i class="fa-solid fa-file-pen" />',
       },
-      icon: '<i class="fa-solid fa-file-pen" />',
-    },
-    'copy',
-    'separator',
-    'chartRange',
-  ], [selectedRows]);
+      'copy',
+      'separator',
+      'chartRange',
+    ], [selectedRows]);
 
   // SUB AG-GRID
   const detailCellRenderer = useMemo<any>(() => DetailCellRenderer, []);
