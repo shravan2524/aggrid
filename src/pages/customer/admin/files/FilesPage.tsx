@@ -61,7 +61,7 @@ function ActionsRenderer({ params, onFileMappingClickCallback }: ActionsRenderer
   function onchange(e) {
     setcontentType(e.target.value);
     /* eslint-disable-next-line */
-    dispatch(setContentTypeRequest({ ...params.data, data: e.target.value }));
+    dispatch(setContentTypeRequest({ id: params.data.id, data: { fileType: e.target.value } }));
   }
 
   const downloadFile = (fileId) => {
