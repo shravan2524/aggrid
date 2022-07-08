@@ -25,6 +25,8 @@ export default function CompanyEditCredentialsForm({
 }: CompanyEditCredentialsFormProps) {
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
+  console.log(companyCredentials);
+
   const schema = yup.object({
     username: yup.string().required(),
     password: yup.string().required(),
@@ -48,7 +50,7 @@ export default function CompanyEditCredentialsForm({
 
   const onSubmit = ({ username, password, current_password }: CompanyEditFormProps) => {
     setIsLoading(true);
-    putCompanyCredentialsData(companyData?.id, { username, password, current_password })
+    putCompanyCredentialsData(companyData?.id, companyCredentials?.id, { username, password, current_password })
       .then((r) => {
         console.log(r);
         toast.success('Company credentials successfully updated.');
