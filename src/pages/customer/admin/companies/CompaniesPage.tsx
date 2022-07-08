@@ -26,7 +26,6 @@ type ActionsRendererProps = {
 };
 
 function ActionsRenderer({ params, onEditClickCallback, onCredentialsClickCallback }: ActionsRendererProps) {
-  console.log(params);
   return (
     <div className="d-flex align-items-center w-100 h-100">
       <button type="button" className="btn btn-sm btn-light " onClick={(e) => onEditClickCallback(e, params)}>
