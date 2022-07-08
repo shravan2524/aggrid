@@ -26,22 +26,29 @@ type ActionsRendererProps = {
 };
 
 function ActionsRenderer({ params, onEditClickCallback, onCredentialsClickCallback }: ActionsRendererProps) {
+  console.log(params);
   return (
-    <div className="d-flex justify-content-around align-items-center w-100 h-100">
-      <button type="button" className="btn btn-sm btn-light" onClick={(e) => onEditClickCallback(e, params)}>
-        <i className="fa-solid fa-pen-to-square" />
-        {' '}
-        Edit
-      </button>
-      <button
-        type="button"
-        className="btn btn-sm btn-danger"
-        onClick={(e) => onCredentialsClickCallback(e, params)}
-      >
-        <i className="fa-solid fa-key" />
-        {' '}
-        Credentials
-      </button>
+    <div className="row gx-5 w-100 h-100">
+      <div className="col">
+        <button type="button" className="btn btn-sm btn-light " onClick={(e) => onEditClickCallback(e, params)}>
+          <i className="fa-solid fa-pen-to-square" />
+          {' '}
+          Edit
+        </button>
+      </div>
+      {params.data.gstin !== '' && (
+      <div className="col">
+        <button
+          type="button"
+          className="btn btn-sm btn-danger ml-4"
+          onClick={(e) => onCredentialsClickCallback(e, params)}
+        >
+          <i className="fa-solid fa-key" />
+          {' '}
+          Credentials
+        </button>
+      </div>
+)}
     </div>
   );
 }

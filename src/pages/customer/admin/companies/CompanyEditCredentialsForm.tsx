@@ -24,9 +24,6 @@ export default function CompanyEditCredentialsForm({
   modalId, companyData, companyCredentials,
 }: CompanyEditCredentialsFormProps) {
   const [isLoading, setIsLoading] = useState<boolean>(false);
-
-  console.log(companyCredentials);
-
   const schema = yup.object({
     username: yup.string().required(),
     password: yup.string().required(),
