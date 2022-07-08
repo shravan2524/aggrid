@@ -11,6 +11,26 @@ import {
   ColDef, GridReadyEvent, ICellRendererParams, IServerSideDatasource,
 } from 'ag-grid-community';
 import { fetchFileContentData } from 'services/filesAPIService';
+import { tenantUuid } from 'state/tenants/helper';
+import { BACKEND_API } from '../../../../app/config';
+
+function ClickableStatusBarComponent(props: any, onBtExport) {
+  const { api } = props;
+
+  return (
+    <div className="ag-status-name-value">
+      <button
+        onClick={onBtExport}
+        className="btn btn-outline-success btn-sm"
+        type="button"
+      >
+        <i className="fas fa-sign-out-alt" />
+        {' '}
+        Export to Excel
+      </button>
+    </div>
+  );
+}
 
 // main Function
 export default function DetailCellRenderer({
@@ -20,6 +40,8 @@ export default function DetailCellRenderer({
 }: ICellRendererParams) {
   const gridRef = useRef<any>();
   const [hide, setHide] = useState<boolean>(false);
+  const [columnGroupsData, setColumnGroupsData] = useState<any>();
+
   const gridStyle = useMemo(() => ({ height: '400px', width: '90%' }), []);
   // columns
   const Columns = data.agGridColumns.map((f: any) => ({
@@ -42,6 +64,24 @@ export default function DetailCellRenderer({
     }),
     [],
   );
+
+  useEffect(() => {
+    const options: RequestInit = {
+      method: 'GET',
+      credentials: 'include',
+    };
+    const apiUrl = `${BACKEND_API}/api/v1/${tenantUuid()}/column-groups`;
+    fetch(apiUrl, options)
+        .then((response) => response.json())
+        .then((res) => {
+          setColumnGroupsData(res);
+        });
+  }, []);
+
+  useEffect(() => {
+    console.log(columnGroupsData);
+    console.log(data.columnMapping);
+  }, [columnGroupsData]);
 
   // rows
   const onGridReady = useCallback((params: GridReadyEvent) => {
@@ -78,24 +118,14 @@ export default function DetailCellRenderer({
     });
   }, []);
 
+  const statusBar = useMemo(() => ({
+    statusPanels: [
+      { statusPanel: (pr) => ClickableStatusBarComponent(pr, onBtExport) },
+    ],
+  }), []);
+
   return (
     <div className="d-flex flex-column justify-content-center align-items-center">
-      <div
-        className="d-flex justify-content-end pb-2 pt-4"
-        style={{ width: '90%' }}
-      >
-        {hide && (
-          <button
-            onClick={onBtExport}
-            className="btn btn-outline-success btn-sm"
-            type="button"
-          >
-            <i className="fas fa-sign-out-alt" />
-            {' '}
-            Export to Excel
-          </button>
-        )}
-      </div>
       <div style={gridStyle} className="ag-theme-alpine py-2">
         <AgGridReact
           ref={gridRef}
@@ -106,6 +136,7 @@ export default function DetailCellRenderer({
           groupDisplayType="multipleColumns"
           rowGroupPanelShow="always"
           paginationPageSize={10}
+          statusBar={statusBar}
           cacheBlockSize={10}
           serverSideStoreType="partial"
           pagination
