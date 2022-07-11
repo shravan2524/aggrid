@@ -1,147 +1,202 @@
 import React, {
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
+    useCallback,
+    useEffect,
+    useMemo,
+    useRef,
+    useState,
 } from 'react';
 import { AgGridReact } from 'ag-grid-react';
 import 'ag-grid-enterprise';
 import {
-  ColDef, GridReadyEvent, ICellRendererParams, IServerSideDatasource,
+    ColDef, GridReadyEvent, ICellRendererParams, IServerSideDatasource,
 } from 'ag-grid-community';
 import { fetchFileContentData } from 'services/filesAPIService';
 import { tenantUuid } from 'state/tenants/helper';
 import { BACKEND_API } from '../../../../app/config';
 
 function ClickableStatusBarComponent(props: any, onBtExport) {
-  const { api } = props;
+    const { api } = props;
 
-  return (
-    <div className="ag-status-name-value">
-      <button
-        onClick={onBtExport}
-        className="btn btn-outline-success btn-sm"
-        type="button"
-      >
-        <i className="fas fa-sign-out-alt" />
-        {' '}
-        Export to Excel
-      </button>
-    </div>
-  );
+    return (
+      <div className="ag-status-name-value">
+        <button
+          onClick={onBtExport}
+          className="btn btn-outline-success btn-sm"
+          type="button"
+        >
+          <i className="fas fa-sign-out-alt" />
+          {' '}
+          Export to Excel
+        </button>
+      </div>
+    );
 }
 
 // main Function
-export default function DetailCellRenderer({
-  data,
-  node,
-  api,
-}: ICellRendererParams) {
-  const gridRef = useRef<any>();
-  const [hide, setHide] = useState<boolean>(false);
-  const [columnGroupsData, setColumnGroupsData] = useState<any>();
+export default function DetailCellRenderer({ data, node, api }: ICellRendererParams) {
+    const gridRef = useRef<any>();
+    const [hide, setHide] = useState<boolean>(false);
+    const [columnGroupsData, setColumnGroupsData] = useState<any>();
 
-  const gridStyle = useMemo(() => ({ height: '400px', width: '90%' }), []);
-  // columns
-  const Columns = data.agGridColumns.map((f: any) => ({
-    headerName: f.columnTitle,
-    field: f.columnName,
-    filter: 'agTextColumnFilter',
-    editable: false,
-  }));
-  // default Columns settings
-  const [columnDefs, setColumnDefs] = useState(Columns);
-  const defaultColDef = useMemo<ColDef>(
-    () => ({
-      flex: 1,
-      minWidth: 250,
-      sortable: true,
-      filter: true,
-      floatingFilter: true,
-      enableRowGroup: true,
-      enableValue: true,
-    }),
-    [],
-  );
+    const gridStyle = useMemo(() => ({ height: '400px', width: '90%' }), []);
 
-  useEffect(() => {
-    const options: RequestInit = {
-      method: 'GET',
-      credentials: 'include',
-    };
-    const apiUrl = `${BACKEND_API}/api/v1/${tenantUuid()}/column-groups`;
-    fetch(apiUrl, options)
-        .then((response) => response.json())
-        .then((res) => {
-          setColumnGroupsData(res);
-        });
-  }, []);
+    // default Columns settings
 
-  useEffect(() => {
-    console.log(columnGroupsData);
-    console.log(data.columnMapping);
-  }, [columnGroupsData]);
+    // columns
+    const Columns = data.agGridColumns.map((f: any) => ({
+        headerName: f.columnTitle,
+        field: f.columnName,
+        filter: 'agTextColumnFilter',
+        editable: false,
+    }));
+    // default Columns settings
+    const [columnDefs, setColumnDefs] = useState(Columns);
+    const defaultColDef = useMemo<ColDef>(
+        () => ({
+            flex: 1,
+            minWidth: 250,
+            sortable: true,
+            filter: true,
+            floatingFilter: true,
+            enableRowGroup: true,
+            enableValue: true,
+        }),
+        [],
+    );
 
-  // rows
-  const onGridReady = useCallback((params: GridReadyEvent) => {
-    const dataSource: IServerSideDatasource = {
-      getRows: (prms) => {
-        console.log(prms.request);
-
-        fetchFileContentData({ id: data.id, dataRequest: { ...prms.request } }).then((res) => {
-          if (res.rows) {
-            prms.success({
-              rowData: res.rows,
-              rowCount: res.count,
+    useEffect(() => {
+        const options: RequestInit = {
+            method: 'GET',
+            credentials: 'include',
+        };
+        const apiUrl = `${BACKEND_API}/api/v1/${tenantUuid()}/column-groups`;
+        fetch(apiUrl, options)
+            .then((response) => response.json())
+            .then((res) => {
+                setColumnGroupsData(res);
             });
-          }
-          if (res.count > 0) {
-            setHide(true);
-          }
-        }).catch((e) => {
-          prms.fail();
+    }, []);
+
+    useEffect(() => {
+        const newColumnGrouping = {};
+        const newColumnsStructure: any = [];
+        const columnsToRemoveFromParent: any = {};
+        if (columnGroupsData) {
+            columnGroupsData.forEach((c) => {
+                newColumnGrouping[c.id] = c.title;
+            });
+
+            const columnGroupingHeaders: any = {};
+
+            if (data.columnMapping) {
+            Object.values(data.columnMapping).forEach((val: any, i) => {
+                if (newColumnGrouping[val.columnGroup]) {
+                    columnGroupingHeaders[newColumnGrouping[val.columnGroup]] = [];
+                }
+            });
+
+            const columnGroupingData: any = {};
+            Object.keys(data.columnMapping).forEach((colName: any, i) => {
+                const colData = data.columnMapping[colName];
+                if (colData.columnGroup) {
+                    if (newColumnGrouping[Number(colData.columnGroup)]) {
+                        const colGroupName = newColumnGrouping[Number(colData.columnGroup)];
+                        columnGroupingData[colGroupName] = data.agGridColumns.filter((c: any) => data.columnMapping[c.columnTitle]);
+                    }
+                }
+            });
+
+            Object.keys(columnGroupingData).forEach((headerName) => {
+                const clData = columnGroupingData[headerName];
+
+                const children: any = [];
+                clData.forEach((v) => {
+                    columnsToRemoveFromParent[v.columnTitle] = v.columnName;
+                    children.push({
+                        headerName: v.columnTitle,
+                        field: v.columnName,
+                        filter: 'agTextColumnFilter',
+                        editable: false,
+                    });
+                });
+                newColumnsStructure.push({
+                    headerName,
+                    children,
+                });
+            });
+            }
+        }
+
+        const newColumnsCleanedUp = data.agGridColumns.filter((c) => !columnsToRemoveFromParent[c.columnTitle]).map((cl) => ({
+            headerName: cl.columnTitle,
+            field: cl.columnName,
+            filter: 'agTextColumnFilter',
+            editable: false,
+        }));
+
+        const newData = [...newColumnsStructure, ...newColumnsCleanedUp];
+        setColumnDefs(newData);
+    }, [columnGroupsData]);
+
+    // rows
+    const onGridReady = useCallback((params: GridReadyEvent) => {
+        const dataSource: IServerSideDatasource = {
+            getRows: (prms) => {
+                console.log(prms.request);
+
+                fetchFileContentData({ id: data.id, dataRequest: { ...prms.request } }).then((res) => {
+                    if (res.rows) {
+                        prms.success({
+                            rowData: res.rows,
+                            rowCount: res.count,
+                        });
+                    }
+                    if (res.count > 0) {
+                        setHide(true);
+                    }
+                }).catch((e) => {
+                    prms.fail();
+                });
+            },
+        };
+
+        params.api!.setServerSideDatasource(dataSource);
+    }, [data]);
+
+    // export button
+    const onBtExport = useCallback(() => {
+        gridRef.current!.api.exportDataAsExcel({
+            author: 'Finkraft',
+            fontSize: 13,
+            sheetName: 'Finkraft',
+            fileName: 'finkraft-datas.xlsx',
         });
-      },
-    };
+    }, []);
 
-    params.api!.setServerSideDatasource(dataSource);
-  }, [data]);
+    const statusBar = useMemo(() => ({
+        statusPanels: [
+            { statusPanel: (pr) => ClickableStatusBarComponent(pr, onBtExport) },
+        ],
+    }), []);
 
-  // export button
-  const onBtExport = useCallback(() => {
-    gridRef.current!.api.exportDataAsExcel({
-      author: 'Finkraft',
-      fontSize: 13,
-      sheetName: 'Finkraft',
-      fileName: 'finkraft-datas.xlsx',
-    });
-  }, []);
-
-  const statusBar = useMemo(() => ({
-    statusPanels: [
-      { statusPanel: (pr) => ClickableStatusBarComponent(pr, onBtExport) },
-    ],
-  }), []);
-
-  return (
-    <div className="d-flex flex-column justify-content-center align-items-center">
-      <div style={gridStyle} className="ag-theme-alpine py-2">
-        <AgGridReact
-          ref={gridRef}
-          columnDefs={columnDefs}
-          defaultColDef={defaultColDef}
-          onGridReady={onGridReady}
-          rowModelType="serverSide"
-          groupDisplayType="multipleColumns"
-          rowGroupPanelShow="always"
-          paginationPageSize={10}
-          statusBar={statusBar}
-          cacheBlockSize={10}
-          serverSideStoreType="partial"
-          pagination
-        />
+    return (
+      <div className="d-flex flex-column justify-content-center align-items-center">
+        <div style={gridStyle} className="ag-theme-alpine py-2">
+          <AgGridReact
+            ref={gridRef}
+            columnDefs={columnDefs}
+            defaultColDef={defaultColDef}
+            onGridReady={onGridReady}
+            rowModelType="serverSide"
+            groupDisplayType="multipleColumns"
+            rowGroupPanelShow="always"
+            paginationPageSize={10}
+            statusBar={statusBar}
+            cacheBlockSize={10}
+            serverSideStoreType="partial"
+            pagination
+          />
+        </div>
       </div>
-    </div>
-  );
+    );
 }
