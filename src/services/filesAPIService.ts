@@ -1,3 +1,5 @@
+import { BACKEND_API } from 'app/config';
+import { tenantUuid } from 'state/tenants/helper';
 import { TenantApiRequest } from '../app/utils/ApiRequests';
 
 export interface FilesType {
@@ -18,7 +20,19 @@ export interface FilesAgGridType {
 }
 
 export async function fetchFilesData(): Promise<FilesType[]> {
-  return TenantApiRequest('files');
+  // return TenantApiRequest('files');
+  const options: RequestInit = {
+    method: 'GET',
+    credentials: 'include',
+  };
+  const apiUrl = `${BACKEND_API}/api/v1/${tenantUuid()}/files/`;
+  // const apiUrl = 'https://beta.finkraft.ai/api/v1/f3b4a42c-9ac8-42c3-a5ff-1a6e6da8f5c0/files';
+  const response = await fetch(apiUrl, options);
+  if (!response.ok) {
+    const message = `An error has occurreds: ${response.status}`;
+    throw new Error(message);
+  }
+  return response.json();
 }
 
 export async function fetchFileContentData(payload): Promise<any> {

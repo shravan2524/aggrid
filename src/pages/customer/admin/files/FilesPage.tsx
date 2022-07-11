@@ -122,6 +122,7 @@ function CustomActionsToolPanel(onRefreshCallback, ret, isFetchLoading) {
     console.log(res);
     setTimeout(() => {
       if (res.length) {
+        console.log(res);
         test(res);
       } else {
         toast.error('Please select files to download');

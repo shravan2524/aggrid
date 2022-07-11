@@ -23,7 +23,7 @@ const initialState: CommentsState = {
 };
 
 // API Actions ...
-export const fetchComments = createAsyncThunk('getComments', async () => fetchCommentsData());
+export const fetchComments = createAsyncThunk('getComments', async (payload: any) => fetchCommentsData(payload));
 export const postComment = createAsyncThunk('postComments', async (payload: any) => postComments(payload));
 
 // Reducers ...

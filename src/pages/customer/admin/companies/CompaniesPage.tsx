@@ -17,6 +17,7 @@ import classNames from 'classnames';
 import { toast } from 'react-hot-toast';
 import NewCompanyModal from './NewCompanyModal';
 import EditCompanyModal from './EditCompanyModal';
+import CommentsPage from '../comments/CommentsPage';
 import CompanyCredentialsModal from './CompanyCredentialsModal';
 
 type ActionsRendererProps = {
@@ -58,7 +59,6 @@ function CustomActionsToolPanel(onRefreshCallback, isFetchLoading) {
           <i className="fa-solid fa-circle-plus" />
           Add Company
         </button>
-
         <button
           type="button"
           className="btn btn-sm btn-info px-4 d-flex gap-2 align-items-center justify-content-center"

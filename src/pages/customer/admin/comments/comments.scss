@@ -1,0 +1,33 @@
+.container {
+	border: 1px solid silver;
+	width: 150px;
+  }
+  .card-body{
+	padding: 0.5rem !important;
+  }
+  .item {
+	cursor: pointer;
+  }
+  
+  .item:hover {
+	color: blue;
+  }
+  .modal-content{
+	height: 100%;
+  }
+  #replies{
+	padding: 0;
+    background: #e2e2e2;
+    margin-left: 3rem;
+    border-radius: 9px;
+	width: 90%;
+	margin-bottom: 10px;
+  }
+  .blockquote-footer{
+	margin-top: 0;
+	margin-bottom: 0rem !important;
+  }
+#mg{
+	margin-left: 15px;
+  }
+  #pd{margin-bottom: -1rem;}

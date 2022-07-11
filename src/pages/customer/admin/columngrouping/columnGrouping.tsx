@@ -7,6 +7,7 @@ import { AgGridReact } from 'ag-grid-react';
 import { useAppDispatch, useWindowDimensions } from 'app/hooks';
 import PageWrapper from 'components/PageWrapper';
 import { BACKEND_API } from 'app/config';
+import classNames from 'classnames';
 import {
   GetContextMenuItemsParams,
   MenuItemDef,
@@ -18,8 +19,7 @@ import { tenantUuid } from 'state/tenants/helper';
 import {
   fetchFiles, getFiles, isLoadingSelector,
 } from 'state/files/filesSlice';
-import { showModal } from 'app/utils/Modal';
-import classNames from 'classnames';
+import CommentsPage from '../comments/CommentsPage';
 import DetailCellRenderer from '../files/Sub-Ag-Grid';
 
 const moduleName = 'Column';
@@ -403,7 +403,6 @@ export default function columnGrouping() {
       gridRef.current?.api.sizeColumnsToFit();
     }
   }, [rows]);
-
   return (
     <PageWrapper pageTitle="Column Grouping" icon="fa-solid fa-object-group">
       <div style={containerStyle}>

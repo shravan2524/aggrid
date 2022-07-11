@@ -2,16 +2,15 @@ import { tenantUuid } from 'state/tenants/helper';
 import { BACKEND_API } from '../app/config';
 import { handleRequestError } from '../app/utils/ApiRequests';
 
-export interface CommentType {
+export interface ColumnGroupType {
 }
 
-export async function fetchCommentsData(payload): Promise<Comment[]> {
+export async function fetchColumnGroup(): Promise<ColumnGroupType[]> {
   const options: RequestInit = {
     method: 'GET',
     credentials: 'include',
   };
-  const apiUrl = `${BACKEND_API}/api/v1/${tenantUuid()}/files/${payload.fileId}/comments`;
-  console.log(apiUrl);
+  const apiUrl = `${BACKEND_API}/api/v1/${tenantUuid()}/columngroups`;
   const response = await fetch(apiUrl, options);
   if (!response.ok) {
     await handleRequestError(response);
@@ -19,7 +18,7 @@ export async function fetchCommentsData(payload): Promise<Comment[]> {
   return response.json();
 }
 
-export async function postComments(payload): Promise<Comment[]> {
+export async function postColumnGroup(payload): Promise<ColumnGroupType[]> {
   const options: RequestInit = {
     headers: {
       Accept: 'application/json',
@@ -29,8 +28,7 @@ export async function postComments(payload): Promise<Comment[]> {
     credentials: 'include',
     body: JSON.stringify({ ...payload.Comments }),
   };
-  const apiUrl = `${BACKEND_API}/api/v1/${tenantUuid()}/files/${payload.fileId}/comments/`;
-  // console.log(payload, apiUrl);
+  const apiUrl = `${BACKEND_API}/api/v1/${tenantUuid()}/columngroups/`;
   const response = await fetch(apiUrl, options);
   if (!response.ok) {
     await handleRequestError(response);

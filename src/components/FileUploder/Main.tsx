@@ -17,7 +17,6 @@ function ReactFileUploder() {
   //       (prev: any, a: any) => a + (prev || 0),
   //       0,
   //     );
-
   // CALL API
   const UploadFile = async (i: any, file: File) => {
     const progressInf = [...progressInfosRef.current];
