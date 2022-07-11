@@ -25,6 +25,7 @@ export default function ColumnMapping({ fileType, id }: Type) {
     '2B': columns2B,
     PR: columnsPR,
   });
+  const [columnGroups, setColumnGroups] = useState([]);
 
   const dispatch = useAppDispatch();
   const [show, setShow] = useState(false);
@@ -46,11 +47,41 @@ export default function ColumnMapping({ fileType, id }: Type) {
     };
     const apiUrl = `${BACKEND_API}/api/v1/${tenantUuid()}/files/${id}`;
     fetch(apiUrl, options)
-      .then((response) => response.json())
+      .then((response) => {
+        if (response.ok) {
+          return response.json();
+        }
+
+        throw new Error(response.statusText || 'Something is wrong');
+      })
       .then((data1) => {
         setcontentPreview(data1.contentPreview || {});
-        setColumnMapping(data1.columnMapping || {});
-      });
+        const newColumnMapping = data1.columnMapping || {};
+        // update columnType based on defaults
+        Object.keys(newColumnMapping).forEach((k) => {
+          const cm = newColumnMapping[k];
+          if (!cm.columnType) {
+            cm.columnType = cols[fileType].find((it) => it.columnName === cm.columnName)?.columnType || 'string';
+            newColumnMapping[k] = cm;
+          }
+        });
+        setColumnMapping(newColumnMapping);
+      })
+      .catch((e) => console.log(e));
+
+    const apiUrlColumnGroups = `${BACKEND_API}/api/v1/${tenantUuid()}/columngroups`;
+    fetch(apiUrlColumnGroups, options)
+      .then((r) => {
+        if (r.ok) {
+          return r.json();
+        }
+
+        throw new Error(r.statusText || 'Something is wrong');
+      })
+      .then((d) => {
+        setColumnGroups(d?.rows || d);
+      })
+      .catch((e) => console.log(e));
   };
 
   // console.log(filedata, id);
@@ -59,17 +90,54 @@ export default function ColumnMapping({ fileType, id }: Type) {
     const fn = (e) => {
       const columnName = e.target.value;
       const newColumnMapping = { ...columnMapping };
-      if (columnName) {
-        newColumnMapping[k] = { columnName };
-      } else {
-        delete newColumnMapping[k];
+      newColumnMapping[k] = newColumnMapping[k] || {};
+      newColumnMapping[k].columnName = columnName;
+      if (!newColumnMapping[k].columnType) {
+        const ct = cols[fileType].find((it) => it.columnName === columnName);
+        newColumnMapping[k].columnType = ct?.columnType || 'string';
       }
+
       // set the mapping
       setColumnMapping(newColumnMapping);
       // console.log(newColumnMapping);
     };
     return fn;
   };
+
+  console.log(columnMapping);
+
+  const setColumnGroup = (k) => {
+    const fn = (e) => {
+      const columnGroup = e.target.value;
+      const newColumnMapping = { ...columnMapping };
+      newColumnMapping[k] = newColumnMapping[k] || {};
+      newColumnMapping[k].columnGroup = columnGroup;
+      setColumnMapping(newColumnMapping);
+    };
+
+    return fn;
+  };
+
+  const setColumnType = (k) => {
+    const fn = (e) => {
+      const columnType = e.target.value;
+      const newColumnMapping = { ...columnMapping };
+      newColumnMapping[k] = newColumnMapping[k] || {};
+      newColumnMapping[k].columnType = columnType;
+      setColumnMapping(newColumnMapping);
+    };
+
+    return fn;
+  };
+
+  const notSelectedColumnsFilter = (keyName) => (a: any) => !(
+    Object.values(columnMapping).find(
+      (x: any) => (
+        x.columnName === a.columnName // see if (x) is already selected
+        && columnMapping[keyName]?.columnName !== a.columnName// and add also what has been selected
+      ),
+    )
+  );
 
   return (
     <>
@@ -90,9 +158,15 @@ export default function ColumnMapping({ fileType, id }: Type) {
                           <div>
                             <span>{keyName}</span>
                             <select onChange={setMapping(keyName)} value={columnMapping[keyName]?.columnName}>
-                              <option value="">-- select column --</option>
+                              <option value="">-- column --</option>
                               {
-                                cols[fileType].map((e, idx) => (<option key={idx} value={e.columnName}>{e.columnTitle || e.columnName}</option>))
+                                cols[fileType].filter(notSelectedColumnsFilter(keyName)).map((e, idx) => (<option key={idx} value={e.columnName}>{e.columnTitle || e.columnName}</option>))
+                              }
+                            </select>
+                            <select onChange={setColumnGroup(keyName)} value={columnMapping[keyName]?.columnGroup} className="ms-2">
+                              <option value="">-- column group --</option>
+                              {
+                                columnGroups.map((e: any, idx) => <option key={idx} value={e.id}>{e.title}</option>)
                               }
                             </select>
                           </div>

@@ -28,21 +28,23 @@ type ActionsRendererProps = {
 
 function ActionsRenderer({ params, onEditClickCallback, onCredentialsClickCallback }: ActionsRendererProps) {
   return (
-    <div className="d-flex justify-content-around align-items-center w-100 h-100">
-      <button type="button" className="btn btn-sm btn-light" onClick={(e) => onEditClickCallback(e, params)}>
+    <div className="d-flex align-items-center w-100 h-100">
+      <button type="button" className="btn btn-sm btn-light " onClick={(e) => onEditClickCallback(e, params)}>
         <i className="fa-solid fa-pen-to-square" />
         {' '}
         Edit
       </button>
+      {params.data.gstin !== '' && (
       <button
         type="button"
-        className="btn btn-sm btn-danger"
+        className="btn btn-sm btn-danger ml-4"
         onClick={(e) => onCredentialsClickCallback(e, params)}
       >
         <i className="fa-solid fa-key" />
         {' '}
         Credentials
       </button>
+)}
     </div>
   );
 }
