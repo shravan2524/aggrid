@@ -120,7 +120,7 @@ export default function EditCompanyModal({ companyData }: EditCompanyModalProps)
                   {...register('gstin')}
                   id="gstin"
                   className={classNames(['form-control form-control-sm', { 'is-invalid': errors.gstin }])}
-                  placeholder="Enter GSTIN gstin ..."
+                  placeholder="Enter GSTIN ..."
                 />
                 {errors.gstin && (
                   <div id="validationTitleFeedback" className="invalid-feedback">

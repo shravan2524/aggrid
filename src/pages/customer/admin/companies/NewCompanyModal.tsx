@@ -124,7 +124,7 @@ export default function NewCompanyModal() {
                     {...register('gstin')}
                     id="gstin"
                     className={classNames(['form-control form-control-sm', { 'is-invalid': errors.gstin }])}
-                    placeholder="Enter Company gstin ..."
+                    placeholder="Enter Company GSTIN ..."
                   />
                   {errors.gstin && (
                     <div id="validationGstinFeedback" className="invalid-feedback">
