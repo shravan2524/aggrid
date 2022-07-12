@@ -17,7 +17,6 @@ import classNames from 'classnames';
 import { toast } from 'react-hot-toast';
 import NewCompanyModal from './NewCompanyModal';
 import EditCompanyModal from './EditCompanyModal';
-import CommentsPage from '../comments/CommentsPage';
 import CompanyCredentialsModal from './CompanyCredentialsModal';
 
 type ActionsRendererProps = {
@@ -113,7 +112,6 @@ export default function CompaniesPage() {
     setCompanyData(params.data);
     showModal('editCompanyModal', () => {
       setCompanyData(null);
-      dispatch(fetchCompanies());
     });
   };
 

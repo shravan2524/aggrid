@@ -8,6 +8,7 @@ import { useAppDispatch } from 'app/hooks';
 import CustomButton from 'components/CustomButton';
 import { getSelectedTenant } from 'state/tenants/tenantsSlice';
 import {
+  fetchCompanies,
   getCompanies,
   isPostLoadingSelector,
   newCompanyRequest,
@@ -29,7 +30,10 @@ export default function NewCompanyModal() {
   const modalId = 'newCompanyModal';
 
   const schema = yup.object({
-    name: yup.string().required(),
+    name: yup.string().required().test({
+      message: () => 'Cannot be only empty characters',
+      test: async (val) => val?.split(' ').join('').length !== 0,
+    }),
     parent: yup.string(),
     gstin: yup.string().test({
       message: () => 'Enter a valid GSTIN',
@@ -54,6 +58,7 @@ export default function NewCompanyModal() {
   const onModalClose = useCallback(() => {
     onModalHidden(modalId, () => {
       reset({ name: '', gstin: '' });
+      dispatch(fetchCompanies());
     });
   }, []);
 
