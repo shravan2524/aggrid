@@ -8,6 +8,7 @@ import { CompaniesType } from 'services/companiesAPIService';
 import { CredentialsType, putCompanyCredentialsData } from 'services/credentialsAPIService';
 import { toast } from 'react-hot-toast';
 import { hideModal } from 'app/utils/Modal';
+import { yupEmptyCharsRule } from 'app/utils/YupRules';
 
 interface CompanyEditFormProps {
   username: string;
@@ -25,9 +26,9 @@ export default function CompanyEditCredentialsForm({
 }: CompanyEditCredentialsFormProps) {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const schema = yup.object({
-    username: yup.string().required(),
-    password: yup.string().required(),
-    current_password: yup.string().required(),
+    username: yup.string().required().test(yupEmptyCharsRule),
+    password: yup.string().required().test(yupEmptyCharsRule),
+    current_password: yup.string().required().test(yupEmptyCharsRule),
   }).required();
 
   const {

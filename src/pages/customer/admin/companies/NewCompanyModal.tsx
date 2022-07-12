@@ -14,6 +14,7 @@ import {
   newCompanyRequest,
 } from 'state/companies/companiesSlice';
 import { hideModal, onModalHidden } from 'app/utils/Modal';
+import { validGSTINRule, yupEmptyCharsRule } from 'app/utils/YupRules';
 
 interface NewCompanyFormProps {
   name: string;
@@ -30,20 +31,9 @@ export default function NewCompanyModal() {
   const modalId = 'newCompanyModal';
 
   const schema = yup.object({
-    name: yup.string().required().test({
-      message: () => 'Cannot be only empty characters',
-      test: async (val) => val?.split(' ').join('').length !== 0,
-    }),
+    name: yup.string().required().test(yupEmptyCharsRule),
     parent: yup.string(),
-    gstin: yup.string().test({
-      message: () => 'Enter a valid GSTIN',
-      test: async (val) => {
-        if (val) {
-          return /^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$/.test(val);
-        }
-        return true;
-      },
-    }),
+    gstin: yup.string().test(validGSTINRule).test(yupEmptyCharsRule),
   }).required();
 
   const {
