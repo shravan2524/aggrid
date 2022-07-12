@@ -69,6 +69,7 @@ function CustomActionsToolPanel(onRefreshCallback, isFetchLoading) {
         >
           <i className="fa-solid fa-circle-plus" />
           Add new
+          {' '}
           {moduleName}
         </button>
 
