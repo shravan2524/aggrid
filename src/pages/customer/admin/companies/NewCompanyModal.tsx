@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import * as yup from 'yup';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup/dist/yup';
@@ -8,12 +8,11 @@ import { useAppDispatch } from 'app/hooks';
 import CustomButton from 'components/CustomButton';
 import { getSelectedTenant } from 'state/tenants/tenantsSlice';
 import {
-  fetchCompanies,
   getCompanies,
   isPostLoadingSelector,
   newCompanyRequest,
 } from 'state/companies/companiesSlice';
-import { hideModal } from 'app/utils/Modal';
+import { hideModal, onModalHidden } from 'app/utils/Modal';
 
 interface NewCompanyFormProps {
   name: string;
@@ -52,6 +51,12 @@ export default function NewCompanyModal() {
     resolver: yupResolver(schema),
   });
 
+  const onModalClose = useCallback(() => {
+    onModalHidden(modalId, () => {
+      reset({ name: '', gstin: '' });
+    });
+  }, []);
+
   const onSubmit = ({ name, parent, gstin }: NewCompanyFormProps) => {
     const body = {
       name,
@@ -65,8 +70,11 @@ export default function NewCompanyModal() {
 
   useEffect(() => {
     hideModal(modalId);
-    reset({ name: '', gstin: '' });
   }, [isLoading]);
+
+  useEffect(() => {
+    onModalClose();
+  }, []);
 
   return (
     <div className="modal fade" id={modalId} aria-labelledby={`new${modalId}Label`} aria-hidden="true">
