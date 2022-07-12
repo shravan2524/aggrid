@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from 'react';
+import React, { useCallback, useEffect, useMemo } from 'react';
 import * as yup from 'yup';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup/dist/yup';
@@ -13,7 +13,7 @@ import {
   isPutLoadingSelector, updateCompanyRequest,
 
 } from 'state/companies/companiesSlice';
-import { hideModal } from 'app/utils/Modal';
+import { hideModal, onModalHidden } from 'app/utils/Modal';
 import { CompaniesType } from 'services/companiesAPIService';
 import { validGSTINRule, yupEmptyCharsRule } from 'app/utils/YupRules';
 
@@ -37,7 +37,7 @@ export default function EditCompanyModal({ companyData }: EditCompanyModalProps)
   const schema = yup.object({
     name: yup.string().required().test(yupEmptyCharsRule),
     parent: yup.string(),
-    gstin: yup.string().test(validGSTINRule).test(yupEmptyCharsRule),
+    gstin: yup.string().test(validGSTINRule),
   }).required();
 
   const {
@@ -49,13 +49,26 @@ export default function EditCompanyModal({ companyData }: EditCompanyModalProps)
     resolver: yupResolver(schema),
   });
 
+  const onModalClose = useCallback(() => {
+    onModalHidden(modalId, () => {
+      dispatch(fetchCompanies());
+    });
+  }, []);
+
   const onSubmit = ({ name, parent, gstin }: EditCompanyFormProps) => {
-    const payload = {
+    const payload: any = {
       data: {
-        name, parent: Number(parent), customer_id: Number(selectedCustomer?.id), gstin,
+        name, parent: Number(parent), customer_id: Number(selectedCustomer?.id),
       },
       id: companyData?.id,
     };
+
+    if (gstin !== '') {
+      if (gstin) {
+        payload.data.gstin = gstin;
+      }
+    }
+
     dispatch(updateCompanyRequest({ ...payload }));
   };
 
@@ -67,6 +80,10 @@ export default function EditCompanyModal({ companyData }: EditCompanyModalProps)
     const parentCom = companySelector.find((i) => i.parent === companyData?.parent);
     reset({ name: companyData?.name, parent: parentCom?.parent, gstin: companyData?.gstin });
   }, [companyData]);
+
+  useEffect(() => {
+    onModalClose();
+  }, []);
 
   return (
     <div className="modal fade" id={modalId} aria-labelledby={`new${modalId}Label`} aria-hidden="true">
