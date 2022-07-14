@@ -50,11 +50,11 @@ function ActionsRenderer({ params, onEditClickCallback, onCredentialsClickCallba
 
 function CustomActionsToolPanel(onRefreshCallback, isFetchLoading) {
   return (
-    <div className="container-fluid">
-      <div className="row p-2 gap-2">
+    <div className="col">
+      <div className="row p-2 gap-2 m-1">
         <button
           type="button"
-          className="btn btn-sm btn-danger px-4 d-flex gap-2 align-items-center justify-content-center"
+          className="btn btn-sm btn-danger d-flex gap-1 align-items-center justify-content-center flex-wrap"
           onClick={() => showModal('newCompanyModal')}
         >
           <i className="fa-solid fa-circle-plus" />
@@ -62,7 +62,7 @@ function CustomActionsToolPanel(onRefreshCallback, isFetchLoading) {
         </button>
         <button
           type="button"
-          className="btn btn-sm btn-info px-4 d-flex gap-2 align-items-center justify-content-center"
+          className="btn btn-sm btn-info d-flex gap-1 align-items-center justify-content-center flex-wrap"
           onClick={onRefreshCallback}
         >
           <i className={classNames(['fa-solid', 'fa-rotate', { 'fa-spin': isFetchLoading }])} />
