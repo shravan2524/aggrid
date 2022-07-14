@@ -204,12 +204,12 @@ function Container1({ btnName }: Type) {
 
 function CustomActionsToolPanel(onRefreshCallback, isFetchLoading) {
   return (
-    <div className="container-fluid">
-      <div className="row p-2 gap-2">
+    <div className="col">
+      <div className="row p-2 gap-2 m-1">
         <Container1 btnName="Create Column Group" />
         <button
           type="button"
-          className="btn btn-sm btn-info px-4 d-flex gap-2 align-items-center justify-content-center"
+          className="btn btn-sm btn-info px-4 d-flex gap-2 align-items-center justify-content-center flex-wrap"
           onClick={onRefreshCallback}
         >
           <i className={classNames(['fa-solid', 'fa-rotate', { 'fa-spin': isFetchLoading }])} />

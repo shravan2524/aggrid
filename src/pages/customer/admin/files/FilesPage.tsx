@@ -162,11 +162,11 @@ function CustomActionsToolPanel(onRefreshCallback, selectedFiles, isFetchLoading
   }
 
   return (
-    <div className="container-fluid">
-      <div className="row p-2 gap-2">
+    <div className="col">
+      <div className="row p-2 gap-2 m-1">
         <button
           type="button"
-          className="btn btn-sm btn-info px-4 d-flex gap-2 align-items-center justify-content-center"
+          className="btn btn-sm btn-info d-flex gap-1 align-items-center justify-content-center flex-wrap"
           onClick={() => showModal('editFilesTypeModal')}
         >
           <i className="fa-solid fa-file-pen" />
@@ -175,7 +175,7 @@ function CustomActionsToolPanel(onRefreshCallback, selectedFiles, isFetchLoading
         <ReactFileUploder />
         <button
           type="button"
-          className="btn btn-sm btn-info px-4 d-flex gap-2 align-items-center justify-content-center"
+          className="btn btn-sm btn-info  d-flex gap-1 align-items-center justify-content-center flex-wrap"
           onClick={onRefreshCallback}
         >
           <i className={classNames(['fa-solid', 'fa-rotate', { 'fa-spin': isFetchLoading }])} />
@@ -184,7 +184,7 @@ function CustomActionsToolPanel(onRefreshCallback, selectedFiles, isFetchLoading
         <button
           type="button"
           disabled={downloadLoading}
-          className="btn btn-sm btn-info px-4 d-flex gap-2 align-items-center justify-content-center"
+          className="btn btn-sm btn-info d-flex gap-1 align-items-center justify-content-center flex-wrap"
           onClick={() => downloadTestZip(selectedFiles)}
         >
           {downloadLoading ? (<i className="fas fa-circle-notch fa-spin" />) : <i className="fa fa-download" /> }
