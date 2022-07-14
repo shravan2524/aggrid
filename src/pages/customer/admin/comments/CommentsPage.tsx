@@ -210,13 +210,25 @@ export default function CommentsPage({ fileId }: File) {
   const handleShow = () => {
     setShow(true);
   };
+  useEffect(() => {
+    const options: RequestInit = {
+      method: 'GET',
+      credentials: 'include',
+    };
+    const apiUrl = `${BACKEND_API}/api/v1/${tenantUuid()}/files/${fileId}/comments/`;
+    fetch(apiUrl, options)
+      .then((response) => response.json())
+      .then((data1) => {
+        console.log(data1, apiUrl);
+        setdata(data1);
+      });
+    console.log(data);
+  }, []);
+  useEffect(() => {
+    setstate(!state);
+  }, []);
   const inputRef = React.useRef(null);
   const [inputValue, setInputValue] = React.useState('');
-  const [userList, setUserList] = React.useState([
-    { name: 'John smith', username: 'johnsmith' },
-    { name: 'Jenna surname2', username: 'jennasurname2' },
-    { name: 'Tuija rajala', username: 'tuijarajala' },
-  ]);
   const [showSuggestions, setShowSuggestions] = React.useState(false);
   const [partialMention, setPartialMention] = React.useState(null);
   const [suggestionList, setSuggestionList] = React.useState(
@@ -303,7 +315,7 @@ export default function CommentsPage({ fileId }: File) {
         <Modal.Footer>
           <div className="mb-3 d-flex w-100 flex-column-reverse">
             <div className="mb-3 d-flex w-100">
-              <input type="text" ref={inputRef} style={{ width: '95%' }} onChange={onChange} value={typedcomment} />
+              <input type="text" ref={inputRef} style={{ width: '95%' }} maxLength={250} onChange={onChange} value={typedcomment} />
               <button type="button" className="btn btn-sm btn-primary" onClick={(e) => onSubmitAction(null, typedcomment)}><i className="fa fa-paper-plane">{' '}</i></button>
             </div>
             <div>
