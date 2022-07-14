@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from 'react';
+import React, { useCallback, useEffect, useMemo } from 'react';
 import * as yup from 'yup';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup/dist/yup';
@@ -23,7 +23,7 @@ interface SaveFormTypes extends Record<string, any> {
   title: string;
 }
 
-export default function SaveFormModal({ itemData }: ModalProps) {
+ function SaveFormModal({ itemData }: ModalProps) {
   const dispatch = useAppDispatch();
   const isPutLoading = useSelector(isPutLoadingSelector);
   const isPostLoading = useSelector(isPostLoadingSelector);
@@ -44,7 +44,7 @@ export default function SaveFormModal({ itemData }: ModalProps) {
     resolver: yupResolver(schema),
   });
 
-  const onSubmit = (formData) => {
+  const onSubmit = useCallback((formData) => {
     if (!formData) {
       return;
     }
@@ -53,19 +53,17 @@ export default function SaveFormModal({ itemData }: ModalProps) {
       title: formData.title,
       policies: [],
     };
-
     data.policies = Object.keys(formData.policy).map((key) => {
       const val = formData.policy[key];
       const vals = Object.keys(val).filter((x) => val[x] === true).join('');
       return { p: key, a: vals };
     }).filter((x) => (x.a)).sort((a, b) => (a.p < b.p ? -1 : 1));
-
     if (itemData?.id) {
       dispatch(update({ title: data.title, policies: data.policies, id: itemData.id }));
     } else {
       dispatch(create({ title: data.title, policies: data.policies }));
     }
-  };
+  }, []);
 
   useEffect(() => {
     hideModal(modalId);
@@ -189,3 +187,5 @@ export default function SaveFormModal({ itemData }: ModalProps) {
     </div>
   );
 }
+
+export default React.memo(SaveFormModal);

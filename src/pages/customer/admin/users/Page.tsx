@@ -2,7 +2,7 @@ import React, {
   useCallback, useEffect, useMemo, useRef, useState,
 } from 'react';
 import { AgGridReact } from 'ag-grid-react';
-import { showModal } from 'app/utils/Modal';
+import { onModalHidden, showModal } from 'app/utils/Modal';
 import { useAppDispatch, useWindowDimensions } from 'app/hooks';
 import PageWrapper from 'components/PageWrapper';
 import {
@@ -131,7 +131,7 @@ function RolesRenderer(props: RolesRendererProps) {
   );
 }
 
-export default function Page() {
+function Page() {
   const dispatch = useAppDispatch();
   const gridRef = useRef<any>();
   const [rowData, setRowData] = useState<any>();
@@ -147,13 +147,17 @@ export default function Page() {
     minHeight: '600px',
   }), [height, width]);
 
+  const onModalHide = useCallback(() => {
+    onModalHidden(`save${moduleName}Modal`, () => {
+      setItemData(null);
+      dispatch(readAll());
+    });
+  }, []);
+
   const onEditClickCallback = useCallback(
     (e, params) => {
       setItemData(params.data);
-      showModal(`save${moduleName}Modal`, () => {
-        setItemData(null);
-        dispatch(readAll());
-      });
+      showModal(`save${moduleName}Modal`);
     },
     [],
   );
@@ -298,6 +302,7 @@ export default function Page() {
 
   const onGridReady = useCallback((params) => {
     dispatch(readAll());
+    onModalHide();
   }, []);
 
   useEffect(() => {
@@ -349,3 +354,5 @@ export default function Page() {
     </PageWrapper>
   );
 }
+
+export default React.memo(Page);

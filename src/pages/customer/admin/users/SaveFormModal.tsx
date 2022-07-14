@@ -24,7 +24,7 @@ interface SaveFormTypes {
   roles: any[];
 }
 
-export default function SaveFormModal({ itemData, modalIdentifier }: ModalProps) {
+function SaveFormModal({ itemData, modalIdentifier }: ModalProps) {
   const dispatch = useAppDispatch();
   const [selectedRoles, setSelectedRoles] = useState<string[]>([]);
   const isPutLoading = useSelector(isPutLoadingSelector);
@@ -150,3 +150,4 @@ export default function SaveFormModal({ itemData, modalIdentifier }: ModalProps)
     </div>
   );
 }
+export default React.memo(SaveFormModal);
