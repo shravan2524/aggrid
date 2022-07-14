@@ -223,7 +223,7 @@ function CustomActionsToolPanel(onRefreshCallback, isFetchLoading) {
 export default function columnGrouping() {
   const dispatch = useAppDispatch();
   const gridRef = useRef<any>();
-  const [rowData, setRowData] = useState<any>();
+  const [rowData, setRowData] = useState<any[]>([]);
   const [selectedRows, setSelectedRows] = useState<any[]>([]);
   const { height, width } = useWindowDimensions();
   const rows = useSelector(getFiles);
@@ -348,7 +348,9 @@ export default function columnGrouping() {
     fetch(apiUrl, options)
       .then((response) => response.json())
       .then((data) => {
-        setRowData(data);
+        if (!data.error) {
+          setRowData(data);
+        }
       });
   }, []);
 
@@ -401,6 +403,7 @@ export default function columnGrouping() {
       gridRef.current?.api.sizeColumnsToFit();
     }
   }, [rows]);
+
   return (
     <PageWrapper pageTitle="Column Grouping" icon="fa-solid fa-object-group">
       <div style={containerStyle}>
