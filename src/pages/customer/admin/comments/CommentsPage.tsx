@@ -24,7 +24,7 @@ interface Comment {
   onSubmitAction: Function;
 }
 
-function Date({ date }: Type) {
+function DateMod({ date }: Type) {
   const ret = date.slice(8, 10);
   ret.concat(' ');
   const check = date.slice(5, 7);
@@ -135,7 +135,7 @@ function CommentUI({ description, createdAt, createdBy } : CommentUiType) {
         <div className="d-flex flex-column align-items-center w-100" id="mg">
           <div className="d-flex justify-content-between w-100">
             <p className="h4 mb-0">{createdBy}</p>
-            <Date date={createdAt} />
+            <DateMod date={createdAt} />
           </div>
           <div className="w-100">
             <p id="pd">{description}</p>
@@ -172,9 +172,25 @@ export default function CommentsPage({ fileId }: File) {
     setShow(false);
   };
   const [state, setstate] = useState(true);
+  async function postreq(Comments) {
+    await dispatch(postComment({ Comments, fileId }));
+    const options: RequestInit = {
+      method: 'GET',
+      credentials: 'include',
+    };
+    const apiUrl = `${BACKEND_API}/api/v1/${tenantUuid()}/files/${fileId}/comments/`;
+    await fetch(apiUrl, options)
+      .then((response) => response.json())
+      .then((data1) => {
+        console.log(data1, apiUrl);
+        setdata(data1);
+        setstate(!state);
+      });
+  }
   const onSubmitAction = (id, typedcomment1) => {
     console.log(id, typedcomment1);
     settypedcomment('');
+    const d = new Date();
     const Comments = {
       description: typedcomment1,
       parent: id,
@@ -184,27 +200,28 @@ export default function CommentsPage({ fileId }: File) {
       description: typedcomment1,
       createdBy: '1',
       parent: id,
-      createdAt: '220002001',
-      updatedAt: '221321321',
+      createdAt: d.toLocaleDateString(),
+      updatedAt: d.toLocaleDateString(),
       id: 1,
     };
     const tempcomment = data;
     // tempcomment.push(tComments);
     // setdata(tempcomment);
     console.log(tempcomment);
-    dispatch(postComment({ Comments, fileId }));
+    // dispatch(postComment({ Comments, fileId }));
+    postreq(Comments);
     setstate(!state);
-    const options: RequestInit = {
-      method: 'GET',
-      credentials: 'include',
-    };
-    const apiUrl = `${BACKEND_API}/api/v1/${tenantUuid()}/files/${fileId}/comments/`;
-    fetch(apiUrl, options)
-      .then((response) => response.json())
-      .then((data1) => {
-        console.log(data1, apiUrl);
-        setdata(data1);
-      });
+    // const options: RequestInit = {
+    //   method: 'GET',
+    //   credentials: 'include',
+    // };
+    // const apiUrl = `${BACKEND_API}/api/v1/${tenantUuid()}/files/${fileId}/comments/`;
+    // fetch(apiUrl, options)
+    //   .then((response) => response.json())
+    //   .then((data1) => {
+    //     console.log(data1, apiUrl);
+    //     setdata(data1);
+    //   });
     // console.log(data);
   };
   const handleShow = () => {
