@@ -60,7 +60,7 @@ export default function EditTenantModal({ tenantToEdit }: EditTenantModalProps) 
         <div className="modal-content">
           <form onSubmit={handleSubmit(onSubmit)}>
             <div className="modal-header">
-              <h5 className="modal-title" id={`new${modalId}Label`}>Edit Tenant</h5>
+              <h5 className="modal-title" id={`new${modalId}Label`}>Edit Workspace</h5>
               <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close" />
             </div>
             <div className="modal-body">
@@ -71,7 +71,7 @@ export default function EditTenantModal({ tenantToEdit }: EditTenantModalProps) 
                   {...register('title')}
                   id="title"
                   className={classNames(['form-control form-control-sm', { 'is-invalid': errors.title }])}
-                  placeholder="Enter Tenant title ..."
+                  placeholder="Enter Workspace title ..."
                 />
                 {errors.title && (
                   <div id="validationTitleFeedback" className="invalid-feedback">

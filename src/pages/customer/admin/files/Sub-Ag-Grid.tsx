@@ -12,7 +12,7 @@ import {
 } from 'ag-grid-community';
 import { fetchFileContentData } from 'services/filesAPIService';
 import { tenantUuid } from 'state/tenants/helper';
-import { BACKEND_API } from '../../../../app/config';
+import { BACKEND_API } from 'app/config';
 
 function ClickableStatusBarComponent(props: any, onBtExport) {
   const { api } = props;
@@ -45,6 +45,7 @@ export default function DetailCellRenderer({ data, node, api }: ICellRendererPar
     filter: 'agTextColumnFilter',
     editable: false,
   }));
+
   // default Columns settings
   const [columnDefs, setColumnDefs] = useState(Columns);
   const defaultColDef = useMemo<ColDef>(
@@ -74,6 +75,7 @@ export default function DetailCellRenderer({ data, node, api }: ICellRendererPar
   }, []);
 
   useEffect(() => {
+    setColumnDefs(columnGroupsData);
     const newColumnGrouping = {};
     const newColumnsStructure: any = [];
     const columnsToRemoveFromParent: any = {};
@@ -128,7 +130,6 @@ export default function DetailCellRenderer({ data, node, api }: ICellRendererPar
       editable: false,
     }));
     const newData = [...newColumnsStructure, ...newColumnsCleanedUp];
-    setColumnDefs(newData);
   }, [columnGroupsData]);
 
   // rows

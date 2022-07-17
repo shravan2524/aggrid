@@ -52,7 +52,7 @@ export default function NewTenantModal() {
         <div className="modal-content">
           <form onSubmit={handleSubmit(onSubmit)}>
             <div className="modal-header">
-              <h5 className="modal-title" id={`new${modalId}Label`}>New Tenant</h5>
+              <h5 className="modal-title" id={`new${modalId}Label`}>Add New Workspace</h5>
               <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close" />
             </div>
             <div className="modal-body">
@@ -63,7 +63,7 @@ export default function NewTenantModal() {
                   {...register('title')}
                   id="title"
                   className={classNames(['form-control form-control-sm', { 'is-invalid': errors.title }])}
-                  placeholder="Enter Tenant name ..."
+                  placeholder="Enter Workspace name ..."
                 />
                 {errors.title && (
                   <div id="validationTitleFeedback" className="invalid-feedback">

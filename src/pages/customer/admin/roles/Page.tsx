@@ -2,7 +2,7 @@ import React, {
   useCallback, useEffect, useMemo, useRef, useState,
 } from 'react';
 import { AgGridReact } from 'ag-grid-react';
-import { showModal } from 'app/utils/Modal';
+import { onModalHidden, showModal } from 'app/utils/Modal';
 import { useAppDispatch, useWindowDimensions } from 'app/hooks';
 import PageWrapper from 'components/PageWrapper';
 import {
@@ -60,11 +60,11 @@ function ActionsRenderer({ params, onEditClickCallback }: ActionsRendererProps) 
 
 function CustomActionsToolPanel(onRefreshCallback, isFetchLoading) {
   return (
-    <div className="container-fluid">
-      <div className="row p-2 gap-2">
+    <div className="col">
+      <div className="row p-2 gap-2 m-1">
         <button
           type="button"
-          className="btn btn-sm btn-danger px-4 d-flex gap-2 align-items-center justify-content-center"
+          className="btn btn-sm btn-danger px-4 d-flex gap-2 align-items-center justify-content-center flex-wrap"
           onClick={() => showModal(`save${moduleName}Modal`)}
         >
           <i className="fa-solid fa-circle-plus" />
@@ -75,7 +75,7 @@ function CustomActionsToolPanel(onRefreshCallback, isFetchLoading) {
 
         <button
           type="button"
-          className="btn btn-sm btn-info px-4 d-flex gap-2 align-items-center justify-content-center"
+          className="btn btn-sm btn-info px-4 d-flex gap-2 align-items-center justify-content-center flex-wrap"
           onClick={onRefreshCallback}
         >
           <i className={classNames(['fa-solid', 'fa-rotate', { 'fa-spin': isFetchLoading }])} />
@@ -90,7 +90,7 @@ function PoliciesRenderer() {
   return null;
 }
 
-export default function Page() {
+function Page() {
   const dispatch = useAppDispatch();
   const gridRef = useRef<any>();
   const [rowData, setRowData] = useState<any>();
@@ -105,13 +105,18 @@ export default function Page() {
     minHeight: '600px',
   }), [height, width]);
 
+  const onModalHide = useCallback(() => {
+    onModalHidden(`save${moduleName}Modal`, () => {
+      setItemData(null);
+      dispatch(readAll());
+      console.log('Here');
+    });
+  }, []);
+
   const onEditClickCallback = useCallback(
     (e, params) => {
       setItemData(params.data);
-      showModal(`save${moduleName}Modal`, () => {
-        setItemData(null);
-        dispatch(readAll());
-      });
+      showModal(`save${moduleName}Modal`);
     },
     [],
   );
@@ -171,7 +176,7 @@ export default function Page() {
   }), []);
 
   const onRefreshCallback = useCallback(() => {
-    dispatch(readAll());
+     dispatch(readAll());
   }, []);
 
   const sideBar = useMemo(() => ({
@@ -218,6 +223,7 @@ export default function Page() {
 
   const onGridReady = useCallback((params) => {
     dispatch(readAll());
+    onModalHide();
   }, []);
 
   useEffect(() => {
@@ -264,3 +270,5 @@ export default function Page() {
     </PageWrapper>
   );
 }
+
+export default React.memo(Page);

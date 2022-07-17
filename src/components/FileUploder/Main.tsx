@@ -79,7 +79,7 @@ function ReactFileUploder() {
     <>
       <button
         type="button"
-        className="btn btn-sm btn-danger px-4 d-flex gap-2 align-items-center"
+        className="btn btn-sm btn-danger d-flex gap-2 align-items-center justify-content-center  flex-wrap"
         onClick={() => showModal('add')}
       >
         <i className="fas fa-cloud-upload-alt" />

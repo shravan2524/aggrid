@@ -24,7 +24,6 @@ export type ColumnGroupState = {
 export const fetchColumn = createAsyncThunk('getComments', async () => fetchColumnGroup());
 export const postColumns = createAsyncThunk('postColumnss', async (payload: any) => postColumnGroup(payload));
 
-
 // Reducers ...
 export const CommentsSlice = createSlice({
 	name: 'comment',
@@ -46,7 +45,7 @@ export const CommentsSlice = createSlice({
 		state.isLoading = false;
 		ProgressBar.done();
 	  });
-  
+
 	  // Set ContentType
 	  builder.addCase(postColumns.pending, (state: Draft<ColumnGroupState>, action) => {
 		state.isPutLoading = true;
@@ -63,28 +62,27 @@ export const CommentsSlice = createSlice({
 	  });
 	},
   });
-  
+
   export default CommentsSlice.reducer;
   // Selectors ...
   const CommentsSelector = (state) => state.Comments;
-  
+
   export const getComments = createSelector(
 	CommentsSelector,
 	(Comments: ColumnGroupState): ColumnGroupType[] => Comments.rows,
   );
-  
+
   export const isLoadingSelector = createSelector(
 	CommentsSelector,
 	(Comments: ColumnGroupState): boolean | undefined => Comments.isLoading,
   );
-  
+
   export const isPutLoadingSelector = createSelector(
 	CommentsSelector,
 	(Comments: ColumnGroupState): boolean | undefined => Comments.isPutLoading,
   );
-  
+
   export const selectErrorMessageSelector = createSelector(
 	CommentsSelector,
 	(Comments: ColumnGroupState): string | null | undefined => Comments.error,
   );
-  
