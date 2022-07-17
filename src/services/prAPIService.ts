@@ -1,5 +1,4 @@
-import { tenantUuid } from 'state/tenants/helper';
-import { BACKEND_API } from '../app/config';
+import { TenantApiRequest } from '../app/utils/ApiRequests';
 
 /*
 [
@@ -55,17 +54,5 @@ export interface PRType {
 }
 
 export async function fetchPRData() :Promise<PRType[] | null | Error> {
-  const options: RequestInit = {
-    method: 'GET',
-    credentials: 'include',
-  };
-
-  const apiUrl = `${BACKEND_API}/api/v1/${tenantUuid()}/pr`;
-  const response = await fetch(apiUrl, options);
-
-  if (!response.ok) {
-    const message = `An error has occurred: ${response.status}`;
-    throw new Error(message);
-  }
-  return response.json();
+  return TenantApiRequest('pr');
 }

@@ -1,5 +1,4 @@
-import { BACKEND_API } from 'app/config';
-import { tenantUuid } from 'state/tenants/helper';
+import { TenantApiRequest } from '../app/utils/ApiRequests';
 
 interface Contact {
   email: string,
@@ -25,93 +24,21 @@ export interface ItemType {
 }
 
 export async function readAll(): Promise<ItemType[]> {
-  const options: RequestInit = {
-    method: 'GET',
-    credentials: 'include',
-  };
-
-  const apiUrl = `${BACKEND_API}/api/v1/${tenantUuid()}/users`;
-  const response = await fetch(apiUrl, options);
-
-  if (!response.ok) {
-    const message = `An error has occurr: ${response.status}`;
-    throw new Error(message);
-  }
-  return response.json();
+  return TenantApiRequest('users');
 }
 
 export async function readOne(id: number): Promise<ItemType> {
-  const options: RequestInit = {
-    method: 'GET',
-    credentials: 'include',
-  };
-
-  const apiUrl = `${BACKEND_API}/api/v1/${tenantUuid()}/users/${id}`;
-  const response = await fetch(apiUrl, options);
-
-  if (!response.ok) {
-    const message = `An error has occurr: ${response.status}`;
-    throw new Error(message);
-  }
-  return response.json();
+  return TenantApiRequest(`users/${id}`);
 }
 
 export async function create(data: ItemType): Promise<ItemType> {
-  const options: RequestInit = {
-    headers: {
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
-    },
-    method: 'POST',
-    credentials: 'include',
-    body: JSON.stringify({ ...data }),
-  };
-
-  const apiUrl = `${BACKEND_API}/api/v1/${tenantUuid()}/users`;
-  const response = await fetch(apiUrl, options);
-  if (!response.ok) {
-    const message = `An error has occurred: ${response.status}`;
-    throw new Error(message);
-  }
-  return response.json();
+  return TenantApiRequest('users', 'POST', data);
 }
 
 export async function update(payload: ItemType): Promise<ItemType> {
-  const options: RequestInit = {
-    headers: {
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
-    },
-    method: 'PUT',
-    credentials: 'include',
-    body: JSON.stringify({ ...payload }),
-  };
-
-  const apiUrl = `${BACKEND_API}/api/v1/${tenantUuid()}/users/${payload.id}`;
-  const response = await fetch(apiUrl, options);
-  if (!response.ok) {
-    const message = `An error has occurred: ${response.status}`;
-    throw new Error(message);
-  }
-  return response.json();
+  return TenantApiRequest(`users/${payload.id}`, 'PUT', payload);
 }
 
 export async function patch(payload: ItemType): Promise<ItemType> {
-  const options: RequestInit = {
-    headers: {
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
-    },
-    method: 'PATCH',
-    credentials: 'include',
-    body: JSON.stringify({ ...payload }),
-  };
-
-  const apiUrl = `${BACKEND_API}/api/v1/${tenantUuid()}/users/${payload.id}`;
-  const response = await fetch(apiUrl, options);
-  if (!response.ok) {
-    const message = `An error has occurred: ${response.status}`;
-    throw new Error(message);
-  }
-  return response.json();
+  return TenantApiRequest(`users/${payload.id}`, 'PATCH', payload);
 }

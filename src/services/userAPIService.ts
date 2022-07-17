@@ -1,17 +1,12 @@
-import { tenantUuid } from 'state/tenants/helper';
-import { BACKEND_API } from '../app/config';
+import { tenantUuid as tenantUuidFn } from 'state/tenants/helper';
+import { ApiRequest } from '../app/utils/ApiRequests';
 
 export async function fetchUserMeData() {
-  const options: RequestInit = {
-    method: 'GET',
-    credentials: 'include',
-  };
+  return ApiRequest('auth/me');
+}
 
-  const response = await fetch(`${BACKEND_API}/api/v1/me`, options);
+export async function fetchUserDataForTenant(tenantUuid = '') {
+  tenantUuid = tenantUuid || tenantUuidFn();
 
-  if (!response.ok) {
-    const message = `An error has occurred: ${response.status}`;
-    throw new Error(message);
-  }
-  return response.json();
+  return ApiRequest(`auth/me/${tenantUuid}`);
 }

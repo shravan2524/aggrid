@@ -1,5 +1,5 @@
 import {
-  createAsyncThunk, createSelector, createSlice, Draft, PayloadAction,
+  createAsyncThunk, createSelector, createSlice, Draft,
 } from '@reduxjs/toolkit';
 import { postComments, fetchCommentsData, CommentType } from 'services/commentsAPIServices';
 import ProgressBar from 'app/utils/ProgressBar';
@@ -23,7 +23,7 @@ const initialState: CommentsState = {
 };
 
 // API Actions ...
-export const fetchComments = createAsyncThunk('getComments', async () => fetchCommentsData());
+export const fetchComments = createAsyncThunk('getComments', async (payload: any) => fetchCommentsData(payload));
 export const postComment = createAsyncThunk('postComments', async (payload: any) => postComments(payload));
 
 // Reducers ...
@@ -44,10 +44,6 @@ export const CommentsSlice = createSlice({
       ProgressBar.done();
     });
     builder.addCase(fetchComments.rejected, (state, action) => {
-      const error = action.error.message;
-      if (error) {
-        toast.error(error);
-      }
       state.isLoading = false;
       ProgressBar.done();
     });
@@ -63,10 +59,6 @@ export const CommentsSlice = createSlice({
       ProgressBar.done();
     });
     builder.addCase(postComment.rejected, (state, action) => {
-      const error = action.error.message;
-      if (error) {
-        toast.error(error);
-      }
       state.isPutLoading = false;
       ProgressBar.done();
     });

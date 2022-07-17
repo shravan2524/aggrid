@@ -9,7 +9,7 @@ import classNames from 'classnames';
 import { useAppDispatch } from 'app/hooks';
 import CustomButton from 'components/CustomButton';
 import { useSelector } from 'react-redux';
-import { isPutLoadingSelector, updateFileRequest } from 'state/files/filesSlice';
+import { isPutLoadingSelector, setContentTypeRequest } from 'state/files/filesSlice';
 import { toast } from 'react-hot-toast';
 import { AgGridReact } from 'ag-grid-react';
 import { onModalHidden, onModalShown } from 'app/utils/Modal';
@@ -123,7 +123,7 @@ export default function EditFilesTypeModal({ selectedRows }: EditFilesTypeModalP
         data: { fileType: type },
         id: sr?.id,
       };
-      dispatch(updateFileRequest({ ...payload })).then(() => toast.success('File Successfully Updated !'));
+      dispatch(setContentTypeRequest({ ...payload })).then(() => toast.success('File Successfully Updated !'));
     });
   };
 

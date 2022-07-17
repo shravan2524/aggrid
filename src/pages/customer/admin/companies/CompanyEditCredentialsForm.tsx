@@ -8,6 +8,7 @@ import { CompaniesType } from 'services/companiesAPIService';
 import { CredentialsType, putCompanyCredentialsData } from 'services/credentialsAPIService';
 import { toast } from 'react-hot-toast';
 import { hideModal } from 'app/utils/Modal';
+import { yupEmptyCharsRule } from 'app/utils/YupRules';
 
 interface CompanyEditFormProps {
   username: string;
@@ -24,11 +25,10 @@ export default function CompanyEditCredentialsForm({
   modalId, companyData, companyCredentials,
 }: CompanyEditCredentialsFormProps) {
   const [isLoading, setIsLoading] = useState<boolean>(false);
-
   const schema = yup.object({
-    username: yup.string().required(),
-    password: yup.string().required(),
-    current_password: yup.string().required(),
+    username: yup.string().required().test(yupEmptyCharsRule),
+    password: yup.string().required().test(yupEmptyCharsRule),
+    current_password: yup.string().required().test(yupEmptyCharsRule),
   }).required();
 
   const {
@@ -48,7 +48,7 @@ export default function CompanyEditCredentialsForm({
 
   const onSubmit = ({ username, password, current_password }: CompanyEditFormProps) => {
     setIsLoading(true);
-    putCompanyCredentialsData(companyData?.id, { username, password, current_password })
+    putCompanyCredentialsData(companyData?.id, companyCredentials?.id, { username, password, current_password })
       .then((r) => {
         console.log(r);
         toast.success('Company credentials successfully updated.');

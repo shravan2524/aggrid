@@ -27,41 +27,42 @@ type ActionsRendererProps = {
 
 function ActionsRenderer({ params, onEditClickCallback, onCredentialsClickCallback }: ActionsRendererProps) {
   return (
-    <div className="d-flex justify-content-around align-items-center w-100 h-100">
-      <button type="button" className="btn btn-sm btn-light" onClick={(e) => onEditClickCallback(e, params)}>
+    <div className="d-flex align-items-center w-100 h-100">
+      <button type="button" className="btn btn-sm btn-light " onClick={(e) => onEditClickCallback(e, params)}>
         <i className="fa-solid fa-pen-to-square" />
         {' '}
         Edit
       </button>
+      {params.data.gstin !== '' && (
       <button
         type="button"
-        className="btn btn-sm btn-danger"
+        className="btn btn-sm btn-danger ml-4"
         onClick={(e) => onCredentialsClickCallback(e, params)}
       >
         <i className="fa-solid fa-key" />
         {' '}
         Credentials
       </button>
+)}
     </div>
   );
 }
 
 function CustomActionsToolPanel(onRefreshCallback, isFetchLoading) {
   return (
-    <div className="container-fluid">
-      <div className="row p-2 gap-2">
+    <div className="col">
+      <div className="row p-2 gap-2 m-1">
         <button
           type="button"
-          className="btn btn-sm btn-danger px-4 d-flex gap-2 align-items-center justify-content-center"
+          className="btn btn-sm btn-danger d-flex gap-1 align-items-center justify-content-center flex-wrap"
           onClick={() => showModal('newCompanyModal')}
         >
           <i className="fa-solid fa-circle-plus" />
           Add Company
         </button>
-
         <button
           type="button"
-          className="btn btn-sm btn-info px-4 d-flex gap-2 align-items-center justify-content-center"
+          className="btn btn-sm btn-info d-flex gap-1 align-items-center justify-content-center flex-wrap"
           onClick={onRefreshCallback}
         >
           <i className={classNames(['fa-solid', 'fa-rotate', { 'fa-spin': isFetchLoading }])} />
@@ -93,7 +94,7 @@ export default function CompaniesPage() {
   const dispatch = useAppDispatch();
   const gridRef = useRef<any>();
 
-  const [rowData, setRowData] = useState<any>();
+  const [rowData, setRowData] = useState<any[]>([]);
 
   const anyCustomer = useSelector(availableTenants);
   const { height, width } = useWindowDimensions();
@@ -111,7 +112,6 @@ export default function CompaniesPage() {
     setCompanyData(params.data);
     showModal('editCompanyModal', () => {
       setCompanyData(null);
-      dispatch(fetchCompanies());
     });
   };
 
@@ -194,7 +194,7 @@ export default function CompaniesPage() {
     'custom-actions-tool': '<i class="fa-solid fa-screwdriver-wrench"></i>',
   }), []);
 
-  const onRefreshCallback = () => useCallback(() => {
+  const onRefreshCallback = useCallback(() => {
     dispatch(fetchCompanies());
   }, []);
 
