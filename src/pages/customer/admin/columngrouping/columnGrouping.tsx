@@ -215,6 +215,7 @@ function CustomActionsToolPanel(onRefreshCallback, isFetchLoading) {
           <i className={classNames(['fa-solid', 'fa-rotate', { 'fa-spin': isFetchLoading }])} />
           Refresh
         </button>
+        <CommentsPage fileId={'12'} />
       </div>
     </div>
   );
