@@ -54,7 +54,7 @@ export default function EditFilesTypeModal({ selectedRows }: EditFilesTypeModalP
   const availableFilesTypes = useMemo(() => ([
     {
       type: 'invoicePdf',
-      label: 'Invoice Pdf',
+      label: 'Invoice PDF',
     },
     {
       type: '2A',

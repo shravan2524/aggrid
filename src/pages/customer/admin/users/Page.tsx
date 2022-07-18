@@ -72,7 +72,8 @@ function CustomActionsToolPanel(onRefreshCallback, isFetchLoading) {
           onClick={() => showModal(modalIdentifier)}
         >
           <i className="fa-solid fa-circle-plus" />
-          Add new
+          Add New
+          {' '}
           {moduleName}
         </button>
 

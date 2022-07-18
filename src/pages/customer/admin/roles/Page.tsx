@@ -109,7 +109,6 @@ function Page() {
     onModalHidden(`save${moduleName}Modal`, () => {
       setItemData(null);
       dispatch(readAll());
-      console.log('Here');
     });
   }, []);
 
