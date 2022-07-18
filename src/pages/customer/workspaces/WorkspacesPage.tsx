@@ -50,7 +50,7 @@ function CustomActionsToolPanel(onRefreshCallback, isFetchLoading) {
           onClick={() => showModal('newTenantModal')}
         >
           <i className="fa-solid fa-circle-plus" />
-          Add new Workspace
+          Add New Workspace
         </button>
         <button
           type="button"
