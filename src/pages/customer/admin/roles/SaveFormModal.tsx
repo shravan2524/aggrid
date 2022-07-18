@@ -28,7 +28,6 @@ interface SaveFormTypes extends Record<string, any> {
   const isPutLoading = useSelector(isPutLoadingSelector);
   const isPostLoading = useSelector(isPostLoadingSelector);
   const isLoading = isPostLoading || isPutLoading;
-
   const modalId = useMemo(() => 'saveRoleModal', []);
 
   const schema = yup.object({
@@ -63,7 +62,7 @@ interface SaveFormTypes extends Record<string, any> {
     } else {
       dispatch(create({ title: data.title, policies: data.policies }));
     }
-  }, []);
+  }, [itemData]);
 
   useEffect(() => {
     hideModal(modalId);
