@@ -251,6 +251,22 @@ export default function CommentsPage({ fileId }: File) {
   const [suggestionList, setSuggestionList] = React.useState(
     ['johnsmith', 'jennasurname2', 'tuijarajala'],
   );
+  useEffect(() => {
+    const options: RequestInit = {
+      method: 'GET',
+      credentials: 'include',
+    };
+    const apiUrl = `${BACKEND_API}/api/v1/${tenantUuid()}/users`;
+    fetch(apiUrl, options)
+      .then((response) => response.json())
+      .then((data1) => {
+        console.log(data1, 'hii');
+        const temp :any = [];
+        data1.map((e) => e.contact.email);
+        setSuggestionList(data1);
+      });
+    console.log(suggestionList);
+  }, []);
 
   const onChange = (event) => {
     settypedcomment(event.target.value);
