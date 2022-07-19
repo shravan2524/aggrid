@@ -265,7 +265,7 @@ export default function CommentsPage({ fileId }: File) {
         data1.map((e) => temp.push(e.contact.email));
       });
     setSuggestionList(temp);
-    console.log(suggestionList, 'ht');
+    console.log(suggestionList, temp, 'ht');
   }
   useEffect(() => {
     def();
