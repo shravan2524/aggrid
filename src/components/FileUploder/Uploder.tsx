@@ -30,7 +30,7 @@ function Uploder({ setFileDropZone }: Iprops) {
       <i className="fas fa-file-import uploadIcon" />
       <p className="fw-bold my-2">
         Drag & Drop or
-        <span className="text-warning"> Browser</span>
+        <span className="text-warning"> Browse</span>
       </p>
       {/* <p
         className={`text-small ${isDragReject ? 'text-danger' : 'fst-italic'}`}
