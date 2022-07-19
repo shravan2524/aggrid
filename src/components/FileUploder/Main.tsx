@@ -30,11 +30,14 @@ function ReactFileUploder() {
         );
         setProgress(progressInf);
       }
-    }).then(() => {
+    }).then((data) => {
       setMessage((prevMessage: any) => [
         ...prevMessage,
         `Uploaded the file successfully: ${file.name}`,
       ]);
+      if (data) {
+        dispatch(fetchFiles());
+      }
     });
   };
 
@@ -74,7 +77,7 @@ function ReactFileUploder() {
     setProgress([]);
     setLoading(false);
     setMessage([]);
-    dispatch(fetchFiles());
+    // dispatch(fetchFiles());
   };
 
   return (
