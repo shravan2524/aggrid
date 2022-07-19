@@ -68,7 +68,7 @@ function CustomActionsToolPanel(onRefreshCallback, isFetchLoading) {
           onClick={() => showModal(`save${moduleName}Modal`)}
         >
           <i className="fa-solid fa-circle-plus" />
-          Add new
+          Add New
           {' '}
           {moduleName}
         </button>
