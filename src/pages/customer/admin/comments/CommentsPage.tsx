@@ -251,22 +251,24 @@ export default function CommentsPage({ fileId }: File) {
   const [suggestionList, setSuggestionList] = React.useState(
     ['johnsmith', 'jennasurname2', 'tuijarajala'],
   );
-  useEffect(() => {
-    const options: RequestInit = {
-      method: 'GET',
-      credentials: 'include',
-    };
-    const apiUrl = `${BACKEND_API}/api/v1/${tenantUuid()}/users`;
-    fetch(apiUrl, options)
+  const options1: RequestInit = {
+    method: 'GET',
+    credentials: 'include',
+  };
+  const apiUrl1 = `${BACKEND_API}/api/v1/${tenantUuid()}/users`;
+  async function def() {
+    const temp :any = [];
+    await fetch(apiUrl1, options1)
       .then((response) => response.json())
       .then((data1) => {
         console.log(data1, 'hii');
-        const temp :any = [];
-        data1.map((e) => e.contact.email);
-        console.log(data1);
-        setSuggestionList(data1);
+        data1.map((e) => temp.push(e.contact.email));
       });
+    setSuggestionList(temp);
     console.log(suggestionList, 'ht');
+  }
+  useEffect(() => {
+    def();
   }, []);
 
   const onChange = (event) => {
