@@ -10,7 +10,7 @@ export function agGridRowDrag(params) {
 }
 
 export function agGridDateFormatter(params: ValueFormatterParams) {
-  return moment(params.value).format('LLL');
+  return moment(params.data?.updatedAt).format('LLL');
 }
 
 export function agGridCompaniesDTO(companies: CompaniesType[]): CompaniesAgGridType[] {
