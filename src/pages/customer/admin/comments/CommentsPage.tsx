@@ -262,12 +262,11 @@ export default function CommentsPage({ fileId }: File) {
       .then((data1) => {
         console.log(data1, 'hii');
         const temp :any = [];
-        for (let x = 0; x <= data1.length(); x++) {
-          temp.push(data1[x].contact.email);
-        }
-        setSuggestionList(temp);
+        data1.map((e) => e.contact.email);
+        console.log(data1);
+        setSuggestionList(data1);
       });
-    console.log(suggestionList);
+    console.log(suggestionList, 'ht');
   }, []);
 
   const onChange = (event) => {
