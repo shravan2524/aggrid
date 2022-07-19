@@ -28,6 +28,7 @@ const modalIdentifier = `save${moduleName}Modal`;
 
 interface Type {
   btnName: string;
+  sendFunc: Function;
 }
 
 interface AGGridType {
@@ -129,23 +130,17 @@ function agGridDTO(rows: Array<ItemType>): Array<AGGridType> {
   );
 }
 
-function Container1({ btnName }: Type) {
+function Container1({ btnName, sendFunc }: Type) {
   const [show, setShow] = useState(false);
+  const [colgroup, setcolgroup] = useState('');
   const handleShow = () => {
     setShow(true);
+    setcolgroup('');
   };
-  const handleClose = () => setShow(false);
-  const [colgroup, setcolgroup] = useState('');
-  const onSubmitAction = (e) => {
-    e.preventDefault();
+  const handleClose = () => {
     setShow(false);
-    const ColumnGroup = {
-      title: '1',
-      description: colgroup,
-      createdBy: 1,
-      parent: 1,
-    };
-
+  };
+  async function getData() {
     const options: RequestInit = {
       headers: {
         Accept: 'application/json',
@@ -161,12 +156,18 @@ function Container1({ btnName }: Type) {
       }),
     };
     const apiUrl = `${BACKEND_API}/api/v1/${tenantUuid()}/column-groups`;
-    fetch(apiUrl, options)
+    await fetch(apiUrl, options)
       .then((response) => response.json())
       .then((data) => {
         // console.log(data);
         toast.success('Column Group added');
       });
+    await sendFunc();
+  }
+  const onSubmitAction = (e) => {
+    e.preventDefault();
+    setShow(false);
+    getData();
   };
   const modalId = 'ColunGroup';
   return (
@@ -202,11 +203,11 @@ function Container1({ btnName }: Type) {
   );
 }
 
-function CustomActionsToolPanel(onRefreshCallback, isFetchLoading) {
+function CustomActionsToolPanel(onRefreshCallback, isFetchLoading, sendFunc) {
   return (
     <div className="col">
       <div className="row p-2 gap-2 m-1">
-        <Container1 btnName="Create Column Group" />
+        <Container1 btnName="Create Column Group" sendFunc={sendFunc} />
         <button
           type="button"
           className="btn btn-sm btn-info px-4 d-flex gap-2 align-items-center justify-content-center flex-wrap"
@@ -215,7 +216,6 @@ function CustomActionsToolPanel(onRefreshCallback, isFetchLoading) {
           <i className={classNames(['fa-solid', 'fa-rotate', { 'fa-spin': isFetchLoading }])} />
           Refresh
         </button>
-        <CommentsPage fileId={'12'} />
       </div>
     </div>
   );
@@ -285,7 +285,7 @@ export default function columnGrouping() {
     'custom-actions-tool': '<i className="fa-solid fa-screwdriver-wrench"></i>',
   }), []);
 
-  const onRefreshCallback = () => {
+  const sendFunc = () => {
     const options: RequestInit = {
       method: 'GET',
       credentials: 'include',
@@ -297,6 +297,9 @@ export default function columnGrouping() {
         setRowData(data);
       });
   };
+  const onRefreshCallback = () => {
+    sendFunc();
+  };
 
   const sideBar = useMemo(() => ({
     toolPanels: [
@@ -305,7 +308,7 @@ export default function columnGrouping() {
         labelDefault: 'Actions',
         labelKey: 'customActionsTool',
         iconKey: 'custom-actions-tool',
-        toolPanel: () => CustomActionsToolPanel(onRefreshCallback, isFetchLoading),
+        toolPanel: () => CustomActionsToolPanel(onRefreshCallback, isFetchLoading, sendFunc),
       },
       {
         id: 'columns',

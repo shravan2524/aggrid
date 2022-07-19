@@ -263,9 +263,10 @@ export default function CommentsPage({ fileId }: File) {
         console.log(data1, 'hii');
         const temp :any = [];
         data1.map((e) => e.contact.email);
+        console.log(data1);
         setSuggestionList(data1);
       });
-    console.log(suggestionList);
+    console.log(suggestionList, 'ht');
   }, []);
 
   const onChange = (event) => {
