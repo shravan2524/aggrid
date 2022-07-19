@@ -69,7 +69,7 @@ export default function ColumnMapping({ fileType, id }: Type) {
       })
       .catch((e) => console.log(e));
 
-    const apiUrlColumnGroups = `${BACKEND_API}/api/v1/${tenantUuid()}/columngroups`;
+    const apiUrlColumnGroups = `${BACKEND_API}/api/v1/${tenantUuid()}/column-groups`;
     fetch(apiUrlColumnGroups, options)
       .then((r) => {
         if (r.ok) {

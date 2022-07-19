@@ -1,6 +1,8 @@
+import { useAppDispatch } from 'app/hooks';
 import { hideModal, showModal } from 'app/utils/Modal';
-import React, { useRef, useState } from 'react';
+import React, { useCallback, useRef, useState } from 'react';
 import { MutPart } from 'services/UploadImageS3API';
+import { fetchFiles } from 'state/files/filesSlice';
 import UploadFileModel from './UploadMode';
 import './Uploder.scss';
 
@@ -10,6 +12,7 @@ function ReactFileUploder() {
   const [progress, setProgress] = useState<number[]>([]);
   const [message, setMessage] = useState<any>([]);
   const progressInfosRef = useRef<any>([]);
+  const dispatch = useAppDispatch();
   const modalId = 'add';
   //   const chunkSize = 5 * 1024 * 1024; // 5MiB
   //   const mapd = fileDropZone && fileDropZone.map((r:any) => Math.floor(r.size / chunkSize) + 1)
@@ -27,11 +30,14 @@ function ReactFileUploder() {
         );
         setProgress(progressInf);
       }
-    }).then(() => {
+    }).then((data) => {
       setMessage((prevMessage: any) => [
         ...prevMessage,
         `Uploaded the file successfully: ${file.name}`,
       ]);
+      if (data) {
+        dispatch(fetchFiles());
+      }
     });
   };
 
@@ -67,12 +73,10 @@ function ReactFileUploder() {
   // CLOSE MODEL
   const Close = () => {
     hideModal(modalId);
-    if (Total === 100) {
-      setFileDropZone(null);
-      setProgress([]);
-      setLoading(false);
-      setMessage([]);
-    }
+    setFileDropZone(null);
+    setProgress([]);
+    setLoading(false);
+    setMessage([]);
   };
 
   return (
