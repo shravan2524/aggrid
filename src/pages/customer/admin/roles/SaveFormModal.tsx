@@ -66,9 +66,7 @@ interface SaveFormTypes extends Record<string, any> {
   }, [itemData]);
 
   useEffect(() => {
-    if (!isLoading) {
-      hideModal(modalId);
-    }
+    hideModal(modalId);
   }, [isLoading]);
 
   useEffect(() => {
