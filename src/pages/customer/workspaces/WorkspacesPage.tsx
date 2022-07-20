@@ -25,6 +25,7 @@ import {
   isLoadingSelector,
 } from 'state/companies/companiesSlice';
 import classNames from 'classnames';
+import { AggridPagination } from 'components/AggridPagination';
 import NewTenantModal from './NewTenantModal';
 import EditTenantModal from './EditTenantModal';
 
@@ -115,17 +116,15 @@ export default function WorkspacesPage() {
   const selectedWorkspace = useSelector(getSelectedTenant);
   const [tenantToEdit, setTenantToEdit] = useState<TenantType | null>(null);
   const isFetchLoading = useSelector(isLoadingSelector);
-  const { height, width } = useWindowDimensions();
+  const { width } = useWindowDimensions();
   const [rowData, setRowData] = useState<TenantAGGridType[]>([]);
-
+  const [totalPages, setTotalPage] = useState<number>(0);
+  const [currentPage, setCurrentPage] = useState<number>(0);
   const containerStyle = useMemo(
-    () => ({
-      width: '100%',
-      height: `${height}px`,
-      minHeight: '600px',
-    }),
-    [height, width],
+    () => ({ width: '100%', height: '100vh' }),
+    [],
   );
+  const gridStyle = useMemo(() => ({ height: '500px', width: '100%' }), []);
 
   const onEditClickCallback = (e, params) => {
     setTenantToEdit(params.data);
@@ -253,12 +252,6 @@ export default function WorkspacesPage() {
   );
 
   useEffect(() => {
-    if (gridRef.current?.api) {
-      gridRef.current?.api.sizeColumnsToFit();
-    }
-  }, [width, rows]);
-
-  useEffect(() => {
     if (rows) {
       setRowData(agGridTenantsDTO(rows));
 
@@ -266,41 +259,56 @@ export default function WorkspacesPage() {
         gridRef.current?.api.sizeColumnsToFit();
       }
     }
-  }, [rows]);
-
-  useEffect(() => {
     if (gridRef.current?.api && selectedWorkspace) {
       gridRef.current?.api.forEachNodeAfterFilter((rowNode) => {
         rowNode.setSelected(rowNode.data.title === selectedWorkspace?.title);
       });
     }
-  }, [selectedWorkspace]);
+  }, [width, rows, selectedWorkspace]);
+
+  // navigation
+  const onPaginationChanged = () => {
+    if (gridRef.current!.api!) {
+      setCurrentPage(gridRef.current!.api.paginationGetCurrentPage() + 1);
+      setTotalPage(gridRef.current!.api.paginationGetTotalPages());
+    }
+  };
 
   return (
     <PageWrapper pageTitle="Workspaces" icon="fa-solid fa-building">
-      <div className=" ag-theme-alpine grid-container-style">
+      <div style={containerStyle}>
         <NewTenantModal />
         <EditTenantModal tenantToEdit={tenantToEdit} />
-        <AgGridReact
-          containerStyle={containerStyle}
-          ref={gridRef}
-          rowData={rowData}
-          columnDefs={columnDefs}
-          sideBar={sideBar}
-          rowSelection="multiple"
-          rowDragManaged
-          rowDragMultiRow
-          rowGroupPanelShow="always"
-          defaultColDef={defaultColDef}
-          groupDisplayType="multipleColumns"
-          animateRows
-          onGridReady={onGridReady}
-          icons={icons}
-          pagination
-          onFirstDataRendered={onFirstDataRendered}
-          enableRangeSelection
-          masterDetail
-        />
+        <div style={gridStyle} className="ag-theme-alpine">
+          <AgGridReact
+            ref={gridRef}
+            rowData={rowData}
+            columnDefs={columnDefs}
+            sideBar={sideBar}
+            rowSelection="multiple"
+            rowDragManaged
+            rowDragMultiRow
+            rowGroupPanelShow="always"
+            defaultColDef={defaultColDef}
+            groupDisplayType="multipleColumns"
+            animateRows
+            onGridReady={onGridReady}
+            icons={icons}
+            paginationPageSize={10}
+            pagination
+            suppressPaginationPanel
+            suppressScrollOnNewData
+            onPaginationChanged={onPaginationChanged}
+            onFirstDataRendered={onFirstDataRendered}
+            enableRangeSelection
+            masterDetail
+          />
+          <AggridPagination
+            gridRef={gridRef}
+            totalPages={totalPages}
+            currentPage={currentPage}
+          />
+        </div>
       </div>
     </PageWrapper>
   );
