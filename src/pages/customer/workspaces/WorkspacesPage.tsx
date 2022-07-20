@@ -1,41 +1,79 @@
 import React, {
-  useCallback, useEffect, useMemo, useRef, useState,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
 } from 'react';
 import { AgGridReact } from 'ag-grid-react';
 import { showModal } from 'app/utils/Modal';
 import { useAppDispatch, useWindowDimensions } from 'app/hooks';
 import PageWrapper from 'components/PageWrapper';
 import {
-  fetchTenants, updateTenantRequest,
-  getTenants, setSelectedTenant, getSelectedTenant,
+  fetchTenants,
+  updateTenantRequest,
+  getTenants,
+  setSelectedTenant,
+  getSelectedTenant,
 } from 'state/tenants/tenantsSlice';
 import { agGridTenantsDTO } from 'app/utils/Helpers';
 import { TenantAGGridType, TenantType } from 'services/tenantsAPIService';
 import { useSelector } from 'react-redux';
 import { ICellRendererParams } from 'ag-grid-community';
-import { setSelectedCompany, isLoadingSelector } from 'state/companies/companiesSlice';
+import {
+  setSelectedCompany,
+  isLoadingSelector,
+} from 'state/companies/companiesSlice';
 import classNames from 'classnames';
+import { AggridPagination } from 'components/AggridPagination';
 import NewTenantModal from './NewTenantModal';
 import EditTenantModal from './EditTenantModal';
 
 type ActionsRendererProps = {
   params: ICellRendererParams;
-  onEditClickCallback: (e: React.MouseEvent<HTMLButtonElement>, params: ICellRendererParams) => void;
-  onSelectClickCallback: (e: React.MouseEvent<HTMLButtonElement>, params: ICellRendererParams) => void;
+  onEditClickCallback: (
+    e: React.MouseEvent<HTMLButtonElement>,
+    params: ICellRendererParams
+  ) => void;
+  onSelectClickCallback: (
+    e: React.MouseEvent<HTMLButtonElement>,
+    params: ICellRendererParams
+  ) => void;
 };
-function ActionsRenderer({ params, onEditClickCallback, onSelectClickCallback }: ActionsRendererProps) {
+function ActionsRenderer({
+  params,
+  onEditClickCallback,
+  onSelectClickCallback,
+}: ActionsRendererProps) {
+  const activeTenant = useSelector(getSelectedTenant);
   return (
     <div className="d-flex justify-content-evenly align-items-center w-100 h-100">
-      <button type="button" className="btn btn-sm btn-light" onClick={(e) => onEditClickCallback(e, params)}>
+      <button
+        type="button"
+        className="btn btn-sm btn-light"
+        onClick={(e) => onEditClickCallback(e, params)}
+      >
         <i className="fa-solid fa-pen-to-square" />
         {' '}
         Edit
       </button>
-      <button type="button" className="btn btn-sm btn-light" onClick={(e) => onSelectClickCallback(e, params)}>
-        <i className="fa-solid fa-circle-check" />
-        {' '}
-        Select
-      </button>
+      {activeTenant?.id !== params.data?.id ? (
+        <button
+          type="button"
+          className="btn btn-sm btn-light"
+          onClick={(e) => onSelectClickCallback(e, params)}
+        >
+          <i className="fa-solid fa-circle-check" />
+          {' '}
+          Select
+        </button>
+      ) : (
+        <button type="button" className="btn btn-sm btn-light text-success">
+          <i className="fa-solid fa-circle-check" />
+          {' '}
+          Active
+        </button>
+      )}
     </div>
   );
 }
@@ -57,7 +95,13 @@ function CustomActionsToolPanel(onRefreshCallback, isFetchLoading) {
           className="btn btn-sm btn-info px-4 d-flex gap-2 align-items-center justify-content-center flex-wrap"
           onClick={onRefreshCallback}
         >
-          <i className={classNames(['fa-solid', 'fa-rotate', { 'fa-spin': isFetchLoading }])} />
+          <i
+            className={classNames([
+              'fa-solid',
+              'fa-rotate',
+              { 'fa-spin': isFetchLoading },
+            ])}
+          />
           Refresh
         </button>
       </div>
@@ -72,15 +116,15 @@ export default function WorkspacesPage() {
   const selectedWorkspace = useSelector(getSelectedTenant);
   const [tenantToEdit, setTenantToEdit] = useState<TenantType | null>(null);
   const isFetchLoading = useSelector(isLoadingSelector);
-  const { height, width } = useWindowDimensions();
-
-  const [rowData, setRowData] = useState<TenantAGGridType[] >([]);
-
-  const containerStyle = useMemo(() => ({
-    width: '100%',
-    height: `${(height)}px`,
-    minHeight: '600px',
-  }), [height, width]);
+  const { width } = useWindowDimensions();
+  const [rowData, setRowData] = useState<TenantAGGridType[]>([]);
+  const [totalPages, setTotalPage] = useState<number>(0);
+  const [currentPage, setCurrentPage] = useState<number>(0);
+  const containerStyle = useMemo(
+    () => ({ width: '100%', height: '100vh' }),
+    [],
+  );
+  const gridStyle = useMemo(() => ({ height: '500px', width: '100%' }), []);
 
   const onEditClickCallback = (e, params) => {
     setTenantToEdit(params.data);
@@ -88,6 +132,7 @@ export default function WorkspacesPage() {
   };
 
   const onSelectClickCallback = (e, params) => {
+    // console.log(selectedWorkspace);
     if (params.data) {
       if (params.data.id) {
         dispatch(setSelectedCompany(null));
@@ -119,7 +164,13 @@ export default function WorkspacesPage() {
         {
           field: 'actions',
           // eslint-disable-next-line react/no-unstable-nested-components
-          cellRenderer: (params) => (<ActionsRenderer params={params} onEditClickCallback={(e) => onEditClickCallback(e, params)} onSelectClickCallback={(e) => onSelectClickCallback(e, params)} />),
+          cellRenderer: (params) => (
+            <ActionsRenderer
+              params={params}
+              onEditClickCallback={(e) => onEditClickCallback(e, params)}
+              onSelectClickCallback={(e) => onSelectClickCallback(e, params)}
+            />
+          ),
           editable: false,
           filter: false,
           cellStyle: (params) => {
@@ -134,65 +185,71 @@ export default function WorkspacesPage() {
     },
   ]);
 
-  const icons = useMemo<{ [key: string]: Function | string; }>(() => ({
-    'custom-actions-tool': '<i class="fa-solid fa-screwdriver-wrench"></i>',
-  }), []);
+  const icons = useMemo<{ [key: string]: Function | string }>(
+    () => ({
+      'custom-actions-tool': '<i class="fa-solid fa-screwdriver-wrench"></i>',
+    }),
+    [],
+  );
 
   const onRefreshCallback = () => {
     dispatch(fetchTenants());
   };
 
-  const sideBar = useMemo(() => ({
-    toolPanels: [
-      {
-        id: 'customActionsTool',
-        labelDefault: 'Actions',
-        labelKey: 'customActionsTool',
-        iconKey: 'custom-actions-tool',
-        toolPanel: () => CustomActionsToolPanel(onRefreshCallback, isFetchLoading),
-      },
-      {
-        id: 'columns',
-        labelDefault: 'Columns',
-        labelKey: 'columns',
-        iconKey: 'columns',
-        toolPanel: 'agColumnsToolPanel',
-      },
-      {
-        id: 'filters',
-        labelDefault: 'Filters',
-        labelKey: 'filters',
-        iconKey: 'filter',
-        toolPanel: 'agFiltersToolPanel',
-      },
-    ],
-    defaultToolPanel: 'customActionsTool',
-  }), [isFetchLoading]);
+  const sideBar = useMemo(
+    () => ({
+      toolPanels: [
+        {
+          id: 'customActionsTool',
+          labelDefault: 'Actions',
+          labelKey: 'customActionsTool',
+          iconKey: 'custom-actions-tool',
+          toolPanel: () => CustomActionsToolPanel(onRefreshCallback, isFetchLoading),
+        },
+        {
+          id: 'columns',
+          labelDefault: 'Columns',
+          labelKey: 'columns',
+          iconKey: 'columns',
+          toolPanel: 'agColumnsToolPanel',
+        },
+        {
+          id: 'filters',
+          labelDefault: 'Filters',
+          labelKey: 'filters',
+          iconKey: 'filter',
+          toolPanel: 'agFiltersToolPanel',
+        },
+      ],
+      defaultToolPanel: 'customActionsTool',
+    }),
+    [isFetchLoading],
+  );
 
-  const defaultColDef = useMemo(() => ({
-    sortable: true,
-    filter: true,
-    resizable: true,
-    floatingFilter: true,
-    enableRowGroup: true,
-    editable: true,
-    enablePivot: true,
-    enableValue: true,
-  }), []);
+  const defaultColDef = useMemo(
+    () => ({
+      sortable: true,
+      filter: true,
+      resizable: true,
+      floatingFilter: true,
+      enableRowGroup: true,
+      editable: true,
+      enablePivot: true,
+      enableValue: true,
+    }),
+    [],
+  );
 
   const onFirstDataRendered = useCallback(() => {
     gridRef.current?.api.sizeColumnsToFit();
   }, []);
 
-  const onGridReady = useCallback((params) => {
-    dispatch(fetchTenants());
-  }, [dispatch]);
-
-  useEffect(() => {
-    if (gridRef.current?.api) {
-      gridRef.current?.api.sizeColumnsToFit();
-    }
-  }, [width, rows]);
+  const onGridReady = useCallback(
+    (params) => {
+      dispatch(fetchTenants());
+    },
+    [dispatch],
+  );
 
   useEffect(() => {
     if (rows) {
@@ -202,44 +259,57 @@ export default function WorkspacesPage() {
         gridRef.current?.api.sizeColumnsToFit();
       }
     }
-  }, [rows]);
-
-  useEffect(() => {
     if (gridRef.current?.api && selectedWorkspace) {
       gridRef.current?.api.forEachNodeAfterFilter((rowNode) => {
         rowNode.setSelected(rowNode.data.title === selectedWorkspace?.title);
       });
     }
-  }, [selectedWorkspace]);
+  }, [width, rows, selectedWorkspace]);
+
+  // navigation
+  const onPaginationChanged = () => {
+    if (gridRef.current!.api!) {
+      setCurrentPage(gridRef.current!.api.paginationGetCurrentPage() + 1);
+      setTotalPage(gridRef.current!.api.paginationGetTotalPages());
+    }
+  };
 
   return (
     <PageWrapper pageTitle="Workspaces" icon="fa-solid fa-building">
-
-      <div className=" ag-theme-alpine grid-container-style">
+      <div style={containerStyle}>
         <NewTenantModal />
         <EditTenantModal tenantToEdit={tenantToEdit} />
-        <AgGridReact
-          containerStyle={containerStyle}
-          ref={gridRef}
-          rowData={rowData}
-          columnDefs={columnDefs}
-          sideBar={sideBar}
-          rowSelection="multiple"
-          rowDragManaged
-          rowDragMultiRow
-          rowGroupPanelShow="always"
-          defaultColDef={defaultColDef}
-          groupDisplayType="multipleColumns"
-          animateRows
-          onGridReady={onGridReady}
-          icons={icons}
-          pagination
-          onFirstDataRendered={onFirstDataRendered}
-          enableRangeSelection
-          masterDetail
-        />
+        <div style={gridStyle} className="ag-theme-alpine">
+          <AgGridReact
+            ref={gridRef}
+            rowData={rowData}
+            columnDefs={columnDefs}
+            sideBar={sideBar}
+            rowSelection="multiple"
+            rowDragManaged
+            rowDragMultiRow
+            rowGroupPanelShow="always"
+            defaultColDef={defaultColDef}
+            groupDisplayType="multipleColumns"
+            animateRows
+            onGridReady={onGridReady}
+            icons={icons}
+            paginationPageSize={10}
+            pagination
+            suppressPaginationPanel
+            suppressScrollOnNewData
+            onPaginationChanged={onPaginationChanged}
+            onFirstDataRendered={onFirstDataRendered}
+            enableRangeSelection
+            masterDetail
+          />
+          <AggridPagination
+            gridRef={gridRef}
+            totalPages={totalPages}
+            currentPage={currentPage}
+          />
+        </div>
       </div>
-
     </PageWrapper>
   );
 }
