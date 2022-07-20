@@ -12,6 +12,7 @@ import { RoleType, PolicyType as RolePolicyType } from 'services/roles';
 import { useSelector } from 'react-redux';
 import { ICellRendererParams } from 'ag-grid-community';
 import classNames from 'classnames';
+import { agGridDateFormatter } from 'app/utils/Helpers';
 import SaveFormModal from './SaveFormModal';
 
 const moduleName = 'Role';
@@ -127,7 +128,7 @@ function Page() {
         {
           headerName: 'Title',
           field: 'title',
-          filter: 'agNumberColumnFilter',
+          filter: 'agTextColumnFilter',
           onCellValueChanged: (event) => {
             const payload = { ...event.data };
             dispatch(update({ ...payload }));
@@ -136,15 +137,15 @@ function Page() {
         {
           headerName: 'Policies',
           field: 'policies',
-          filter: 'agNumberColumnFilter',
+          filter: 'agTextColumnFilter',
           valueGetter: PoliciesRenderer,
           editable: false,
         },
         {
           headerName: 'Updated At',
           field: 'updatedAt',
-          filter: 'agNumberColumnFilter',
-          // valueGetter: PoliciesRenderer,
+          filter: 'agTextColumnFilter',
+          valueGetter: agGridDateFormatter,
           editable: false,
         },
         {

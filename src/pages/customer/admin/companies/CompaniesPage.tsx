@@ -1,12 +1,18 @@
 import React, {
-  useCallback, useEffect, useMemo, useRef, useState,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
 } from 'react';
 import { AgGridReact } from 'ag-grid-react';
 import { onModalHidden, showModal } from 'app/utils/Modal';
 import { useAppDispatch, useCompanies, useWindowDimensions } from 'app/hooks';
 import PageWrapper from 'components/PageWrapper';
 import {
-  fetchCompanies, updateCompanyRequest, isLoadingSelector,
+  fetchCompanies,
+  updateCompanyRequest,
+  isLoadingSelector,
 } from 'state/companies/companiesSlice';
 import { agGridCompaniesDTO } from 'app/utils/Helpers';
 import { CompaniesType } from 'services/companiesAPIService';
@@ -15,35 +21,50 @@ import { availableTenants } from 'state/tenants/tenantsSlice';
 import { ICellRendererParams } from 'ag-grid-community';
 import classNames from 'classnames';
 import { toast } from 'react-hot-toast';
+import { AggridPagination } from 'components/AggridPagination';
 import NewCompanyModal from './NewCompanyModal';
 import EditCompanyModal from './EditCompanyModal';
 import CompanyCredentialsModal from './CompanyCredentialsModal';
 
 type ActionsRendererProps = {
   params: ICellRendererParams;
-  onEditClickCallback: (e: React.MouseEvent<HTMLButtonElement>, params: ICellRendererParams) => void;
-  onCredentialsClickCallback: (e: React.MouseEvent<HTMLButtonElement>, params: ICellRendererParams) => void;
+  onEditClickCallback: (
+    e: React.MouseEvent<HTMLButtonElement>,
+    params: ICellRendererParams
+  ) => void;
+  onCredentialsClickCallback: (
+    e: React.MouseEvent<HTMLButtonElement>,
+    params: ICellRendererParams
+  ) => void;
 };
 
-function ActionsRenderer({ params, onEditClickCallback, onCredentialsClickCallback }: ActionsRendererProps) {
+function ActionsRenderer({
+  params,
+  onEditClickCallback,
+  onCredentialsClickCallback,
+}: ActionsRendererProps) {
   return (
     <div className="d-flex align-items-center w-100 h-100">
-      <button type="button" className="btn btn-sm btn-light " onClick={(e) => onEditClickCallback(e, params)}>
+      <button
+        type="button"
+        className="btn btn-sm btn-light "
+        onClick={(e) => onEditClickCallback(e, params)}
+      >
         <i className="fa-solid fa-pen-to-square" />
         {' '}
         Edit
       </button>
       {params.data.gstin !== '' && (
-      <button
-        type="button"
-        className="btn btn-sm btn-danger ml-4"
-        onClick={(e) => onCredentialsClickCallback(e, params)}
-      >
-        <i className="fa-solid fa-key" />
-        {' '}
-        Credentials
-      </button>
-)}
+        <button
+          type="button"
+          className="btn btn-sm btn-danger ml-4"
+          onClick={(e) => onCredentialsClickCallback(e, params)}
+        >
+          <i className="fa-solid fa-key" />
+          {' '}
+          Credentials
+        </button>
+      )}
     </div>
   );
 }
@@ -65,7 +86,13 @@ function CustomActionsToolPanel(onRefreshCallback, isFetchLoading) {
           className="btn btn-sm btn-info d-flex gap-1 align-items-center justify-content-center flex-wrap"
           onClick={onRefreshCallback}
         >
-          <i className={classNames(['fa-solid', 'fa-rotate', { 'fa-spin': isFetchLoading }])} />
+          <i
+            className={classNames([
+              'fa-solid',
+              'fa-rotate',
+              { 'fa-spin': isFetchLoading },
+            ])}
+          />
           Refresh
         </button>
       </div>
@@ -93,20 +120,19 @@ function ParentRenderer(params) {
 export default function CompaniesPage() {
   const dispatch = useAppDispatch();
   const gridRef = useRef<any>();
-
-  const [rowData, setRowData] = useState<any[]>([]);
-
-  const anyCustomer = useSelector(availableTenants);
   const { height, width } = useWindowDimensions();
+  const [rowData, setRowData] = useState<any[]>([]);
+  const [totalPages, setTotalPage] = useState<number>(0);
+  const [currentPage, setCurrentPage] = useState<number>(0);
+  const anyCustomer = useSelector(availableTenants);
   const rows: any = useCompanies();
   const [companyData, setCompanyData] = useState<CompaniesType | null>(null);
   const isFetchLoading = useSelector(isLoadingSelector);
-
-  const containerStyle = useMemo(() => ({
-    width: '100%',
-    height: `${(height)}px`,
-    minHeight: '600px',
-  }), [height, width]);
+  const containerStyle = useMemo(
+    () => ({ width: '100%', height: '100vh' }),
+    [],
+  );
+  const gridStyle = useMemo(() => ({ height: '500px', width: '100%' }), []);
 
   const onEditClickCallback = (e, params) => {
     setCompanyData(params.data);
@@ -138,9 +164,7 @@ export default function CompaniesPage() {
           filter: 'agNumberColumnFilter',
           onCellValueChanged: (event) => {
             const { gstin, id } = event.data;
-
             const isValidGSTIN = /^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$/.test(gstin);
-
             if (isValidGSTIN) {
               const payload = { data: { gstin }, id };
               dispatch(updateCompanyRequest({ ...payload }));
@@ -190,118 +214,132 @@ export default function CompaniesPage() {
     },
   ]);
 
-  const icons = useMemo<{ [key: string]: Function | string; }>(() => ({
-    'custom-actions-tool': '<i class="fa-solid fa-screwdriver-wrench"></i>',
-  }), []);
+  const icons = useMemo<{ [key: string]: Function | string }>(
+    () => ({
+      'custom-actions-tool': '<i class="fa-solid fa-screwdriver-wrench"></i>',
+    }),
+    [],
+  );
 
   const onRefreshCallback = useCallback(() => {
     dispatch(fetchCompanies());
   }, []);
 
-  const sideBar = useMemo(() => ({
-    toolPanels: [
-      {
-        id: 'customActionsTool',
-        labelDefault: 'Actions',
-        labelKey: 'customActionsTool',
-        iconKey: 'custom-actions-tool',
-        toolPanel: () => CustomActionsToolPanel(onRefreshCallback, isFetchLoading),
-      },
-      {
-        id: 'columns',
-        labelDefault: 'Columns',
-        labelKey: 'columns',
-        iconKey: 'columns',
-        toolPanel: 'agColumnsToolPanel',
-      },
-      {
-        id: 'filters',
-        labelDefault: 'Filters',
-        labelKey: 'filters',
-        iconKey: 'filter',
-        toolPanel: 'agFiltersToolPanel',
-      },
-    ],
-    defaultToolPanel: 'customActionsTool',
-  }), [isFetchLoading]);
+  const sideBar = useMemo(
+    () => ({
+      toolPanels: [
+        {
+          id: 'customActionsTool',
+          labelDefault: 'Actions',
+          labelKey: 'customActionsTool',
+          iconKey: 'custom-actions-tool',
+          toolPanel: () => CustomActionsToolPanel(onRefreshCallback, isFetchLoading),
+        },
+        {
+          id: 'columns',
+          labelDefault: 'Columns',
+          labelKey: 'columns',
+          iconKey: 'columns',
+          toolPanel: 'agColumnsToolPanel',
+        },
+        {
+          id: 'filters',
+          labelDefault: 'Filters',
+          labelKey: 'filters',
+          iconKey: 'filter',
+          toolPanel: 'agFiltersToolPanel',
+        },
+      ],
+      defaultToolPanel: 'customActionsTool',
+    }),
+    [isFetchLoading],
+  );
 
-  const defaultColDef = useMemo(() => ({
-    sortable: true,
-    filter: true,
-    resizable: true,
-    floatingFilter: true,
-    enableRowGroup: true,
-    editable: true,
-    enablePivot: true,
-    enableValue: true,
-  }), []);
+  const defaultColDef = useMemo(
+    () => ({
+      sortable: true,
+      filter: true,
+      resizable: true,
+      floatingFilter: true,
+      enableRowGroup: true,
+      editable: true,
+      enablePivot: true,
+      enableValue: true,
+    }),
+    [],
+  );
 
-  const onFirstDataRendered = useCallback(() => {
-    gridRef.current?.api.sizeColumnsToFit();
-  }, []);
-
-  const onNewCompanyHiddenCache = useCallback(() => onModalHidden('newCompanyModal', () => dispatch(fetchCompanies())), []);
+  const onNewCompanyHiddenCache = useCallback(
+    () => onModalHidden('newCompanyModal', () => dispatch(fetchCompanies())),
+    [],
+  );
 
   useEffect(() => {
+    onNewCompanyHiddenCache();
+    if (rows.length) {
+      setRowData(agGridCompaniesDTO(rows));
+    }
     if (gridRef.current?.api) {
       gridRef.current?.api.sizeColumnsToFit();
     }
   }, [width, rows]);
-
-  useEffect(() => {
-    if (rows.length) {
-      setRowData(agGridCompaniesDTO(rows));
-    }
-
-    if (gridRef.current?.api) {
-      gridRef.current?.api.sizeColumnsToFit();
-    }
-  }, [rows]);
-
-  useEffect(() => {
-    onNewCompanyHiddenCache();
-  }, []);
 
   if (!anyCustomer) {
     return (
       <PageWrapper pageTitle="Companies" icon="fa-solid fa-building">
         <div className="col">
           <div className="alert alert-info" role="alert">
-            You have no Workspaces set, please set first at less one Workspace in order to use Companies .
+            You have no Workspaces set, please set first at less one Workspace
+            in order to use Companies .
           </div>
         </div>
       </PageWrapper>
     );
   }
 
+  // navigation
+  const onPaginationChanged = () => {
+    if (gridRef.current!.api!) {
+      setCurrentPage(gridRef.current!.api.paginationGetCurrentPage() + 1);
+      setTotalPage(gridRef.current!.api.paginationGetTotalPages());
+    }
+  };
+
   return (
     <PageWrapper pageTitle="Companies" icon="fa-solid fa-building">
-
-      <div className=" ag-theme-alpine grid-container-style">
+      <div style={containerStyle}>
         <NewCompanyModal />
         <EditCompanyModal companyData={companyData} />
         <CompanyCredentialsModal companyData={companyData} />
-        <AgGridReact
-          containerStyle={containerStyle}
-          ref={gridRef}
-          rowData={rowData}
-          columnDefs={columnDefs}
-          sideBar={sideBar}
-          rowSelection="multiple"
-          rowDragManaged
-          rowDragMultiRow
-          rowGroupPanelShow="always"
-          defaultColDef={defaultColDef}
-          groupDisplayType="multipleColumns"
-          animateRows
-          icons={icons}
-          pagination
-          onFirstDataRendered={onFirstDataRendered}
-          enableRangeSelection
-          masterDetail
-        />
+        <div style={gridStyle} className="ag-theme-alpine">
+          <AgGridReact
+            ref={gridRef}
+            rowData={rowData}
+            columnDefs={columnDefs}
+            sideBar={sideBar}
+            rowSelection="multiple"
+            rowDragManaged
+            rowDragMultiRow
+            rowGroupPanelShow="always"
+            defaultColDef={defaultColDef}
+            groupDisplayType="multipleColumns"
+            animateRows
+            icons={icons}
+            paginationPageSize={10}
+            pagination
+            suppressPaginationPanel
+            suppressScrollOnNewData
+            onPaginationChanged={onPaginationChanged}
+            enableRangeSelection
+            masterDetail
+          />
+          <AggridPagination
+            gridRef={gridRef}
+            totalPages={totalPages}
+            currentPage={currentPage}
+          />
+        </div>
       </div>
-
     </PageWrapper>
   );
 }
