@@ -48,11 +48,14 @@ function SaveFormModal({ itemData, modalIdentifier }: ModalProps) {
     resolver: yupResolver(schema),
   });
 
+  async function handleReset() {
+    await Array.from(document.querySelectorAll('input')).forEach((input) => { (input.value = ''); });
+    hideModal(modalId);
+  }
   const onSubmit = (formData) => {
     if (!formData) {
       return;
     }
-
     const data: SaveFormTypes = {
       email: formData.email,
       roles: formData.roles,
@@ -63,6 +66,8 @@ function SaveFormModal({ itemData, modalIdentifier }: ModalProps) {
     } else {
       dispatch(create({ email: data.email, roles: data.roles }));
     }
+    handleReset();
+    hideModal(modalId);
   };
 
   useEffect(() => {
@@ -96,7 +101,7 @@ function SaveFormModal({ itemData, modalIdentifier }: ModalProps) {
     <div className="modal fade" id={modalId} aria-labelledby={`new${modalId}Label`} aria-hidden="true">
       <div className="modal-dialog modal-dialog-centered">
         <div className="modal-content">
-          <form onSubmit={handleSubmit(onSubmit)}>
+          <form id="create-course-form" onSubmit={handleSubmit(onSubmit)}>
             <div className="modal-header">
               <h5 className="modal-title" id={`new${modalId}Label`}>{modalTitle}</h5>
               <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close" />
