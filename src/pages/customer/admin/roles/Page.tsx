@@ -99,12 +99,11 @@ function Page() {
   const rows = useSelector(readAllSelector);
   const [itemData, setItemData] = useState<RoleType | null>(null);
   const isFetchLoading = useSelector(isLoadingSelector);
-
-  const containerStyle = useMemo(() => ({
-    width: '100%',
-    height: `${(height)}px`,
-    minHeight: '600px',
-  }), [height, width]);
+  const containerStyle = useMemo(
+    () => ({ width: '100%', height: '100vh' }),
+    [],
+  );
+  const gridStyle = useMemo(() => ({ height: '600px', width: '100%' }), []);
 
   const onModalHide = useCallback(() => {
     onModalHidden(`save${moduleName}Modal`, () => {
@@ -234,7 +233,6 @@ function Page() {
 
   useEffect(() => {
     setRowData(agGridDTO(rows));
-
     if (gridRef.current?.api) {
       gridRef.current?.api.sizeColumnsToFit();
     }
@@ -242,29 +240,29 @@ function Page() {
 
   return (
     <PageWrapper pageTitle={moduleTitle} icon="fa-solid fa-building">
-
-      <div className=" ag-theme-alpine grid-container-style">
+      <div style={containerStyle}>
         <SaveFormModal itemData={itemData} />
-        <AgGridReact
-          containerStyle={containerStyle}
-          ref={gridRef}
-          rowData={rowData}
-          columnDefs={columnDefs}
-          sideBar={sideBar}
-          rowSelection="multiple"
-          rowDragManaged
-          rowDragMultiRow
-          rowGroupPanelShow="always"
-          defaultColDef={defaultColDef}
-          groupDisplayType="multipleColumns"
-          animateRows
-          onGridReady={onGridReady}
-          icons={icons}
-          pagination
-          onFirstDataRendered={onFirstDataRendered}
-          enableRangeSelection
-          masterDetail
-        />
+        <div style={gridStyle} className="ag-theme-alpine">
+          <AgGridReact
+            ref={gridRef}
+            rowData={rowData}
+            columnDefs={columnDefs}
+            sideBar={sideBar}
+            rowSelection="multiple"
+            rowDragManaged
+            rowDragMultiRow
+            rowGroupPanelShow="always"
+            defaultColDef={defaultColDef}
+            groupDisplayType="multipleColumns"
+            animateRows
+            onGridReady={onGridReady}
+            icons={icons}
+            pagination
+            onFirstDataRendered={onFirstDataRendered}
+            enableRangeSelection
+            masterDetail
+          />
+        </div>
       </div>
 
     </PageWrapper>
