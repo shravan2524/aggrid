@@ -74,7 +74,7 @@ function ActionsRenderer({ params, onFileMappingClickCallback }: ActionsRenderer
       .then((response) => response.json())
       .then((d) => {
         const url = d?.url || d;
-        window.open(url, '_blank');
+        window.location.href = url;
       });
   };
 

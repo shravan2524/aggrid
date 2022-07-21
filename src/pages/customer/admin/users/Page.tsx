@@ -152,6 +152,7 @@ function Page() {
     onModalHidden(`save${moduleName}Modal`, () => {
       setItemData(null);
       dispatch(readAll());
+      console.log('hi');
     });
   }, []);
 
@@ -252,6 +253,9 @@ function Page() {
     'custom-actions-tool': '<i class="fa-solid fa-screwdriver-wrench"></i>',
   }), []);
 
+  function upDate() {
+    dispatch(readAll);
+  }
   const onRefreshCallback = useCallback(
     (params) => {
       dispatch(readAll());

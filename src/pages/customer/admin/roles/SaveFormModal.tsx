@@ -47,7 +47,7 @@ interface SaveFormTypes extends Record<string, any> {
     if (!formData) {
       return;
     }
-
+    console.log(formData);
     const data: Record<string, any> = {
       title: formData.title,
       policies: [],
