@@ -8,7 +8,7 @@ import { useAppDispatch } from 'app/hooks';
 import CustomButton from 'components/CustomButton';
 import {
   isPostLoadingSelector,
-  isPutLoadingSelector, update, create,
+  isPutLoadingSelector, update, readAll, create,
 
 } from 'state/roles/slice';
 import { hideModal } from 'app/utils/Modal';
@@ -62,6 +62,7 @@ interface SaveFormTypes extends Record<string, any> {
       dispatch(update({ title: data.title, policies: data.policies, id: itemData.id }));
     } else {
       dispatch(create({ title: data.title, policies: data.policies }));
+      dispatch(readAll());
     }
   }, [itemData]);
 
