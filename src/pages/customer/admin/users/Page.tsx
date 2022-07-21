@@ -217,6 +217,7 @@ function Page() {
           cellClass: statusCellClass,
           editable: false,
           filter: StatusFilter,
+          floatingFilter: false,
         },
         {
           headerName: 'Roles',

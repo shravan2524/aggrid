@@ -46,23 +46,16 @@ interface ItemType {
 type ActionsRendererProps = {
   title: string;
   id: string;
+  sendFunc:Function
 };
 
-function ActionsRenderer({ title, id }: ActionsRendererProps) {
+function ActionsRenderer({ title, id, sendFunc }: ActionsRendererProps) {
   const [show, setShow] = useState(false);
   const [colgroup, setcolgroup] = useState(title);
   const handleShow = () => {
     setShow(true);
   };
-  const onSubmitAction = (e) => {
-    e.preventDefault();
-    setShow(false);
-    const ColumnGroup = {
-      title: '1',
-      description: colgroup,
-      createdBy: 1,
-      parent: 1,
-    };
+  async function putData() {
     const options: RequestInit = {
       headers: {
         Accept: 'application/json',
@@ -78,12 +71,19 @@ function ActionsRenderer({ title, id }: ActionsRendererProps) {
       }),
     };
     const apiUrl = `${BACKEND_API}/api/v1/${tenantUuid()}/column-groups/${id}`;
-    fetch(apiUrl, options)
+    await fetch(apiUrl, options)
       .then((response) => response.json())
       .then((data) => {
         // console.log(data);
         toast.success('Column Group Updated');
       });
+    await sendFunc();
+  }
+
+  const onSubmitAction = (e) => {
+    e.preventDefault();
+    setShow(false);
+    putData();
   };
   const handleClose = () => setShow(false);
   return (
@@ -236,8 +236,18 @@ export default function columnGrouping() {
   );
   const gridStyle = useMemo(() => ({ height: '100%', width: '100%' }), []);
 
-  const [selectedFiles, setselectedFiles] = useState<any[]>([]);
-  const [tmp, settmp] = useState<any[]>([]);
+  const sendFunc = () => {
+    const options: RequestInit = {
+      method: 'GET',
+      credentials: 'include',
+    };
+    const apiUrl = `${BACKEND_API}/api/v1/${tenantUuid()}/column-groups`;
+    fetch(apiUrl, options)
+      .then((response) => response.json())
+      .then((data) => {
+        setRowData(data);
+      });
+  };
 
   const [columnDefs, setColumnDefs] = useState([
     {
@@ -265,7 +275,7 @@ export default function columnGrouping() {
           field: 'actions',
           // eslint-disable-next-line react/no-unstable-nested-components
           cellRenderer: (params) => (
-            <ActionsRenderer title={params.data.title} id={params.data.id} />
+            <ActionsRenderer title={params.data.title} id={params.data.id} sendFunc={sendFunc} />
           ),
           editable: false,
           filter: false,
@@ -285,18 +295,6 @@ export default function columnGrouping() {
     'custom-actions-tool': '<i className="fa-solid fa-screwdriver-wrench"></i>',
   }), []);
 
-  const sendFunc = () => {
-    const options: RequestInit = {
-      method: 'GET',
-      credentials: 'include',
-    };
-    const apiUrl = `${BACKEND_API}/api/v1/${tenantUuid()}/column-groups`;
-    fetch(apiUrl, options)
-      .then((response) => response.json())
-      .then((data) => {
-        setRowData(data);
-      });
-  };
   const onRefreshCallback = () => {
     sendFunc();
   };
