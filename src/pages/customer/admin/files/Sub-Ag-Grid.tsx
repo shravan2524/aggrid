@@ -61,82 +61,81 @@ export default function DetailCellRenderer({ data, node, api }: ICellRendererPar
     [],
   );
 
-  useEffect(() => {
-    const options: RequestInit = {
-      method: 'GET',
-      credentials: 'include',
-    };
-    const apiUrl = `${BACKEND_API}/api/v1/${tenantUuid()}/column-groups`;
-    fetch(apiUrl, options)
-      .then((response) => response.json())
-      .then((res) => {
-        setColumnGroupsData(res);
-      });
-  }, []);
+  // useEffect(() => {
+  //   const options: RequestInit = {
+  //     method: 'GET',
+  //     credentials: 'include',
+  //   };
+  //   const apiUrl = `${BACKEND_API}/api/v1/${tenantUuid()}/column-groups`;
+  //   fetch(apiUrl, options)
+  //     .then((response) => response.json())
+  //     .then((res) => {
+  //       setColumnGroupsData(res);
+  //     });
+  // }, []);
 
-  useEffect(() => {
-    setColumnDefs(columnGroupsData);
-    const newColumnGrouping = {};
-    const newColumnsStructure: any = [];
-    const columnsToRemoveFromParent: any = {};
-    if (columnGroupsData) {
-      columnGroupsData.forEach((c) => {
-        newColumnGrouping[c.id] = c.title;
-      });
+  // useEffect(() => {
+  //   setColumnDefs(columnGroupsData);
+  //   const newColumnGrouping = {};
+  //   const newColumnsStructure: any = [];
+  //   const columnsToRemoveFromParent: any = {};
+  //   if (columnGroupsData) {
+  //     columnGroupsData.forEach((c) => {
+  //       newColumnGrouping[c.id] = c.title;
+  //     });
 
-      const columnGroupingHeaders: any = {};
+  //     const columnGroupingHeaders: any = {};
 
-      if (data.columnMapping) {
-        Object.values(data.columnMapping).forEach((val: any, i) => {
-          if (newColumnGrouping[val.columnGroup]) {
-            columnGroupingHeaders[newColumnGrouping[val.columnGroup]] = [];
-          }
-        });
+  //     if (data.columnMapping) {
+  //       Object.values(data.columnMapping).forEach((val: any, i) => {
+  //         if (newColumnGrouping[val.columnGroup]) {
+  //           columnGroupingHeaders[newColumnGrouping[val.columnGroup]] = [];
+  //         }
+  //       });
 
-        const columnGroupingData: any = {};
-        Object.keys(data.columnMapping).forEach((colName: any, i) => {
-          const colData = data.columnMapping[colName];
-          if (colData.columnGroup) {
-            if (newColumnGrouping[Number(colData.columnGroup)]) {
-              const colGroupName = newColumnGrouping[Number(colData.columnGroup)];
-              columnGroupingData[colGroupName] = data.agGridColumns.filter((c: any) => data.columnMapping[c.columnTitle]);
-            }
-          }
-        });
+  //       const columnGroupingData: any = {};
+  //       Object.keys(data.columnMapping).forEach((colName: any, i) => {
+  //         const colData = data.columnMapping[colName];
+  //         if (colData.columnGroup) {
+  //           if (newColumnGrouping[Number(colData.columnGroup)]) {
+  //             const colGroupName = newColumnGrouping[Number(colData.columnGroup)];
+  //             columnGroupingData[colGroupName] = data.agGridColumns.filter((c: any) => data.columnMapping[c.columnTitle]);
+  //           }
+  //         }
+  //       });
 
-        Object.keys(columnGroupingData).forEach((headerName) => {
-          const clData = columnGroupingData[headerName];
-          const children: any = [];
-          clData.forEach((v) => {
-            columnsToRemoveFromParent[v.columnTitle] = v.columnName;
-            children.push({
-              headerName: v.columnTitle,
-              field: v.columnName,
-              filter: 'agTextColumnFilter',
-              editable: false,
-            });
-          });
-          newColumnsStructure.push({
-            headerName,
-            children,
-          });
-        });
-      }
-    }
-    const newColumnsCleanedUp = data.agGridColumns.filter((c) => !columnsToRemoveFromParent[c.columnTitle]).map((cl) => ({
-      headerName: cl.columnTitle,
-      field: cl.columnName,
-      filter: 'agTextColumnFilter',
-      editable: false,
-    }));
-    const newData = [...newColumnsStructure, ...newColumnsCleanedUp];
-  }, [columnGroupsData]);
+  //       Object.keys(columnGroupingData).forEach((headerName) => {
+  //         const clData = columnGroupingData[headerName];
+  //         const children: any = [];
+  //         clData.forEach((v) => {
+  //           columnsToRemoveFromParent[v.columnTitle] = v.columnName;
+  //           children.push({
+  //             headerName: v.columnTitle,
+  //             field: v.columnName,
+  //             filter: 'agTextColumnFilter',
+  //             editable: false,
+  //           });
+  //         });
+  //         newColumnsStructure.push({
+  //           headerName,
+  //           children,
+  //         });
+  //       });
+  //     }
+  //   }
+  //   const newColumnsCleanedUp = data.agGridColumns.filter((c) => !columnsToRemoveFromParent[c.columnTitle]).map((cl) => ({
+  //     headerName: cl.columnTitle,
+  //     field: cl.columnName,
+  //     filter: 'agTextColumnFilter',
+  //     editable: false,
+  //   }));
+  //   const newData = [...newColumnsStructure, ...newColumnsCleanedUp];
+  // }, [columnGroupsData]);
 
   // rows
   const onGridReady = useCallback((params: GridReadyEvent) => {
     const dataSource: IServerSideDatasource = {
       getRows: (prms) => {
-        console.log(prms.request);
         fetchFileContentData({ id: data.id, dataRequest: { ...prms.request } }).then((res) => {
           if (res.rows) {
             prms.success({
