@@ -227,7 +227,7 @@ function Page() {
           editable: false,
         },
         {
-          headerName: 'Updated At',
+          headerName: 'Updated On',
           field: 'updatedAt',
           filter: 'agNumberColumnFilter',
           valueGetter: agGridDateFormatter,
