@@ -12,6 +12,8 @@ export interface ItemType {
   id?: number,
   contact?: Contact,
   email: string,
+  firstName: string,
+  lastName: string,
   status?: string,
   createdAt?: Date,
   createdBy?: number,

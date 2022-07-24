@@ -21,6 +21,8 @@ interface ModalProps {
 
 interface SaveFormTypes {
   email: string;
+  firstName: string;
+  lastName: string;
   roles: any[];
 }
 
@@ -36,6 +38,8 @@ function SaveFormModal({ itemData, modalIdentifier }: ModalProps) {
 
   const schema = yup.object({
     email: yup.string().required().email(),
+    firstName: yup.string().required(),
+    lastName: yup.string().required(),
     roles: yup.array(),
   }).required();
 
@@ -58,13 +62,15 @@ function SaveFormModal({ itemData, modalIdentifier }: ModalProps) {
     }
     const data: SaveFormTypes = {
       email: formData.email,
+      firstName: formData.firstName,
+      lastName: formData.lastName,
       roles: formData.roles,
     };
 
     if (itemData?.id) {
-      dispatch(update({ email: data.email, id: itemData.id, roles: data.roles }));
+      dispatch(update({ id: itemData.id, ...data }));
     } else {
-      dispatch(create({ email: data.email, roles: data.roles }));
+      dispatch(create(data));
     }
     handleReset();
     hideModal(modalId);
@@ -77,10 +83,14 @@ function SaveFormModal({ itemData, modalIdentifier }: ModalProps) {
   useEffect(() => {
     if (itemData) {
       setValue('email', itemData.email);
+      setValue('firstName', itemData.firstName);
+      setValue('lastName', itemData.lastName);
     }
 
     return function cleanup() {
       setValue('email', '');
+      setValue('firstName', '');
+      setValue('lastName', '');
       setValue('roles', []);
     };
   }, [itemData]);
@@ -118,6 +128,36 @@ function SaveFormModal({ itemData, modalIdentifier }: ModalProps) {
                 {errors.email && (
                 <div id="validationTitleFeedback" className="invalid-feedback">
                   <p>{errors.email?.message}</p>
+                </div>
+                )}
+              </div>
+
+              <div className="mb-3">
+                <label htmlFor="firstName" className="col-form-label required">First Name (*)</label>
+                <input
+                  {...register('firstName')}
+                  id="email"
+                  className={classNames(['form-control form-control-sm', { 'is-invalid': errors.firstName }])}
+                  type="text"
+                />
+                {errors.firstName && (
+                <div id="validationfirstNameFeedback" className="invalid-feedback">
+                  <p>{errors.firstName?.message}</p>
+                </div>
+                )}
+              </div>
+
+              <div className="mb-3">
+                <label htmlFor="lastName" className="col-form-label required">First Name (*)</label>
+                <input
+                  {...register('lastName')}
+                  id="email"
+                  className={classNames(['form-control form-control-sm', { 'is-invalid': errors.lastName }])}
+                  type="text"
+                />
+                {errors.lastName && (
+                <div id="validationLastNameFeedback" className="invalid-feedback">
+                  <p>{errors.lastName?.message}</p>
                 </div>
                 )}
               </div>
