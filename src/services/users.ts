@@ -44,3 +44,14 @@ export async function update(payload: ItemType): Promise<ItemType> {
 export async function patch(payload: ItemType): Promise<ItemType> {
   return TenantApiRequest(`users/${payload.id}`, 'PATCH', payload);
 }
+export async function DeleteUser(id: ItemType): Promise<ItemType> {
+  return TenantApiRequest(`users/${id}`, 'DELETE');
+}
+
+export async function ActivateUser(id: ItemType): Promise<ItemType> {
+  return TenantApiRequest(`users/activate/${id}`, 'GET');
+}
+
+export async function DeactivateUser(id: ItemType): Promise<ItemType> {
+  return TenantApiRequest(`users/deactivate/${id}`, 'GET');
+}

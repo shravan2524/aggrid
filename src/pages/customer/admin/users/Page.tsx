@@ -1,19 +1,28 @@
 import React, {
-  useCallback, useEffect, useMemo, useRef, useState,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
 } from 'react';
 import { AgGridReact } from 'ag-grid-react';
 import { onModalHidden, showModal } from 'app/utils/Modal';
 import { useAppDispatch, useWindowDimensions } from 'app/hooks';
 import PageWrapper from 'components/PageWrapper';
+import { readAll, isLoadingSelector, readAllSelector } from 'state/users/slice';
 import {
-  readAll, isLoadingSelector, readAllSelector,
-} from 'state/users/slice';
-import { ItemType as UserType } from 'services/users';
+  ActivateUser,
+  DeactivateUser,
+  DeleteUser,
+  ItemType as UserType,
+} from 'services/users';
 import { useSelector } from 'react-redux';
 import { ICellRendererParams } from 'ag-grid-community';
 import classNames from 'classnames';
 import { readAllSelector as rolesReadAllSelector } from 'state/roles/slice';
 import { agGridDateFormatter } from 'app/utils/Helpers';
+import Switch from 'react-switch';
+import toast from 'react-hot-toast';
 import StatusFilter from './UsersAgGridStatusFilter';
 import SaveFormModal from './SaveFormModal';
 
@@ -22,45 +31,91 @@ const moduleTitle = 'Users';
 const modalIdentifier = `save${moduleName}Modal`;
 
 interface AGGridType {
-  id: number,
-  email: string,
-  fullName?: string,
-  firstName?: string,
-  lastName?: string,
-  updatedAt?: Date,
-  updator?: any,
-  status?: string,
-  roles?: Array<number>,
+  id: number;
+  email: string;
+  fullName?: string;
+  firstName?: string;
+  lastName?: string;
+  updatedAt?: Date;
+  updator?: any;
+  status?: string;
+  roles?: Array<number>;
 }
 
 function agGridDTO(rows: Array<UserType>): Array<AGGridType> {
-  return rows.map(
-    (item: UserType) => ({
-      id: item.id || -1,
-      email: item?.contact?.email || '',
-      fullName: item?.contact?.fullName,
-      firstName: item?.contact?.firstName,
-      lastName: item?.contact?.lastName,
-      status: item.status,
-      updatedAt: item.updatedAt,
-      updator: item.updator,
-      roles: item.roles || [],
-    }),
-  );
+  return rows.map((item: UserType) => ({
+    id: item.id || -1,
+    email: item?.contact?.email || '',
+    fullName: item?.contact?.fullName,
+    firstName: item?.contact?.firstName,
+    lastName: item?.contact?.lastName,
+    status: item.status,
+    updatedAt: item.updatedAt,
+    updator: item.updator,
+    roles: item.roles || [],
+  }));
 }
 
 type ActionsRendererProps = {
   params: ICellRendererParams;
-  onEditClickCallback: (e: React.MouseEvent<HTMLButtonElement>, params: ICellRendererParams) => void;
+  onEditClickCallback: (params: ICellRendererParams) => void;
+  onDeleteUser: (params: ICellRendererParams) => void;
 };
 
-function ActionsRenderer({ params, onEditClickCallback }: ActionsRendererProps) {
+function ActionsRenderer({
+  params,
+  onDeleteUser,
+  onEditClickCallback,
+}: ActionsRendererProps) {
+  const { data } = params;
+  const [checked, setChecked] = useState(false);
+  const handleChange = (e) => {
+    if (e === true) {
+      setChecked(true);
+      ActivateUser(data?.id).then(() => {
+        toast.success('User Activated');
+      });
+    }
+    if (e === false) {
+      setChecked(false);
+      DeactivateUser(data?.id).then(() => {
+        toast.success('User Deactivated');
+      });
+    }
+  };
+
+  useEffect(() => {
+    if (data?.status === 'active') {
+      setChecked(true);
+    }
+  }, [data]);
+
   return (
     <div className="d-flex justify-content-around align-items-center w-100 h-100">
-      <button type="button" className="btn btn-sm btn-light" onClick={(e) => onEditClickCallback(e, params)}>
+      <Switch
+        onChange={handleChange}
+        checked={checked}
+        height={20}
+        width={35}
+        uncheckedIcon={false}
+        checkedIcon={false}
+        disabled={data?.status === 'invited'}
+        className="react-switch"
+      />
+
+      <button
+        type="button"
+        className="btn btn-sm btn-light text-success"
+        onClick={(e) => onEditClickCallback(params)}
+      >
         <i className="fa-solid fa-pen-to-square" />
-        {' '}
-        Edit
+      </button>
+      <button
+        onClick={(e) => onDeleteUser(params)}
+        type="button"
+        className="btn btn-sm btn-light text-danger"
+      >
+        <i className="fas fa-trash-alt" />
       </button>
     </div>
   );
@@ -77,7 +132,6 @@ function CustomActionsToolPanel(onRefreshCallback, isFetchLoading) {
         >
           <i className="fa-solid fa-circle-plus" />
           Add New
-          {' '}
           {moduleName}
         </button>
 
@@ -86,7 +140,13 @@ function CustomActionsToolPanel(onRefreshCallback, isFetchLoading) {
           className="btn btn-sm btn-info px-4 d-flex gap-2 align-items-center justify-content-center flex-wrap"
           onClick={onRefreshCallback}
         >
-          <i className={classNames(['fa-solid', 'fa-rotate', { 'fa-spin': isFetchLoading }])} />
+          <i
+            className={classNames([
+              'fa-solid',
+              'fa-rotate',
+              { 'fa-spin': isFetchLoading },
+            ])}
+          />
           Refresh
         </button>
       </div>
@@ -95,7 +155,7 @@ function CustomActionsToolPanel(onRefreshCallback, isFetchLoading) {
 }
 
 interface RolesRendererProps {
-  data: any,
+  data: any;
 }
 
 function RolesRenderer(props: RolesRendererProps) {
@@ -112,26 +172,26 @@ function RolesRenderer(props: RolesRendererProps) {
     return null;
   }
 
-  const result = roles.map((r: string, idx: number) => {
-    const i = parseInt(r, 10);
-    const ar = allRoles.find((x) => x.id === i);
-    if (!ar) {
-      return null;
-    }
+  const result = roles
+    .map((r: string, idx: number) => {
+      const i = parseInt(r, 10);
+      const ar = allRoles.find((x) => x.id === i);
+      if (!ar) {
+        return null;
+      }
 
-    return { key: idx, title: ar.title };
-  }).filter((x) => x !== null);
+      return { key: idx, title: ar.title };
+    })
+    .filter((x) => x !== null);
 
   return (
     <div>
-      {
-        result.map((i, idx) => (
-          <span key={i?.key}>
-            {i?.title}
-            {(idx < result.length - 1) && ' | '}
-          </span>
-        ))
-      }
+      {result.map((i, idx) => (
+        <span key={i?.key}>
+          {i?.title}
+          {idx < result.length - 1 && ' | '}
+        </span>
+      ))}
     </div>
   );
 }
@@ -145,12 +205,18 @@ function Page() {
   const [itemData, setItemData] = useState<UserType | null>(null);
   const isFetchLoading = useSelector(isLoadingSelector);
   const allRoles = useSelector(rolesReadAllSelector);
+  const containerStyle = useMemo(
+    () => ({
+      width: '100%',
+      height: `${height}px`,
+      minHeight: '600px',
+    }),
+    [height, width],
+  );
 
-  const containerStyle = useMemo(() => ({
-    width: '100%',
-    height: `${(height)}px`,
-    minHeight: '600px',
-  }), [height, width]);
+  const onRefreshCallback = useCallback((params) => {
+    dispatch(readAll());
+  }, []);
 
   const onModalHide = useCallback(() => {
     onModalHidden(`save${moduleName}Modal`, () => {
@@ -159,16 +225,21 @@ function Page() {
     });
   }, []);
 
-  const onEditClickCallback = useCallback(
-    (e, params) => {
-      setItemData(params.data);
-      showModal(`save${moduleName}Modal`);
-    },
-    [],
-  );
+  const onEditClickCallback = useCallback((params) => {
+    setItemData(params.data);
+    showModal(`save${moduleName}Modal`);
+  }, []);
+
+  const onDeleteUser = useCallback((params) => {
+    if (window.confirm(`${params.data?.fullName} Will be deleted`)) {
+      DeleteUser(params.data?.id).then(() => {
+        dispatch(readAll());
+      });
+    }
+  }, []);
 
   const RolesRendererCb = useCallback(
-    (params) => (<RolesRenderer data={params} />),
+    (params) => <RolesRenderer data={params} />,
     [],
   );
 
@@ -176,28 +247,27 @@ function Page() {
     (params) => (
       <ActionsRenderer
         params={params}
-        onEditClickCallback={(e) => onEditClickCallback(e, params)}
+        onDeleteUser={() => onDeleteUser(params)}
+        onEditClickCallback={() => onEditClickCallback(params)}
       />
     ),
     [],
   );
 
-  const statusCellClass = useCallback(
-    (params) => {
-      const { data } = params;
+  // const statusCellClass = useCallback((params) => {
+  //   const { data } = params;
 
-      if (data.status === 'deactivated') {
-        return ['bg-danger text-white'];
-      }
-
-      if (data.status === 'invited') {
-        return ['bg-warning'];
-      }
-
-      return [];
-    },
-    [],
-  );
+  //   if (data.status === 'deactivated') {
+  //     return ['text-danger'];
+  //   }
+  //   if (data.status === 'active') {
+  //     return ['text-success'];
+  //   }
+  //   if (data.status === 'invited') {
+  //     return ['bg-warning'];
+  //   }
+  //   return [];
+  // }, []);
 
   const [columnDefs, setColumnDefs] = useState([
     {
@@ -214,14 +284,14 @@ function Page() {
           field: 'email',
           filter: 'agTextColumnFilter',
         },
-        {
-          headerName: 'Status',
-          field: 'status',
-          cellClass: statusCellClass,
-          editable: false,
-          filter: StatusFilter,
-          floatingFilter: false,
-        },
+        // {
+        //   headerName: 'Status',
+        //   field: 'status',
+        //   cellClass: statusCellClass,
+        //   editable: false,
+        //   filter: StatusFilter,
+        //   floatingFilter: false,
+        // },
         {
           headerName: 'Roles',
           field: 'roles',
@@ -253,57 +323,56 @@ function Page() {
     },
   ]);
 
-  const icons = useMemo<{ [key: string]: Function | string; }>(() => ({
-    'custom-actions-tool': '<i class="fa-solid fa-screwdriver-wrench"></i>',
-  }), []);
-
-  function upDate() {
-    dispatch(readAll);
-  }
-  const onRefreshCallback = useCallback(
-    (params) => {
-      dispatch(readAll());
-    },
+  const icons = useMemo<{ [key: string]: Function | string }>(
+    () => ({
+      'custom-actions-tool': '<i class="fa-solid fa-screwdriver-wrench"></i>',
+    }),
     [],
   );
 
-  const sideBar = useMemo(() => ({
-    toolPanels: [
-      {
-        id: 'customActionsTool',
-        labelDefault: 'Actions',
-        labelKey: 'customActionsTool',
-        iconKey: 'custom-actions-tool',
-        toolPanel: () => CustomActionsToolPanel(onRefreshCallback, isFetchLoading),
-      },
-      {
-        id: 'columns',
-        labelDefault: 'Columns',
-        labelKey: 'columns',
-        iconKey: 'columns',
-        toolPanel: 'agColumnsToolPanel',
-      },
-      {
-        id: 'filters',
-        labelDefault: 'Filters',
-        labelKey: 'filters',
-        iconKey: 'filter',
-        toolPanel: 'agFiltersToolPanel',
-      },
-    ],
-    defaultToolPanel: 'customActionsTool',
-  }), [isFetchLoading]);
+  const sideBar = useMemo(
+    () => ({
+      toolPanels: [
+        {
+          id: 'customActionsTool',
+          labelDefault: 'Actions',
+          labelKey: 'customActionsTool',
+          iconKey: 'custom-actions-tool',
+          toolPanel: () => CustomActionsToolPanel(onRefreshCallback, isFetchLoading),
+        },
+        {
+          id: 'columns',
+          labelDefault: 'Columns',
+          labelKey: 'columns',
+          iconKey: 'columns',
+          toolPanel: 'agColumnsToolPanel',
+        },
+        {
+          id: 'filters',
+          labelDefault: 'Filters',
+          labelKey: 'filters',
+          iconKey: 'filter',
+          toolPanel: 'agFiltersToolPanel',
+        },
+      ],
+      defaultToolPanel: 'customActionsTool',
+    }),
+    [isFetchLoading],
+  );
 
-  const defaultColDef = useMemo(() => ({
-    sortable: true,
-    filter: true,
-    resizable: true,
-    floatingFilter: true,
-    enableRowGroup: true,
-    editable: true,
-    enablePivot: true,
-    enableValue: true,
-  }), []);
+  const defaultColDef = useMemo(
+    () => ({
+      sortable: true,
+      filter: true,
+      resizable: true,
+      floatingFilter: true,
+      enableRowGroup: true,
+      editable: true,
+      enablePivot: true,
+      enableValue: true,
+    }),
+    [],
+  );
 
   const onFirstDataRendered = useCallback(() => {
     gridRef.current?.api.sizeColumnsToFit();
@@ -335,7 +404,6 @@ function Page() {
   return (
     <PageWrapper pageTitle={moduleTitle} icon="fa-solid fa-building">
       <div className=" ag-theme-alpine grid-container-style">
-
         <SaveFormModal itemData={itemData} modalIdentifier={modalIdentifier} />
         <AgGridReact
           containerStyle={containerStyle}
@@ -357,9 +425,7 @@ function Page() {
           enableRangeSelection
           masterDetail
         />
-
       </div>
-
     </PageWrapper>
   );
 }
