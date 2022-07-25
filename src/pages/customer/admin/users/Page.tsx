@@ -25,6 +25,8 @@ interface AGGridType {
   id: number,
   email: string,
   fullName?: string,
+  firstName?: string,
+  lastName?: string,
   updatedAt?: Date,
   updator?: any,
   status?: string,
@@ -37,6 +39,8 @@ function agGridDTO(rows: Array<UserType>): Array<AGGridType> {
       id: item.id || -1,
       email: item?.contact?.email || '',
       fullName: item?.contact?.fullName,
+      firstName: item?.contact?.firstName,
+      lastName: item?.contact?.lastName,
       status: item.status,
       updatedAt: item.updatedAt,
       updator: item.updator,
@@ -152,7 +156,6 @@ function Page() {
     onModalHidden(`save${moduleName}Modal`, () => {
       setItemData(null);
       dispatch(readAll());
-      console.log('hi');
     });
   }, []);
 
