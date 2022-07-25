@@ -148,7 +148,7 @@ function SaveFormModal({ itemData, modalIdentifier }: ModalProps) {
               </div>
 
               <div className="mb-3">
-                <label htmlFor="lastName" className="col-form-label required">First Name (*)</label>
+                <label htmlFor="lastName" className="col-form-label required">Last Name (*)</label>
                 <input
                   {...register('lastName')}
                   id="email"
