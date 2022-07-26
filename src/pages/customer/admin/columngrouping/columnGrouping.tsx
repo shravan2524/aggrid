@@ -11,15 +11,11 @@ import classNames from 'classnames';
 import {
   GetContextMenuItemsParams,
   MenuItemDef,
-  ICellRendererParams,
 } from 'ag-grid-community';
-import CustomButton from 'components/CustomButton';
 import { useSelector } from 'react-redux';
 import { tenantUuid } from 'state/tenants/helper';
-import {
-  fetchFiles, getFiles, isLoadingSelector,
-} from 'state/files/filesSlice';
-import CommentsPage from '../comments/CommentsPage';
+import { getFiles, isLoadingSelector } from 'state/files/filesSlice';
+import { agGridDateFormatter } from 'app/utils/Helpers';
 import DetailCellRenderer from '../files/Sub-Ag-Grid';
 
 const moduleName = 'Column';
@@ -260,16 +256,18 @@ export default function columnGrouping() {
           editable: false,
         },
         {
-          headerName: 'Created At',
+          headerName: 'Created On',
           field: 'createdAt',
           filter: 'agTextColumnFilter',
           editable: false,
+          valueGetter: agGridDateFormatter,
         },
         {
-          headerName: 'Updated At',
+          headerName: 'Updated On',
           field: 'updatedAt',
           filter: 'agTextColumnFilter',
           editable: false,
+          valueGetter: agGridDateFormatter,
         },
         {
           field: 'actions',
