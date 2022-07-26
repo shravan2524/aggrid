@@ -29,6 +29,7 @@ interface SaveFormTypes {
 function SaveFormModal({ itemData, modalIdentifier }: ModalProps) {
   const dispatch = useAppDispatch();
   const [selectedRoles, setSelectedRoles] = useState<string[]>([]);
+  const [disable, setdisable] = useState(true);
   const isPutLoading = useSelector(isPutLoadingSelector);
   const isPostLoading = useSelector(isPostLoadingSelector);
   const isLoading = isPostLoading || isPutLoading;
@@ -103,6 +104,8 @@ function SaveFormModal({ itemData, modalIdentifier }: ModalProps) {
   const setSelectedRolesOnChange = (e) => {
     const value = Array.from(e.target.selectedOptions, (option: any) => option.value);
     setSelectedRoles(value);
+    setdisable(false);
+    console.log(disable);
   };
 
   const modalTitle = itemData?.id ? 'Edit User' : 'Invite User';
@@ -124,6 +127,7 @@ function SaveFormModal({ itemData, modalIdentifier }: ModalProps) {
                   id="email"
                   className={classNames(['form-control form-control-sm', { 'is-invalid': errors.email }])}
                   type="email"
+                  onChange={(e) => setdisable(false)}
                 />
                 {errors.email && (
                 <div id="validationTitleFeedback" className="invalid-feedback">
@@ -139,6 +143,7 @@ function SaveFormModal({ itemData, modalIdentifier }: ModalProps) {
                   id="email"
                   className={classNames(['form-control form-control-sm', { 'is-invalid': errors.firstName }])}
                   type="text"
+                  onChange={(e) => setdisable(false)}
                 />
                 {errors.firstName && (
                 <div id="validationfirstNameFeedback" className="invalid-feedback">
@@ -154,6 +159,7 @@ function SaveFormModal({ itemData, modalIdentifier }: ModalProps) {
                   id="email"
                   className={classNames(['form-control form-control-sm', { 'is-invalid': errors.lastName }])}
                   type="text"
+                  onChange={(e) => setdisable(false)}
                 />
                 {errors.lastName && (
                 <div id="validationLastNameFeedback" className="invalid-feedback">
@@ -181,13 +187,14 @@ function SaveFormModal({ itemData, modalIdentifier }: ModalProps) {
               <button type="button" className="btn btn-sm btn-danger" data-bs-dismiss="modal">
                 Close
               </button>
-              <CustomButton
+              {/* <CustomButton
                 isLoading={isLoading}
                 isSubmit
                 className="btn btn-sm btn-primary"
               >
                 Save
-              </CustomButton>
+              </CustomButton> */}
+              <button type="submit" className="btn btn-sm btn-primary" disabled={disable}>Save</button>
             </div>
           </form>
         </div>
