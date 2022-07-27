@@ -38,7 +38,7 @@ export default function EditCompanyModal({
 
   const schema = yup
     .object({
-      name: yup.string().required().test(yupEmptyCharsRule),
+      name: yup.string().required('Title is a required field').test(yupEmptyCharsRule),
       parent: yup.string(),
       gstin: yup.string().test(validGSTINRule),
     })
