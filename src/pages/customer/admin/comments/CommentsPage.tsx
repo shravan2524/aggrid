@@ -88,7 +88,7 @@ function Suggestions({
     focusInput();
   }
   return (
-    <div className="container w-100 border border-white" style={{ position: 'relative', right: '18px' }}>
+    <div className="container1 w-100 border border-white" style={{ position: 'relative', right: '18px' }}>
       {suggestionList.filter((item) => item.includes(partialMention)).map((item) => (
         <button type="button" className="item w-100 border border-white text-start" onClick={() => selectSuggestion('@'.concat(item))}>
           @
