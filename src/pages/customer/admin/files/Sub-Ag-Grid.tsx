@@ -8,7 +8,7 @@ import React, {
 import { AgGridReact } from 'ag-grid-react';
 import 'ag-grid-enterprise';
 import {
-  ColDef, GridReadyEvent, ICellRendererParams, IServerSideDatasource,
+  ColDef, CellClassParams, GridReadyEvent, ICellRendererParams, IServerSideDatasource,
 } from 'ag-grid-community';
 import { fetchFileContentData } from 'services/filesAPIService';
 import { tenantUuid } from 'state/tenants/helper';
@@ -38,12 +38,12 @@ export default function DetailCellRenderer({ data, node, api }: ICellRendererPar
   const [columnGroupsData, setColumnGroupsData] = useState<any>();
 
   const gridStyle = useMemo(() => ({ height: '400px', width: '90%' }), []);
-
   const Columns = data.agGridColumns.map((f: any) => ({
     headerName: f.columnTitle,
     field: f.columnName,
     filter: 'agTextColumnFilter',
     editable: false,
+    cellStyle: (params) => (params.value === 'ERROR' ? { backgroundColor: '#ff7272', color: '#ff7272' } : null),
   }));
 
   // default Columns settings
@@ -138,8 +138,18 @@ export default function DetailCellRenderer({ data, node, api }: ICellRendererPar
       getRows: (prms) => {
         fetchFileContentData({ id: data.id, dataRequest: { ...prms.request } }).then((res) => {
           if (res.rows) {
+            console.log(res.rows);
+            const temprows = res.rows;
+            temprows.forEach((e) => {
+              Object.keys(e.errors).forEach((key) => {
+                if (e.errors[key] != null) {
+                  e[key] = 'ERROR';
+                }
+            });
+            });
+            console.log(temprows);
             prms.success({
-              rowData: res.rows,
+              rowData: temprows,
               rowCount: res.count,
             });
           }
