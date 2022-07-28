@@ -179,21 +179,23 @@ function Container1({ btnName, sendFunc }: Type) {
         aria-labelledby="contained-modal-title-vcenter"
         centered
       >
-        <Modal.Header closeButton>
-          <Modal.Title>{btnName}</Modal.Title>
-        </Modal.Header>
-        <Modal.Body className="mapping">
-          <div className="mb-3">
-            <label className="col-form-label" style={{ fontSize: '13px' }}>Column Group Name (*) </label>
-            <input type="text" className={classNames(['form-control form-control-sm'])} onChange={(e) => setcolgroup(e.target.value)} value={colgroup} />
-          </div>
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" className="btn btn-sm btn-danger" onClick={handleClose}>
-            Close
-          </Button>
-          <button type="button" className="btn btn-sm btn-primary" onClick={(e) => onSubmitAction(e)}>Save</button>
-        </Modal.Footer>
+        <form onSubmit={onSubmitAction}>
+          <Modal.Header closeButton>
+            <Modal.Title>{btnName}</Modal.Title>
+          </Modal.Header>
+          <Modal.Body className="mapping">
+            <div className="mb-3">
+              <label className="col-form-label" style={{ fontSize: '13px' }}>Column Group Name (*) </label>
+              <input type="text" required className={classNames(['form-control form-control-sm'])} onChange={(e) => setcolgroup(e.target.value)} value={colgroup} />
+            </div>
+          </Modal.Body>
+          <Modal.Footer>
+            <Button variant="secondary" className="btn btn-sm btn-danger" onClick={handleClose}>
+              Close
+            </Button>
+            <button type="submit" value="Submit" className="btn btn-sm btn-primary">Save</button>
+          </Modal.Footer>
+        </form>
       </Modal>
     </>
   );
