@@ -1,4 +1,5 @@
 import { BACKEND_API } from 'app/config';
+import { Console } from 'console';
 import { tenantUuid } from 'state/tenants/helper';
 import { TenantApiRequest } from '../app/utils/ApiRequests';
 
@@ -41,10 +42,11 @@ export async function fetchFileContentData(payload): Promise<any> {
     console.log(res.rows);
     const temprows = res.rows;
     temprows.forEach((e) => {
-      e.errors.forEach((e1) => {
-        e.e1 = 'errors';
+      Object.keys(e.errors).forEach((key) => {
+        if (e.errors != null) {
+          e[key] = 'ERROR';
+        }
       });
-      console.log(e);
     });
     console.log(temprows);
   })
