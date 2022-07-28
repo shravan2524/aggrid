@@ -144,7 +144,7 @@ function Page() {
           headerName: 'Updated On',
           field: 'updatedAt',
           filter: 'agTextColumnFilter',
-          valueGetter: agGridDateFormatter,
+          valueGetter: (params) => (agGridDateFormatter(params.data?.updatedAt)),
           editable: false,
         },
         {

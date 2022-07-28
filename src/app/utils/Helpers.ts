@@ -1,4 +1,3 @@
-import { ValueFormatterParams } from 'ag-grid-community';
 import moment from 'moment';
 import { CompaniesAgGridType, CompaniesType } from 'services/companiesAPIService';
 import { TenantAGGridType, TenantType } from 'services/tenantsAPIService';
@@ -9,8 +8,8 @@ export function agGridRowDrag(params) {
   return !params.node.group;
 }
 
-export function agGridDateFormatter(params: ValueFormatterParams) {
-  return moment(params.data?.updatedAt).format('LLL');
+export function agGridDateFormatter(params) {
+  return moment(params).format('LLL');
 }
 
 export function agGridCompaniesDTO(companies: CompaniesType[]): CompaniesAgGridType[] {

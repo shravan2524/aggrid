@@ -69,26 +69,29 @@ function ActionsRenderer({
 }: ActionsRendererProps) {
   const { data } = params;
   const [checked, setChecked] = useState(false);
+  const rows = useSelector(readAllSelector);
+  // const activated = rows.filter((e) => e.status == 'active').length === 1;
+
   const handleChange = (e) => {
-    if (e === true) {
-      setChecked(true);
-      ActivateUser(data?.id).then(() => {
-        toast.success('User Activated');
-      });
-    }
-    if (e === false) {
-      setChecked(false);
-      DeactivateUser(data?.id).then(() => {
-        toast.success('User Deactivated');
-      });
-    }
+      if (e === true) {
+        setChecked(true);
+        ActivateUser(data?.id).then(() => {
+          toast.success('User Activated');
+        });
+      }
+      if (e === false) {
+        setChecked(false);
+        DeactivateUser(data?.id).then(() => {
+          toast.success('User Deactivated');
+        });
+      }
   };
 
   useEffect(() => {
     if (data?.status === 'active') {
       setChecked(true);
     }
-  }, [data]);
+  }, [data, rows]);
 
   return (
     <div className="d-flex justify-content-around align-items-center w-100 h-100">
@@ -304,7 +307,7 @@ function Page() {
           headerName: 'Updated On',
           field: 'updatedAt',
           filter: 'agNumberColumnFilter',
-          valueGetter: agGridDateFormatter,
+          valueGetter: (params) => (agGridDateFormatter(params.data?.updatedAt)),
           editable: false,
         },
         {

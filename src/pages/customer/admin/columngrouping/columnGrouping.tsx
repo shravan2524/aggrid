@@ -262,14 +262,14 @@ export default function columnGrouping() {
           field: 'createdAt',
           filter: 'agTextColumnFilter',
           editable: false,
-          valueGetter: agGridDateFormatter,
+          valueGetter: (params) => (agGridDateFormatter(params.data?.createdAt)),
         },
         {
           headerName: 'Updated On',
           field: 'updatedAt',
           filter: 'agTextColumnFilter',
           editable: false,
-          valueGetter: agGridDateFormatter,
+          valueGetter: (params) => (agGridDateFormatter(params.data?.updatedAt)),
         },
         {
           field: 'actions',
