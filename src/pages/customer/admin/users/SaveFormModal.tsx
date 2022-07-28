@@ -58,19 +58,6 @@ function SaveFormModal({ itemData, modalIdentifier }: ModalProps) {
     resolver: yupResolver(schema),
   });
 
-  // async function handleReset() {
-  //   await Array.from(document.querySelectorAll('input')).forEach((input) => {
-  //     input.value = '';
-  //   });
-  // }
-
-  // function cleanup() {
-  //   setValue('email', '');
-  //   setValue('firstName', '');
-  //   setValue('lastName', '');
-  //   setValue('roles', []);
-  // }
-
   const onSubmit = (formData) => {
     if (!formData) {
       return;

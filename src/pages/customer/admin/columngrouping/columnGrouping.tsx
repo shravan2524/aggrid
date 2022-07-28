@@ -16,6 +16,7 @@ import { useSelector } from 'react-redux';
 import { tenantUuid } from 'state/tenants/helper';
 import { getFiles, isLoadingSelector } from 'state/files/filesSlice';
 import { agGridDateFormatter } from 'app/utils/Helpers';
+import { AggridPagination } from 'components/AggridPagination';
 import DetailCellRenderer from '../files/Sub-Ag-Grid';
 
 const moduleName = 'Column';
@@ -227,9 +228,10 @@ export default function columnGrouping() {
   const { height, width } = useWindowDimensions();
   const rows = useSelector(getFiles);
   const isFetchLoading = useSelector(isLoadingSelector);
-
+  const [totalPages, setTotalPage] = useState<number>(0);
+  const [currentPage, setCurrentPage] = useState<number>(0);
   const containerStyle = useMemo(
-    () => ({ width: '100%', height: '100vh' }),
+    () => ({ width: '100%', height: '600px' }),
     [],
   );
   const gridStyle = useMemo(() => ({ height: '100%', width: '100%' }), []);
@@ -406,6 +408,14 @@ export default function columnGrouping() {
     }
   }, [rows]);
 
+  // navigation
+  const onPaginationChanged = () => {
+    if (gridRef.current!.api!) {
+      setCurrentPage(gridRef.current!.api.paginationGetCurrentPage() + 1);
+      setTotalPage(gridRef.current!.api.paginationGetTotalPages());
+    }
+  };
+
   return (
     <PageWrapper pageTitle="Column Grouping" icon="fa-solid fa-object-group">
       <div style={containerStyle}>
@@ -427,10 +437,20 @@ export default function columnGrouping() {
             animateRows
             onGridReady={onGridReady}
             icons={icons}
+            paginationPageSize={10}
             pagination
+            suppressPaginationPanel
+            suppressScrollOnNewData
+            onPaginationChanged={onPaginationChanged}
+            enableRangeSelection
             onFirstDataRendered={onFirstDataRendered}
             getContextMenuItems={getContextMenuItems}
             onSelectionChanged={onSelectionChanged}
+          />
+          <AggridPagination
+            gridRef={gridRef}
+            totalPages={totalPages}
+            currentPage={currentPage}
           />
         </div>
       </div>

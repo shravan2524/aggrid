@@ -12,6 +12,7 @@ import { RoleType, PolicyType as RolePolicyType } from 'services/roles';
 import { useSelector } from 'react-redux';
 import { ICellRendererParams } from 'ag-grid-community';
 import classNames from 'classnames';
+import { AggridPagination } from 'components/AggridPagination';
 import { agGridDateFormatter } from 'app/utils/Helpers';
 import SaveFormModal from './SaveFormModal';
 
@@ -99,6 +100,8 @@ function Page() {
   const rows = useSelector(readAllSelector);
   const [itemData, setItemData] = useState<RoleType | null>(null);
   const isFetchLoading = useSelector(isLoadingSelector);
+  const [totalPages, setTotalPage] = useState<number>(0);
+  const [currentPage, setCurrentPage] = useState<number>(0);
   const containerStyle = useMemo(
     () => ({ width: '100%', height: '100vh' }),
     [],
@@ -238,6 +241,14 @@ function Page() {
     }
   }, [rows]);
 
+  // navigation
+  const onPaginationChanged = () => {
+    if (gridRef.current!.api!) {
+      setCurrentPage(gridRef.current!.api.paginationGetCurrentPage() + 1);
+      setTotalPage(gridRef.current!.api.paginationGetTotalPages());
+    }
+  };
+
   return (
     <PageWrapper pageTitle={moduleTitle} icon="fa-solid fa-building">
       <div style={containerStyle}>
@@ -257,10 +268,19 @@ function Page() {
             animateRows
             onGridReady={onGridReady}
             icons={icons}
+            paginationPageSize={10}
             pagination
-            onFirstDataRendered={onFirstDataRendered}
+            suppressPaginationPanel
+            suppressScrollOnNewData
+            onPaginationChanged={onPaginationChanged}
             enableRangeSelection
+            onFirstDataRendered={onFirstDataRendered}
             masterDetail
+          />
+          <AggridPagination
+            gridRef={gridRef}
+            totalPages={totalPages}
+            currentPage={currentPage}
           />
         </div>
       </div>
