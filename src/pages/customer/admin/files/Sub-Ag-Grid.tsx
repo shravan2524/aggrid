@@ -138,10 +138,12 @@ export default function DetailCellRenderer({ data, node, api }: ICellRendererPar
       getRows: (prms) => {
         fetchFileContentData({ id: data.id, dataRequest: { ...prms.request } }).then((res) => {
           if (res.rows) {
+            console.log(res.rows);
             prms.success({
               rowData: res.rows,
               rowCount: res.count,
             });
+            console.log(prms);
           }
           if (res.count > 0) {
             setHide(true);

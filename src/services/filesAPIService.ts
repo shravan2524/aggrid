@@ -36,9 +36,7 @@ export async function fetchFilesData(): Promise<FilesType[]> {
 }
 
 export async function fetchFileContentData(payload): Promise<any> {
-  const temp = TenantApiRequest(`files/${payload.id}/content`, 'POST', payload.dataRequest);
-  console.log(temp, 'contentdata');
-  return temp;
+  return TenantApiRequest(`files/${payload.id}/content`, 'POST', payload.dataRequest);
 }
 
 export async function putFilesData(payload): Promise<FilesType[]> {
