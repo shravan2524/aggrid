@@ -37,22 +37,23 @@ export async function fetchFilesData(): Promise<FilesType[]> {
 }
 
 export async function fetchFileContentData(payload): Promise<any> {
-  TenantApiRequest(`files/${payload.id}/content`, 'POST', payload.dataRequest)
-  .then((res) => {
-    console.log(res.rows);
-    const temprows = res.rows;
-    temprows.forEach((e) => {
-      Object.keys(e.errors).forEach((key) => {
-        if (e.errors != null) {
-          e[key] = 'ERROR';
-        }
-      });
-    });
-    console.log(temprows);
-  })
-  .catch((err) => {
-    console.log(err);
-  });
+//   TenantApiRequest(`files/${payload.id}/content`, 'POST', payload.dataRequest)
+//   .then((res) => {
+//     console.log(res.rows);
+//     const temprows = res;
+//     temprows.rows.forEach((e) => {
+//       Object.keys(e.errors).forEach((key) => {
+//         if (e.errors != null) {
+//           e[key] = 'ERROR';
+//         }
+//       });
+//     });
+//     console.log(temprows);
+//     return temprows;
+//   })
+//   .catch((err) => {
+//     console.log(err);
+//   });
   return TenantApiRequest(`files/${payload.id}/content`, 'POST', payload.dataRequest);
 }
 

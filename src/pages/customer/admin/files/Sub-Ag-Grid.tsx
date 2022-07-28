@@ -138,8 +138,18 @@ export default function DetailCellRenderer({ data, node, api }: ICellRendererPar
       getRows: (prms) => {
         fetchFileContentData({ id: data.id, dataRequest: { ...prms.request } }).then((res) => {
           if (res.rows) {
+            console.log(res.rows);
+            const temprows = res.rows;
+            temprows.forEach((e) => {
+              Object.keys(e.errors).forEach((key) => {
+                if (e.errors[key] != null) {
+                  e[key] = 'ERROR';
+                }
+            });
+            });
+            console.log(temprows);
             prms.success({
-              rowData: res.rows,
+              rowData: temprows,
               rowCount: res.count,
             });
           }
