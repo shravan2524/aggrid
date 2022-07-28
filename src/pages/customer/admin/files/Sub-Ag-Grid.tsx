@@ -43,7 +43,7 @@ export default function DetailCellRenderer({ data, node, api }: ICellRendererPar
     field: f.columnName,
     filter: 'agTextColumnFilter',
     editable: false,
-    cellStyle: (params) => (params.value === 'ERROR' ? { backgroundColor: 'red' } : null),
+    cellStyle: (params) => (params.value === 'ERROR' ? { backgroundColor: '#ff7272', color: '#ff7272' } : null),
   }));
 
   // default Columns settings
