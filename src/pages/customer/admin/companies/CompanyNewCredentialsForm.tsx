@@ -66,6 +66,7 @@ export default function CompanyNewCredentialsForm({ modalId, companyData }: Comp
         <div className="mb-3">
           <label htmlFor="customer" className="col-form-label">
             Company:
+            {' '}
             {companyData?.name}
           </label>
         </div>

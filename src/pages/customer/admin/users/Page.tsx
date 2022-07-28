@@ -19,11 +19,10 @@ import {
 import { useSelector } from 'react-redux';
 import { ICellRendererParams } from 'ag-grid-community';
 import classNames from 'classnames';
-import { readAllSelector as rolesReadAllSelector } from 'state/roles/slice';
+import { readAllSelector as rolesReadAllSelector, readAll as readAllRoles } from 'state/roles/slice';
 import { agGridDateFormatter } from 'app/utils/Helpers';
 import Switch from 'react-switch';
 import toast from 'react-hot-toast';
-import StatusFilter from './UsersAgGridStatusFilter';
 import SaveFormModal from './SaveFormModal';
 
 const moduleName = 'User';
@@ -70,7 +69,6 @@ function ActionsRenderer({
   const { data } = params;
   const [checked, setChecked] = useState(false);
   const rows = useSelector(readAllSelector);
-  // const activated = rows.filter((e) => e.status == 'active').length === 1;
 
   const handleChange = (e) => {
       if (e === true) {
@@ -208,7 +206,7 @@ function Page() {
   const rows = useSelector(readAllSelector);
   const [itemData, setItemData] = useState<UserType | null>(null);
   const isFetchLoading = useSelector(isLoadingSelector);
-  const allRoles = useSelector(rolesReadAllSelector);
+
   const containerStyle = useMemo(
     () => ({
       width: '100%',
@@ -258,25 +256,7 @@ function Page() {
     [],
   );
 
-  // const statusCellClass = useCallback((params) => {
-  //   const { data } = params;
-
-  //   if (data.status === 'deactivated') {
-  //     return ['text-danger'];
-  //   }
-  //   if (data.status === 'active') {
-  //     return ['text-success'];
-  //   }
-  //   if (data.status === 'invited') {
-  //     return ['bg-warning'];
-  //   }
-  //   return [];
-  // }, []);
-
   const [columnDefs, setColumnDefs] = useState([
-    {
-      headerName: `${moduleTitle} Details`,
-      children: [
         {
           headerName: 'Name',
           field: 'fullName',
@@ -288,14 +268,6 @@ function Page() {
           field: 'email',
           filter: 'agTextColumnFilter',
         },
-        // {
-        //   headerName: 'Status',
-        //   field: 'status',
-        //   cellClass: statusCellClass,
-        //   editable: false,
-        //   filter: StatusFilter,
-        //   floatingFilter: false,
-        // },
         {
           headerName: 'Roles',
           field: 'roles',
@@ -323,8 +295,6 @@ function Page() {
             return null;
           },
         },
-      ],
-    },
   ]);
 
   const icons = useMemo<{ [key: string]: Function | string }>(
@@ -384,14 +354,9 @@ function Page() {
 
   const onGridReady = useCallback((params) => {
     dispatch(readAll());
+    dispatch(readAllRoles());
     onModalHide();
   }, []);
-
-  useEffect(() => {
-    if (gridRef.current?.api) {
-      gridRef.current?.api.sizeColumnsToFit();
-    }
-  }, [width, rows]);
 
   useEffect(() => {
     setRowData(agGridDTO(rows));
@@ -399,11 +364,7 @@ function Page() {
     if (gridRef.current?.api) {
       gridRef.current?.api.sizeColumnsToFit();
     }
-  }, [rows]);
-
-  if (!allRoles) {
-    return null;
-  }
+  }, [width, rows]);
 
   return (
     <PageWrapper pageTitle={moduleTitle} icon="fa-solid fa-building">

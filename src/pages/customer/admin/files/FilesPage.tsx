@@ -23,6 +23,7 @@ import {
   fetchFiles, getFiles, isLoadingSelector, setContentTypeRequest,
 } from 'state/files/filesSlice';
 import classNames from 'classnames';
+import { AggridPagination } from 'components/AggridPagination';
 import DetailCellRenderer from './Sub-Ag-Grid';
 import CommentsPage from '../comments/CommentsPage';
 import EditFilesTypeModal from './EditFilesTypeModal';
@@ -198,7 +199,8 @@ function CustomActionsToolPanel(onRefreshCallback, selectedFiles, isFetchLoading
 export default function FilesPage() {
   const dispatch = useAppDispatch();
   const gridRef = useRef<any>();
-
+  const [totalPages, setTotalPage] = useState<number>(0);
+  const [currentPage, setCurrentPage] = useState<number>(0);
   const [rowData, setRowData] = useState<any>();
   const [selectedRows, setSelectedRows] = useState<any[]>([]);
   const { height, width } = useWindowDimensions();
@@ -206,7 +208,7 @@ export default function FilesPage() {
   const isFetchLoading = useSelector(isLoadingSelector);
 
   const containerStyle = useMemo(
-    () => ({ width: '100%', height: '100vh' }),
+    () => ({ width: '100%', height: '600px' }),
     [],
   );
   const gridStyle = useMemo(() => ({ height: '100%', width: '100%' }), []);
@@ -412,6 +414,14 @@ export default function FilesPage() {
     }
   }, [rows]);
 
+    // navigation
+    const onPaginationChanged = () => {
+      if (gridRef.current!.api!) {
+        setCurrentPage(gridRef.current!.api.paginationGetCurrentPage() + 1);
+        setTotalPage(gridRef.current!.api.paginationGetTotalPages());
+      }
+    };
+
   return (
     <PageWrapper pageTitle="Files" icon="fa-solid fa-file-arrow-up">
       <div style={containerStyle}>
@@ -434,10 +444,20 @@ export default function FilesPage() {
             animateRows
             onGridReady={onGridReady}
             icons={icons}
+            paginationPageSize={10}
             pagination
+            suppressPaginationPanel
+            suppressScrollOnNewData
+            onPaginationChanged={onPaginationChanged}
+            enableRangeSelection
             onFirstDataRendered={onFirstDataRendered}
             getContextMenuItems={getContextMenuItems}
             onSelectionChanged={onSelectionChanged}
+          />
+          <AggridPagination
+            gridRef={gridRef}
+            totalPages={totalPages}
+            currentPage={currentPage}
           />
         </div>
       </div>
