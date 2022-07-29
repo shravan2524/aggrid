@@ -228,7 +228,7 @@ function SaveFormModal({ itemData, modalIdentifier }: ModalProps) {
                 </select>
                 {rolesError && (
                   <div className="text-danger text-sm mt-2">
-                    <p>Select at least 1 role to this user</p>
+                    <p>Select any role for this user</p>
                   </div>
                 )}
               </div>

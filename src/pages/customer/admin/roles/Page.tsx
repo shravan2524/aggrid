@@ -14,6 +14,7 @@ import { ICellRendererParams } from 'ag-grid-community';
 import classNames from 'classnames';
 import { AggridPagination } from 'components/AggridPagination';
 import { agGridDateFormatter } from 'app/utils/Helpers';
+import ShareDataModal from 'components/Library/SharePopup';
 import SaveFormModal from './SaveFormModal';
 
 const moduleName = 'Role';
@@ -82,6 +83,14 @@ function CustomActionsToolPanel(onRefreshCallback, isFetchLoading) {
         >
           <i className={classNames(['fa-solid', 'fa-rotate', { 'fa-spin': isFetchLoading }])} />
           Refresh
+        </button>
+        <button
+          type="button"
+          className="btn btn-md btn-primary  px-4 d-flex gap-2 align-items-center justify-content-center flex-wrap"
+          onClick={() => showModal('shareDataModal')}
+        >
+          <i className="fas fa-folder-plus" />
+          Share Data
         </button>
       </div>
     </div>
@@ -253,6 +262,7 @@ function Page() {
     <PageWrapper pageTitle={moduleTitle} icon="fa-solid fa-building">
       <div style={containerStyle}>
         <SaveFormModal itemData={itemData} />
+        <ShareDataModal />
         <div style={gridStyle} className="ag-theme-alpine">
           <AgGridReact
             ref={gridRef}
