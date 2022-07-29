@@ -89,7 +89,7 @@ export default function ShareDataModal({ active }: Props) {
             </div>
             <div className="modal-footer">
               <button
-                type="submit"
+                type="button"
                 className="btn btn-md btn-primary d-flex gap-3 justify-content-center align-items-center"
               >
                 Share
