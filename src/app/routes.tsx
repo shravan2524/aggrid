@@ -27,7 +27,8 @@ const SignInIndexPage = React.lazy(() => import('pages/public/auth/SignInPage'))
 const AuthHandlerProcessorIndexPage = React.lazy(() => import('pages/public/auth/AuthHandlerProcessorPage'));
 const AuthLogoutProcessorIndexPage = React.lazy(() => import('pages/public/auth/AuthLogoutProcessorPage'));
 const QRHelper = React.lazy(() => import('pages/public/qr-helper/Import'));
-
+const MyLibraryPage = React.lazy(() => import('pages/customer/Library/MyLibrary/MyLibraryPage'));
+const SharedWithMe = React.lazy(() => import('pages/customer/Library/Shared/SharedWithMe'));
 const RolesPage = React.lazy(() => import('pages/customer/admin/roles/Page'));
 const UsersPage = React.lazy(() => import('pages/customer/admin/users/Page'));
 
@@ -198,6 +199,33 @@ const routes: any = [
               {
                 path: 'users',
                 element: <Suspense fallback={<Loader />}><UsersPage /></Suspense>,
+              },
+            ],
+          },
+          // library
+          {
+            path: 'library',
+            element: <WithSubMenu subMenuItems={[
+              {
+                path: '/customer/library/',
+                text: 'My Library',
+                icon: 'fas fa-folder-open',
+              },
+              {
+                path: '/customer/library/shared',
+                text: 'Shared with me',
+                icon: 'fas fa-user-friends',
+              },
+            ]}
+            />,
+            children: [
+              {
+                path: '',
+                element: <Suspense fallback={<Loader />}><MyLibraryPage /></Suspense>,
+              },
+              {
+                path: 'shared',
+                element: <Suspense fallback={<Loader />}><SharedWithMe /></Suspense>,
               },
             ],
           },

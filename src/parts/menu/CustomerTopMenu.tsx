@@ -130,7 +130,11 @@ export default function CustomerTopMenu({ companies }:CustomerTopMenuProps) {
                   Admin
                 </NavLink>
               </li>
-
+              <li className="nav-item">
+                <NavLink to="/customer/library" className="nav-link">
+                  Library
+                </NavLink>
+              </li>
               <li className="nav-item">
                 <NavLink to="/customer/demo" className="nav-link">
                   Demo
