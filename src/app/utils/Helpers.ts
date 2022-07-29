@@ -59,3 +59,37 @@ export function agGridFilesDTO(items: FilesType[]): FilesAgGridType[] {
     contentPreview,
   }));
 }
+
+export function GetFilename(url?: string | null) {
+  if (url) {
+    const m = url.toString().match(/.*\/(.+?)\./);
+    if (m && m.length > 1) {
+      return m[1];
+    }
+  }
+  return '';
+}
+
+export function DownloadFile(dataUrl?: string | null) {
+  if (dataUrl) {
+    const filename = GetFilename(dataUrl);
+    const req = new XMLHttpRequest();
+    req.open('GET', dataUrl, true);
+    req.responseType = 'blob';
+    req.onload = () => {
+      const blob = new Blob([req.response], {
+        type: 'application/pdf',
+      });
+
+      const windowUrl = window.URL || window.webkitURL;
+      const href = windowUrl.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.setAttribute('download', filename);
+      a.setAttribute('href', href);
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+    };
+    req.send();
+  }
+}
