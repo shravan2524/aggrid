@@ -10,7 +10,7 @@ function SharedWithMe() {
   return (
     <PageWrapper pageTitle={moduleTitle} icon="fas fa-user-friends">
       <div className="mai-div">
-        <ShareDataModal />
+        <ShareDataModal active />
         {FakeData.slice(0, 1).map((f, i) => (
           <FilesComponent f={f} i={i} />
         ))}
