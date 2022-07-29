@@ -1,9 +1,9 @@
 import PageWrapper from 'components/PageWrapper';
-import 'components/Library/style.scss';
 import React from 'react';
 import FilesComponent from 'components/Library/FilesComponent';
 import ShareDataModal from 'components/Library/SharePopup';
 import { FakeData } from './FakeData';
+import 'components/Library/style.scss';
 
 const moduleTitle = 'My Library';
 
