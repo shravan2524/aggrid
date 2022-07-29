@@ -31,6 +31,8 @@ const QRHelper = React.lazy(() => import('pages/public/qr-helper/Import'));
 const RolesPage = React.lazy(() => import('pages/customer/admin/roles/Page'));
 const UsersPage = React.lazy(() => import('pages/customer/admin/users/Page'));
 
+const DemoHomeIndexPage = React.lazy(() => import('pages/customer/demo/DemoPage'));
+
 const routes: any = [
 
   // Auth handler
@@ -210,6 +212,11 @@ const routes: any = [
           {
             path: 'profile',
             element: <Suspense fallback={<Loader />}><ProfileIndexPage /></Suspense>,
+          },
+
+          {
+            path: 'demo',
+            element: <Suspense fallback={<Loader />}><DemoHomeIndexPage /></Suspense>,
           },
         ],
       },
