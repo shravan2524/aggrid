@@ -3,13 +3,12 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 
 interface Props {
-  i: number;
   f: any;
 }
 
-export default function SharedFilesComponent({ i, f }: Props) {
+export default function SharedFilesComponent({ f }: Props) {
   return (
-    <div key={i} className="d-flex w-100 px-5 py-4 mb-2">
+    <div className="d-flex w-100 px-5 py-4 mb-2">
       <div className="w-25">
         <h5>{f.date}</h5>
       </div>

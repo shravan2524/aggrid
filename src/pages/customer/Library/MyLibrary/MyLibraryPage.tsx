@@ -13,7 +13,7 @@ function MyLibraryPage() {
       <div className="mai-div">
         <ShareDataModal active shared={false} />
         {FakeData.map((f, i) => (
-          <FilesComponent f={f} i={i} />
+          <FilesComponent key={i} f={f} />
         ))}
       </div>
     </PageWrapper>
