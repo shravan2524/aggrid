@@ -7,7 +7,7 @@ interface Props {
   f: any;
 }
 
-export default function FilesComponent({ i, f }: Props) {
+export default function SharedFilesComponent({ i, f }: Props) {
   return (
     <div key={i} className="d-flex w-100 px-5 py-4 mb-2">
       <div className="w-25">
@@ -37,18 +37,6 @@ export default function FilesComponent({ i, f }: Props) {
                   className="action-button d-flex justify-content-center align-items-center"
                 >
                   <i className="fas fa-user-plus" />
-                </button>
-                <button
-                  type="button"
-                  className="action-button d-flex justify-content-center align-items-center"
-                >
-                  <i className="fas fa-trash-alt" />
-                </button>
-                <button
-                  type="button"
-                  className="action-button d-flex justify-content-center align-items-center"
-                >
-                  <i className="far fa-edit" />
                 </button>
               </div>
             </div>

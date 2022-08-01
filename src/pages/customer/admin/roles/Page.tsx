@@ -262,7 +262,7 @@ function Page() {
     <PageWrapper pageTitle={moduleTitle} icon="fa-solid fa-building">
       <div style={containerStyle}>
         <SaveFormModal itemData={itemData} />
-        <ShareDataModal active={false} />
+        <ShareDataModal active={false} shared={false} />
         <div style={gridStyle} className="ag-theme-alpine">
           <AgGridReact
             ref={gridRef}

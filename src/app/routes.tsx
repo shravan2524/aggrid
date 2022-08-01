@@ -29,6 +29,7 @@ const AuthLogoutProcessorIndexPage = React.lazy(() => import('pages/public/auth/
 const QRHelper = React.lazy(() => import('pages/public/qr-helper/Import'));
 const MyLibraryPage = React.lazy(() => import('pages/customer/Library/MyLibrary/MyLibraryPage'));
 const SharedWithMe = React.lazy(() => import('pages/customer/Library/Shared/SharedWithMe'));
+const SharedFilterView = React.lazy(() => import('pages/customer/Library/SharedFilterView'));
 const RolesPage = React.lazy(() => import('pages/customer/admin/roles/Page'));
 const UsersPage = React.lazy(() => import('pages/customer/admin/users/Page'));
 
@@ -245,6 +246,10 @@ const routes: any = [
           {
             path: 'demo',
             element: <Suspense fallback={<Loader />}><DemoHomeIndexPage /></Suspense>,
+          },
+          {
+            path: 'filter-ag',
+            element: <Suspense fallback={<Loader />}><SharedFilterView /></Suspense>,
           },
         ],
       },
