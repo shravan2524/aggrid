@@ -82,7 +82,7 @@ export default function EditTenantModal({ tenantToEdit }: EditTenantModalProps) 
 
             </div>
             <div className="modal-footer">
-              <button type="button" className="btn btn-sm btn-danger" data-bs-dismiss="modal">
+              <button type="button" className="btn btn-sm btn-danger" data-bs-dismiss="modal" onClick={() => reset({ title: tenantToEdit?.title })}>
                 Close
               </button>
               <CustomButton
