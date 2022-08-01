@@ -237,6 +237,7 @@ export default function columnGrouping() {
   const gridStyle = useMemo(() => ({ height: '100%', width: '100%' }), []);
 
   const sendFunc = () => {
+    setSelectedRows([]);
     const options: RequestInit = {
       method: 'GET',
       credentials: 'include',
@@ -428,7 +429,7 @@ export default function columnGrouping() {
             detailCellRenderer={detailCellRenderer}
             detailRowHeight={400}
             sideBar={sideBar}
-            rowSelection="multiple"
+            // rowSelection="multiple"
             rowDragManaged
             rowDragMultiRow
             rowGroupPanelShow="always"
@@ -442,10 +443,10 @@ export default function columnGrouping() {
             suppressPaginationPanel
             suppressScrollOnNewData
             onPaginationChanged={onPaginationChanged}
-            enableRangeSelection
+            // enableRangeSelection
             onFirstDataRendered={onFirstDataRendered}
             getContextMenuItems={getContextMenuItems}
-            onSelectionChanged={onSelectionChanged}
+            // onSelectionChanged={onSelectionChanged}
           />
           <AggridPagination
             gridRef={gridRef}
