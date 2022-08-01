@@ -11,7 +11,7 @@ function MyLibraryPage() {
   return (
     <PageWrapper pageTitle={moduleTitle} icon="fas fa-folder-open">
       <div className="mai-div">
-        <ShareDataModal active />
+        <ShareDataModal active shared={false} />
         {FakeData.map((f, i) => (
           <FilesComponent f={f} i={i} />
         ))}

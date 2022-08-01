@@ -4,9 +4,10 @@ import { UsersDatas } from './Users';
 
 interface Props {
   active: boolean;
+  shared: boolean;
 }
 
-export default function ShareDataModal({ active }: Props) {
+export default function ShareDataModal({ active, shared }: Props) {
   const modalId = 'shareDataModal';
   return (
     <div
@@ -77,9 +78,12 @@ export default function ShareDataModal({ active }: Props) {
                             )
                           </p>
                         ) : (
-                          <button type="button" className="btn btn-light">
-                            <i className="fas fa-trash-alt text-danger" />
-                          </button>
+                          !shared && (
+                            <button type="button" className="btn btn-light">
+                              <i className="fas fa-trash-alt text-danger" />
+                            </button>
+                          )
+
                         )}
                       </div>
                     </div>
