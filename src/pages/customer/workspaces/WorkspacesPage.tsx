@@ -6,6 +6,7 @@ import React, {
   useState,
 } from 'react';
 import { AgGridReact } from 'ag-grid-react';
+import { toast } from 'react-hot-toast';
 import { showModal } from 'app/utils/Modal';
 import { useAppDispatch, useWindowDimensions } from 'app/hooks';
 import PageWrapper from 'components/PageWrapper';
@@ -141,6 +142,10 @@ export default function WorkspacesPage() {
     }
   };
 
+  const onRefreshCallback = () => {
+    dispatch(fetchTenants());
+  };
+
   const [columnDefs, setColumnDefs] = useState([
     {
       headerName: 'Tenants Details',
@@ -157,8 +162,13 @@ export default function WorkspacesPage() {
           filter: 'agTextColumnFilter',
           onCellValueChanged: (event) => {
             const { title, id } = event.data;
-            const payload = { data: { title }, id };
-            dispatch(updateTenantRequest({ ...payload }));
+            if (title) {
+              const payload = { data: { title }, id };
+              dispatch(updateTenantRequest({ ...payload }));
+            } else {
+              toast.error('Title cannot be null');
+              onRefreshCallback();
+            }
           },
         },
         {
@@ -191,10 +201,6 @@ export default function WorkspacesPage() {
     }),
     [],
   );
-
-  const onRefreshCallback = () => {
-    dispatch(fetchTenants());
-  };
 
   const sideBar = useMemo(
     () => ({

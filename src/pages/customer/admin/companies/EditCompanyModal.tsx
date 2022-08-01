@@ -132,7 +132,9 @@ export default function EditCompanyModal({
                   <option value="">Please select Parent Company ...</option>
                   {companySelector
                   && companySelector.map((option) => (
-                    <option key={option.id} value={option.id}>{option.name}</option>
+                    (companyData && option.name !== companyData.name)
+                    ? <option key={option.id} value={option.id}>{option.name}</option>
+                    : null
                  ))}
                 </select>
 

@@ -171,7 +171,7 @@ export default function EditFilesTypeModal({ selectedRows }: EditFilesTypeModalP
                   {...register('type')}
                   className={classNames(['form-select form-select-sm', { 'is-invalid': errors.type }])}
                 >
-                  <option value="">Please select File type ...</option>
+                  <option value="" selected>Please select File type ...</option>
                   {availableFilesTypes && availableFilesTypes.map((option) => (
                     <option key={option.type} value={option.type}>{option.label}</option>
                   ))}
@@ -186,7 +186,7 @@ export default function EditFilesTypeModal({ selectedRows }: EditFilesTypeModalP
 
             </div>
             <div className="modal-footer">
-              <button type="button" className="btn btn-sm btn-danger" data-bs-dismiss="modal">
+              <button type="button" className="btn btn-sm btn-danger" data-bs-dismiss="modal" onClick={() => reset()}>
                 Close
               </button>
               <CustomButton
