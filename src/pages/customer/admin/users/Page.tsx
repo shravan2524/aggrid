@@ -376,7 +376,7 @@ function Page() {
           rowData={rowData}
           columnDefs={columnDefs}
           sideBar={sideBar}
-          rowSelection="multiple"
+          // rowSelection="multiple"
           rowDragManaged
           rowDragMultiRow
           rowGroupPanelShow="always"
@@ -387,7 +387,7 @@ function Page() {
           icons={icons}
           pagination
           onFirstDataRendered={onFirstDataRendered}
-          enableRangeSelection
+          // enableRangeSelection
           masterDetail
         />
       </div>

@@ -269,7 +269,7 @@ function Page() {
             rowData={rowData}
             columnDefs={columnDefs}
             sideBar={sideBar}
-            rowSelection="multiple"
+            // rowSelection="multiple"
             rowDragManaged
             rowDragMultiRow
             rowGroupPanelShow="always"
@@ -283,7 +283,7 @@ function Page() {
             suppressPaginationPanel
             suppressScrollOnNewData
             onPaginationChanged={onPaginationChanged}
-            enableRangeSelection
+            // enableRangeSelection
             onFirstDataRendered={onFirstDataRendered}
             masterDetail
           />
