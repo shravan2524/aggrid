@@ -1,5 +1,9 @@
 import React, {
-  useCallback, useEffect, useMemo, useRef, useState,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
 } from 'react';
 import { downloadZip } from 'client-zip';
 import { toast } from 'react-hot-toast';
@@ -20,7 +24,10 @@ import './FilePage.scss';
 import { useSelector } from 'react-redux';
 import { tenantUuid } from 'state/tenants/helper';
 import {
-  fetchFiles, getFiles, isLoadingSelector, setContentTypeRequest,
+  fetchFiles,
+  getFiles,
+  isLoadingSelector,
+  setContentTypeRequest,
 } from 'state/files/filesSlice';
 import classNames from 'classnames';
 import { AggridPagination } from 'components/AggridPagination';
@@ -31,14 +38,23 @@ import { showModal } from '../../../../app/utils/Modal';
 
 type ActionsRendererProps = {
   params: ICellRendererParams;
-  onFileMappingClickCallback: (e: React.MouseEvent<HTMLButtonElement>, params: ICellRendererParams) => void;
+  onFileMappingClickCallback: (
+    e: React.MouseEvent<HTMLButtonElement>,
+    params: ICellRendererParams
+  ) => void;
 };
 type SelectActionsRendererProps = {
   params: ICellRendererParams;
-  onFileMappingClickCallback: (e: React.MouseEvent<HTMLButtonElement>, params: ICellRendererParams) => void;
+  onFileMappingClickCallback: (
+    e: React.MouseEvent<HTMLButtonElement>,
+    params: ICellRendererParams
+  ) => void;
 };
 
-function SelectFiles({ params, onFileMappingClickCallback }: SelectActionsRendererProps) {
+function SelectFiles({
+  params,
+  onFileMappingClickCallback,
+}: SelectActionsRendererProps) {
   return (
     <div>
       <input
@@ -50,7 +66,10 @@ function SelectFiles({ params, onFileMappingClickCallback }: SelectActionsRender
   );
 }
 
-function ActionsRenderer({ params, onFileMappingClickCallback }: ActionsRendererProps) {
+function ActionsRenderer({
+  params,
+  onFileMappingClickCallback,
+}: ActionsRendererProps) {
   if (!params.data) {
     return null;
   }
@@ -62,7 +81,12 @@ function ActionsRenderer({ params, onFileMappingClickCallback }: ActionsRenderer
   function onchange(e) {
     setcontentType(e.target.value);
     /* eslint-disable-next-line */
-    dispatch(setContentTypeRequest({ id: params.data.id, data: { fileType: e.target.value } }));
+    dispatch(
+      setContentTypeRequest({
+        id: params.data.id,
+        data: { fileType: e.target.value },
+      }),
+    );
   }
 
   const downloadFile = (fileId) => {
@@ -80,22 +104,29 @@ function ActionsRenderer({ params, onFileMappingClickCallback }: ActionsRenderer
   };
 
   return (
-    <div className="d-flex justify-content-between align-items-center w-100 h-100" id="columns">
+    <div
+      className="d-flex justify-content-between align-items-center w-100 h-100"
+      id="columns"
+    >
       <select className="p-8" onChange={onchange} value={contentType}>
-        <option disabled value="">Select Content Type</option>
+        <option disabled value="">
+          Select Content Type
+        </option>
         <option value="2A">GSTR2A</option>
         <option value="2B">GSTR2B</option>
         <option value="PR">Purchase Register</option>
         <option value="InvoicePDF">Invoice PDF</option>
       </select>
-      {
-        (params.data)
-          && (params.data.fileType === '2A' || params.data.fileType === '2B' || params.data.fileType === 'PR')
-          ? (
-            <ColumnMapping id={params.data.id} fileType={params.data.fileType} />
-          )
-          : <Button style={{ visibility: 'hidden' }} variant="primary">Column Mapping</Button>
-      }
+      {params.data
+      && (params.data.fileType === '2A'
+      || params.data.fileType === '2B'
+      || params.data.fileType === 'PR') ? (
+        <ColumnMapping id={params.data.id} fileType={params.data.fileType} />
+      ) : (
+        <Button style={{ visibility: 'hidden' }} variant="primary">
+          Column Mapping
+        </Button>
+      )}
       <button
         type="button"
         onClick={() => downloadFile(params.data.id)}
@@ -108,57 +139,64 @@ function ActionsRenderer({ params, onFileMappingClickCallback }: ActionsRenderer
   );
 }
 
-function CustomActionsToolPanel(onRefreshCallback, selectedFiles, isFetchLoading) {
+function CustomActionsToolPanel(
+  onRefreshCallback,
+  selectedFiles,
+  isFetchLoading,
+) {
   const [downloadLoading, setDownloadLoading] = useState<boolean>(false);
-
   // TODO: This code needs some refactoring work ...
   async function downloadTestZip(selFiles: any[]) {
-    const promises : any = [];
-    setDownloadLoading(true);
-    // eslint-disable-next-line react/destructuring-assignment
-    await selFiles.forEach((e) => {
-      const newPromise = new Promise((resolve, reject) => {
-        const options: RequestInit = {
-          method: 'GET',
-          credentials: 'include',
-        };
-        const apiUrl = `${BACKEND_API}/api/v1/${tenantUuid()}/files/${e}/download`;
-        fetch(apiUrl, options)
-          .then((response) => response.json())
-          .then(async (data1) => {
-            resolve(data1.url);
-          });
-      });
-      promises.push(newPromise);
-    });
-
-    let urls: any = [];
-    await Promise.all(promises).then(async (values: any) => {
-      urls = values;
-    });
-
-    if (urls) {
-      const urlsContentsPromise: any = [];
-      urls.forEach((i) => {
-        const np = new Promise((resolve, reject) => {
-          fetch(i).then(async (response) => {
-            resolve(response);
-          });
-        });
-        urlsContentsPromise.push(np);
-      });
-
-      await Promise.all(urlsContentsPromise).then(async (v: any) => {
-        const link = document.createElement('a');
-        const blob = await downloadZip(v).blob();
-        link.href = URL.createObjectURL(blob);
-        link.download = 'files.zip';
-        link.click();
-        link.remove();
-        setDownloadLoading(false);
-      });
+    if (selFiles.length === 0) {
+      toast.error('Select At least 1 File to download');
     } else {
-      setDownloadLoading(false);
+      const promises: any = [];
+      setDownloadLoading(true);
+      // eslint-disable-next-line react/destructuring-assignment
+      await selFiles.forEach((e) => {
+        const newPromise = new Promise((resolve, reject) => {
+          const options: RequestInit = {
+            method: 'GET',
+            credentials: 'include',
+          };
+          const apiUrl = `${BACKEND_API}/api/v1/${tenantUuid()}/files/${e}/download`;
+          fetch(apiUrl, options)
+            .then((response) => response.json())
+            .then(async (data1) => {
+              resolve(data1.url);
+            });
+        });
+        promises.push(newPromise);
+      });
+
+      let urls: any = [];
+      await Promise.all(promises).then(async (values: any) => {
+        urls = values;
+      });
+
+      if (urls) {
+        const urlsContentsPromise: any = [];
+        urls.forEach((i) => {
+          const np = new Promise((resolve, reject) => {
+            fetch(i).then(async (response) => {
+              resolve(response);
+            });
+          });
+          urlsContentsPromise.push(np);
+        });
+
+        await Promise.all(urlsContentsPromise).then(async (v: any) => {
+          const link = document.createElement('a');
+          const blob = await downloadZip(v).blob();
+          link.href = URL.createObjectURL(blob);
+          link.download = 'files.zip';
+          link.click();
+          link.remove();
+          setDownloadLoading(false);
+        });
+      } else {
+        setDownloadLoading(false);
+      }
     }
   }
 
@@ -179,18 +217,31 @@ function CustomActionsToolPanel(onRefreshCallback, selectedFiles, isFetchLoading
           className="btn btn-sm btn-info  d-flex gap-1 align-items-center justify-content-center flex-wrap"
           onClick={onRefreshCallback}
         >
-          <i className={classNames(['fa-solid', 'fa-rotate', { 'fa-spin': isFetchLoading }])} />
+          <i
+            className={classNames([
+              'fa-solid',
+              'fa-rotate',
+              { 'fa-spin': isFetchLoading },
+            ])}
+          />
           Refresh
         </button>
+        {/* {selectedFiles.length !== 0 && ( */}
         <button
           type="button"
           disabled={downloadLoading}
           className="btn btn-sm btn-info d-flex gap-1 align-items-center justify-content-center flex-wrap"
           onClick={() => downloadTestZip(selectedFiles)}
         >
-          {downloadLoading ? (<i className="fas fa-circle-notch fa-spin" />) : <i className="fa fa-download" /> }
+          {downloadLoading ? (
+            <i className="fas fa-circle-notch fa-spin" />
+          ) : (
+            <i className="fa fa-download" />
+          )}
           Download Files
         </button>
+        {/* )
+        } */}
       </div>
     </div>
   );
@@ -309,51 +360,60 @@ export default function FilesPage() {
     },
   ]);
 
-  const icons = useMemo<{ [key: string]: Function | string; }>(() => ({
-    'custom-actions-tool': '<i class="fa-solid fa-screwdriver-wrench"></i>',
-  }), []);
+  const icons = useMemo<{ [key: string]: Function | string }>(
+    () => ({
+      'custom-actions-tool': '<i class="fa-solid fa-screwdriver-wrench"></i>',
+    }),
+    [],
+  );
 
   const onRefreshCallback = () => {
     dispatch(fetchFiles());
   };
 
-  const sideBar = useMemo(() => ({
-    toolPanels: [
-      {
-        id: 'customActionsTool',
-        labelDefault: 'Actions',
-        labelKey: 'customActionsTool',
-        iconKey: 'custom-actions-tool',
-        toolPanel: () => CustomActionsToolPanel(onRefreshCallback, selectedFiles, isFetchLoading),
-      },
-      {
-        id: 'columns',
-        labelDefault: 'Columns',
-        labelKey: 'columns',
-        iconKey: 'columns',
-        toolPanel: 'agColumnsToolPanel',
-      },
-      {
-        id: 'filters',
-        labelDefault: 'Filters',
-        labelKey: 'filters',
-        iconKey: 'filter',
-        toolPanel: 'agFiltersToolPanel',
-      },
-    ],
-    defaultToolPanel: 'customActionsTool',
-  }), [isFetchLoading]);
+  const sideBar = useMemo(
+    () => ({
+      toolPanels: [
+        {
+          id: 'customActionsTool',
+          labelDefault: 'Actions',
+          labelKey: 'customActionsTool',
+          iconKey: 'custom-actions-tool',
+          toolPanel: () => CustomActionsToolPanel(onRefreshCallback, selectedFiles, isFetchLoading),
+        },
+        {
+          id: 'columns',
+          labelDefault: 'Columns',
+          labelKey: 'columns',
+          iconKey: 'columns',
+          toolPanel: 'agColumnsToolPanel',
+        },
+        {
+          id: 'filters',
+          labelDefault: 'Filters',
+          labelKey: 'filters',
+          iconKey: 'filter',
+          toolPanel: 'agFiltersToolPanel',
+        },
+      ],
+      defaultToolPanel: 'customActionsTool',
+    }),
+    [isFetchLoading],
+  );
 
-  const defaultColDef = useMemo(() => ({
-    sortable: true,
-    filter: true,
-    resizable: true,
-    floatingFilter: true,
-    enableRowGroup: true,
-    editable: true,
-    enablePivot: true,
-    enableValue: true,
-  }), []);
+  const defaultColDef = useMemo(
+    () => ({
+      sortable: true,
+      filter: true,
+      resizable: true,
+      floatingFilter: true,
+      enableRowGroup: true,
+      editable: true,
+      enablePivot: true,
+      enableValue: true,
+    }),
+    [],
+  );
 
   const onFirstDataRendered = useCallback(() => {
     gridRef.current?.api.sizeColumnsToFit();
@@ -375,26 +435,26 @@ export default function FilesPage() {
     setSelectedRows(selection);
   }, []);
 
-  const getContextMenuItems = useCallback((params: GetContextMenuItemsParams): (
-  | string
-  | MenuItemDef
-  )[] => [
-    {
-      // custom item
-      name: 'Edit Files type',
-      action: () => {
-        if (selectedRows.length) {
-          showModal('editFilesTypeModal');
-        } else {
-          toast.error('You need to select at less one row.');
-        }
+  const getContextMenuItems = useCallback(
+    (params: GetContextMenuItemsParams): (string | MenuItemDef)[] => [
+      {
+        // custom item
+        name: 'Edit Files type',
+        action: () => {
+          if (selectedRows.length) {
+            showModal('editFilesTypeModal');
+          } else {
+            toast.error('You need to select at less one row.');
+          }
+        },
+        icon: '<i class="fa-solid fa-file-pen" />',
       },
-      icon: '<i class="fa-solid fa-file-pen" />',
-    },
-    'copy',
-    'separator',
-    'chartRange',
-  ], [selectedRows]);
+      'copy',
+      'separator',
+      'chartRange',
+    ],
+    [selectedRows],
+  );
 
   // SUB AG-GRID
   const detailCellRenderer = useMemo<any>(() => DetailCellRenderer, []);
@@ -404,7 +464,7 @@ export default function FilesPage() {
     if (gridRef.current?.api) {
       gridRef.current?.api.sizeColumnsToFit();
     }
-  }, [width, rows]);
+  }, [width, rows, selectedFiles]);
 
   useEffect(() => {
     setRowData(agGridFilesDTO(rows));
@@ -414,13 +474,13 @@ export default function FilesPage() {
     }
   }, [rows]);
 
-    // navigation
-    const onPaginationChanged = () => {
-      if (gridRef.current!.api!) {
-        setCurrentPage(gridRef.current!.api.paginationGetCurrentPage() + 1);
-        setTotalPage(gridRef.current!.api.paginationGetTotalPages());
-      }
-    };
+  // navigation
+  const onPaginationChanged = () => {
+    if (gridRef.current!.api!) {
+      setCurrentPage(gridRef.current!.api.paginationGetCurrentPage() + 1);
+      setTotalPage(gridRef.current!.api.paginationGetTotalPages());
+    }
+  };
 
   return (
     <PageWrapper pageTitle="Files" icon="fa-solid fa-file-arrow-up">

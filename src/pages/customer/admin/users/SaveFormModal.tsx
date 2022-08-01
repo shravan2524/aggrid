@@ -42,8 +42,8 @@ function SaveFormModal({ itemData, modalIdentifier }: ModalProps) {
   const schema = yup
     .object({
       email: yup.string().required().email(),
-      firstName: yup.string().required(),
-      lastName: yup.string().required(),
+      firstName: yup.string().required().trim(),
+      lastName: yup.string().required().trim(),
       roles: yup.array(),
     })
     .required();

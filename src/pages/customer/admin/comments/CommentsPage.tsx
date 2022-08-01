@@ -11,6 +11,7 @@ import { type } from 'os';
 import './comments.scss';
 import { MDBCollapse, MDBBtn } from 'mdb-react-ui-kit';
 import { tenantUuid } from 'state/tenants/helper';
+import { agGridDateFormatter } from 'app/utils/Helpers';
 
 interface Type {
   date: string;
@@ -22,47 +23,6 @@ interface File {
 interface Comment {
   id: number;
   onSubmitAction: Function;
-}
-
-function DateMod({ date }: Type) {
-  const ret = date.slice(8, 10);
-  ret.concat(' ');
-  const check = date.slice(5, 7);
-  let month = '';
-  if (check.localeCompare('01') === 0) {
-    month = 'January';
-  } else if (check.localeCompare('02') === 0) {
-    month = 'February';
-  } else if (check.localeCompare('03') === 0) {
-    month = 'March';
-  } else if (check.localeCompare('04') === 0) {
-    month = 'April';
-  } else if (check.localeCompare('05') === 0) {
-    month = 'May';
-  } else if (check.localeCompare('06') === 0) {
-    month = 'June';
-  } else if (check.localeCompare('07') === 0) {
-    month = 'July';
-  } else if (check.localeCompare('08') === 0) {
-    month = 'August';
-  } else if (check.localeCompare('09') === 0) {
-    month = 'September';
-  } else if (check.localeCompare('10') === 0) {
-    month = 'October';
-  } else if (check.localeCompare('11') === 0) {
-    month = 'November';
-  } else if (check.localeCompare('12') === 0) {
-    month = 'December';
-  }
-  return (
-    <div className="blockquote-footer">
-      {ret}
-      {' '}
-      {month}
-      {', '}
-      {date.slice(0, 4)}
-    </div>
-  );
 }
 
 interface CommentUiType {
@@ -108,14 +68,15 @@ function Reply({ id, onSubmitAction }: Comment) {
     onSubmitAction(id, typedcomment);
     settypedcomment('');
   }
+  const ids = `collapse${id}`;
   return (
     <>
-      <button className="btn btn-outline-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+      <button className="btn btn-outline-primary" type="button" data-bs-toggle="collapse" data-bs-target={`#${ids}`}>
         reply
         <i className="fa fa-reply" aria-hidden="true" />
         {' '}
       </button>
-      <div className="collapse" id="collapseExample">
+      <div className="collapse" id={ids}>
         <div className="mb-3 d-flex w-100">
           <input type="text" style={{ width: '83%' }} onChange={(e) => settypedcomment(e.target.value)} value={typedcomment} />
           <button type="button" className="btn btn-sm btn-primary px-4 d-flex gap-2 align-items-center justify-content-center" onClick={(e) => submit(e)}>
@@ -135,7 +96,7 @@ function CommentUI({ description, createdAt, createdBy } : CommentUiType) {
         <div className="d-flex flex-column align-items-center w-100" id="mg">
           <div className="d-flex justify-content-between w-100">
             <p className="h4 mb-0">{createdBy}</p>
-            <DateMod date={createdAt} />
+            <div className="blockquote-footer">{agGridDateFormatter(createdAt)}</div>
           </div>
           <div className="w-100">
             <p id="pd">{description}</p>
@@ -182,13 +143,11 @@ export default function CommentsPage({ fileId }: File) {
     await fetch(apiUrl, options)
       .then((response) => response.json())
       .then((data1) => {
-        console.log(data1, apiUrl);
         setdata(data1);
         setstate(!state);
       });
   }
   const onSubmitAction = (id, typedcomment1) => {
-    console.log(id, typedcomment1);
     settypedcomment('');
     const d = new Date();
     const Comments = {
@@ -207,7 +166,6 @@ export default function CommentsPage({ fileId }: File) {
     const tempcomment = data;
     // tempcomment.push(tComments);
     // setdata(tempcomment);
-    console.log(tempcomment);
     // dispatch(postComment({ Comments, fileId }));
     postreq(Comments);
     setstate(!state);
@@ -236,10 +194,8 @@ export default function CommentsPage({ fileId }: File) {
     fetch(apiUrl, options)
       .then((response) => response.json())
       .then((data1) => {
-        console.log(data1, apiUrl);
         setdata(data1);
       });
-    console.log(data);
   }, []);
   useEffect(() => {
     setstate(!state);
@@ -261,12 +217,10 @@ export default function CommentsPage({ fileId }: File) {
     await fetch(apiUrl1, options1)
       .then((response) => response.json())
       .then((data1) => {
-        console.log(data1, 'hii');
         data1.map((e) => temp.push(e.contact.email));
         setSuggestionList(temp);
       });
     await setSuggestionList(temp);
-    console.log(suggestionList, temp, 'ht');
   }
   useEffect(() => {
     def();
@@ -299,10 +253,8 @@ export default function CommentsPage({ fileId }: File) {
     fetch(apiUrl, options)
       .then((response) => response.json())
       .then((data1) => {
-        console.log(data1, apiUrl);
         setdata(data1);
       });
-    console.log(data);
   }, []);
   useEffect(() => {
     setstate(!state);
@@ -333,8 +285,8 @@ export default function CommentsPage({ fileId }: File) {
                 </div>
                 <div style={{ position: 'relative', bottom: '12px', left: '10px' }}>
                   {
-                    e.Replies.map((ee) => (
-                      <div className="card-body" id="replies">
+                    e.Replies.map((ee, index) => (
+                      <div key={index} className="card-body" id="replies">
                         <CommentUI description={ee.description} createdAt={ee.createdAt} createdBy={ee.createdBy} />
                       </div>
                     ))
