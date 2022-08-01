@@ -5,6 +5,7 @@ import PageWrapper from 'components/PageWrapper';
 import PDFPreviewer from 'components/PDFPreviewer';
 import bootstrap from 'bootstrap/dist/js/bootstrap.bundle';
 import { AgGridReact } from 'ag-grid-react';
+import './styles.css';
 import { GetFilename } from 'app/utils/Helpers';
 
 const agGridData = require('./Q1_Travel_Booking_Matched_with_Invoice_and_2A_f1000.json');
@@ -226,6 +227,9 @@ function DetailCellRenderer(props: any) {
       </div>
     );
 }
+const OnExpand = (i: any) => {
+    i.node.setExpanded(!i.node.expanded);
+  };
 
 export default function DemoPage() {
     const gridRef = useRef<any>();
@@ -239,6 +243,20 @@ export default function DemoPage() {
     const [columnDefs, setColumnDefs] = useState([
 
         // Airline Details
+        {
+          field: '',
+          // eslint-disable-next-line react/no-unstable-nested-components
+          cellRenderer: (params) => (
+            <div aria-hidden="true" onClick={() => OnExpand(params)}>
+              <i className="fa fa-link" />
+            </div>
+          ),
+          editable: false,
+          filter: false,
+          width: 40,
+          minWidth: 40,
+          maxWidth: 40,
+        },
         {
             headerName: 'Airline Details',
             children: [
