@@ -12,7 +12,7 @@ function SharedWithMe() {
       <div className="mai-div">
         <ShareDataModal active shared />
         {FakeData.slice(0, 1).map((f, i) => (
-          <SharedFilesComponent f={f} i={i} />
+          <SharedFilesComponent f={f} key={i} />
         ))}
       </div>
     </PageWrapper>
