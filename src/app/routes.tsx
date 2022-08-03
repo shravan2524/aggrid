@@ -89,10 +89,10 @@ const routes: any = [
                 path: '/customer/reconciliation',
                 text: 'Reconciliation',
               },
-              {
+             /* {
                 path: '/customer/reconciliation/qr',
                 text: 'QR',
-              },
+              }, */
               {
                 path: '/customer/reconciliation/pr',
                 text: 'PR',
@@ -105,14 +105,14 @@ const routes: any = [
                 path: '/customer/reconciliation/gstr2b',
                 text: '2B',
               },
-              {
+            /*  {
                 path: '/customer/reconciliation/ewb',
                 text: 'EWB',
               },
               {
                 path: '/customer/reconciliation/ocr',
                 text: 'OCR',
-              },
+              }, */
             ]}
             />,
             children: [
@@ -120,22 +120,22 @@ const routes: any = [
                 path: '',
                 element: <Suspense fallback={<Loader />}><ReconciliationIndexPage /></Suspense>,
               },
-              {
+            /*  {
                 path: 'ocr',
                 element: <Suspense fallback={<Loader />}><ReconciliationOCRIndexPage /></Suspense>,
-              },
-              {
+              }, */
+             /* {
                 path: 'qr',
                 element: <Suspense fallback={<Loader />}><ReconciliationQrIndexPage /></Suspense>,
-              },
+              }, */
               {
                 path: 'pr',
                 element: <Suspense fallback={<Loader />}><ReconciliationPrIndexPage /></Suspense>,
               },
-              {
+             /* {
                 path: 'ewb',
                 element: <Suspense fallback={<Loader />}><ReconciliationEwbPage /></Suspense>,
-              },
+              }, */
               {
                 path: 'gstr2a',
                 element: <Suspense fallback={<Loader />}><ReconciliationGstr2aPage /></Suspense>,
