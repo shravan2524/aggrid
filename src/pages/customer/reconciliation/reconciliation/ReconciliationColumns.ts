@@ -146,11 +146,4 @@ export const ReconciliationColumns = (agGridRowDrag) => [
     filter: 'agDateColumnFilter',
     chartDataType: 'category',
   },
-  {
-    headerName: 'Extra Information',
-    field: 'extra_information',
-    agGridRowDrag,
-    filter: 'agTextColumnFilter',
-    chartDataType: 'category',
-  },
 ];
