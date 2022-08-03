@@ -9,7 +9,7 @@ const PublicLayout = React.lazy(() => import('parts/layout/PublicLayout'));
 const ProtectedRoute = React.lazy(() => import('components/ProtectedRoute'));
 
 const CustomerHomeIndexPage = React.lazy(() => import('pages/customer/za/HomeZAPage'));
-const ReconciliationIndexPage = React.lazy(() => import('pages/customer/reconciliation/ReconciliationPage'));
+const ReconciliationIndexPage = React.lazy(() => import('pages/customer/reconciliation/reconciliation/ReconciliationPage'));
 const ReconciliationOCRIndexPage = React.lazy(() => import('pages/customer/reconciliation/OCR/ReconciliationOCRPage'));
 const ReconciliationQrIndexPage = React.lazy(() => import('pages/customer/reconciliation/qr/ReconciliationQrPage'));
 const ReconciliationPrIndexPage = React.lazy(() => import('pages/customer/reconciliation/pr/ReconciliationPrPage'));

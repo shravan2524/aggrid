@@ -4,6 +4,7 @@ export const pages = [
   { title: 'Roles', uuid: 'roles' }, // this is for roles APIs
   { title: 'Column Header Groups', uuid: 'columnGroups' }, // this is for columnGroups APIs
   { title: 'Companies', uuid: 'companies' }, // this is for companies and companyCredentials APIs
+  { title: 'Reconciliation', uuid: 'reconciliation' }, // this is for reconciliation APIs
   { title: 'E-way Bill', uuid: 'ewb' }, // this is for ewb APIs
   { title: 'GSTR2A', uuid: 'gstr2a' }, // this is for gstr2a APIs
   { title: 'GSTR2B', uuid: 'gstr2b' }, // this is for gstr2b APIs
