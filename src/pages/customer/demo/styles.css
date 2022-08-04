@@ -1,10 +1,10 @@
-.ag-theme-alpine {
+/* .ag-theme-alpine {
 	--ag-header-height: 30px;
 	--ag-header-foreground-color: white;
-	--ag-header-background-color: purple;
+	/* --ag-header-background-color: purple;
 	--ag-header-cell-hover-background-color: rgb(80, 40, 140);
-	--ag-header-cell-moving-background-color: rgb(80, 40, 140);
-  }
+	--ag-header-cell-moving-background-color: rgb(80, 40, 140); 
+  } */
   .ag-theme-alpine .ag-header {
 	font-family: cursive;
   }
@@ -14,4 +14,33 @@
   }
   .ag-theme-alpine .ag-header-cell {
 	font-size: 18px;
+  }
+  .my-css-class:nth-child(odd) {
+	background-color: #00be8b;
+  }
+  .my-css-class:nth-child(even) {
+	background-color: #928dff;
+  }
+  .test-grid {
+	height: 1px;
+	min-height: 1px;
+	flex-grow: 1;
+  }
+  
+  .test-container {
+	height: 100%;
+	display: flex;
+	flex-direction: column;
+  }
+  
+  .test-header {
+	font-family: Verdana, Geneva, Tahoma, sans-serif;
+	font-size: 13px;
+	margin-bottom: 5px;
+  }
+  .ag-header-row.ag-header-row-column{
+	/* background-color: #46ffcb; */
+  }
+  .my-css-class:nth-child(odd) > .ag-header-cell.ag-header-cell-sortable.ag-focus-managed{
+	background-color: black;
   }

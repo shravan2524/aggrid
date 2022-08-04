@@ -317,7 +317,7 @@ export default function CompaniesPage() {
             rowData={rowData}
             columnDefs={columnDefs}
             sideBar={sideBar}
-            rowSelection="multiple"
+            // rowSelection="multiple"
             rowDragManaged
             rowDragMultiRow
             rowGroupPanelShow="always"
@@ -330,7 +330,7 @@ export default function CompaniesPage() {
             suppressPaginationPanel
             suppressScrollOnNewData
             onPaginationChanged={onPaginationChanged}
-            enableRangeSelection
+            // enableRangeSelection
             masterDetail
           />
           <AggridPagination

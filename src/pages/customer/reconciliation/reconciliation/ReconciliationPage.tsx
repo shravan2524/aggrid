@@ -1,16 +1,12 @@
 import React, {
   useCallback, useMemo, useRef, useState,
 } from 'react';
-import { fetchQRData } from 'services/qrAPIService';
 import { AgGridReact } from 'ag-grid-react';
 import { agGridRowDrag } from 'app/utils/Helpers';
-import { useNavigate } from 'react-router-dom';
 import { useWindowDimensions } from 'app/hooks';
 import PageWrapper from 'components/PageWrapper';
 import { GridReadyEvent, IServerSideDatasource } from 'ag-grid-community';
-import { ReconciliationColumns } from './ReconciliationColumns';
-import { fetchFileContentData } from '../../../../services/filesAPIService';
-import { fetchReconciliationData } from '../../../../services/reconciliationAPIService';
+import { fetchReconciliationData } from 'services/reconciliationAPIService';
 
 function ClickableStatusBarComponent(props: any, onBtExport) {
   const { api } = props;
@@ -29,6 +25,22 @@ function ClickableStatusBarComponent(props: any, onBtExport) {
   );
 }
 
+function generateRowsAndGroups(rows) {
+    const convertCamelCaseToSpaceCase = (text) => {
+        const textFormatted = text.replace('_', ' ');
+        const result = textFormatted.replace(/([A-Z])/g, ' $1');
+        return result.charAt(0).toUpperCase() + result.slice(1);
+    };
+
+  return Object.keys(rows[0]).map((r) => ({
+      headerName: convertCamelCaseToSpaceCase(r),
+      field: r,
+      agGridRowDrag,
+      filter: 'agTextColumnFilter',
+      chartDataType: 'category',
+    }));
+}
+
 export default function ReconciliationPage() {
   const gridRef = useRef<any>();
   const { height } = useWindowDimensions();
@@ -36,13 +48,8 @@ export default function ReconciliationPage() {
     () => ({ width: '100%', height: `${height}px`, minHeight: '600px' }),
     [height],
   );
-  const [rowData, setRowData] = useState<any>();
-  const [columnDefs, setColumnDefs] = useState([
-    {
-      headerName: 'Reconciliation Details',
-      children: ReconciliationColumns(agGridRowDrag),
-    },
-  ]);
+
+  const [columnDefs, setColumnDefs] = useState<any[]>([]);
 
   // CUSTOM ICON
   const icons = useMemo<{ [key: string]: Function | string }>(
@@ -81,9 +88,8 @@ export default function ReconciliationPage() {
         fetchReconciliationData({ dataRequest: { ...prms.request } }).then((res) => {
           if (res.rows) {
             const tempRows = res.rows;
-
-            console.log(res);
-
+            const rowsAndGroups = generateRowsAndGroups(res.rows);
+            setColumnDefs(rowsAndGroups);
             prms.success({
               rowData: tempRows,
               rowCount: res.count,
