@@ -32,11 +32,22 @@ function generateRowsAndGroups(rows) {
         return result.charAt(0).toUpperCase() + result.slice(1);
     };
 
+    const getFilterType = (string) => {
+        if (string.toLowerCase().includes('date')) {
+            return 'agDateColumnFilter';
+        }
+        if (string.toLowerCase().includes('amount') || string.toLowerCase().includes('total')) {
+            return 'agNumberColumnFilter';
+        }
+
+        return 'agTextColumnFilter';
+    };
+
   return Object.keys(rows[0]).map((r) => ({
       headerName: convertCamelCaseToSpaceCase(r),
       field: r,
       agGridRowDrag,
-      filter: 'agTextColumnFilter',
+      filter: getFilterType(convertCamelCaseToSpaceCase(r)),
       chartDataType: 'category',
     }));
 }
