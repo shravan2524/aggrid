@@ -1,14 +1,93 @@
-import React from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import './style.scss';
-import { UsersDatas } from './Users';
+import * as yup from 'yup';
+import { useForm } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup/dist/yup';
+import classNames from 'classnames';
+import {
+  shareFilterData,
+  Filters,
+  getUsersInFilter,
+  deleteUsersInFilter,
+} from 'services/filtersAPIService';
+import toast from 'react-hot-toast';
 
-interface Props {
-  active: boolean;
+interface FilterProps {
+  email: string;
+}
+interface ModalProps {
+  itemData: Filters | null;
   shared: boolean;
 }
 
-export default function ShareDataModal({ active, shared }: Props) {
+export default function ShareDataModal({ itemData, shared }: ModalProps) {
   const modalId = 'shareDataModal';
+  const [isLoading, setIsLoading] = useState(false);
+  const [userLoading, setUserLoading] = useState(false);
+  const [users, setUsers] = useState<any[]>();
+
+  const OnClose = (reset) => {
+    setIsLoading(false);
+    reset();
+    toast.success('Data shared succesfully');
+  };
+
+  const FetchUsers = () => {
+    setUserLoading(true);
+    getUsersInFilter(itemData?.id).then((data) => {
+      setUserLoading(false);
+      setUsers(data);
+    });
+  };
+
+  const OndeleteSharedUser = (user) => {
+    const data = {
+      id: user.id,
+      filterid: itemData?.id,
+    };
+    if (data.filterid || user) {
+      if (window.confirm(`${user?.contact.email} Will be deleted`)) {
+        deleteUsersInFilter(data).then(() => {
+          FetchUsers();
+          toast.success('User Deleted succesfully');
+        });
+      }
+    }
+  };
+
+  const schema = yup
+    .object({
+      email: yup.string().email().required('Email is a required field'),
+    })
+    .required();
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm<FilterProps>({
+    resolver: yupResolver(schema),
+  });
+
+  const onSubmit = ({ email }: FilterProps) => {
+    if (itemData?.id) {
+      setIsLoading(true);
+      shareFilterData({ id: itemData?.id, data: { email } })
+        .then((data) => {
+          OnClose(reset);
+        })
+        .catch(() => {
+          setIsLoading(false);
+        });
+    }
+  };
+
+  useEffect(() => {
+    if (itemData?.id) {
+      FetchUsers();
+    }
+  }, [isLoading, itemData]);
+
   return (
     <div
       className="modal fade"
@@ -29,62 +108,52 @@ export default function ShareDataModal({ active, shared }: Props) {
               aria-label="Close"
             />
           </div>
-          <form>
+          <form onSubmit={handleSubmit(onSubmit)}>
             <div className="modal-body">
-              {!active && (
-                <div className="mb-4 w-100">
-                  <input
-                    type="text"
-                    className=" w-100 inputed rounded-top"
-                    placeholder="Data title"
-                  />
-                </div>
-              )}
-
               <div className="mb-4 w-100">
                 <input
                   type="email"
-                  className=" w-100 inputed rounded-top"
+                  {...register('email')}
+                  className={classNames([
+                    'w-100 inputed rounded-top',
+                    { 'is-invalid': errors.email },
+                  ])}
                   placeholder="Add user email"
                 />
-              </div>
-              <div className="mb-4 w-100">
-                <textarea
-                  rows={2}
-                  className=" w-100 border-0 bg-light p-4 rounded-2"
-                  placeholder="Message"
-                />
+                {errors.email && (
+                  <div className="invalid-feedback">
+                    <p>{errors.email?.message}</p>
+                  </div>
+                )}
               </div>
               {/* acess people */}
-              {active && (
+              {userLoading && (
+                <div className="text-warning w-100 text-center">
+                  <span className="spinner-border text-center spinner-border-sm" />
+                </div>
+              )}
+              {users && users.length > 0 && !userLoading && (
                 <>
                   <h5>People with access</h5>
-                  {UsersDatas.map((u, i) => (
+                  {users.map((u, i) => (
                     <div
-                      key={i}
+                      key={u.userId}
                       className="p-2 mb-1 hover-user rounded-pill d-flex justify-content-between align-items-center gap-2"
                     >
                       <div className="w-75 d-flex gap-2 align-items-center">
                         <div className="user d-flex justify-content-center align-items-center rounded-circle">
                           <i className="fas fa-user-circle" />
                         </div>
-                        <p>{u.email}</p>
+                        <p>{u.contact.email}</p>
                       </div>
                       <div className="w-25 px-2 d-flex justify-content-end align-items-center">
-                        {u.status === 'owner' ? (
-                          <p>
-                            (
-                            <span className="fw-semibold">owner</span>
-                            )
-                          </p>
-                        ) : (
-                          !shared && (
-                            <button type="button" className="btn btn-light">
-                              <i className="fas fa-trash-alt text-danger" />
-                            </button>
-                          )
-
-                        )}
+                        <button
+                          onClick={() => OndeleteSharedUser(u)}
+                          type="button"
+                          className="btn btn-light"
+                        >
+                          <i className="fas fa-trash-alt text-danger" />
+                        </button>
                       </div>
                     </div>
                   ))}
@@ -93,11 +162,15 @@ export default function ShareDataModal({ active, shared }: Props) {
             </div>
             <div className="modal-footer">
               <button
-                type="button"
+                type="submit"
                 className="btn btn-md btn-primary d-flex gap-3 justify-content-center align-items-center"
               >
                 Share
-                <i className="fas fa-paper-plane" />
+                {isLoading ? (
+                  <i className="spinner-border spinner-border-sm" />
+                ) : (
+                  <i className="fas fa-paper-plane" />
+                )}
               </button>
             </div>
           </form>

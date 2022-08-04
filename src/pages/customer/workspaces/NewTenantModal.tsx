@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import * as yup from 'yup';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup/dist/yup';
@@ -6,11 +6,12 @@ import classNames from 'classnames';
 import { useSelector } from 'react-redux';
 import { useAppDispatch } from 'app/hooks';
 import CustomButton from 'components/CustomButton';
-
+import { v4 as uuidv4 } from 'uuid';
 import { hideModal } from 'app/utils/Modal';
 import {
   fetchTenants, isPostLoadingSelector, newTenantRequest,
 } from 'state/tenants/tenantsSlice';
+import toast from 'react-hot-toast';
 
 interface NewTenantFormProps {
   title: string;
@@ -20,7 +21,7 @@ export default function NewTenantModal() {
   const dispatch = useAppDispatch();
   const isLoading = useSelector(isPostLoadingSelector);
 
-  const modalId = 'newTenantModal';
+  const modalId = useMemo(() => 'newTenantModal', []);
 
   const schema = yup.object({
     title: yup.string().required(),
@@ -36,14 +37,17 @@ export default function NewTenantModal() {
   });
 
   const onSubmit = ({ title }: NewTenantFormProps) => {
-    const body = { title };
-    dispatch(newTenantRequest(body));
+    const body = { title, uuid: uuidv4() };
+    dispatch(newTenantRequest(body)).then(() => {
+      toast.success('Workspace successfully created.');
+    });
   };
 
   useEffect(() => {
-    hideModal(modalId);
     reset({ title: '' });
-    dispatch(fetchTenants());
+    dispatch(fetchTenants()).then(() => {
+      hideModal(modalId);
+    });
   }, [isLoading]);
 
   return (

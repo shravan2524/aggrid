@@ -267,7 +267,7 @@ export default function FilesPage() {
   const isFetchLoading = useSelector(isLoadingSelector);
 
   const containerStyle = useMemo(
-    () => ({ width: '100%', height: '600px' }),
+    () => ({ width: '100%', height: '800px' }),
     [],
   );
   const gridStyle = useMemo(() => ({ height: '100%', width: '100%' }), []);
@@ -502,7 +502,7 @@ export default function FilesPage() {
             columnDefs={columnDefs}
             masterDetail
             detailCellRenderer={detailCellRenderer}
-            detailRowHeight={500}
+            detailRowHeight={600}
             sideBar={sideBar}
             rowSelection="multiple"
             rowDragManaged

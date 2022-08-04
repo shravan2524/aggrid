@@ -1,6 +1,5 @@
 import React, {
   useCallback,
-  useEffect,
   useMemo,
   useRef,
   useState,
@@ -8,16 +7,19 @@ import React, {
 import { AgGridReact } from 'ag-grid-react';
 import 'ag-grid-enterprise';
 import {
-  ColDef, CellClassParams, GridReadyEvent, ICellRendererParams, IServerSideDatasource,
+  ColDef,
+  GridReadyEvent,
+  ICellRendererParams,
+  IServerSideDatasource,
 } from 'ag-grid-community';
 import { fetchFileContentData } from 'services/filesAPIService';
-import { tenantUuid } from 'state/tenants/helper';
-import { BACKEND_API } from 'app/config';
+import NewSharePopup from 'components/Library/NewSharePopup';
+import { Modal } from 'react-bootstrap';
 
-function ClickableStatusBarComponent(props: any, onBtExport) {
+function ClickableStatusBarComponent(props: any, onBtExport, handleShow) {
   const { api } = props;
   return (
-    <div className="ag-status-name-value">
+    <div className="ag-status-name-value d-flex gap-4">
       <button
         onClick={onBtExport}
         className="btn btn-outline-success btn-sm"
@@ -27,17 +29,31 @@ function ClickableStatusBarComponent(props: any, onBtExport) {
         {' '}
         Export to Excel
       </button>
+      <button
+        type="button"
+        className="btn btn-sm btn-success  px-4 d-flex gap-2 align-items-center justify-content-center flex-wrap"
+        onClick={handleShow}
+      >
+        <i className="fas fa-folder-plus" />
+        Share Data
+      </button>
     </div>
   );
 }
 
 // main Function
-export default function DetailCellRenderer({ data, node, api }: ICellRendererParams) {
+export default function DetailCellRenderer({
+  data,
+  node,
+  api,
+}: ICellRendererParams) {
   const gridRef = useRef<any>();
   const [hide, setHide] = useState<boolean>(false);
-  const [columnGroupsData, setColumnGroupsData] = useState<any>();
+  const [show, setShow] = useState(false);
+  const [filterSetting, setFilterSetting] = useState({});
+  const handleShow = () => setShow(true);
 
-  const gridStyle = useMemo(() => ({ height: '400px', width: '90%' }), []);
+  const gridStyle = useMemo(() => ({ height: '600px', width: '90%' }), []);
   const Columns = data.agGridColumns.map((f: any) => ({
     headerName: f.columnTitle,
     field: f.columnName,
@@ -61,108 +77,44 @@ export default function DetailCellRenderer({ data, node, api }: ICellRendererPar
     [],
   );
 
-  // useEffect(() => {
-  //   const options: RequestInit = {
-  //     method: 'GET',
-  //     credentials: 'include',
-  //   };
-  //   const apiUrl = `${BACKEND_API}/api/v1/${tenantUuid()}/column-groups`;
-  //   fetch(apiUrl, options)
-  //     .then((response) => response.json())
-  //     .then((res) => {
-  //       setColumnGroupsData(res);
-  //     });
-  // }, []);
-
-  // useEffect(() => {
-  //   setColumnDefs(columnGroupsData);
-  //   const newColumnGrouping = {};
-  //   const newColumnsStructure: any = [];
-  //   const columnsToRemoveFromParent: any = {};
-  //   if (columnGroupsData) {
-  //     columnGroupsData.forEach((c) => {
-  //       newColumnGrouping[c.id] = c.title;
-  //     });
-
-  //     const columnGroupingHeaders: any = {};
-
-  //     if (data.columnMapping) {
-  //       Object.values(data.columnMapping).forEach((val: any, i) => {
-  //         if (newColumnGrouping[val.columnGroup]) {
-  //           columnGroupingHeaders[newColumnGrouping[val.columnGroup]] = [];
-  //         }
-  //       });
-
-  //       const columnGroupingData: any = {};
-  //       Object.keys(data.columnMapping).forEach((colName: any, i) => {
-  //         const colData = data.columnMapping[colName];
-  //         if (colData.columnGroup) {
-  //           if (newColumnGrouping[Number(colData.columnGroup)]) {
-  //             const colGroupName = newColumnGrouping[Number(colData.columnGroup)];
-  //             columnGroupingData[colGroupName] = data.agGridColumns.filter((c: any) => data.columnMapping[c.columnTitle]);
-  //           }
-  //         }
-  //       });
-
-  //       Object.keys(columnGroupingData).forEach((headerName) => {
-  //         const clData = columnGroupingData[headerName];
-  //         const children: any = [];
-  //         clData.forEach((v) => {
-  //           columnsToRemoveFromParent[v.columnTitle] = v.columnName;
-  //           children.push({
-  //             headerName: v.columnTitle,
-  //             field: v.columnName,
-  //             filter: 'agTextColumnFilter',
-  //             editable: false,
-  //           });
-  //         });
-  //         newColumnsStructure.push({
-  //           headerName,
-  //           children,
-  //         });
-  //       });
-  //     }
-  //   }
-  //   const newColumnsCleanedUp = data.agGridColumns.filter((c) => !columnsToRemoveFromParent[c.columnTitle]).map((cl) => ({
-  //     headerName: cl.columnTitle,
-  //     field: cl.columnName,
-  //     filter: 'agTextColumnFilter',
-  //     editable: false,
-  //   }));
-  //   const newData = [...newColumnsStructure, ...newColumnsCleanedUp];
-  // }, [columnGroupsData]);
-
   // rows
-  const onGridReady = useCallback((params: GridReadyEvent) => {
-    const dataSource: IServerSideDatasource = {
-      getRows: (prms) => {
-        fetchFileContentData({ id: data.id, dataRequest: { ...prms.request } }).then((res) => {
-          if (res.rows) {
-            console.log(res.rows);
-            const temprows = res.rows;
-            temprows.forEach((e) => {
-              Object.keys(e.errors).forEach((key) => {
-                if (e.errors[key] != null) {
-                  e[key] = 'ERROR';
-                }
+  const onGridReady = useCallback(
+    (params: GridReadyEvent) => {
+      const dataSource: IServerSideDatasource = {
+        getRows: (prms) => {
+          setFilterSetting(prms.request);
+          fetchFileContentData({
+            id: data.id,
+            dataRequest: { ...prms.request },
+          })
+            .then((res) => {
+              if (res.rows) {
+                const temprows = res.rows;
+                temprows.forEach((e) => {
+                  Object.keys(e.errors).forEach((key) => {
+                    if (e.errors[key] != null) {
+                      e[key] = 'ERROR';
+                    }
+                  });
+                });
+                prms.success({
+                  rowData: temprows,
+                  rowCount: res.count,
+                });
+              }
+              if (res.count > 0) {
+                setHide(true);
+              }
+            })
+            .catch((e) => {
+              prms.fail();
             });
-            });
-            console.log(temprows);
-            prms.success({
-              rowData: temprows,
-              rowCount: res.count,
-            });
-          }
-          if (res.count > 0) {
-            setHide(true);
-          }
-        }).catch((e) => {
-          prms.fail();
-        });
-      },
-    };
-    params.api!.setServerSideDatasource(dataSource);
-  }, [data]);
+        },
+      };
+      params.api!.setServerSideDatasource(dataSource);
+    },
+    [data],
+  );
 
   // export button
   const onBtExport = useCallback(() => {
@@ -174,14 +126,32 @@ export default function DetailCellRenderer({ data, node, api }: ICellRendererPar
     });
   }, []);
 
-  const statusBar = useMemo(() => ({
-    statusPanels: [
-      { statusPanel: (pr) => ClickableStatusBarComponent(pr, onBtExport) },
-    ],
-  }), []);
+  const statusBar = useMemo(
+    () => ({
+      statusPanels: [
+        {
+          statusPanel: (pr) => ClickableStatusBarComponent(pr, onBtExport, handleShow),
+        },
+      ],
+    }),
+    [],
+  );
+
+  const filterSettings = {
+    modelName: data?.fileType,
+    modelId: data?.id,
+    settings: filterSetting,
+  };
 
   return (
     <div className="d-flex flex-column justify-content-center align-items-center">
+      <Modal
+        show={show}
+        aria-labelledby="contained-modal-title-vcenter"
+        centered
+      >
+        <NewSharePopup setShow={setShow} filterSetting={filterSettings} />
+      </Modal>
       <div style={gridStyle} className="ag-theme-alpine py-2">
         <AgGridReact
           ref={gridRef}

@@ -1,7 +1,6 @@
 import {
   createAsyncThunk, createSelector, createSlice, Draft, PayloadAction,
 } from '@reduxjs/toolkit';
-import { v4 as uuidv4 } from 'uuid';
 import {
   TenantType, fetchTenantsData, postTenantsData, putTenantsData,
 } from 'services/tenantsAPIService';
@@ -29,7 +28,7 @@ const initialState: TenantsState = {
 
 // API Actions ...
 export const fetchTenants = createAsyncThunk('fetchTenants', async () => fetchTenantsData());
-export const newTenantRequest = createAsyncThunk('postTenants', async (data: any) => postTenantsData({ ...data, uuid: uuidv4() }));
+export const newTenantRequest = createAsyncThunk('postTenants', async (data: any) => postTenantsData(data));
 export const updateTenantRequest = createAsyncThunk('putTenantsData', async (payload: any) => putTenantsData(payload));
 
 // Reducers ...
@@ -68,7 +67,6 @@ export const TenantsSlice = createSlice({
       ProgressBar.start();
     });
     builder.addCase(newTenantRequest.fulfilled, (state, action) => {
-      toast.success('Workspace successfully created.');
       state.isPostLoading = false;
       ProgressBar.done();
     });
