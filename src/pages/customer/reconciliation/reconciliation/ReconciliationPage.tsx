@@ -43,13 +43,19 @@ function generateRowsAndGroups(rows) {
         return 'agTextColumnFilter';
     };
 
-  return Object.keys(rows[0]).map((r) => ({
+  const columns = Object.keys(rows[0]).map((r) => ({
       headerName: convertCamelCaseToSpaceCase(r),
       field: r,
       agGridRowDrag,
       filter: getFilterType(convertCamelCaseToSpaceCase(r)),
       chartDataType: 'category',
-    }));
+  }));
+
+  return columns
+      .filter((c) => c.field !== 'updatedAt')
+      .filter((c) => c.field !== 'createdAt')
+      .filter((c) => c.field !== 'updatedBy')
+      .filter((c) => c.field !== 'createdBy');
 }
 
 export default function ReconciliationPage() {
