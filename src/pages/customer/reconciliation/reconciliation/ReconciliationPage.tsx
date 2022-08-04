@@ -121,6 +121,30 @@ export default function ReconciliationPage() {
     ],
   }), []);
 
+    // SIDE BAR
+    const sideBar = useMemo(
+        () => ({
+            toolPanels: [
+                {
+                    id: 'columns',
+                    labelDefault: 'Columns',
+                    labelKey: 'columns',
+                    iconKey: 'columns',
+                    toolPanel: 'agColumnsToolPanel',
+                },
+                {
+                    id: 'filters',
+                    labelDefault: 'Filters',
+                    labelKey: 'filters',
+                    iconKey: 'filter',
+                    toolPanel: 'agFiltersToolPanel',
+                },
+            ],
+            defaultToolPanel: 'customActionsTool',
+        }),
+        [],
+    );
+
   return (
     <PageWrapper pageTitle="Reconciliation">
       <div className="container-fluid ag-theme-alpine grid-container-style">
@@ -137,6 +161,7 @@ export default function ReconciliationPage() {
           statusBar={statusBar}
           cacheBlockSize={10}
           serverSideStoreType="partial"
+          sideBar={sideBar}
           pagination
         />
       </div>
