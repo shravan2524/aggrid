@@ -9,7 +9,6 @@ import CustomButton from 'components/CustomButton';
 import {
   isPostLoadingSelector,
   isPutLoadingSelector, update, readAll, create,
-
 } from 'state/roles/slice';
 import { hideModal } from 'app/utils/Modal';
 import { RoleType } from 'services/roles';

@@ -8,6 +8,8 @@ import { useAppDispatch, useWindowDimensions } from 'app/hooks';
 import PageWrapper from 'components/PageWrapper';
 import { BACKEND_API } from 'app/config';
 import classNames from 'classnames';
+import { useForm, SubmitHandler } from 'react-hook-form';
+import './style.css';
 import {
   GetContextMenuItemsParams,
   MenuItemDef,
@@ -22,6 +24,10 @@ import DetailCellRenderer from '../files/Sub-Ag-Grid';
 const moduleName = 'Column';
 const moduleTitle = 'Column';
 const modalIdentifier = `save${moduleName}Modal`;
+
+interface IFormInput {
+  columngroup: string;
+}
 
 interface Type {
   btnName: string;
@@ -47,6 +53,7 @@ type ActionsRendererProps = {
 };
 
 function ActionsRenderer({ title, id, sendFunc }: ActionsRendererProps) {
+  const { register, handleSubmit, formState: { errors } } = useForm<IFormInput>();
   const [show, setShow] = useState(false);
   const [colgroup, setcolgroup] = useState(title);
   const handleShow = () => {
@@ -76,20 +83,18 @@ function ActionsRenderer({ title, id, sendFunc }: ActionsRendererProps) {
       });
     await sendFunc();
   }
-
-  const onSubmitAction = (e) => {
-    e.preventDefault();
+  const onSubmit: SubmitHandler<IFormInput> = (data) => {
     setShow(false);
     putData();
   };
   const handleClose = () => setShow(false);
   return (
     <>
-      <Button variant="primary" className="btn btn-sm btn-light" onClick={handleShow}>
+      <button type="button" className="btn btn-sm btn-light" onClick={handleShow}>
         <i className="fa-solid fa-pen-to-square" />
         {' '}
         Edit
-      </Button>
+      </button>
       <Modal
         show={show}
         onHide={handleClose}
@@ -99,18 +104,23 @@ function ActionsRenderer({ title, id, sendFunc }: ActionsRendererProps) {
         <Modal.Header closeButton>
           <Modal.Title>Edit Column Group</Modal.Title>
         </Modal.Header>
-        <Modal.Body className="mapping">
-          <div className="mb-3">
-            <label className="col-form-label required" style={{ fontSize: '13px' }}>Column Group Name (*) </label>
-            <input type="text" className={classNames(['form-control form-control-sm'])} onChange={(e) => setcolgroup(e.target.value)} value={colgroup} />
-          </div>
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" className="btn btn-sm btn-danger" onClick={handleClose}>
-            Close
-          </Button>
-          <button type="button" className="btn btn-sm btn-primary" onClick={(e) => onSubmitAction(e)}>Save</button>
-        </Modal.Footer>
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <Modal.Body className="mapping">
+            <div className="mb-3">
+              <label className="col-form-label required" style={{ fontSize: '13px' }}>Column Group Name (*) </label>
+              <input type="text" {...register('columngroup', { required: true, minLength: 1 })} onChange={(e) => setcolgroup(e.target.value)} value={colgroup} />
+              <div>
+                {errors.columngroup && <span className="error">Column group cannot be null</span>}
+              </div>
+            </div>
+          </Modal.Body>
+          <Modal.Footer>
+            <Button variant="secondary" className="btn btn-sm btn-danger" onClick={handleClose}>
+              Close
+            </Button>
+            <button type="submit" className="btn btn-sm btn-primary">Save</button>
+          </Modal.Footer>
+        </form>
       </Modal>
     </>
   );
@@ -209,7 +219,7 @@ function CustomActionsToolPanel(onRefreshCallback, isFetchLoading, sendFunc) {
         <Container1 btnName="Create Column Group" sendFunc={sendFunc} />
         <button
           type="button"
-          className="btn btn-sm btn-info px-4 d-flex gap-2 align-items-center justify-content-center flex-wrap"
+          className="btn btn-sm btn-info"
           onClick={onRefreshCallback}
         >
           <i className={classNames(['fa-solid', 'fa-rotate', { 'fa-spin': isFetchLoading }])} />
@@ -237,6 +247,7 @@ export default function columnGrouping() {
   const gridStyle = useMemo(() => ({ height: '100%', width: '100%' }), []);
 
   const sendFunc = () => {
+    console.log('1');
     setSelectedRows([]);
     const options: RequestInit = {
       method: 'GET',
@@ -298,9 +309,9 @@ export default function columnGrouping() {
     'custom-actions-tool': '<i className="fa-solid fa-screwdriver-wrench"></i>',
   }), []);
 
-  const onRefreshCallback = () => {
+  const onRefreshCallback = useCallback(() => {
     sendFunc();
-  };
+  }, []);
 
   const sideBar = useMemo(() => ({
     toolPanels: [

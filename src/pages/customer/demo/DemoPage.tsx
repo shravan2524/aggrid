@@ -259,6 +259,7 @@ export default function DemoPage() {
         },
         {
             headerName: 'Airline Details',
+            headerClass: 'my-css-class',
             children: [
                 {
                     field: 'Airline Name',
@@ -285,6 +286,7 @@ export default function DemoPage() {
         // Invoice
         {
             headerName: 'Invoice Details',
+            headerClass: 'my-css-class',
             children: [
                 {
                     field: 'Invoice Number - Invoice',
@@ -397,6 +399,7 @@ export default function DemoPage() {
         // Agency Details
         {
             headerName: 'Agency Details',
+            headerClass: 'my-css-class',
             children: [
                 {
                     field: 'Agency Invoice Number',
@@ -432,6 +435,7 @@ export default function DemoPage() {
         // Transaction
         {
             headerName: 'Transaction Details',
+            headerClass: 'my-css-class',
             children: [
                 {
                     field: 'Transaction Amount',
@@ -463,6 +467,7 @@ export default function DemoPage() {
         // Customer
         {
             headerName: 'Customer Details',
+            headerClass: 'my-css-class',
             children: [
                 {
                     field: 'Customer Name - Booking',

@@ -26,7 +26,7 @@ export default function EditFilesTypeModal({ selectedRows }: EditFilesTypeModalP
   const gridRef = useRef<any>();
   const [rowData, setRowData] = useState<any>();
   const [isModalShown, setIsModalShown] = useState<boolean>();
-
+  console.log(selectedRows);
   const dispatch = useAppDispatch();
   const isLoading = useSelector(isPutLoadingSelector);
   const [columnDefs, setColumnDefs] = useState([

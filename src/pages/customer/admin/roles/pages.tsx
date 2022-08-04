@@ -8,6 +8,7 @@ export const pages = [
   { title: 'E-way Bill', uuid: 'ewb' }, // this is for ewb APIs
   { title: 'GSTR2A', uuid: 'gstr2a' }, // this is for gstr2a APIs
   { title: 'GSTR2B', uuid: 'gstr2b' }, // this is for gstr2b APIs
+  { title: 'Filters', uuid: 'filters' }, // this is for filters
   { title: 'OCR', uuid: 'ocr' }, // this is for ocr APIs
   { title: 'QR', uuid: 'qr' }, // this is for qr APIs
   { title: 'Purchase Register', uuid: 'pr' }, // this is for pr APIs

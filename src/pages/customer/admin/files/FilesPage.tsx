@@ -143,6 +143,7 @@ function CustomActionsToolPanel(
   onRefreshCallback,
   selectedFiles,
   isFetchLoading,
+  selectedFilesLength,
 ) {
   const [downloadLoading, setDownloadLoading] = useState<boolean>(false);
   // TODO: This code needs some refactoring work ...
@@ -199,14 +200,21 @@ function CustomActionsToolPanel(
       }
     }
   }
-
+  function editModal() {
+    console.log(selectedFiles);
+    if (selectedFilesLength > 0) {
+      showModal('editFilesTypeModal');
+    } else {
+      toast.error('please select atleast a single file');
+    }
+  }
   return (
     <div className="col">
       <div className="row p-2 gap-2 m-1">
         <button
           type="button"
           className="btn btn-sm btn-info d-flex gap-1 align-items-center justify-content-center flex-wrap"
-          onClick={() => showModal('editFilesTypeModal')}
+          onClick={editModal}
         >
           <i className="fa-solid fa-file-pen" />
           Edit File Type
@@ -379,7 +387,7 @@ export default function FilesPage() {
           labelDefault: 'Actions',
           labelKey: 'customActionsTool',
           iconKey: 'custom-actions-tool',
-          toolPanel: () => CustomActionsToolPanel(onRefreshCallback, selectedFiles, isFetchLoading),
+          toolPanel: () => CustomActionsToolPanel(onRefreshCallback, selectedFiles, isFetchLoading, selectedRows.length),
         },
         {
           id: 'columns',
@@ -442,6 +450,7 @@ export default function FilesPage() {
         name: 'Edit Files type',
         action: () => {
           if (selectedRows.length) {
+            console.log(selectedRows);
             showModal('editFilesTypeModal');
           } else {
             toast.error('You need to select at less one row.');

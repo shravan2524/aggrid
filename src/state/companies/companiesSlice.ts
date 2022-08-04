@@ -82,7 +82,7 @@ export const companiesSlice = createSlice({
       ProgressBar.start();
     });
     builder.addCase(updateCompanyRequest.fulfilled, (state, action) => {
-      toast.success('Company successfully updated.');
+      toast.success('Company successfully updated. 2');
       state.isPutLoading = false;
       ProgressBar.done();
     });

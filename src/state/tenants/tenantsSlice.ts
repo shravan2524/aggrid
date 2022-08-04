@@ -30,7 +30,7 @@ const initialState: TenantsState = {
 // API Actions ...
 export const fetchTenants = createAsyncThunk('fetchTenants', async () => fetchTenantsData());
 export const newTenantRequest = createAsyncThunk('postTenants', async (data: any) => postTenantsData({ ...data, uuid: uuidv4() }));
-export const updateTenantRequest = createAsyncThunk('putCompanies', async (payload: any) => putTenantsData(payload));
+export const updateTenantRequest = createAsyncThunk('putTenantsData', async (payload: any) => putTenantsData(payload));
 
 // Reducers ...
 export const TenantsSlice = createSlice({

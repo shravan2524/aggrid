@@ -25,9 +25,12 @@ export default function CompanyEditCredentialsForm({
   modalId, companyData, companyCredentials,
 }: CompanyEditCredentialsFormProps) {
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [currentPassword, setcurrentPassword] = useState('');
   const schema = yup.object({
     username: yup.string().required().test(yupEmptyCharsRule),
-    password: yup.string().required().test(yupEmptyCharsRule),
+    password: yup.string()
+    .required().test(yupEmptyCharsRule)
+    .test('passwords-match', 'Old and new password should not be same', (value) => (currentPassword !== value)),
     current_password: yup.string().required().test(yupEmptyCharsRule),
   }).required();
 
@@ -101,6 +104,7 @@ export default function CompanyEditCredentialsForm({
             type="current_password"
             className={classNames(['form-control form-control-sm', { 'is-invalid': errors.current_password }])}
             placeholder="Enter Credentials current password ..."
+            onChange={(e) => setcurrentPassword(e.target.value)}
           />
           {errors.current_password && (
             <div id="validationCurrentPasswordFeedback" className="invalid-feedback">
