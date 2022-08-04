@@ -32,13 +32,30 @@ function generateRowsAndGroups(rows) {
         return result.charAt(0).toUpperCase() + result.slice(1);
     };
 
-  return Object.keys(rows[0]).map((r) => ({
+    const getFilterType = (string) => {
+        if (string.toLowerCase().includes('date')) {
+            return 'agDateColumnFilter';
+        }
+        if (string.toLowerCase().includes('amount') || string.toLowerCase().includes('total')) {
+            return 'agNumberColumnFilter';
+        }
+
+        return 'agTextColumnFilter';
+    };
+
+  const columns = Object.keys(rows[0]).map((r) => ({
       headerName: convertCamelCaseToSpaceCase(r),
       field: r,
       agGridRowDrag,
-      filter: 'agTextColumnFilter',
+      filter: getFilterType(convertCamelCaseToSpaceCase(r)),
       chartDataType: 'category',
-    }));
+  }));
+
+  return columns
+      .filter((c) => c.field !== 'updatedAt')
+      .filter((c) => c.field !== 'createdAt')
+      .filter((c) => c.field !== 'updatedBy')
+      .filter((c) => c.field !== 'createdBy');
 }
 
 export default function ReconciliationPage() {
@@ -110,6 +127,30 @@ export default function ReconciliationPage() {
     ],
   }), []);
 
+    // SIDE BAR
+    const sideBar = useMemo(
+        () => ({
+            toolPanels: [
+                {
+                    id: 'columns',
+                    labelDefault: 'Columns',
+                    labelKey: 'columns',
+                    iconKey: 'columns',
+                    toolPanel: 'agColumnsToolPanel',
+                },
+                {
+                    id: 'filters',
+                    labelDefault: 'Filters',
+                    labelKey: 'filters',
+                    iconKey: 'filter',
+                    toolPanel: 'agFiltersToolPanel',
+                },
+            ],
+            defaultToolPanel: 'customActionsTool',
+        }),
+        [],
+    );
+
   return (
     <PageWrapper pageTitle="Reconciliation">
       <div className="container-fluid ag-theme-alpine grid-container-style">
@@ -126,6 +167,7 @@ export default function ReconciliationPage() {
           statusBar={statusBar}
           cacheBlockSize={10}
           serverSideStoreType="partial"
+          sideBar={sideBar}
           pagination
         />
       </div>
