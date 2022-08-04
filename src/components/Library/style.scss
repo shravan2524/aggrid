@@ -33,18 +33,16 @@ p,h6{
     position: relative;
 }
 .box1{
-    height: 150px;
-    font-size: 50px;
-    color: #636363;
+    height: 50px;
+ padding: 1rem;
 }
-.box2{
-    background-color: #dee6f0; 
-    padding:10px 20px;
+.box1 i{
+    font-size:20px; 
+    color: #636363;
 }
 .actions{
     position: absolute;
-    top:0;
-    right: -30px;
+    top: -3rem;
     transition: 0.5s linear;
 }
 .action-button{
@@ -52,10 +50,10 @@ p,h6{
     height: 30px;
     border-radius: 100px;
     background-color: white;
-    font-size: 12px;
+    font-size: 13px;
     border:0;
 }
 .box:hover .actions{
-    right: 2px;
+    top: 0rem;
     transition:0.5s linear;
 } 
