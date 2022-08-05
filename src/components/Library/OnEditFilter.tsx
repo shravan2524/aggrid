@@ -131,7 +131,7 @@ export default function EditFilterPopup({ editFilter, onfetchData }: Props3) {
                 isSubmit
                 className="btn btn-sm btn-primary"
               >
-                Save
+                Update
               </CustomButton>
             </div>
           </form>

@@ -82,8 +82,6 @@ export default function MyLibraryDetailCellRenderer({
           rowGroupPanelShow="always"
           paginationPageSize={10}
           statusBar={statusBar}
-          cacheBlockSize={10}
-          serverSideStoreType="partial"
           pagination
         />
       </div>

@@ -55,7 +55,7 @@ function SharedWithMe() {
 
   const [columnDefs, setColumnDefs] = useState([
     {
-      headerName: 'Name',
+      headerName: 'File Name',
       field: 'title',
       filter: 'agTextColumnFilter',
       editable: false,

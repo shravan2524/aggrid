@@ -15,6 +15,7 @@ import 'components/Library/style.scss';
 import { fetchFoldersData, Folders } from 'services/FolderAPIService';
 import classNames from 'classnames';
 import SaveFolderModal from 'components/Library/CreateFolder';
+import FolderFiltersDetailCellRenderer from './FolderFiltersSuAg';
 
 const moduleTitle = 'Folders';
 
@@ -80,13 +81,10 @@ function FoldersPage() {
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const containerStyle = useMemo(
-    () => ({
-      width: '100%',
-      height: `${height}px`,
-      minHeight: '600px',
-    }),
-    [height, width],
+    () => ({ width: '100%', height: '100vh' }),
+    [],
   );
+  const gridStyle = useMemo(() => ({ height: '800px', width: '100%' }), []);
 
   const onfetchData = () => {
     setIsLoading(true);
@@ -128,7 +126,7 @@ function FoldersPage() {
 
   const [columnDefs, setColumnDefs] = useState([
     {
-      headerName: 'Name',
+      headerName: 'Folder Name',
       field: 'title',
       filter: 'agTextColumnFilter',
       editable: false,
@@ -226,31 +224,40 @@ function FoldersPage() {
     if (gridRef.current?.api) {
       gridRef.current?.api.sizeColumnsToFit();
     }
-  }, [width]);
+  }, [width, height]);
+
+  // SUB AG-GRID
+  const detailCellRenderer = useMemo<any>(
+    () => FolderFiltersDetailCellRenderer,
+    [],
+  );
 
   return (
     <PageWrapper pageTitle={moduleTitle} icon="fas fa-folder-plus">
-      <div className=" ag-theme-alpine grid-container-style">
-        <SaveFolderModal itemData={itemData} />
-        <AgGridReact
-          containerStyle={containerStyle}
-          ref={gridRef}
-          rowData={rowData}
-          columnDefs={columnDefs}
-          sideBar={sideBar}
-          // rowSelection="multiple"
-          rowDragManaged
-          rowDragMultiRow
-          rowGroupPanelShow="always"
-          defaultColDef={defaultColDef}
-          groupDisplayType="multipleColumns"
-          animateRows
-          onGridReady={onGridReady}
-          icons={icons}
-          pagination
-          onFirstDataRendered={onFirstDataRendered}
-          masterDetail
-        />
+      <div style={containerStyle}>
+        <div style={gridStyle} className="ag-theme-alpine">
+          <SaveFolderModal itemData={itemData} />
+          <AgGridReact
+            ref={gridRef}
+            rowData={rowData}
+            columnDefs={columnDefs}
+            sideBar={sideBar}
+            rowDragManaged
+            rowDragMultiRow
+            rowGroupPanelShow="always"
+            defaultColDef={defaultColDef}
+            groupDisplayType="multipleColumns"
+            animateRows
+            onGridReady={onGridReady}
+            icons={icons}
+            pagination
+            detailCellRenderer={detailCellRenderer}
+            onFirstDataRendered={onFirstDataRendered}
+            masterDetail
+            detailRowHeight={600}
+            paginationPageSize={10}
+          />
+        </div>
       </div>
     </PageWrapper>
   );
