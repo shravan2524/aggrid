@@ -62,11 +62,11 @@ function FilterTitle({
     resolver: yupResolver(schema),
   });
 
-  const onSubmit = ({ title }: Filter) => {
+const onSubmit = ({ title }: Filter) => {
     const datas = {
       settings: filterSetting.settings,
       title,
-      modelName: filterSetting.modelName,
+      modelName: `${filterSetting.modelName}FileContent`,
       modelId: filterSetting.modelId,
     };
 

@@ -1,49 +1,51 @@
 import React, { useEffect, useState } from 'react';
+import './style.scss';
 import * as yup from 'yup';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup/dist/yup';
+import { yupEmptyCharsRule } from 'app/utils/YupRules';
 import classNames from 'classnames';
 import CustomButton from 'components/CustomButton';
+import { Filters, updateFilter } from 'services/filtersAPIService';
 import { hideModal } from 'app/utils/Modal';
-import {
-  createFoldersData,
-  Folders,
-  putFoldersData,
-} from 'services/FolderAPIService';
 import toast from 'react-hot-toast';
+import {
+  fetchFoldersData,
+  Folders,
+  postFilterInFolderData,
+} from 'services/FolderAPIService';
 
-interface ModalProps {
-  itemData: Folders | null;
+interface Filter {
+  folder: string;
 }
 
-interface SaveFormTypes {
-  title: string;
+interface Filter2 {
+  id: number | undefined;
+  filterId: number | undefined;
 }
 
-function SaveFolderModal({ itemData }: ModalProps) {
-  const modalId = 'saveFolderModal';
+interface Props3 {
+  params: Filters | null;
+}
+
+export default function MoveFilterPopup({ params }: Props3) {
+  const modalId = 'moveFilterPopup';
   const [isLoading, setIsLoading] = useState(false);
-
-  const cleanUp = (reset) => {
-    setIsLoading(false);
-    hideModal(modalId, () => {
-      reset();
-    });
-  };
+  const [folders, setFolders] = useState<Folders[] | []>([]);
 
   const schema = yup
     .object({
-      title: yup.string().required(),
+      folder: yup.string().required('Select folder'),
     })
     .required();
 
   const {
     register,
     handleSubmit,
-    formState: { errors },
-    setValue,
     reset,
-  } = useForm<SaveFormTypes>({
+    setValue,
+    formState: { errors },
+  } = useForm<Filter>({
     resolver: yupResolver(schema),
   });
 
@@ -51,32 +53,32 @@ function SaveFolderModal({ itemData }: ModalProps) {
     if (!formData) {
       return;
     }
-    const data: SaveFormTypes = {
-      title: formData.title,
+    const data: Filter2 = {
+      id: Number(formData.folder),
+      filterId: Number(params?.id),
     };
 
-    if (itemData?.id) {
+    if (params?.id) {
       setIsLoading(true);
-      putFoldersData({ id: itemData.id, ...data }).then(() => {
-        cleanUp(reset);
-        toast.success('Folder Updated');
-      });
-    } else {
-      setIsLoading(true);
-      createFoldersData(formData).then(() => {
-        cleanUp(reset);
-        toast.success('Folder Created');
-      });
+      postFilterInFolderData(data)
+        .then(() => {
+          setIsLoading(false);
+          toast.success('File Moved');
+          hideModal(modalId, () => {
+            reset();
+          });
+        })
+        .catch(() => {
+          setIsLoading(false);
+        });
     }
   };
 
   useEffect(() => {
-    if (itemData) {
-      setValue('title', itemData.title);
-    }
-  }, [itemData]);
-
-  const modalTitle = itemData?.id ? 'Edit Folder' : 'Create Folder';
+    fetchFoldersData().then((data) => {
+      setFolders(data);
+    });
+  }, [params]);
 
   return (
     <div
@@ -89,8 +91,8 @@ function SaveFolderModal({ itemData }: ModalProps) {
         <div className="modal-content">
           <form onSubmit={handleSubmit(onSubmit)}>
             <div className="modal-header">
-              <h5 className="modal-title" id={`new${modalId}Label`}>
-                {modalTitle}
+              <h5 className="modal-folder" id={`new${modalId}Label`}>
+                Move File
               </h5>
               <button
                 type="button"
@@ -101,24 +103,31 @@ function SaveFolderModal({ itemData }: ModalProps) {
             </div>
             <div className="modal-body">
               <div className="mb-3">
-                <label htmlFor="title" className="col-form-label required">
-                  Title (*)
+                <label htmlFor="folder" className="col-form-label required">
+                  Folder (*)
                 </label>
-                <input
-                  {...register('title')}
-                  id="title"
+                <select
+                  {...register('folder')}
+                  id="folder"
                   className={classNames([
-                    'form-control form-control-sm',
-                    { 'is-invalid': errors.title },
+                    'form-select form-select-sm',
+                    { 'is-invalid': errors.folder },
                   ])}
-                  placeholder=""
-                />
-                {errors.title && (
+                >
+                  <option value="">Select Folder</option>
+                  {folders
+                  && folders.map((option) => (
+                    <option key={option.id} value={option.id}>
+                      {option.title}
+                    </option>
+                    ))}
+                </select>
+                {errors.folder && (
                   <div
                     id="validationTitleFeedback"
                     className="invalid-feedback"
                   >
-                    <p>{errors.title?.message}</p>
+                    <p>{errors.folder?.message}</p>
                   </div>
                 )}
               </div>
@@ -136,7 +145,7 @@ function SaveFolderModal({ itemData }: ModalProps) {
                 isSubmit
                 className="btn btn-sm btn-primary"
               >
-                {itemData?.id ? 'Update' : 'Save'}
+                Move
               </CustomButton>
             </div>
           </form>
@@ -145,5 +154,3 @@ function SaveFolderModal({ itemData }: ModalProps) {
     </div>
   );
 }
-
-export default SaveFolderModal;
