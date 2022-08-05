@@ -283,6 +283,7 @@ export default function FilesPage() {
       tselectfiles.splice(ind, 1);
     }
     setselectedFiles(tselectfiles);
+    setlen(selectedRows.length);
   };
 
   const OnExpand = (i: any) => {
