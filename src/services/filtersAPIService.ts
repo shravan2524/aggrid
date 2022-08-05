@@ -39,6 +39,14 @@ export async function getUsersInFilter(payload): Promise<any[]> {
   return TenantApiRequest(`filter/userFilter/${payload}`);
 }
 
+export async function updateFilter(payload): Promise<any[]> {
+  return TenantApiRequest(`filter/${payload.id}`, 'PUT', payload);
+}
+// TODO
+export async function getFilterContent(payload): Promise<any[]> {
+  return TenantApiRequest(`filter/${payload}/content`);
+}
+
 export async function deleteUsersInFilter(payload): Promise<any[]> {
   return TenantApiRequest(
     `filter/userFilter/${payload.filterid}/user/${payload.id}`,
@@ -56,6 +64,26 @@ export async function fetchSharedFilterData(): Promise<Filters[]> {
     credentials: 'include',
   };
   const apiUrl = `${BACKEND_API}/api/v1/userFilter/sharedWithMe`;
+  const response = await fetch(apiUrl, options);
+  if (!response.ok) {
+    await handleRequestError(response);
+  }
+  return response.json();
+}
+
+// TODO
+export async function fetchContentSharedFilterData(
+  payload,
+): Promise<Filters[]> {
+  const options: RequestInit = {
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+    },
+    method: 'GET',
+    credentials: 'include',
+  };
+  const apiUrl = `${BACKEND_API}/api/v1/userFilter/sharedWithMe/${payload}/content`;
   const response = await fetch(apiUrl, options);
   if (!response.ok) {
     await handleRequestError(response);
