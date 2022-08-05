@@ -201,9 +201,8 @@ function CustomActionsToolPanel(
     }
   }
   function editModal() {
-    console.log(selectedFilesLength);
     console.log(selectedFiles);
-    if (selectedFilesLength > 0) {
+    if (selectedFilesLength === 0) {
       showModal('editFilesTypeModal');
     } else {
       toast.error('please select atleast a single file');
@@ -266,6 +265,7 @@ export default function FilesPage() {
   const { height, width } = useWindowDimensions();
   const rows = useSelector(getFiles);
   const isFetchLoading = useSelector(isLoadingSelector);
+  const [len, setlen] = useState(0);
 
   const containerStyle = useMemo(
     () => ({ width: '100%', height: '800px' }),
@@ -380,6 +380,10 @@ export default function FilesPage() {
     dispatch(fetchFiles());
   };
 
+  useEffect(() => {
+    setlen(selectedRows.length);
+  }, []);
+
   const sideBar = useMemo(
     () => ({
       toolPanels: [
@@ -388,7 +392,7 @@ export default function FilesPage() {
           labelDefault: 'Actions',
           labelKey: 'customActionsTool',
           iconKey: 'custom-actions-tool',
-          toolPanel: () => CustomActionsToolPanel(onRefreshCallback, selectedFiles, isFetchLoading, selectedRows.length),
+          toolPanel: () => CustomActionsToolPanel(onRefreshCallback, selectedFiles, isFetchLoading, len),
         },
         {
           id: 'columns',
