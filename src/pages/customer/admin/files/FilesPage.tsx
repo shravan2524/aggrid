@@ -203,7 +203,7 @@ function CustomActionsToolPanel(
   function editModal() {
     console.log(selectedFilesLength);
     console.log(selectedFiles);
-    if (selectedFiles > 0) {
+    if (selectedFilesLength > 0) {
       showModal('editFilesTypeModal');
     } else {
       toast.error('please select atleast a single file');
