@@ -32,12 +32,12 @@ interface SaveFormTypes extends Record<string, any> {
   const schema = yup.object({
     title: yup.string().required(),
   }).required();
-
   const {
     register,
     handleSubmit,
     formState: { errors },
     setValue,
+    getValues,
   } = useForm<SaveFormTypes>({
     resolver: yupResolver(schema),
   });
@@ -70,6 +70,7 @@ interface SaveFormTypes extends Record<string, any> {
   }, [isLoading]);
 
   useEffect(() => {
+    console.log(itemData);
     if (itemData) {
       setValue('title', itemData.title);
       itemData?.policies?.forEach((item) => {
@@ -91,11 +92,17 @@ interface SaveFormTypes extends Record<string, any> {
 
   const modalTitle = itemData?.id ? 'Edit Role' : 'Create Role';
 
+  function selectAllCols(k) {
+    console.log(k);
+    pages.forEach((e) => {
+      setValue(`policy.${e.uuid}.${k}`, getValues(`policy.${e.uuid}.${k}`) !== true);
+    });
+  }
   return (
     <div className="modal fade" id={modalId} aria-labelledby={`new${modalId}Label`} aria-hidden="true">
       <div className="modal-dialog modal-dialog-centered">
         <div className="modal-content">
-          <form onSubmit={handleSubmit(onSubmit)}>
+          <form id="theForm" onSubmit={handleSubmit(onSubmit)}>
             <div className="modal-header">
               <h5 className="modal-title" id={`new${modalId}Label`}>{modalTitle}</h5>
               <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close" />
@@ -148,6 +155,19 @@ interface SaveFormTypes extends Record<string, any> {
                     </tr>
                   </thead>
                   <tbody>
+                    <tr>
+                      <th scope="row">.</th>
+                      {
+                        ['c', 'r', 'u', 'd'].map((k, idx2) => (
+                          <td key={idx2}>
+                            <div className="form-check">
+                              <label htmlFor="select all" className="form-check-label mb-0">Select All</label>
+                              <input type="checkbox" id="select all" onClick={(e) => selectAllCols(k)} className="form-check-input" />
+                            </div>
+                          </td>
+                        ))
+                      }
+                    </tr>
                     {
                       pages.map((e, idx) => (
                         <tr key={idx}>

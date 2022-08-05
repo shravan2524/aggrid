@@ -36,7 +36,20 @@ function generateRowsAndGroups(rows) {
         if (string.toLowerCase().includes('date')) {
             return 'agDateColumnFilter';
         }
-        if (string.toLowerCase().includes('amount') || string.toLowerCase().includes('total')) {
+        if (string.toLowerCase().includes('amount')
+            || string.toLowerCase().includes('total')
+            || string.toLowerCase().includes('id')
+            || string.toLowerCase().includes('tenantId')
+            || string.toLowerCase().includes('sgst_2A')
+            || string.toLowerCase().includes('sgst_2B')
+            || string.toLowerCase().includes('sgst_PR')
+            || string.toLowerCase().includes('similarityScore')
+            || string.toLowerCase().includes('igst_2A')
+            || string.toLowerCase().includes('igst_2B')
+            || string.toLowerCase().includes('igst_PR')
+            || string.toLowerCase().includes('id_2B')
+            || string.toLowerCase().includes('id_PR')
+            || string.toLowerCase().includes('id_2A')) {
             return 'agNumberColumnFilter';
         }
 
