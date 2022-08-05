@@ -143,7 +143,7 @@ function CustomActionsToolPanel(
   onRefreshCallback,
   selectedFiles,
   isFetchLoading,
-  selectedFilesLength,
+  len,
 ) {
   const [downloadLoading, setDownloadLoading] = useState<boolean>(false);
   // TODO: This code needs some refactoring work ...
@@ -201,8 +201,8 @@ function CustomActionsToolPanel(
     }
   }
   function editModal() {
-    console.log(selectedFiles);
-    if (selectedFilesLength === 0) {
+    console.log(selectedFiles, len);
+    if (len > 0) {
       showModal('editFilesTypeModal');
     } else {
       toast.error('please select atleast a single file');
