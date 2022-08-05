@@ -34,7 +34,7 @@ function ClickableStatusBarComponent(props: any, onBtExport, handleShow) {
         className="btn btn-sm btn-success  px-4 d-flex gap-2 align-items-center justify-content-center flex-wrap"
         onClick={handleShow}
       >
-        <i className="fas fa-folder-plus" />
+        <i className="fas fa-user-plus" />
         Share Data
       </button>
     </div>

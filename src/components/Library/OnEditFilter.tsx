@@ -1,48 +1,44 @@
 import React, { useEffect, useState } from 'react';
+import './style.scss';
 import * as yup from 'yup';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup/dist/yup';
+import { yupEmptyCharsRule } from 'app/utils/YupRules';
 import classNames from 'classnames';
 import CustomButton from 'components/CustomButton';
+import { Filters, updateFilter } from 'services/filtersAPIService';
 import { hideModal } from 'app/utils/Modal';
-import {
-  createFoldersData,
-  Folders,
-  putFoldersData,
-} from 'services/FolderAPIService';
+import toast from 'react-hot-toast';
 
-interface ModalProps {
-  itemData: Folders | null;
-}
-
-interface SaveFormTypes {
+interface Filter {
   title: string;
 }
 
-function SaveFolderModal({ itemData }: ModalProps) {
-  const modalId = 'saveFolderModal';
-  const [isLoading, setIsLoading] = useState(false);
+interface Props3 {
+  editFilter: Filters | null;
+  onfetchData: () => void;
+}
 
-  const cleanUp = (reset) => {
-    setIsLoading(false);
-    hideModal(modalId, () => {
-      reset();
-    });
-  };
+export default function EditFilterPopup({ editFilter, onfetchData }: Props3) {
+  const modalId = 'editFilterPopup';
+  const [isLoading, setIsLoading] = useState(false);
 
   const schema = yup
     .object({
-      title: yup.string().required(),
+      title: yup
+        .string()
+        .required('Title is a required field')
+        .test(yupEmptyCharsRule),
     })
     .required();
 
   const {
     register,
     handleSubmit,
-    formState: { errors },
-    setValue,
     reset,
-  } = useForm<SaveFormTypes>({
+    setValue,
+    formState: { errors },
+  } = useForm<Filter>({
     resolver: yupResolver(schema),
   });
 
@@ -50,30 +46,32 @@ function SaveFolderModal({ itemData }: ModalProps) {
     if (!formData) {
       return;
     }
-    const data: SaveFormTypes = {
+    const data: Filter = {
       title: formData.title,
     };
 
-    if (itemData?.id) {
+    if (editFilter?.id) {
       setIsLoading(true);
-      putFoldersData({ id: itemData.id, ...data }).then(() => {
-        cleanUp(reset);
-      });
-    } else {
-      setIsLoading(true);
-      createFoldersData(formData).then(() => {
-        cleanUp(reset);
-      });
+      updateFilter({ id: editFilter?.id, ...data })
+        .then(() => {
+          setIsLoading(false);
+          toast.success('File Updated');
+          hideModal(modalId, () => {
+            reset();
+            onfetchData();
+          });
+        })
+        .catch(() => {
+          setIsLoading(false);
+        });
     }
   };
 
   useEffect(() => {
-    if (itemData) {
-      setValue('title', itemData.title);
+    if (editFilter?.id) {
+      setValue('title', editFilter.title);
     }
-  }, [itemData]);
-
-  const modalTitle = itemData?.id ? 'Edit Folder' : 'Create Folder';
+  }, [editFilter]);
 
   return (
     <div
@@ -87,7 +85,7 @@ function SaveFolderModal({ itemData }: ModalProps) {
           <form onSubmit={handleSubmit(onSubmit)}>
             <div className="modal-header">
               <h5 className="modal-title" id={`new${modalId}Label`}>
-                {modalTitle}
+                Edit Data
               </h5>
               <button
                 type="button"
@@ -142,5 +140,3 @@ function SaveFolderModal({ itemData }: ModalProps) {
     </div>
   );
 }
-
-export default SaveFolderModal;

@@ -53,30 +53,13 @@ function SharedWithMe() {
     });
   }, []);
 
-  const OnExpand = (i: any) => {
-    i.node.setExpanded(!i.node.expanded);
-  };
-
   const [columnDefs, setColumnDefs] = useState([
-    {
-      field: '',
-      // eslint-disable-next-line react/no-unstable-nested-components
-      cellRenderer: (params) => (
-        <div aria-hidden="true" onClick={() => OnExpand(params)}>
-          <i className="fas fa-angle-right" />
-        </div>
-      ),
-      editable: false,
-      filter: false,
-      width: 40,
-      minWidth: 40,
-      maxWidth: 40,
-    },
     {
       headerName: 'Name',
       field: 'title',
       filter: 'agTextColumnFilter',
       editable: false,
+      cellRenderer: 'agGroupCellRenderer',
     },
     {
       headerName: 'Model Name',
@@ -88,7 +71,7 @@ function SharedWithMe() {
       headerName: 'Create On',
       field: 'createdAt',
       filter: 'agTextColumnFilter',
-      valueGetter: (params) => agGridDateFormatter(params.data?.updatedAt),
+      valueGetter: (params) => agGridDateFormatter(params.data?.createdAt),
       editable: false,
     },
     {

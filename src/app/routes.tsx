@@ -29,6 +29,7 @@ const AuthLogoutProcessorIndexPage = React.lazy(() => import('pages/public/auth/
 const QRHelper = React.lazy(() => import('pages/public/qr-helper/Import'));
 const MyLibraryPage = React.lazy(() => import('pages/customer/Library/MyLibrary/MyLibraryPage'));
 const SharedWithMe = React.lazy(() => import('pages/customer/Library/Shared/SharedWithMe'));
+const FoldersPage = React.lazy(() => import('pages/customer/Library/Folders/FoldersPage'));
 const RolesPage = React.lazy(() => import('pages/customer/admin/roles/Page'));
 const UsersPage = React.lazy(() => import('pages/customer/admin/users/Page'));
 
@@ -212,6 +213,11 @@ const routes: any = [
                 icon: 'fas fa-folder-open',
               },
               {
+                path: '/customer/library/folders',
+                text: 'Folders',
+                icon: 'fas fa-folder-plus',
+              },
+              {
                 path: '/customer/library/shared',
                 text: 'Shared with me',
                 icon: 'fas fa-user-friends',
@@ -226,6 +232,10 @@ const routes: any = [
               {
                 path: 'shared',
                 element: <Suspense fallback={<Loader />}><SharedWithMe /></Suspense>,
+              },
+              {
+                path: 'folders',
+                element: <Suspense fallback={<Loader />}><FoldersPage /></Suspense>,
               },
             ],
           },
