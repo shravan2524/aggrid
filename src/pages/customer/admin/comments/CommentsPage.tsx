@@ -64,7 +64,7 @@ function Reply({ id, onSubmitAction }: Comment) {
   const [typedcomment, settypedcomment] = useState('');
   const toggleShow = () => setShowShow1(!showShow1);
   function submit(e) {
-    e.preventDefault();
+    // e.preventDefault();
     onSubmitAction(id, typedcomment);
     settypedcomment('');
   }
@@ -148,7 +148,9 @@ export default function CommentsPage({ fileId }: File) {
       });
   }
   const onSubmitAction = (id, typedcomment1) => {
-    settypedcomment('');
+    if (id === 1) {
+      settypedcomment('');
+    }
     const d = new Date();
     const Comments = {
       description: typedcomment1,
