@@ -12,7 +12,6 @@ export interface Folders {
   updatedBy?: string;
 }
 
-
 export async function fetchFoldersData(): Promise<Folders[]> {
   return TenantApiRequest('folders');
 }

@@ -7,6 +7,7 @@ import React, {
 } from 'react';
 import { AgGridReact } from 'ag-grid-react';
 import { onModalHidden, showModal } from 'app/utils/Modal';
+import './users.css';
 import { useAppDispatch, useWindowDimensions } from 'app/hooks';
 import PageWrapper from 'components/PageWrapper';
 import { readAll, isLoadingSelector, readAllSelector } from 'state/users/slice';
