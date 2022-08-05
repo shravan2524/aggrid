@@ -16,7 +16,7 @@
 	font-size: 18px;
   }
   .my-css-class:nth-child(odd) {
-	background-color: #00be8b;
+	background-color: #e4800f;
   }
   .my-css-class:nth-child(even) {
 	background-color: #928dff;
