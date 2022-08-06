@@ -16,7 +16,7 @@ function PageTitle({ title, icon }:PageTitleProps) {
           {title}
         </title>
       </Helmet>
-      <h4 className="pb-2 text-capitalize text-purple-dark">
+      <h4 className="pb-2 text-capitalize text-purple-dark pageHeading">
         <i className={icon} />
         {' '}
         {title}
