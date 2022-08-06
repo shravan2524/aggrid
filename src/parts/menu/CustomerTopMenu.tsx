@@ -77,7 +77,7 @@ export default function CustomerTopMenu({ companies }:CustomerTopMenuProps) {
       icon: 'fa-solid fa-house-laptop',
     },
     {
-      divider: true,
+      divider: false,
     },
     {
       itemTitle: 'Logout',
