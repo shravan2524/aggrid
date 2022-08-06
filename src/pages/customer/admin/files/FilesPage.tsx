@@ -222,7 +222,7 @@ function CustomActionsToolPanel(
         <ReactFileUploder />
         <button
           type="button"
-          className="btn btn-sm btn-info  d-flex gap-1 align-items-center justify-content-center flex-wrap refreshBtn"
+          className="btn btn-sm d-flex gap-1 align-items-center justify-content-center flex-wrap refreshBtn"
           onClick={onRefreshCallback}
         >
           <i
