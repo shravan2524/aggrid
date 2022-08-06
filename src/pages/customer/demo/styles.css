@@ -5,7 +5,7 @@
 	--ag-header-cell-hover-background-color: rgb(80, 40, 140);
 	--ag-header-cell-moving-background-color: rgb(80, 40, 140); 
   } */
-  .ag-theme-alpine .ag-header {
+  /*.ag-theme-alpine .ag-header {
 	font-family: cursive;
   }
   .ag-theme-alpine .ag-header-group-cell {
@@ -14,7 +14,7 @@
   }
   .ag-theme-alpine .ag-header-cell {
 	font-size: 18px;
-  }
+  }*/
   .my-css-class:nth-child(odd) {
 	background-color: #e4800f;
   }
