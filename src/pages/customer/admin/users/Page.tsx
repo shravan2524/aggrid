@@ -107,7 +107,7 @@ function ActionsRenderer({
 
       <button
         type="button"
-        className="btn btn-sm btn-primary text-success"
+        className="btn btn-sm btn-primary"
         onClick={(e) => onEditClickCallback(params)}
       >
         <i className="fa-solid fa-pen-to-square" />
@@ -115,7 +115,7 @@ function ActionsRenderer({
       <button
         onClick={(e) => onDeleteUser(params)}
         type="button"
-        className="btn btn-sm btn-danger text-danger"
+        className="btn btn-sm btn-danger"
       >
         <i className="fas fa-trash-alt" />
       </button>
