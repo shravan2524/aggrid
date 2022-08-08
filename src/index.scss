@@ -320,6 +320,7 @@ a.menuIcon{ border: 0px;}
 .btn-warning { background-color: $button-warning-color;}
 .refreshBtn{ background-color: rgb(38 119 219 / 10%); border-color: rgba(88, 157, 243, 0.1);}
 .refreshBtn:hover{ background-color: rgb(38 119 219 / 30%); border-color: rgba(88, 157, 243, 0.3);}
+main{ padding-bottom: 50px;}
 
 @media (max-width: 550px) {
 .ag-theme-alpine .ag-root-wrapper{ background:none; padding:0; border:none !important; box-shadow:none;}
