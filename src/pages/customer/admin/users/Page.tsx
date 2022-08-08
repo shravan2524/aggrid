@@ -280,6 +280,7 @@ function Page() {
           headerName: 'Updated On',
           field: 'updatedAt',
           filter: 'agNumberColumnFilter',
+          cellClass: 'updateColumn',
           valueGetter: (params) => (agGridDateFormatter(params.data?.updatedAt)),
           editable: false,
         },
