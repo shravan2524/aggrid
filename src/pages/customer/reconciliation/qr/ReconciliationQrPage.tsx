@@ -85,7 +85,6 @@ export default function ReconciliationQrPage() {
           toolPanel: 'agFiltersToolPanel',
         },
       ],
-      defaultToolPanel: 'customActionsTool',
     }),
     [],
   );

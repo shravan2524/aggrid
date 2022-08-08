@@ -82,7 +82,6 @@ export default function ReconciliationOCRPage() {
           toolPanel: 'agFiltersToolPanel',
         },
       ],
-      defaultToolPanel: 'customActionsTool',
     }),
     [],
   );

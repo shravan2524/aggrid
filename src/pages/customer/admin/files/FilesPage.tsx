@@ -410,7 +410,6 @@ export default function FilesPage() {
           toolPanel: 'agFiltersToolPanel',
         },
       ],
-      defaultToolPanel: 'customActionsTool',
     }),
     [isFetchLoading],
   );

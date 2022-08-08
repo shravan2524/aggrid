@@ -85,7 +85,6 @@ export default function ReconciliationEwbPage() {
           toolPanel: 'agFiltersToolPanel',
         },
       ],
-      defaultToolPanel: 'customActionsTool',
     }),
     [],
   );

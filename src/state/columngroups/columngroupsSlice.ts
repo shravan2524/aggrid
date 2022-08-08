@@ -28,12 +28,10 @@ const initialState: ColumnGroupState = {
   error: undefined,
 };
 
-export const fetchColumn = createAsyncThunk('getComments', async () =>
-  fetchColumnGroup()
-);
+export const fetchColumn = createAsyncThunk('getComments', async () => fetchColumnGroup());
 export const postColumns = createAsyncThunk(
   'postColumnss',
-  async (payload: any) => postColumnGroup(payload)
+  async (payload: any) => postColumnGroup(payload),
 );
 
 // Reducers ...
@@ -48,7 +46,7 @@ export const CommentsSlice = createSlice({
       (state: Draft<ColumnGroupState>, action) => {
         state.isLoading = true;
         ProgressBar.start();
-      }
+      },
     );
     builder.addCase(fetchColumn.fulfilled, (state, action) => {
       state.rows = action.payload;
@@ -66,7 +64,7 @@ export const CommentsSlice = createSlice({
       (state: Draft<ColumnGroupState>, action) => {
         state.isPutLoading = true;
         ProgressBar.start();
-      }
+      },
     );
     builder.addCase(postColumns.fulfilled, (state, action) => {
       toast.success('File successfully updated.');
@@ -86,20 +84,20 @@ const CommentsSelector = (state) => state.Comments;
 
 export const getComments = createSelector(
   CommentsSelector,
-  (Comments: ColumnGroupState): ColumnGroupType[] => Comments.rows
+  (Comments: ColumnGroupState): ColumnGroupType[] => Comments.rows,
 );
 
 export const isLoadingSelector = createSelector(
   CommentsSelector,
-  (Comments: ColumnGroupState): boolean | undefined => Comments.isLoading
+  (Comments: ColumnGroupState): boolean | undefined => Comments.isLoading,
 );
 
 export const isPutLoadingSelector = createSelector(
   CommentsSelector,
-  (Comments: ColumnGroupState): boolean | undefined => Comments.isPutLoading
+  (Comments: ColumnGroupState): boolean | undefined => Comments.isPutLoading,
 );
 
 export const selectErrorMessageSelector = createSelector(
   CommentsSelector,
-  (Comments: ColumnGroupState): string | null | undefined => Comments.error
+  (Comments: ColumnGroupState): string | null | undefined => Comments.error,
 );

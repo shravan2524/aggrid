@@ -330,7 +330,6 @@ function Page() {
           toolPanel: 'agFiltersToolPanel',
         },
       ],
-      defaultToolPanel: 'customActionsTool',
     }),
     [isFetchLoading],
   );

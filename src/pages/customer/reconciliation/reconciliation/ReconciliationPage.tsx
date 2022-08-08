@@ -159,7 +159,6 @@ export default function ReconciliationPage() {
                     toolPanel: 'agFiltersToolPanel',
                 },
             ],
-            defaultToolPanel: 'customActionsTool',
         }),
         [],
     );
