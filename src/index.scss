@@ -320,3 +320,9 @@ a.menuIcon{ border: 0px;}
 .btn-warning { background-color: $button-warning-color;}
 .refreshBtn{ background-color: rgb(38 119 219 / 10%); border-color: rgba(88, 157, 243, 0.1);}
 .refreshBtn:hover{ background-color: rgb(38 119 219 / 30%); border-color: rgba(88, 157, 243, 0.3);}
+
+@media (max-width: 550px) {
+.ag-theme-alpine .ag-root-wrapper{ background:none; padding:0; border:none !important; box-shadow:none;}
+.ag-theme-alpine .ag-status-bar, .ag-theme-alpine .ag-status-bar .ag-status-bar-right{ display:block !important; padding:0;}
+.ag-theme-alpine .ag-status-bar .ag-status-name-value{ padding-top: 0; padding-bottom: 0;}
+}
