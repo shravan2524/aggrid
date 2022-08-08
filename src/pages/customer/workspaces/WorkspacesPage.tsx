@@ -48,7 +48,7 @@ function ActionsRenderer({
 }: ActionsRendererProps) {
   const activeTenant = useSelector(getSelectedTenant);
   return (
-    <div className="d-flex justify-content-evenly align-items-center w-100 h-100">
+    <div className="d-flex btn-group align-items-center w-100 h-100">
       <button
         type="button"
         className="btn btn-sm btn-primary"
