@@ -93,7 +93,7 @@ function ActionsRenderer({
   }, [data, rows]);
 
   return (
-    <div className="d-flex justify-content-around align-items-center w-100 h-100">
+    <div className="d-flex btn-group align-items-center w-100 h-100">
       <Switch
         onChange={handleChange}
         checked={checked}
