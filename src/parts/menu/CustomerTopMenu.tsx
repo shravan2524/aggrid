@@ -98,7 +98,7 @@ export default function CustomerTopMenu({ companies }:CustomerTopMenuProps) {
   return (
     <div className="fixed-top" id="customer-top-menu">
       <nav className="navbar navbar-expand-md navbar-dark bg-color-purple-dark">
-        <div className="container-fluid d-flex flex-wrap">
+        <div className="container-fluid d-flex">
           <NavLink to="/" className="navbar-brand d-lg-block d-lg-none d-xl-block">
             <img src={logo} alt="Finkraft" width={90} />
           </NavLink>
