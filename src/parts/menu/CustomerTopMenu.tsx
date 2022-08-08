@@ -77,7 +77,7 @@ export default function CustomerTopMenu({ companies }:CustomerTopMenuProps) {
       icon: 'fa-solid fa-house-laptop',
     },
     {
-      divider: true,
+      divider: false,
     },
     {
       itemTitle: 'Logout',
@@ -144,7 +144,7 @@ export default function CustomerTopMenu({ companies }:CustomerTopMenuProps) {
             <ul className="navbar-nav mr-auto ">
 
               <li className="d-flex justify-content-between align-items-center mx-2 my-2">
-                <NavLink to="/customer/notifications" className="btn btn-primary p-1 m-0 bg-color-purple-dark border-4 border-white position-relative rounded-pill">
+                <NavLink to="/customer/notifications" className="btn btn-primary p-1 m-0 bg-color-purple-dark border-4 border-white position-relative rounded-pill menuIcon">
                   <i className="fa-solid fa-bell m-1" />
                   <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
                     0

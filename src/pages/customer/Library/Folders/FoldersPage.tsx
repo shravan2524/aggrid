@@ -33,7 +33,7 @@ function ActionsRenderer({
       <button
         type="button"
         onClick={() => onEditClickCallback(params)}
-        className="btn btn-sm btn-light text-success"
+        className="btn btn-sm btn-primary text-success"
       >
         <i className="fa-solid fa-pen-to-square" />
       </button>
@@ -48,7 +48,7 @@ function CustomActionsToolPanel(isLoading, onRefreshCallback) {
         <button
           type="button"
           onClick={() => showModal('saveFolderModal')}
-          className="btn btn-sm btn-danger px-4 d-flex gap-2 align-items-center justify-content-center flex-wrap"
+          className="btn btn-sm btn-success px-4 d-flex gap-2 align-items-center justify-content-center flex-wrap"
         >
           <i className="fas fa-folder-plus" />
           Create Folder
@@ -57,7 +57,7 @@ function CustomActionsToolPanel(isLoading, onRefreshCallback) {
         <button
           type="button"
           onClick={onRefreshCallback}
-          className="btn btn-sm btn-info px-4 d-flex gap-2 align-items-center justify-content-center flex-wrap"
+          className="btn btn-sm px-4 d-flex gap-2 align-items-center justify-content-center flex-wrap refreshBtn"
         >
           <i
             className={classNames([

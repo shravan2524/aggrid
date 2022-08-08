@@ -130,7 +130,7 @@ function ActionsRenderer({
       <button
         type="button"
         onClick={() => downloadFile(params.data.id)}
-        className="btn btn-primary"
+        className="btn btn-success"
       >
         <i className="fa fa-download" />
       </button>
@@ -213,7 +213,7 @@ function CustomActionsToolPanel(
       <div className="row p-2 gap-2 m-1">
         <button
           type="button"
-          className="btn btn-sm btn-info d-flex gap-1 align-items-center justify-content-center flex-wrap"
+          className="btn btn-sm btn-primary d-flex gap-1 align-items-center justify-content-center flex-wrap"
           onClick={editModal}
         >
           <i className="fa-solid fa-file-pen" />
@@ -222,7 +222,7 @@ function CustomActionsToolPanel(
         <ReactFileUploder />
         <button
           type="button"
-          className="btn btn-sm btn-info  d-flex gap-1 align-items-center justify-content-center flex-wrap"
+          className="btn btn-sm d-flex gap-1 align-items-center justify-content-center flex-wrap refreshBtn"
           onClick={onRefreshCallback}
         >
           <i
@@ -238,7 +238,7 @@ function CustomActionsToolPanel(
         <button
           type="button"
           disabled={downloadLoading}
-          className="btn btn-sm btn-info d-flex gap-1 align-items-center justify-content-center flex-wrap"
+          className="btn btn-sm btn-warning d-flex gap-1 align-items-center justify-content-center flex-wrap"
           onClick={() => downloadTestZip(selectedFiles)}
         >
           {downloadLoading ? (

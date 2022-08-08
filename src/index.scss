@@ -1,7 +1,20 @@
 // Custom.scss
 // Option A: Include all of Bootstrap
 
-$color-dark-purple: #282952;
+$color-dark-purple: #30445C;
+
+$button-primary-color:#07baed;
+$button-success-color:#21cfb3;
+$button-warning-color:#ffda6a;
+
+$badge-primary: #009ef7;
+$badge-primary-light: #f1faff; 
+
+$badge-warning: #ff8b00;
+$badge-warning-light: #fff4ca; 
+
+$badge-danger: #f1416c;
+$badge-danger-light: #fff5f8; 
 
 // Include any default variable overrides here (though functions won't be available)
 // Default variable overrides
@@ -10,6 +23,12 @@ $component-active-bg: $color-dark-purple;
 $dropdown-link-active-bg: $color-dark-purple;
 
 @import "../node_modules/bootstrap/scss/bootstrap";
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;500;600;700&display=swap');
+
+// Then add additional custom code here
+
+
+:root { --bs-font-sans-serif: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";}
 
 // Then add additional custom code here
 
@@ -23,7 +42,7 @@ body {
 }
 
 .bg-color-purple {
-  background-color: #2e2e52;
+  background-color: #30445C;
 }
 
 .bg-color-purple-dark {
@@ -35,7 +54,7 @@ body {
 }
 
 .bg-color-purple-light {
-  background-color: #444885;
+  background-color: #ffffff;
 }
 
 .grid-container-style {
@@ -45,7 +64,7 @@ body {
   //left: 0;
   //right: 0;
   // position: absolute;
-  width: 100%;
+  width: 100%; padding: 0 20px;
 
   .ag-root-wrapper {
     height: 65vh;
@@ -142,3 +161,162 @@ table {
     border: none;
     padding: 0px;
 }
+
+
+
+.ag-theme-alpine .ag-column-drop-horizontal{ border-bottom: none; padding: 0 !important; font-size: 13px; font-weight: 500; line-height: 1.1; background:none !important;}
+.ag-theme-alpine .ag-root-wrapper{ border:none !important; background: #fff;
+  border-radius: 6px;
+  padding: 20px; height:100%;
+  box-shadow: 0 0 15px #eceef0;}
+.ag-theme-alpine .ag-tool-panel-wrapper{ border-top:1px solid #babfc7; border-bottom:1px solid #babfc7 !important;}
+.ag-theme-alpine .ag-status-bar{ border-top:none;}
+.ag-theme-alpine .ag-tool-panel-wrapper{ padding: 20px 14px; background-color: #fff; box-shadow: 0 0 15px #ccc;}
+.ag-theme-alpine{ --ag-header-background-color: #394859;}
+.ag-theme-alpine .ag-header{ font-family: inherit;}
+.ag-theme-alpine .ag-header-group-cell{ font-weight: 600; font-size: 14px;}
+.ag-theme-alpine .ag-header-cell{ font-size:13px;}
+.ag-status-name-value input[type="button"]{ color: #fff;
+    background: #245081;
+    border:none;  display: inline-block;
+    font-weight: 600;
+    line-height: 1.53;
+    text-align: center;
+    vertical-align: middle;
+    cursor: pointer;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    user-select: none; 
+    /*padding: 0.4375rem 1.25rem;*/
+    font-size: 0.7375rem;
+    border-radius: 0.275rem;
+    transition: all 0.2s ease-in-out;
+} 
+.ag-theme-alpine .ag-filter-toolpanel .ag-filter-toolpanel-header{ color: #111;}
+.ag-theme-mycustomtheme { 
+    --ag-grid-size: 8px;
+    --ag-border-color: white;
+} 
+.ag-tool-panel-wrapper h2{ font-size: 20px;}
+ 
+.ag-header-row.ag-header-row-column-group{ background: #fff; color:#111;}
+.ag-header-row.ag-header-row-column-group.ag-header-group-cell{ padding-left:0;}
+.ag-header-row.ag-header-row-column{ background:#d2e3e3; color:#0e1b2b;}
+.ag-header-row.ag-header-row-column-filter{ background:#f3f3ff; color:#111; border:none;}
+.ag-root{ border: 1px solid #ddd;}
+.ag-theme-alpine .ag-header{ background:none;}
+
+.ag-header-row.ag-header-row-column-group .ag-header-cell-resize{ display:none;}
+.ag-theme-alpine .ag-icon{ font-size: 20px;}
+.ag-theme-alpine .ag-sort-ascending-icon .ag-icon{ color: #fff;}
+.btn-light:hover{ color: #fff; background-color: #5a83a6;}
+.ag-theme-alpine input[class^=ag-][type=text]{ border: 1px solid #749de6 !important;}
+.ag-theme-alpine .ag-header-cell.ag-header-active{ background:#1DCDFE;}
+.ag-theme-alpine .ag-header-cell.ag-header-active .ag-icon{ color:#fff;}
+.ag-header-row.ag-header-row-column-filter .ag-floating-filter-button{ margin-left: 5px;} 
+
+.ag-theme-alpine .ag-column-drop-cell {
+  background-color: $color-dark-purple;
+}
+
+.ag-theme-alpine .ag-column-drop-cell .ag-icon {
+  color: white;
+}
+
+.ag-theme-alpine .ag-column-drop-cell-text {
+  color: white;
+  font-weight: bold;
+}
+
+.ag-theme-alpine {
+  --ag-control-panel-background-color: rgb(229 243 245);
+  --ag-side-button-selected-background-color: rgb(229 243 245);
+
+  --ag-selected-tab-underline-color: deeppink;
+  --ag-selected-tab-underline-width: 2px;
+  --ag-selected-tab-underline-transition-speed: 0.5s;
+
+  --ag-side-bar-panel-width: 300px;
+}
+
+.ag-theme-alpine .ag-filter-toolpanel-group-title-bar {
+  /* use a semi-transparent background to show the background colour behind */
+  background-color: rgb(255, 255, 255, 0.2);
+}
+.ag-theme-alpine button.ag-side-button-button{ border-top-right-radius: 10px; border-bottom-right-radius: 10px; background: #f5f8fa; color:#111; margin:2px 0; font-size:14px; font-family:arial;}
+.ag-theme-alpine button.ag-side-button-button:hover, .ag-theme-alpine .ag-selected button.ag-side-button-button{ background: #30445C; color:#fff; border-left-color:#30445C !important;} 
+.ag-theme-alpine .ag-ltr .ag-cell[col-id="Airline Name"] .ag-cell-value button[type="button"]{ float: right; margin: 5px;}
+.ag-tool-panel-wrapper dl dt{ font-weight:400; font-size: 16px;}
+.ag-tool-panel-wrapper dl dt b{ display:block; font-size:22px; color:#12ac93;}
+/*.ag-floating-filter-button button.ag-floating-filter-button-button{ background: #444885;
+    color: #fff; width:22px; height:22px;
+    padding: 1px; 
+    border-radius: 3px;}*/
+.ag-floating-filter-button button .ag-icon{ font-size: 16px;}
+.ag-theme-alpine .ag-status-name-value{ color: #111;}
+
+body{ background:#f5f8fa;}
+.ag-theme-alpine .ag-ltr .ag-side-bar-right .ag-tool-panel-wrapper{ border-right: 1px solid #babfc7;}
+
+.ag-theme-alpine .ag-header-group-cell.ag-header-cell-moving {
+  color: #fff;
+}
+
+
+.ag-theme-alpine .ag-side-buttons, .ag-theme-alpine .ag-ltr .ag-column-drop-horizontal{ background: #fff;}
+.ag-theme-alpine .ag-paging-panel{ border: none; background: #fff;}
+.ag-theme-alpine .ag-ltr .ag-column-drop-horizontal{ display: none;}
+
+.text-success{ color: #50cd89;}
+.text-danger{ color: #f1416c;}
+.text-warning{ color: #ffc700;}
+
+/*.bg-success{ background-color: #50cd89; color: #fff;}
+.bg-danger{ background-color: #f1416c; color: #fff;}
+.bg-warning{ background-color: #ffc700; color: #fff;}*/
+
+.ag-theme-alpine .ag-ltr .ag-cell{ background-color: inherit !important;}
+.bg-success span{ color:$badge-primary; background-color:$badge-primary-light; padding: 5px 10px;
+      border-radius: 4px;
+      text-transform: capitalize;
+      font-weight: 500;
+      font-size: 13px;}
+.bg-warning span{ color:$badge-warning; background-color:$badge-warning-light;padding: 5px 10px;
+  border-radius: 4px;
+  text-transform: capitalize;
+  font-weight: 500;
+  font-size: 13px;}
+
+.badge-light-success{ color: #50cd89; background-color: #d7ffe9;}
+.badge-light-danger{ color: #f1416c; background-color: #fff5f8;}
+.badge-light-warning{ color: #ffc700; background-color: #fff8dd;}
+
+.ag-paging-panel .ag-paging-page-summary-panel{ margin-right: 30px; background: #f5f8fa; padding: 10px; border-radius: 5px; /*box-shadow: 0 0 8px #d8e2e6; margin: 0 30px 0 0;*/}
+
+
+#navbarNavDropdown{ font-size: 0.8rem;}
+.navbar{ padding: 0;}
+.navbar-brand{ margin-right: 2rem;}
+.navbar-nav .nav-item{ margin-right: 5px;}
+.navbar-nav .nav-link{ font-size: 0.9rem; font-weight: 400;}
+.nav-underline .nav-link .fa-solid{ font-size: 12px; margin-right: 1px;}
+.footer p{ font-size: 14px;}
+.dropdown-item{ font-size: 0.8rem; padding: 0.55rem 1rem;}
+.dropdown-item .fa-solid{ margin-right: 4px;}
+a.menuIcon{ border: 0px;}
+.navbar-nav .rounded-circle.bg-color-purple, .navbar-nav .rounded-circle.bg-color-purple .bg-color-purple-dark{ color:#1a1b39; background-color: #cecef8;}
+.navbar-nav .rounded-circle.bg-color-purple .fa-solid{ font-size: 0.8rem;}
+.navbar-nav .rounded-circle.bg-color-purple.p-1{ padding: 0.15rem 0.25rem !important;}
+.navbar-nav .rounded-circle #react-select-5-placeholder{ color:#171717 !important;}
+.css-1bm3yv2-control{ min-height: inherit !important;}
+.pageHeading{ padding: 0 10px; display: none;}
+.profileRow{ border-bottom: 1px solid #efefef; padding: 15px 0; display: flex;}
+.noBorder{ border-bottom: none;}
+.nameColumn span::before{ content:"\f007" ;font-family: "Font Awesome 6 Free"; color: #7c86a3; font-weight: 900; font-size: 10px; margin-right: 8px;}
+
+.btn-primary { background-color: $button-primary-color; border-color:$button-primary-color;}
+.btn-success { background-color: $button-success-color; border-color: $button-success-color;}
+.btn-success:hover { background-color: #12ac93; border-color: #12ac93;}
+.btn-warning { background-color: $button-warning-color;}
+.refreshBtn{ background-color: rgb(38 119 219 / 10%); border-color: rgba(88, 157, 243, 0.1);}
+.refreshBtn:hover{ background-color: rgb(38 119 219 / 30%); border-color: rgba(88, 157, 243, 0.3);}

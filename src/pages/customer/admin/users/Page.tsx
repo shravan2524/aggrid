@@ -107,7 +107,7 @@ function ActionsRenderer({
 
       <button
         type="button"
-        className="btn btn-sm btn-light text-success"
+        className="btn btn-sm btn-primary"
         onClick={(e) => onEditClickCallback(params)}
       >
         <i className="fa-solid fa-pen-to-square" />
@@ -115,7 +115,7 @@ function ActionsRenderer({
       <button
         onClick={(e) => onDeleteUser(params)}
         type="button"
-        className="btn btn-sm btn-light text-danger"
+        className="btn btn-sm btn-danger"
       >
         <i className="fas fa-trash-alt" />
       </button>
@@ -129,7 +129,7 @@ function CustomActionsToolPanel(onRefreshCallback, isFetchLoading) {
       <div className="row p-2 gap-2 m-1">
         <button
           type="button"
-          className="btn btn-sm btn-danger px-4 d-flex gap-2 align-items-center justify-content-center flex-wrap"
+          className="btn btn-sm btn-success px-4 d-flex gap-2 align-items-center justify-content-center flex-wrap"
           onClick={() => showModal(modalIdentifier)}
         >
           <i className="fa-solid fa-circle-plus" />
@@ -140,7 +140,7 @@ function CustomActionsToolPanel(onRefreshCallback, isFetchLoading) {
 
         <button
           type="button"
-          className="btn btn-sm btn-info px-4 d-flex gap-2 align-items-center justify-content-center flex-wrap"
+          className="btn btn-sm btn-info px-4 d-flex gap-2 align-items-center justify-content-center flex-wrap refreshBtn"
           onClick={onRefreshCallback}
         >
           <i

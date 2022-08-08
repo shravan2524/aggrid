@@ -51,7 +51,7 @@ function ActionsRenderer({
     <div className="d-flex justify-content-evenly align-items-center w-100 h-100">
       <button
         type="button"
-        className="btn btn-sm btn-light"
+        className="btn btn-sm btn-primary"
         onClick={(e) => onEditClickCallback(e, params)}
       >
         <i className="fa-solid fa-pen-to-square" />
@@ -85,7 +85,7 @@ function CustomActionsToolPanel(onRefreshCallback, isFetchLoading) {
       <div className="row p-2 gap-2 m-1">
         <button
           type="button"
-          className="btn btn-sm btn-danger px-4 d-flex gap-2 align-items-center justify-content-center flex-wrap"
+          className="btn btn-sm btn-success px-4 d-flex gap-2 align-items-center justify-content-center flex-wrap"
           onClick={() => showModal('newTenantModal')}
         >
           <i className="fa-solid fa-circle-plus" />
@@ -93,7 +93,7 @@ function CustomActionsToolPanel(onRefreshCallback, isFetchLoading) {
         </button>
         <button
           type="button"
-          className="btn btn-sm btn-info px-4 d-flex gap-2 align-items-center justify-content-center flex-wrap"
+          className="btn btn-sm btn-info px-4 d-flex gap-2 align-items-center justify-content-center flex-wrap refreshBtn"
           onClick={onRefreshCallback}
         >
           <i
