@@ -1,3 +1,6 @@
 .ag-column-select-header{
 	display: none;
 }
+@media (max-width: 550px) {
+	.ag-theme-alpine .ag-ltr .ag-cell[aria-colindex="4"], .ag-header-cell[aria-colindex="4"]{ display:none;}
+}
