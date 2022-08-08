@@ -12,8 +12,9 @@ import PageWrapper from 'components/PageWrapper';
 import { ICellRendererParams } from 'ag-grid-community';
 import { agGridDateFormatter } from 'app/utils/Helpers';
 import 'components/Library/style.scss';
-import { fetchFoldersData, Folders } from 'services/FolderAPIService';
+import { deleteFoldersData, fetchFoldersData, Folders } from 'services/FolderAPIService';
 import classNames from 'classnames';
+import toast from 'react-hot-toast';
 import SaveFolderModal from 'components/Library/CreateFolder';
 import FolderFiltersDetailCellRenderer from './FolderFiltersSuAg';
 
@@ -22,11 +23,13 @@ const moduleTitle = 'Folders';
 type ActionsRendererProps = {
   params: ICellRendererParams;
   onEditClickCallback: (params: ICellRendererParams) => void;
+  onDeleteClickCallback: (params: ICellRendererParams) => void;
 };
 
 function ActionsRenderer({
   params,
   onEditClickCallback,
+  onDeleteClickCallback,
 }: ActionsRendererProps) {
   return (
     <div className="d-flex justify-content-around align-items-center w-100 h-100">
@@ -38,6 +41,7 @@ function ActionsRenderer({
         <i className="fa-solid fa-pen-to-square" />
       </button>
       <button
+        onClick={() => onDeleteClickCallback(params)}
         type="button"
         className="btn btn-sm btn-danger"
       >
@@ -104,6 +108,15 @@ function FoldersPage() {
       });
   };
 
+  const onDeleteClickCallback = useCallback((params) => {
+    if (window.confirm(`${params.data?.title} File Will be deleted`)) {
+      deleteFoldersData(params.data?.id).then(() => {
+        toast.success('Folder Deleted');
+        onfetchData();
+      });
+    }
+  }, []);
+
   const onModalHide = useCallback(() => {
     onModalHidden('saveFolderModal', () => {
       setItemData(null);
@@ -125,6 +138,7 @@ function FoldersPage() {
       <ActionsRenderer
         params={params}
         onEditClickCallback={onEditClickCallback}
+        onDeleteClickCallback={onDeleteClickCallback}
       />
     ),
     [],
@@ -212,6 +226,7 @@ function FoldersPage() {
       editable: true,
       enablePivot: true,
       enableValue: true,
+      flex: 1,
     }),
     [],
   );

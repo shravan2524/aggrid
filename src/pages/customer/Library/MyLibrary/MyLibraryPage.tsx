@@ -209,6 +209,7 @@ function MyLibraryPage() {
       editable: true,
       enablePivot: true,
       enableValue: true,
+      flex: 1,
     }),
     [],
   );

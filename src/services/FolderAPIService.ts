@@ -48,3 +48,7 @@ export async function removeFilterInFolderData(payload): Promise<Folders[]> {
     'DELETE',
   );
 }
+
+export async function deleteFoldersData(payload): Promise<Folders[]> {
+  return TenantApiRequest(`folders/${payload}`, 'DELETE');
+}
