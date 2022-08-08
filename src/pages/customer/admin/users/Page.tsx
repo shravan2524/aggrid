@@ -212,6 +212,7 @@ function Page() {
     () => ({
       width: '100%',
       height: `${height}px`,
+      minHeight: '350px',
     }),
     [height, width],
   );
