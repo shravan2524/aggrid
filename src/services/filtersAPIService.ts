@@ -4,6 +4,14 @@ import { handleRequestError, TenantApiRequest } from '../app/utils/ApiRequests';
 interface Filter {
   title: string;
   modelName?: string;
+  contact:Contact
+}
+
+interface Contact {
+  email: string,
+  firstName?: string,
+  lastName?: string,
+  fullName?: string,
 }
 
 export interface Filters {

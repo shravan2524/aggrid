@@ -19,6 +19,7 @@ interface AGGridType {
   id: number;
   title: string;
   modelName?: string;
+  owner?:string
 }
 
 function agGridDTO(rows: Array<Filters>): Array<AGGridType> {
@@ -28,6 +29,7 @@ function agGridDTO(rows: Array<Filters>): Array<AGGridType> {
     modelName: item?.filter?.modelName,
     updatedAt: item.updatedAt,
     createdAt: item.createdAt,
+    owner: item.filter?.contact.fullName,
   }));
 }
 
@@ -36,7 +38,6 @@ const moduleTitle = 'Shared';
 function SharedWithMe() {
   const gridRef = useRef<any>();
   const { height, width } = useWindowDimensions();
-  const [itemData, setItemData] = useState<Filters | null>(null);
 
   const containerStyle = useMemo(
     () => ({ width: '100%', height: '100vh' }),
@@ -48,7 +49,6 @@ function SharedWithMe() {
 
   const onModalHide = useCallback(() => {
     onModalHidden('shareDataModal', () => {
-      setItemData(null);
       fetchSharedFilterData();
     });
   }, []);
@@ -60,6 +60,12 @@ function SharedWithMe() {
       filter: 'agTextColumnFilter',
       editable: false,
       cellRenderer: 'agGroupCellRenderer',
+    },
+    {
+      headerName: 'Person',
+      field: 'owner',
+      filter: 'agTextColumnFilter',
+      editable: false,
     },
     {
       headerName: 'Model Name',
@@ -117,6 +123,7 @@ function SharedWithMe() {
       editable: true,
       enablePivot: true,
       enableValue: true,
+      flex: 1,
     }),
     [],
   );
