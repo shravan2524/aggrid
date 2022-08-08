@@ -37,6 +37,12 @@ function ActionsRenderer({
       >
         <i className="fa-solid fa-pen-to-square" />
       </button>
+      <button
+        type="button"
+        className="btn btn-sm btn-danger"
+      >
+        <i className="fas fa-trash" />
+      </button>
     </div>
   );
 }
