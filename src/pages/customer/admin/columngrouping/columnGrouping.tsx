@@ -337,7 +337,6 @@ export default function columnGrouping() {
         toolPanel: 'agFiltersToolPanel',
       },
     ],
-    defaultToolPanel: 'customActionsTool',
   }), [isFetchLoading]);
 
   const defaultColDef = useMemo(() => ({

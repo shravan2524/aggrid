@@ -227,7 +227,6 @@ export default function WorkspacesPage() {
           toolPanel: 'agFiltersToolPanel',
         },
       ],
-      defaultToolPanel: 'customActionsTool',
     }),
     [isFetchLoading],
   );

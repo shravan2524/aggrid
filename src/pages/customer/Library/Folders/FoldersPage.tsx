@@ -198,7 +198,6 @@ function FoldersPage() {
           toolPanel: 'agFiltersToolPanel',
         },
       ],
-      defaultToolPanel: 'customActionsTool',
     }),
     [isLoading],
   );

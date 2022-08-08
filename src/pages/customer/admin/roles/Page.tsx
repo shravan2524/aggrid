@@ -205,7 +205,6 @@ function Page() {
         toolPanel: 'agFiltersToolPanel',
       },
     ],
-    defaultToolPanel: 'customActionsTool',
   }), [isFetchLoading]);
 
   const defaultColDef = useMemo(() => ({

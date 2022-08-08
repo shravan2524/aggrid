@@ -729,7 +729,6 @@ export default function DemoPage() {
                 toolPanel: CustomStatsToolPanel,
             },
         ],
-        defaultToolPanel: 'customStats',
     }), []);
 
     const detailCellRenderer = useMemo(() => DetailCellRenderer, []);
