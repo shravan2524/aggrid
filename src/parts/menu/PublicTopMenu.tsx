@@ -31,7 +31,7 @@ export function PublicTopMenu() {
           <img src={logo} alt="Finkraft" width={90} />
         </NavLink>
         <button
-          className="navbar-toggler"
+          className="navbar-toggler closeIcon"
           type="button"
           data-bs-toggle="collapse"
           data-bs-target="#navbarNavDropdown"
@@ -39,7 +39,9 @@ export function PublicTopMenu() {
           aria-expanded="false"
           aria-label=""
         >
-          <span className="navbar-toggler-icon" />
+          <span />
+          <span />
+          <span />
         </button>
         <div className="collapse navbar-collapse" id="navbarNavDropdown">
           <ul className="navbar-nav mr-auto">
