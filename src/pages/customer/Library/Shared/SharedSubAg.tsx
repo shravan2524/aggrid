@@ -4,6 +4,8 @@ import React, {
 import { AgGridReact } from 'ag-grid-react';
 import 'ag-grid-enterprise';
 import { ColDef, GridReadyEvent, ICellRendererParams } from 'ag-grid-community';
+import { AgColums } from 'components/Library/Ag-gridColumn';
+import { fetchContentSharedFilterData } from 'services/filtersAPIService';
 
 function ClickableStatusBarComponent(props: any, onBtExport) {
   return (
@@ -28,11 +30,10 @@ export default function SharedDetailCellRenderer({
   api,
 }: ICellRendererParams) {
   const gridRef = useRef<any>();
-
   const gridStyle = useMemo(() => ({ height: '600px', width: '90%' }), []);
-
   // default Columns settings
-  const [columnDefs, setColumnDefs] = useState([]);
+  const [rowData, setRowData] = useState<any>();
+  const [columnDefs, setColumnDefs] = useState(AgColums);
   const defaultColDef = useMemo<ColDef>(
     () => ({
       flex: 1,
@@ -47,7 +48,11 @@ export default function SharedDetailCellRenderer({
   );
 
   // rows
-  const onGridReady = useCallback((params: GridReadyEvent) => {}, [data]);
+  const onGridReady = useCallback((params: GridReadyEvent) => {
+    fetchContentSharedFilterData(data?.filterId).then((datas) => {
+      setRowData(datas);
+    });
+  }, [data]);
 
   // export button
   const onBtExport = useCallback(() => {
@@ -75,6 +80,7 @@ export default function SharedDetailCellRenderer({
       <div style={gridStyle} className="ag-theme-alpine py-2">
         <AgGridReact
           ref={gridRef}
+          rowData={rowData}
           columnDefs={columnDefs}
           defaultColDef={defaultColDef}
           onGridReady={onGridReady}

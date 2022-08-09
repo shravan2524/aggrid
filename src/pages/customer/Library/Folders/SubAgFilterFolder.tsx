@@ -1,5 +1,9 @@
-import React, {
-  useCallback, useMemo, useRef, useState,
+import React,
+{
+  useCallback,
+  useMemo,
+  useRef,
+  useState,
 } from 'react';
 import { AgGridReact } from 'ag-grid-react';
 import 'ag-grid-enterprise';
@@ -24,7 +28,7 @@ function ClickableStatusBarComponent(props: any, onBtExport) {
 }
 
 // main Function
-export default function MyLibraryDetailCellRenderer({
+export default function MyFilterFolderDetailCellRenderer({
   data,
   node,
   api,
@@ -50,11 +54,14 @@ export default function MyLibraryDetailCellRenderer({
   );
 
   // rows
-  const onGridReady = useCallback((params: GridReadyEvent) => {
-    getFilterContent(data?.id).then((datas) => {
-      setRowData(datas);
-    });
-  }, [data]);
+  const onGridReady = useCallback(
+    (params: GridReadyEvent) => {
+      getFilterContent(data?.filterId).then((datas) => {
+        setRowData(datas);
+      });
+    },
+    [data],
+  );
 
   // export button
   const onBtExport = useCallback(() => {
