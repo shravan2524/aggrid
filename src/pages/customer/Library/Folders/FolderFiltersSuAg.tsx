@@ -16,6 +16,7 @@ import {
 } from 'services/FolderAPIService';
 import { agGridDateFormatter } from 'app/utils/Helpers';
 import toast from 'react-hot-toast';
+import MyFilterFolderDetailCellRenderer from './SubAgFilterFolder';
 
 interface AGGridType {
   createdAt?: string;
@@ -200,6 +201,12 @@ export default function FolderFiltersDetailCellRenderer({
     }
   }, [width, height]);
 
+   // SUB AG-GRID
+   const detailCellRenderer = useMemo<any>(
+    () => MyFilterFolderDetailCellRenderer,
+    [],
+  );
+
   return (
     <div className="d-flex flex-column justify-content-center align-items-center">
       <div style={gridStyle} className="ag-theme-alpine py-2">
@@ -214,7 +221,8 @@ export default function FolderFiltersDetailCellRenderer({
           paginationPageSize={10}
           statusBar={statusBar}
           masterDetail
-          detailRowHeight={200}
+          detailCellRenderer={detailCellRenderer}
+          detailRowHeight={600}
           onFirstDataRendered={onFirstDataRendered}
           pagination
         />

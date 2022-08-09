@@ -19,7 +19,8 @@ interface AGGridType {
   id: number;
   title: string;
   modelName?: string;
-  owner?:string
+  owner?:string;
+  filterId:number | undefined;
 }
 
 function agGridDTO(rows: Array<Filters>): Array<AGGridType> {
@@ -30,6 +31,7 @@ function agGridDTO(rows: Array<Filters>): Array<AGGridType> {
     updatedAt: item.updatedAt,
     createdAt: item.createdAt,
     owner: item.filter?.contact.fullName,
+    filterId: item.filterId,
   }));
 }
 

@@ -25,6 +25,7 @@ export interface Filters {
   createdBy?: string;
   updatedBy?: string;
   filter?: Filter;
+  filterId?:number;
 }
 
 export async function fetchFilterData(): Promise<Filters[]> {
