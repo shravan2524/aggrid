@@ -362,15 +362,6 @@ main{ padding-bottom: 50px;}
   bottom:0px;
   left: 0px;
 }
-.closeIcon:not([aria-expanded="true"]):hover span:nth-child(1){
-  transform: rotate(-3deg) scaleY(1.1);
-}
-.closeIcon:not([aria-expanded="true"]):hover span:nth-child(2){
-  transform: rotate(3deg) scaleY(1.1);
-}
-.closeIcon:not([aria-expanded="true"]):hover span:nth-child(3){
-  transform: rotate(-4deg) scaleY(1.1);
-}
 .closeIcon[aria-expanded="true"] span:nth-child(1){
   transform: rotate(45deg);
   top: 13px;
