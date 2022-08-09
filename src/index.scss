@@ -332,9 +332,9 @@ main{ padding-bottom: 50px;}
 }
 .btn-light.text-success:hover{ color:#fff !important;}
 .closeIcon{
-  width: 35px;
-  height: 26px;
-  margin: 10px 10px;
+  width: 28px;
+  height: 21px;
+  margin: 6px 10px;
   position: relative;
   cursor: pointer;
   display: inline-block;
@@ -354,7 +354,7 @@ main{ padding-bottom: 50px;}
   left: 0px;
 }
 .closeIcon span:nth-child(2){
-  top:11px;
+  top:9px;
   left: 0px;
   opacity:1;
 }
@@ -385,4 +385,5 @@ main{ padding-bottom: 50px;}
 .ag-theme-alpine .ag-paging-panel{ background:none;}
 .nav-underline .nav-link{ margin: 0 1px 0 0 !important; padding: .4rem .55rem !important;}
 .nav-scroller .container-fluid{ padding-left: 0.45rem; padding-right: 0.45rem;}
+.navbar-brand{ padding-top:0 !important; padding-bottom:0 !important;}
 }
