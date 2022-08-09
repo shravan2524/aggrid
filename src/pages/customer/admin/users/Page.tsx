@@ -93,7 +93,7 @@ function ActionsRenderer({
   }, [data, rows]);
 
   return (
-    <div className="d-flex justify-content-around align-items-center w-100 h-100">
+    <div className="d-flex btn-group align-items-center w-100 h-100">
       <Switch
         onChange={handleChange}
         checked={checked}
@@ -212,7 +212,7 @@ function Page() {
     () => ({
       width: '100%',
       height: `${height}px`,
-      minHeight: '600px',
+      minHeight: '350px',
     }),
     [height, width],
   );
@@ -280,6 +280,7 @@ function Page() {
           headerName: 'Updated On',
           field: 'updatedAt',
           filter: 'agNumberColumnFilter',
+          cellClass: 'updateColumn',
           valueGetter: (params) => (agGridDateFormatter(params.data?.updatedAt)),
           editable: false,
         },

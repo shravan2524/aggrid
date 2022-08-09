@@ -50,7 +50,7 @@ type ActionsRendererProps = {
 
 function ActionsRenderer({ params, onEditClickCallback }: ActionsRendererProps) {
   return (
-    <div className="d-flex justify-content-around align-items-center w-100 h-100">
+    <div className="d-flex btn-group align-items-center w-100 h-100">
       <button type="button" className="btn btn-sm btn-primary" onClick={(e) => onEditClickCallback(e, params)}>
         <i className="fa-solid fa-pen-to-square" />
         {' '}

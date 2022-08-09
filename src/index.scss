@@ -321,10 +321,26 @@ a.menuIcon{ border: 0px;}
 .refreshBtn{ background-color: rgb(38 119 219 / 10%); border-color: rgba(88, 157, 243, 0.1);}
 .refreshBtn:hover{ background-color: rgb(38 119 219 / 30%); border-color: rgba(88, 157, 243, 0.3);}
 main{ padding-bottom: 50px;}
+.btn-group .btn, .btn-group .react-switch{ margin-right:10px; flex:inherit;}
+.btn-group > .btn-group:not(:last-child) > .btn, .btn-group > .btn:not(:last-child):not(.dropdown-toggle) {
+  border-bottom-right-radius: .2rem;
+  border-top-right-radius: .2rem;
+}
+.btn-group > :not(.btn-check) + .btn {
+  border-bottom-left-radius: .2rem;
+  border-top-left-radius: .2rem;
+}
+.btn-light.text-success:hover{ color:#fff !important;}
 
 @media (max-width: 550px) {
 .ag-theme-alpine .ag-root-wrapper{ background:none; padding:0; border:none !important; box-shadow:none;}
 .ag-theme-alpine .ag-status-bar, .ag-theme-alpine .ag-status-bar .ag-status-bar-right{ display:block !important; padding:0;}
 .ag-theme-alpine .ag-status-bar .ag-status-name-value{ padding-top: 0; padding-bottom: 0;}
 .ag-theme-alpine .ag-side-buttons{ background:none;}
+.ag-theme-alpine .ag-cell, .ag-theme-alpine .ag-full-width-row .ag-cell-wrapper.ag-row-group{ padding-left: 5px; padding-right: 5px;}
+.ag-center-cols-viewport{ background:#fff;}
+.nav-underline .nav-link .fa-solid{ display:none;}
+.ag-theme-alpine .ag-paging-panel{ background:none;}
+.nav-underline .nav-link{ margin: 0 1px 0 0; padding: .4rem .55rem;}
+.nav-scroller .container-fluid{ padding-left: 0.45rem; padding-right: 0.45rem;}
 }

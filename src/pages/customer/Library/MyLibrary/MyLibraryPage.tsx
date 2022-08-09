@@ -38,18 +38,18 @@ function ActionsRenderer({
   onMoveClickCallback,
 }: ActionsRendererProps) {
   return (
-    <div className="d-flex justify-content-around align-items-center w-100 h-100">
+    <div className="d-flex btn-group align-items-center w-100 h-100">
       <button
         onClick={(e) => onEditClickCallback(params)}
         type="button"
-        className="btn btn-sm btn-light"
+        className="btn btn-sm btn-primary"
       >
         <i className="fa-solid fa-pen-to-square" />
       </button>
       <button
         onClick={(e) => onShareClickCallback(params)}
         type="button"
-        className="btn btn-sm btn-light"
+        className="btn btn-sm btn-info"
       >
         <i className="fas fa-user-plus" />
       </button>
