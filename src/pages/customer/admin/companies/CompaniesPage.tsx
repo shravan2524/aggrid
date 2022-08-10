@@ -129,7 +129,7 @@ export default function CompaniesPage() {
   const [companyData, setCompanyData] = useState<CompaniesType | null>(null);
   const isFetchLoading = useSelector(isLoadingSelector);
   const containerStyle = useMemo(
-    () => ({ width: '100%', height: '73vh' }),
+    () => ({ width: '100%', height: '61vh' }),
     [],
   );
   const gridStyle = useMemo(() => ({ height: '500px', width: '100%' }), []);
