@@ -129,7 +129,7 @@ export default function GstinsPage() {
   const [gstinData, setgstinData] = useState<GstinsType | null>(null);
   const isFetchLoading = useSelector(isLoadingSelector);
   const containerStyle = useMemo(
-    () => ({ width: '100%', height: '100vh' }),
+    () => ({ width: '100%', height: '61vh' }),
     [],
   );
   const gridStyle = useMemo(() => ({ height: '500px', width: '100%' }), []);

@@ -41,7 +41,7 @@ function CustomerTopMenuDropDown({
             {mark ? (<i className={mark} />) : mark}
           </span>
         </strong>
-        <span className="text-purple-dark mx-3 pe-3">{title}</span>
+        <span className="text-purple-dark mx-2">{title}</span>
       </a>
 
       <ul className="dropdown-menu" aria-labelledby={id}>

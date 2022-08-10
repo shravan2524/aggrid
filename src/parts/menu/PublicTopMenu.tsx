@@ -25,10 +25,10 @@ export function PublicTopMenu() {
     },
   ], []);
   return (
-    <nav className="navbar navbar-expand-md fixed-top navbar-dark bg-color-purple-dark">
+    <nav className="navbar navbar-expand-md fixed-top bg-white topHeader">
       <div className="container-fluid">
         <NavLink to="/" className="navbar-brand">
-          <img src={logo} alt="Finkraft" width={90} />
+          <img src={logo} alt="Finkraft" width={120} />
         </NavLink>
         <button
           className="navbar-toggler closeIcon"
@@ -54,7 +54,7 @@ export function PublicTopMenu() {
           </ul>
 
           <ShowOnAuth>
-            <ul className="navbar-nav ms-auto mb-2 mb-md-0">
+            <ul className="navbar-nav ms-auto mb-2 mb-md-0 topRight">
               <CustomerTopMenuDropDown
                 id="dropdown06"
                 title={userFullName ?? ''}
