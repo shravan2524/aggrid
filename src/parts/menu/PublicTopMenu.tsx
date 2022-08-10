@@ -28,7 +28,7 @@ export function PublicTopMenu() {
     <nav className="navbar navbar-expand-md fixed-top bg-white topHeader">
       <div className="container-fluid">
         <NavLink to="/" className="navbar-brand">
-          <img src={logo} alt="Finkraft" width={110} />
+          <img src={logo} alt="Finkraft" width={120} />
         </NavLink>
         <button
           className="navbar-toggler closeIcon"
