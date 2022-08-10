@@ -21,7 +21,7 @@ function PageWrapper({ children, pageTitle, icon }:PageWrapperProps) {
       <div className="row">
         <div className="col-md-12">
           <div className="card">
-             {children}
+            {children}
           </div>
         </div>
       </div>
