@@ -7,24 +7,24 @@ import React, {
 } from 'react';
 import { AgGridReact } from 'ag-grid-react';
 import { onModalHidden, showModal } from 'app/utils/Modal';
-import { useAppDispatch, useCompanies, useWindowDimensions } from 'app/hooks';
+import { useAppDispatch, useGstins, useWindowDimensions } from 'app/hooks';
 import PageWrapper from 'components/PageWrapper';
 import {
-  fetchCompanies,
-  updateCompanyRequest,
+  fetchGstins,
+  updateGstinRequest,
   isLoadingSelector,
-} from 'state/companies/companiesSlice';
-import { agGridCompaniesDTO } from 'app/utils/Helpers';
-import { CompaniesType } from 'services/companiesAPIService';
+} from 'state/gstins/gstinsSlice';
+import { agGridGstinsDTO } from 'app/utils/Helpers';
+import { GstinsType } from 'services/gstinsAPIService';
 import { useSelector } from 'react-redux';
 import { availableTenants } from 'state/tenants/tenantsSlice';
 import { ICellRendererParams } from 'ag-grid-community';
 import classNames from 'classnames';
 import { toast } from 'react-hot-toast';
 import { AggridPagination } from 'components/AggridPagination';
-import NewCompanyModal from './NewCompanyModal';
-import EditCompanyModal from './EditCompanyModal';
-import CompanyCredentialsModal from './CompanyCredentialsModal';
+import NewGstinModal from './NewGstinModal';
+import EditGstinModal from './EditGstinModal';
+import GstinCredentialsModal from './GstinCredentialsModal';
 
 type ActionsRendererProps = {
   params: ICellRendererParams;
@@ -76,10 +76,10 @@ function CustomActionsToolPanel(onRefreshCallback, isFetchLoading) {
         <button
           type="button"
           className="btn btn-sm btn-success d-flex gap-1 align-items-center justify-content-center flex-wrap"
-          onClick={() => showModal('newCompanyModal')}
+          onClick={() => showModal('newGstinModal')}
         >
           <i className="fa-solid fa-circle-plus" />
-          Add Company
+          Add Gstin
         </button>
         <button
           type="button"
@@ -117,7 +117,7 @@ function ParentRenderer(params) {
   }
 }
 
-export default function CompaniesPage() {
+export default function GstinsPage() {
   const dispatch = useAppDispatch();
   const gridRef = useRef<any>();
   const { height, width } = useWindowDimensions();
@@ -125,8 +125,8 @@ export default function CompaniesPage() {
   const [totalPages, setTotalPage] = useState<number>(0);
   const [currentPage, setCurrentPage] = useState<number>(0);
   const anyCustomer = useSelector(availableTenants);
-  const rows: any = useCompanies();
-  const [companyData, setCompanyData] = useState<CompaniesType | null>(null);
+  const rows: any = useGstins();
+  const [gstinData, setgstinData] = useState<GstinsType | null>(null);
   const isFetchLoading = useSelector(isLoadingSelector);
   const containerStyle = useMemo(
     () => ({ width: '100%', height: '100vh' }),
@@ -135,22 +135,22 @@ export default function CompaniesPage() {
   const gridStyle = useMemo(() => ({ height: '500px', width: '100%' }), []);
 
   const onEditClickCallback = (e, params) => {
-    setCompanyData(params.data);
-    showModal('editCompanyModal', () => {
-      setCompanyData(null);
+    setgstinData(params.data);
+    showModal('editgstinModal', () => {
+      setgstinData(null);
     });
   };
 
   const onCredentialsClickCallback = (e, params) => {
-    setCompanyData(params.data);
-    showModal('editCredentialsCompanyModal', () => {
-      setCompanyData(null);
+    setgstinData(params.data);
+    showModal('editCredentialsGstinModal', () => {
+      setgstinData(null);
     });
   };
 
   const [columnDefs, setColumnDefs] = useState([
     {
-      headerName: 'Companies Details',
+      headerName: 'Gstins Details',
       children: [
         {
           headerName: 'ID',
@@ -167,7 +167,7 @@ export default function CompaniesPage() {
             const isValidGSTIN = /^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$/.test(gstin);
             if (isValidGSTIN) {
               const payload = { data: { gstin }, id };
-              dispatch(updateCompanyRequest({ ...payload }));
+              dispatch(updateGstinRequest({ ...payload }));
             } else {
               toast.error('Invalid GSTIN Format');
             }
@@ -180,7 +180,7 @@ export default function CompaniesPage() {
           onCellValueChanged: (event) => {
             const { name, id } = event.data;
             const payload = { data: { name }, id };
-            dispatch(updateCompanyRequest({ ...payload }));
+            dispatch(updateGstinRequest({ ...payload }));
           },
         },
         {
@@ -222,7 +222,7 @@ export default function CompaniesPage() {
   );
 
   const onRefreshCallback = useCallback(() => {
-    dispatch(fetchCompanies());
+    dispatch(fetchGstins());
   }, []);
 
   const sideBar = useMemo(
@@ -268,15 +268,15 @@ export default function CompaniesPage() {
     [],
   );
 
-  const onNewCompanyHiddenCache = useCallback(
-    () => onModalHidden('newCompanyModal', () => dispatch(fetchCompanies())),
+  const onNewgstinHiddenCache = useCallback(
+    () => onModalHidden('newGstinModal', () => dispatch(fetchGstins())),
     [],
   );
 
   useEffect(() => {
-    onNewCompanyHiddenCache();
+    onNewgstinHiddenCache();
     if (rows.length) {
-      setRowData(agGridCompaniesDTO(rows));
+      setRowData(agGridGstinsDTO(rows));
     }
     if (gridRef.current?.api) {
       gridRef.current?.api.sizeColumnsToFit();
@@ -285,11 +285,11 @@ export default function CompaniesPage() {
 
   if (!anyCustomer) {
     return (
-      <PageWrapper pageTitle="Companies" icon="fa-solid fa-building">
+      <PageWrapper pageTitle="Gstins" icon="fa-solid fa-building">
         <div className="col">
           <div className="alert alert-info" role="alert">
             You have no Workspaces set, please set first at less one Workspace
-            in order to use Companies .
+            in order to use Gstins .
           </div>
         </div>
       </PageWrapper>
@@ -305,11 +305,11 @@ export default function CompaniesPage() {
   };
 
   return (
-    <PageWrapper pageTitle="Companies" icon="fa-solid fa-building">
+    <PageWrapper pageTitle="Gstins" icon="fa-solid fa-building">
       <div style={containerStyle}>
-        <NewCompanyModal />
-        <EditCompanyModal companyData={companyData} />
-        <CompanyCredentialsModal companyData={companyData} />
+        <NewGstinModal />
+        <EditGstinModal gstinData={gstinData} />
+        <GstinCredentialsModal gstinData={gstinData} />
         <div style={gridStyle} className="ag-theme-alpine">
           <AgGridReact
             ref={gridRef}

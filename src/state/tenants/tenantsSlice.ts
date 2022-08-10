@@ -61,7 +61,7 @@ export const TenantsSlice = createSlice({
       ProgressBar.done();
     });
 
-    // Adding new Company ...
+    // Adding new Gstin ...
     builder.addCase(newTenantRequest.pending, (state: Draft<TenantsState>, action) => {
       state.isPostLoading = true;
       ProgressBar.start();

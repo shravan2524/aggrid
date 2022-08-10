@@ -6,7 +6,6 @@ import {
 } from 'services/roles';
 import ProgressBar from 'app/utils/ProgressBar';
 import { toast } from 'react-hot-toast';
-import { CustomerTopMenuSelectItemType } from 'parts/menu/CustomerTopMenuSelect';
 
 const moduleName = 'roles';
 const moduleTitle = 'Role';
@@ -121,12 +120,3 @@ export const isPutLoadingSelector = createSelector(
   Selector,
   (state: State): boolean | undefined => state.isPutLoading,
 );
-
-export const errorSelector = createSelector(
-  Selector,
-  (state: State): string | null | undefined => state.error,
-);
-
-// Reducer actions ...
-const { setSelectedItem, clearSelectedItem } = slice.actions;
-export { setSelectedItem, clearSelectedItem };

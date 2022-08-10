@@ -8,9 +8,9 @@ import './CustomerTopMenu.scss';
 import { getAuthFullNameFromLocal } from 'services/authService';
 import { useAppDispatch } from 'app/hooks';
 import {
-  selectSelectedCompany,
-  setSelectedCompany,
-} from 'state/companies/companiesSlice';
+  selectSelectedGstin,
+  setSelectedGstin,
+} from 'state/gstins/gstinsSlice';
 
 import { getSelectedTenant } from 'state/tenants/tenantsSlice';
 import { LOGOUT_LINK } from 'app/config';
@@ -46,16 +46,16 @@ function SecondaryCustomerTopMenu() {
 }
 
 interface CustomerTopMenuProps {
-  companies: any[]
+  gstins: any[]
 }
 
-export default function CustomerTopMenu({ companies }:CustomerTopMenuProps) {
+export default function CustomerTopMenu({ gstins }:CustomerTopMenuProps) {
   const dispatch = useAppDispatch();
   const selectedWorkspace = useSelector(getSelectedTenant);
 
   const userFullName = useMemo(() => getAuthFullNameFromLocal(), []);
 
-  const selectedCompany = useSelector(selectSelectedCompany);
+  const selectedgstin = useSelector(selectSelectedGstin);
 
   const profileItems = useMemo(() => [
     {
@@ -87,11 +87,11 @@ export default function CustomerTopMenu({ companies }:CustomerTopMenuProps) {
     },
   ], [selectedWorkspace]);
 
-  const setSelectedCompanyOption = (e) => {
-    const companyId = e.value;
-    if (companies) {
-      const selectedComp = companies.find((i) => i.id === companyId);
-      dispatch(setSelectedCompany(selectedComp ? selectedComp.id : null));
+  const setSelectedgstinOption = (e) => {
+    const gstinId = e.value;
+    if (gstins) {
+      const selectedComp = gstins.find((i) => i.id === gstinId);
+      dispatch(setSelectedGstin(selectedComp ? selectedComp.id : null));
     }
   };
 
@@ -155,14 +155,14 @@ export default function CustomerTopMenu({ companies }:CustomerTopMenuProps) {
                 </NavLink>
               </li>
 
-              {/* Companies */}
+              {/* Gstins */}
               <CustomerTopMenuSelect
-                options={companies.map((i) => ({ value: i.id, label: i.name }))}
+                options={gstins.map((i) => ({ value: i.id, label: i.name }))}
                 mark="fa-solid fa-building"
-                placeholder="Companies"
-                noOptionsMessage={() => 'No Companies available'}
-                onChange={setSelectedCompanyOption}
-                value={selectedCompany}
+                placeholder="Gstins"
+                noOptionsMessage={() => 'No Gstins available'}
+                onChange={setSelectedgstinOption}
+                value={selectedgstin}
               />
 
               {/* Profile */}
