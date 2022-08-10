@@ -1,5 +1,5 @@
 .page-wrapper-with-submenu{
-  margin-top: 8.5rem; padding-bottom: 40px;
+  margin-top: 9rem; padding-bottom: 40px;
 }
 .pageHeading i.fa-solid{ font-size: 1.2rem;
   background: #466181;
@@ -10,3 +10,7 @@
   height: 35px;
   text-align: center;
   margin-right: 5px;}
+
+@media (max-width: 550px) {
+.page-wrapper-with-submenu{ margin-top: 6.5rem;}
+}
