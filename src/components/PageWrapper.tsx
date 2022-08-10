@@ -19,7 +19,13 @@ function PageWrapper({ children, pageTitle, icon }:PageWrapperProps) {
     <div className={classNames(['container-fluid', { 'page-wrapper-with-submenu': secondaryMenuItemVisible }])}>
       <PageTitle title={pageTitle} icon={icon} />
       <div className="row">
-        {children}
+        <div className="col-md-12">
+          <div className="card">
+            <div className="card-body">
+              {children}
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );
