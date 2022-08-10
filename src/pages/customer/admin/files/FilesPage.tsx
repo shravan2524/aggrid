@@ -268,7 +268,7 @@ export default function FilesPage() {
   const [len, setlen] = useState(0);
 
   const containerStyle = useMemo(
-    () => ({ width: '100%', height: '800px' }),
+    () => ({ width: '100%', height: '61vh' }),
     [],
   );
   const gridStyle = useMemo(() => ({ height: '100%', width: '100%' }), []);
