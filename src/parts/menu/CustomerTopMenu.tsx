@@ -104,36 +104,36 @@ export default function CustomerTopMenu({ companies }:CustomerTopMenuProps) {
           </NavLink>
           <ul className="navbar-nav mr-auto topRight">
 
-              <li className="d-flex justify-content-between align-items-center mx-2 my-2">
-                <NavLink to="/customer/notifications" className="btn btn-primary p-1 m-0 bg-color-purple-dark border-4 border-white position-relative rounded-pill menuIcon">
-                  <i className="fa-solid fa-bell m-1" />
-                  <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                    0
-                    <span className="visually-hidden">unread messages</span>
-                  </span>
-                </NavLink>
-              </li>
+            <li className="d-flex justify-content-between align-items-center mx-2 my-2">
+              <NavLink to="/customer/notifications" className="btn btn-primary p-1 m-0 bg-color-purple-dark border-4 border-white position-relative rounded-pill menuIcon">
+                <i className="fa-solid fa-bell m-1" />
+                <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                  0
+                  <span className="visually-hidden">unread messages</span>
+                </span>
+              </NavLink>
+            </li>
 
-              {/* Companies
-              <CustomerTopMenuSelect
-                options={companies.map((i) => ({ value: i.id, label: i.name }))}
-                mark="fa-solid fa-building"
-                placeholder="Companies"
-                noOptionsMessage={() => 'No Companies available'}
-                onChange={setSelectedCompanyOption}
-                value={selectedCompany}
-              />
-              */}
+            {/* Companies
+            <CustomerTopMenuSelect
+              options={companies.map((i) => ({ value: i.id, label: i.name }))}
+              mark="fa-solid fa-building"
+              placeholder="Companies"
+              noOptionsMessage={() => 'No Companies available'}
+              onChange={setSelectedCompanyOption}
+              value={selectedCompany}
+            />
+            */}
 
-              {/* Profile */}
-              <CustomerTopMenuDropDown
-                id="dropdown05"
-                mark="fa-solid fa-user"
-                title={userFullName ?? ''}
-                items={profileItems}
-              />
+            {/* Profile */}
+            <CustomerTopMenuDropDown
+              id="dropdown05"
+              mark="fa-solid fa-user"
+              title={userFullName ?? ''}
+              items={profileItems}
+            />
 
-            </ul>
+          </ul>
           <div className="topMenu">
             <button
               className="navbar-toggler closeIcon"
