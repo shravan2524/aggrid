@@ -293,11 +293,12 @@ body{ background:#f5f8fa;}
 
 .ag-paging-panel .ag-paging-page-summary-panel{ margin-right: 30px; background: #f5f8fa; padding: 10px; border-radius: 5px; /*box-shadow: 0 0 8px #d8e2e6; margin: 0 30px 0 0;*/}
 
-
+.topHeader .dropdown-toggle{ background: none; box-shadow: none !important;}
+.topHeader .dropdown-toggle:hover:after{ color: #333;}
 #navbarNavDropdown{ font-size: 0.8rem;}
 .navbar{ padding: 0;}
 .navbar-brand{ margin-right: 2rem;}
-.navbar-nav .nav-item{ margin-right: 5px;}
+.navbar-nav .nav-item{ margin-right: 2px;}
 .navbar-nav .nav-link{ font-size: 0.9rem; font-weight: 400;}
 .nav-underline .nav-link .fa-solid{ font-size: 12px; margin-right: 1px;}
 .footer p{ font-size: 14px;}
@@ -341,12 +342,12 @@ main{ padding-bottom: 50px;}
   border: none; box-shadow:none !important;
 }
 .closeIcon span{
-  background-color:#fff;
+  background-color:#3c3c3c;
   position: absolute;
   border-radius: 2px;
   transition: .3s cubic-bezier(.8, .5, .2, 1.4);
   width:100%;
-  height: 3px;
+  height: 2px;
   transition-duration: 500ms
 }
 .closeIcon span:nth-child(1){
@@ -374,6 +375,7 @@ main{ padding-bottom: 50px;}
   top: 13px;
 } 
 .navbar-dark .navbar-nav .nav-link#dropdown05:hover{ color:#fff;}
+.navbar-nav .nav-item .dropdown-menu{ left: auto; right: 0; position: absolute;}
 
 @media (max-width: 550px) {
 .ag-theme-alpine .ag-root-wrapper{ background:none; padding:0; border:none !important; box-shadow:none;}
@@ -386,5 +388,12 @@ main{ padding-bottom: 50px;}
 .ag-theme-alpine .ag-paging-panel{ background:none;}
 .nav-underline .nav-link{ margin: 0 1px 0 0 !important; padding: .4rem .55rem !important;}
 .nav-scroller .container-fluid{ padding-left: 0.45rem; padding-right: 0.45rem;}
-.navbar-brand{ padding-top:0 !important; padding-bottom:0 !important;}
+
+.topHeader .dropdown-toggle:after{ content: inherit;}
+.navbar-brand {
+  margin-right: 2rem;
+  padding: 12px 0;
+}
+.topRight{ right: 50px; position: absolute; top: 0px; display: flex; flex-direction: inherit;}
+.closeIcon{ position: absolute; right: 10px; top: 10px;}
 }
