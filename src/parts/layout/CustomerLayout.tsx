@@ -58,13 +58,7 @@ export default function CustomerLayout() {
         <CustomerTopMenu companies={companies} />
       </header>
       <main className={menuResponsiveClass}>
-        <div className="container-fluid page-wrapper-with-submenu">
-          <div className="card">
-            <div className="card-body">
-              <Outlet />
-            </div>
-          </div>
-        </div>
+        <Outlet />
       </main>
       <div className="b-example-divider" />
       <div className="container-fluid m-0 p-0">
