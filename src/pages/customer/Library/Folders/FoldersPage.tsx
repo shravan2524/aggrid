@@ -255,8 +255,8 @@ function FoldersPage() {
   return (
     <PageWrapper pageTitle={moduleTitle} icon="fas fa-folder-plus">
       <div style={containerStyle}>
+        <SaveFolderModal itemData={itemData} />
         <div style={gridStyle} className="ag-theme-alpine">
-          <SaveFolderModal itemData={itemData} />
           <AgGridReact
             ref={gridRef}
             rowData={rowData}

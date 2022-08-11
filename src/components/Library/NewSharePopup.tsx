@@ -66,7 +66,7 @@ const onSubmit = ({ title }: Filter) => {
     const datas = {
       settings: filterSetting.settings,
       title,
-      modelName: `${filterSetting.modelName}FileContent`,
+      modelName: filterSetting.modelName === '2A' ? 'GSTR2AFileContent' : filterSetting.modelName === '2B' ? 'GSTR2BFileContent' : `${filterSetting.modelName}FileContent`,
       modelId: filterSetting.modelId,
     };
 

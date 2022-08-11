@@ -39,18 +39,18 @@ export default function SharedDetailCellRenderer({
       flex: 1,
       minWidth: 250,
       sortable: true,
-      filter: true,
       floatingFilter: true,
       enableRowGroup: true,
       enableValue: true,
+      filter: 'agTextColumnFilter',
     }),
     [],
   );
 
   // rows
   const onGridReady = useCallback((params: GridReadyEvent) => {
-    fetchContentSharedFilterData(data?.filterId).then((datas) => {
-      setRowData(datas);
+    fetchContentSharedFilterData(data?.filterId).then((datas:any) => {
+      setRowData(datas.rows);
     });
   }, [data]);
 

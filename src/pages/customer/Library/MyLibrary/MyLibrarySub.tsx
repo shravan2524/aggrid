@@ -51,8 +51,8 @@ export default function MyLibraryDetailCellRenderer({
 
   // rows
   const onGridReady = useCallback((params: GridReadyEvent) => {
-    getFilterContent(data?.id).then((datas) => {
-      setRowData(datas);
+    getFilterContent(data?.id).then((datas:any) => {
+      setRowData(datas.rows);
     });
   }, [data]);
 
