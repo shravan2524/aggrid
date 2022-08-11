@@ -211,7 +211,7 @@ function Page() {
   const containerStyle = useMemo(
     () => ({
       width: '100%',
-      height: `61vh`,
+      height: '61vh',
     }),
     [height, width],
   );
