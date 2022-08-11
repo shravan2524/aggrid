@@ -88,7 +88,6 @@ export default function SharedDetailCellRenderer({
           rowGroupPanelShow="always"
           paginationPageSize={10}
           statusBar={statusBar}
-          pagination
         />
       </div>
     </div>
