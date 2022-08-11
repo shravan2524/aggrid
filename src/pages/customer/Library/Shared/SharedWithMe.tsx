@@ -30,7 +30,7 @@ function agGridDTO(rows: Array<Filters>): Array<AGGridType> {
     modelName: item?.filter?.modelName,
     updatedAt: item.updatedAt,
     createdAt: item.createdAt,
-    owner: item.filter?.contact.fullName,
+    owner: item.sharedBy?.fullName,
     filterId: item.filterId,
   }));
 }

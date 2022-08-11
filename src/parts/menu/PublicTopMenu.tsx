@@ -50,7 +50,6 @@ export function PublicTopMenu() {
                 Home
               </NavLink>
             </li>
-
           </ul>
 
           <ShowOnAuth>
