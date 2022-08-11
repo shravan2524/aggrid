@@ -56,8 +56,8 @@ export default function MyFilterFolderDetailCellRenderer({
   // rows
   const onGridReady = useCallback(
     (params: GridReadyEvent) => {
-      getFilterContent(data?.filterId).then((datas) => {
-        setRowData(datas);
+      getFilterContent(data?.filterId).then((datas:any) => {
+        setRowData(datas.rows);
       });
     },
     [data],

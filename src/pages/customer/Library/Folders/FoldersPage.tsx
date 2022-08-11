@@ -91,10 +91,10 @@ function FoldersPage() {
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const containerStyle = useMemo(
-    () => ({ width: '100%', height: '61vh' }),
+    () => ({ width: '100%', height: '100vh' }),
     [],
   );
-  const gridStyle = useMemo(() => ({ height: '800px', width: '100%' }), []);
+  const gridStyle = useMemo(() => ({ height: '600px', width: '100%' }), []);
 
   const onfetchData = () => {
     setIsLoading(true);
@@ -255,8 +255,8 @@ function FoldersPage() {
   return (
     <PageWrapper pageTitle={moduleTitle} icon="fas fa-folder-plus">
       <div style={containerStyle}>
+        <SaveFolderModal itemData={itemData} />
         <div style={gridStyle} className="ag-theme-alpine">
-          <SaveFolderModal itemData={itemData} />
           <AgGridReact
             ref={gridRef}
             rowData={rowData}

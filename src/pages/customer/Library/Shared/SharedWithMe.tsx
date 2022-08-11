@@ -42,7 +42,7 @@ function SharedWithMe() {
   const { height, width } = useWindowDimensions();
 
   const containerStyle = useMemo(
-    () => ({ width: '100%', height: '61vh' }),
+    () => ({ width: '100%', height: '90vh' }),
     [],
   );
   const gridStyle = useMemo(() => ({ height: '600px', width: '100%' }), []);

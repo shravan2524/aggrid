@@ -31,7 +31,10 @@ $dropdown-link-active-bg: $color-dark-purple;
 :root { --bs-font-sans-serif: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";}
 
 // Then add additional custom code here
-
+.btn:focus {
+  outline: none !important;
+  box-shadow: none !important;
+}
 
 body {
   margin-top: 5rem;

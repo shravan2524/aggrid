@@ -211,7 +211,7 @@ function Page() {
   const containerStyle = useMemo(
     () => ({
       width: '100%',
-      height: `61vh`,
+      height: '61vh',
     }),
     [height, width],
   );
@@ -257,6 +257,9 @@ function Page() {
   );
 
   const [columnDefs, setColumnDefs] = useState([
+    {
+      headerName: `${moduleTitle} Details`,
+      children: [
         {
           headerName: 'Name',
           field: 'fullName',
@@ -296,6 +299,8 @@ function Page() {
             return null;
           },
         },
+      ],
+    },
   ]);
 
   const icons = useMemo<{ [key: string]: Function | string }>(
