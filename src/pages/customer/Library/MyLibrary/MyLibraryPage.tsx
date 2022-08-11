@@ -81,7 +81,7 @@ function MyLibraryPage() {
   const [itemData, setItemData] = useState<Filters | null>(null);
 
   const containerStyle = useMemo(
-    () => ({ width: '100%', height: '100%' }),
+    () => ({ width: '100%', height: '77vh' }),
     [],
   );
   const gridStyle = useMemo(() => ({ height: '100%', width: '100%' }), []);
