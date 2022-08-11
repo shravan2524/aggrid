@@ -4,7 +4,6 @@ import { handleRequestError, TenantApiRequest } from '../app/utils/ApiRequests';
 interface Filter {
   title: string;
   modelName?: string;
-  contact:Contact
 }
 
 interface Contact {
@@ -26,6 +25,7 @@ export interface Filters {
   updatedBy?: string;
   filter?: Filter;
   filterId?:number;
+  sharedBy:Contact
 }
 
 export async function fetchFilterData(): Promise<Filters[]> {

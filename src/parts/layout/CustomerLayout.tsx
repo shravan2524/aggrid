@@ -29,7 +29,7 @@ export default function CustomerLayout() {
     dispatch(fetchTenants());
 
     // Fetch Roles ...
-    dispatch(readAll());
+    // dispatch(readAll());
   }, [dispatch]);
 
   useEffect(() => {
