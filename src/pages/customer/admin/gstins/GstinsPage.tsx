@@ -129,10 +129,10 @@ export default function GstinsPage() {
   const [gstinData, setgstinData] = useState<GstinsType | null>(null);
   const isFetchLoading = useSelector(isLoadingSelector);
   const containerStyle = useMemo(
-    () => ({ width: '100%', height: '61vh' }),
+    () => ({ width: '100%', height: '77vh' }),
     [],
   );
-  const gridStyle = useMemo(() => ({ height: '500px', width: '100%' }), []);
+  const gridStyle = useMemo(() => ({ height: '100%', width: '100%' }), []);
 
   const onEditClickCallback = (e, params) => {
     setgstinData(params.data);

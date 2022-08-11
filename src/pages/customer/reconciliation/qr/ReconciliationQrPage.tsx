@@ -30,7 +30,7 @@ export default function ReconciliationQrPage() {
   const gridRef = useRef<any>();
   const { height } = useWindowDimensions();
   const containerStyle = useMemo(
-    () => ({ width: '100%', height: `${height}px`, minHeight: '600px' }),
+    () => ({ width: '100%', height: '77vh' }),
     [height],
   );
   const [rowData, setRowData] = useState<any>();

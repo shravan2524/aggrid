@@ -60,14 +60,14 @@ export default function PansPage() {
     const [panToEdit, setPanToEdit] = useState<PanType | null>(null);
     const [showNewPanModal, setShowNewPanModal] = useState<boolean>(false);
 
-    const gridStyle = useMemo(() => ({ height: '500px', width: '100%' }), []);
+    const gridStyle = useMemo(() => ({ height: '100%', width: '100%' }), []);
     const [totalPages, setTotalPage] = useState<number>(0);
     const isFetchLoading = useSelector(isLoadingSelector);
 
     const [currentPage, setCurrentPage] = useState<number>(0);
     const [rowData, setRowData] = useState<PanAGGridType[]>([]);
 
-    const containerStyle = useMemo(() => ({ width: '100%', height: '100vh' }), []);
+    const containerStyle = useMemo(() => ({ width: '100%', height: '77vh' }), []);
 
     const onEditClickCallback = useCallback((e, params) => {
         setPanToEdit(params.data);

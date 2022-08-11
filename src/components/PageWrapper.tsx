@@ -20,7 +20,7 @@ function PageWrapper({ children, pageTitle, icon }:PageWrapperProps) {
       <PageTitle title={pageTitle} icon={icon} />
       <div className="row">
         <div className="col-md-12">
-          <div className="card1">
+          <div className="card">
             {children}
           </div>
         </div>
