@@ -172,7 +172,7 @@ function SharedWithMe() {
             pagination
             masterDetail
             detailCellRenderer={detailCellRenderer}
-            detailRowHeight={600}
+            detailRowHeight={300}
             paginationPageSize={10}
           />
         </div>
