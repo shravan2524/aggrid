@@ -241,7 +241,7 @@ export default function columnGrouping() {
   const [totalPages, setTotalPage] = useState<number>(0);
   const [currentPage, setCurrentPage] = useState<number>(0);
   const containerStyle = useMemo(
-    () => ({ width: '100%', height: '61vh' }),
+    () => ({ width: '100%', height: '77vh' }),
     [],
   );
   const gridStyle = useMemo(() => ({ height: '100%', width: '100%' }), []);
