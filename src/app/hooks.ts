@@ -4,10 +4,10 @@ import { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { isAuthenticated } from '../services/authService';
 import {
-  fetchCompanies,
-  getCompanies,
-} from '../state/companies/companiesSlice';
-import { CompaniesType } from '../services/companiesAPIService';
+  fetchGstins,
+  getGstins,
+} from '../state/gstins/gstinsSlice';
+import { GstinsType } from '../services/gstinsAPIService';
 import { getSelectedTenant } from '../state/tenants/tenantsSlice';
 
 // Use throughout your app instead of plain `useDispatch` and `useSelector`
@@ -74,23 +74,23 @@ export const useCustomerTopMenuHeightDimension = () => {
   return menuHeight;
 };
 
-export const useCompanies = () => {
+export const useGstins = () => {
   const dispatch = useAppDispatch();
 
-  const [customerCompanies, setCustomerCompanies] = useState<CompaniesType[]>([]);
+  const [customerGstins, setCustomerGstins] = useState<GstinsType[]>([]);
   const selectedCustomer = useSelector(getSelectedTenant);
-  const getAllCompanies = useSelector(getCompanies);
+  const getAllGstins = useSelector(getGstins);
 
   useEffect(() => {
-    dispatch(fetchCompanies());
+    dispatch(fetchGstins());
   }, []);
 
   useEffect(() => {
     if (selectedCustomer) {
-      const selectedCustomerCompanies = getAllCompanies.filter((i) => i.tenantId === Number(selectedCustomer.id));
-      setCustomerCompanies(selectedCustomerCompanies);
+      const selectedCustomerGstins = getAllGstins.filter((i) => i.tenantId === Number(selectedCustomer.id));
+      setCustomerGstins(selectedCustomerGstins);
     }
-  }, [getAllCompanies]);
+  }, [getAllGstins]);
 
-  return customerCompanies;
+  return customerGstins;
 };

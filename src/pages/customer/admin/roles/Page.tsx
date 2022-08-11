@@ -103,7 +103,7 @@ function Page() {
   const [totalPages, setTotalPage] = useState<number>(0);
   const [currentPage, setCurrentPage] = useState<number>(0);
   const containerStyle = useMemo(
-    () => ({ width: '100%', height: '100vh' }),
+    () => ({ width: '100%', height: '61vh' }),
     [],
   );
   const gridStyle = useMemo(() => ({ height: '600px', width: '100%' }), []);

@@ -91,7 +91,7 @@ function FoldersPage() {
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const containerStyle = useMemo(
-    () => ({ width: '100%', height: '100vh' }),
+    () => ({ width: '100%', height: '61vh' }),
     [],
   );
   const gridStyle = useMemo(() => ({ height: '800px', width: '100%' }), []);

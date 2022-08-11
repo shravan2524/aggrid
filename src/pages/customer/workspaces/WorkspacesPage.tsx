@@ -22,9 +22,9 @@ import { TenantAGGridType, TenantType } from 'services/tenantsAPIService';
 import { useSelector } from 'react-redux';
 import { ICellRendererParams } from 'ag-grid-community';
 import {
-  setSelectedCompany,
+  setSelectedGstin,
   isLoadingSelector,
-} from 'state/companies/companiesSlice';
+} from 'state/gstins/gstinsSlice';
 import classNames from 'classnames';
 import { AggridPagination } from 'components/AggridPagination';
 import NewTenantModal from './NewTenantModal';
@@ -136,7 +136,7 @@ export default function WorkspacesPage() {
     // console.log(selectedWorkspace);
     if (params.data) {
       if (params.data.id) {
-        dispatch(setSelectedCompany(null));
+        dispatch(setSelectedGstin(null));
         dispatch(setSelectedTenant(params.data.id));
       }
     }

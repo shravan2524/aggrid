@@ -50,7 +50,7 @@ export const columns2A = [
   },
   {
     columnName: 'buyerGSTIN',
-    columnTitle: 'Buyer/Company GSTIN',
+    columnTitle: 'Buyer/Gstin GSTIN',
     columnType: 'gstin',
   },
   {
@@ -137,7 +137,7 @@ export const columns2B = [
   },
   {
     columnName: 'buyerGSTIN',
-    columnTitle: 'Buyer/Company GSTIN',
+    columnTitle: 'Buyer/Gstin GSTIN',
     columnType: 'gstin',
   },
   {
@@ -236,7 +236,7 @@ export const columnsPR = [
   },
   {
     columnName: 'buyerGSTIN',
-    columnTitle: 'Buyer/Company GSTIN',
+    columnTitle: 'Buyer/Gstin GSTIN',
     columnType: 'gstin',
   },
   {

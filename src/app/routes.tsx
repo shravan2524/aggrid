@@ -14,13 +14,14 @@ const ReconciliationOCRIndexPage = React.lazy(() => import('pages/customer/recon
 const ReconciliationQrIndexPage = React.lazy(() => import('pages/customer/reconciliation/qr/ReconciliationQrPage'));
 const ReconciliationPrIndexPage = React.lazy(() => import('pages/customer/reconciliation/pr/ReconciliationPrPage'));
 const ColumnGrouping = React.lazy(() => import('pages/customer/admin/columngrouping/columnGrouping'));
-const ReconciliationEwbPage = React.lazy(() => import('pages/customer/reconciliation/Ewb/ReconciliationEwbPage'));
+// const ReconciliationEwbPage = React.lazy(() => import('pages/customer/reconciliation/Ewb/ReconciliationEwbPage'));
 const ReconciliationGstr2aPage = React.lazy(() => import('pages/customer/reconciliation/Gstr2a/ReconciliationGstr2aPage'));
 const ReconciliationGstr2BPage = React.lazy(() => import('pages/customer/reconciliation/Gstr2B/ReconciliationGstr2BPage'));
 const AdminIndexPage = React.lazy(() => import('pages/customer/admin/AdminPage'));
 const NotificationsIndexPage = React.lazy(() => import('pages/customer/notifications/NotificationsPage'));
 const ProfileIndexPage = React.lazy(() => import('pages/customer/profile/ProfilePage'));
-const CompaniesIndexPage = React.lazy(() => import('pages/customer/admin/companies/CompaniesPage'));
+const GstinsIndexPage = React.lazy(() => import('pages/customer/admin/gstins/GstinsPage'));
+const PansIndexPage = React.lazy(() => import('pages/customer/admin/pans/PansPage'));
 const FilesIndexPage = React.lazy(() => import('pages/customer/admin/files/FilesPage'));
 const WorkspacesIndexPage = React.lazy(() => import('pages/customer/workspaces/WorkspacesPage'));
 const SignInIndexPage = React.lazy(() => import('pages/public/auth/SignInPage'));
@@ -150,8 +151,13 @@ const routes: any = [
             path: 'admin',
             element: <WithSubMenu subMenuItems={[
               {
-                path: '/customer/admin/companies',
-                text: 'Companies',
+                path: '/customer/admin/gstins',
+                text: 'Gstins',
+                icon: 'fa-solid fa-building',
+              },
+              {
+                path: '/customer/admin/pans',
+                text: 'Pans',
                 icon: 'fa-solid fa-building',
               },
               {
@@ -182,8 +188,12 @@ const routes: any = [
                 element: <Suspense fallback={<Loader />}><AdminIndexPage /></Suspense>,
               },
               {
-                path: 'companies',
-                element: <Suspense fallback={<Loader />}><CompaniesIndexPage /></Suspense>,
+                path: 'gstins',
+                element: <Suspense fallback={<Loader />}><GstinsIndexPage /></Suspense>,
+              },
+              {
+                path: 'pans',
+                element: <Suspense fallback={<Loader />}><PansIndexPage /></Suspense>,
               },
               {
                 path: 'files',

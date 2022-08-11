@@ -9,7 +9,7 @@ export const AgColums = [
   },
   {
     field: 'buyerGSTIN',
-    headerName: 'Buyer/Company GSTIN',
+    headerName: 'Buyer/Gstin GSTIN',
   },
   {
     field: 'invoiceDate',

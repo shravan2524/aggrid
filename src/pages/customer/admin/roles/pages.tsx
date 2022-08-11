@@ -3,7 +3,8 @@ export const pages = [
   { title: 'Users', uuid: 'users' }, // this is for users APIs
   { title: 'Roles', uuid: 'roles' }, // this is for roles APIs
   { title: 'Column Header Groups', uuid: 'columnGroups' }, // this is for columnGroups APIs
-  { title: 'Companies', uuid: 'companies' }, // this is for companies and companyCredentials APIs
+  { title: 'Gstins', uuid: 'gstins' }, // this is for gstins and gstinCredentials APIs
+  { title: 'Pans', uuid: 'pans' }, // this is for pans and gstinCredentials APIs
   { title: 'Reconciliation', uuid: 'reconciliation' }, // this is for reconciliation APIs
   { title: 'E-way Bill', uuid: 'ewb' }, // this is for ewb APIs
   { title: 'GSTR2A', uuid: 'gstr2a' }, // this is for gstr2a APIs

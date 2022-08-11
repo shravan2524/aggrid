@@ -30,7 +30,7 @@ export default function SharedDetailCellRenderer({
   api,
 }: ICellRendererParams) {
   const gridRef = useRef<any>();
-  const gridStyle = useMemo(() => ({ height: '600px', width: '90%' }), []);
+  const gridStyle = useMemo(() => ({ height: '61vh', width: '90%' }), []);
   // default Columns settings
   const [rowData, setRowData] = useState<any>();
   const [columnDefs, setColumnDefs] = useState(AgColums);

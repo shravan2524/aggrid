@@ -235,7 +235,7 @@ const OnExpand = (i: any) => {
 export default function DemoPage() {
     const gridRef = useRef<any>();
     const containerStyle = useMemo(
-        () => ({ width: '100%', height: '100vh' }),
+        () => ({ width: '100%', height: '82vh' }),
         [],
     );
     const gridStyle = useMemo(() => ({ height: '100%', width: '100%' }), []);

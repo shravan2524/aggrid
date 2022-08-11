@@ -9,11 +9,11 @@ import CustomButton from 'components/CustomButton';
 import { getSelectedTenant } from 'state/tenants/tenantsSlice';
 import './ColumnMapping.scss';
 import {
-  fetchCompanies,
-  getCompanies,
+  fetchGstins,
+  getGstins,
   isPostLoadingSelector,
-  newCompanyRequest,
-} from 'state/companies/companiesSlice';
+  newGstinRequest,
+} from 'state/gstins/gstinsSlice';
 import { hideModal, initBootstrapModal } from 'app/utils/Modal';
 import { Column } from 'ag-grid-community';
 
@@ -21,7 +21,7 @@ interface NewProps {
   contentType: string;
 }
 
-interface NewCompanyFormProps {
+interface NewGstinFormProps {
   name: string;
   customer_id: number | undefined;
   parent: number | undefined;
@@ -117,8 +117,8 @@ export default function ColumnMapping() {
   const dispatch = useAppDispatch();
   const isLoading = useSelector(isPostLoadingSelector);
   const selectedCustomer = useSelector(getSelectedTenant);
-  const companySelector = useSelector(getCompanies);
-  const modalId = useMemo(() => 'newCompanyModal', []);
+  const gstinSelector = useSelector(getGstins);
+  const modalId = useMemo(() => 'newGstinModal', []);
   const schema = yup.object({
     name: yup.string().required(),
     customer_id: yup.string().required(),
@@ -130,17 +130,17 @@ export default function ColumnMapping() {
     handleSubmit,
     reset,
     formState: { errors },
-  } = useForm<NewCompanyFormProps>({
+  } = useForm<NewGstinFormProps>({
     resolver: yupResolver(schema),
   });
 
-  const onSubmit = ({ name, customer_id, parent }: NewCompanyFormProps) => {
+  const onSubmit = ({ name, customer_id, parent }: NewGstinFormProps) => {
     const body = {
       name,
       customer_id: Number(customer_id),
       parent: Number(parent),
     };
-    dispatch(newCompanyRequest(body));
+    dispatch(newGstinRequest(body));
   };
 
   useEffect(() => {
@@ -154,7 +154,7 @@ export default function ColumnMapping() {
   useEffect(() => {
     hideModal(modalId);
     reset({ name: '' });
-    dispatch(fetchCompanies());
+    dispatch(fetchGstins());
   }, [isLoading]);
   return (
     <div className="modal fade" id={modalId} aria-labelledby={`new${modalId}Label`} aria-hidden="true">
