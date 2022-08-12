@@ -14,7 +14,7 @@ function ClickableStatusBarComponent(props: any, onBtExport) {
     <div className="ag-status-name-value">
       <button
         onClick={onBtExport}
-        className="btn btn-outline-success btn-sm"
+        className="btn btn-success btn-sm"
         type="button"
       >
         <i className="fas fa-sign-out-alt" />
