@@ -69,7 +69,7 @@ function ActionsRenderer({
           Select
         </button>
       ) : (
-        <button type="button" className="btn btn-sm btn-light text-success">
+        <button type="button" className="btn btn-sm btn-success">
           <i className="fa-solid fa-circle-check" />
           {' '}
           Active
