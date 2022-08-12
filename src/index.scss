@@ -377,6 +377,7 @@ a.menuIcon{ border: 0px; width: 33px;}
 .navbar-nav .nav-item .dropdown-menu{ left: auto; right: 0; position: absolute;}
 .topRight .text-purple-dark{ text-transform:capitalize;} 
 .comingsoon{ margin:25vh 0;}
+.ag-theme-alpine .ag-row-selected{  background-color: var(--ag-row-hover-color,rgba(33,150,243,.1));}
 
 @media (max-width: 550px) {
 .ag-theme-alpine .ag-root-wrapper{ background:none; padding:0; border:none !important; box-shadow:none;}
