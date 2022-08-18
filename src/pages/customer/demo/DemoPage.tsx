@@ -8,8 +8,73 @@ import { AgGridReact } from 'ag-grid-react';
 import './styles.css';
 import { GetFilename } from 'app/utils/Helpers';
 import { Link } from 'react-router-dom';
-
+import 'ag-grid-enterprise';
+// import "ag-grid-community/styles/ag-grid.css";
+// import 'ag-grid-community/styles/ag-theme-alpine.css';
+import {
+  AreaSparklineOptions,
+  BarFormatterParams,
+  BarSparklineOptions,
+  ColDef,
+  ColGroupDef,
+  ColumnFormatterParams,
+  ColumnSparklineOptions,
+  Grid,
+  GridOptions,
+  LineSparklineOptions,
+  MarkerFormatterParams,
+} from 'ag-grid-community';
+import { gettData } from './data';
 const agGridData = require('./Q1_Travel_Booking_Matched_with_Invoice_and_2A_f1000.json');
+
+const palette = {
+	blue: 'rgb(20,94,140)',
+	lightBlue: 'rgb(182,219,242)',
+	green: 'rgb(63,141,119)',
+	lightGreen: 'rgba(75,168,142, 0.2)',
+  };
+  
+  function barFormatter(params: BarFormatterParams) {
+	const { yValue, highlighted } = params;
+	if (highlighted) {
+	  return;
+	}
+	return { fill: yValue <= 50 ? palette.lightBlue : palette.blue };
+  }
+  
+  function lineMarkerFormatter(params: MarkerFormatterParams) {
+	const { first, last, highlighted } = params;
+	const color = highlighted
+	  ? palette.blue
+	  : last
+	  ? palette.lightBlue
+	  : palette.green;
+	return {
+	  size: highlighted || first || last ? 5 : 0,
+	  fill: color,
+	  stroke: color,
+	};
+  }
+  
+  function columnFormatter(params: ColumnFormatterParams) {
+	const { yValue, highlighted } = params;
+	if (highlighted) {
+	  return;
+	}
+	return { fill: yValue < 0 ? palette.lightBlue : palette.blue };
+  }
+  
+  function areaMarkerFormatter(params: MarkerFormatterParams) {
+	const { min, highlighted } = params;
+	return {
+	  size: min || highlighted ? 5 : 0,
+	  fill: palette.green,
+	  stroke: palette.green,
+	};
+  }
+
+  
+
 
 function Modal(props: any) {
     return (
@@ -234,6 +299,14 @@ const OnExpand = (i: any) => {
 
 export default function DemoPage() {
     const gridRef = useRef<any>();
+	const [databar, setdatabar] = useState({});
+	let counterObj = {};
+
+
+	// console.log(gettData[0]["Type"]);
+	Object.keys(gettData).forEach((element, index, array) => {
+		console.log(index, array, element);
+	});
     const containerStyle = useMemo(
         () => ({ width: '100%', height: '600px' }),
         [],
@@ -645,6 +718,7 @@ export default function DemoPage() {
             ],
         },
     ]);
+
 
     const icons = useMemo(() => ({
         'custom-stats': '<i class="fa-solid fa-chart-column"></i>',
