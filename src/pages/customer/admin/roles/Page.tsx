@@ -50,8 +50,8 @@ type ActionsRendererProps = {
 
 function ActionsRenderer({ params, onEditClickCallback }: ActionsRendererProps) {
   return (
-    <div className="d-flex justify-content-around align-items-center w-100 h-100">
-      <button type="button" className="btn btn-sm btn-light" onClick={(e) => onEditClickCallback(e, params)}>
+    <div className="d-flex btn-group align-items-center w-100 h-100">
+      <button type="button" className="btn btn-sm btn-primary" onClick={(e) => onEditClickCallback(e, params)}>
         <i className="fa-solid fa-pen-to-square" />
         {' '}
         Edit
@@ -66,7 +66,7 @@ function CustomActionsToolPanel(onRefreshCallback, isFetchLoading) {
       <div className="row p-2 gap-2 m-1">
         <button
           type="button"
-          className="btn btn-sm btn-danger px-4 d-flex gap-2 align-items-center justify-content-center flex-wrap"
+          className="btn btn-sm btn-success px-4 d-flex gap-2 align-items-center justify-content-center flex-wrap"
           onClick={() => showModal(`save${moduleName}Modal`)}
         >
           <i className="fa-solid fa-circle-plus" />
@@ -77,7 +77,7 @@ function CustomActionsToolPanel(onRefreshCallback, isFetchLoading) {
 
         <button
           type="button"
-          className="btn btn-sm btn-info px-4 d-flex gap-2 align-items-center justify-content-center flex-wrap"
+          className="btn btn-sm btn-info px-4 d-flex gap-2 align-items-center justify-content-center flex-wrap refreshBtn"
           onClick={onRefreshCallback}
         >
           <i className={classNames(['fa-solid', 'fa-rotate', { 'fa-spin': isFetchLoading }])} />
@@ -103,10 +103,10 @@ function Page() {
   const [totalPages, setTotalPage] = useState<number>(0);
   const [currentPage, setCurrentPage] = useState<number>(0);
   const containerStyle = useMemo(
-    () => ({ width: '100%', height: '100vh' }),
+    () => ({ width: '100%', height: '77vh' }),
     [],
   );
-  const gridStyle = useMemo(() => ({ height: '600px', width: '100%' }), []);
+  const gridStyle = useMemo(() => ({ height: '100%', width: '100%' }), []);
 
   const onModalHide = useCallback(() => {
     onModalHidden(`save${moduleName}Modal`, () => {
@@ -205,7 +205,6 @@ function Page() {
         toolPanel: 'agFiltersToolPanel',
       },
     ],
-    defaultToolPanel: 'customActionsTool',
   }), [isFetchLoading]);
 
   const defaultColDef = useMemo(() => ({

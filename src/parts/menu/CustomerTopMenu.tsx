@@ -8,9 +8,9 @@ import './CustomerTopMenu.scss';
 import { getAuthFullNameFromLocal } from 'services/authService';
 import { useAppDispatch } from 'app/hooks';
 import {
-  selectSelectedCompany,
-  setSelectedCompany,
-} from 'state/companies/companiesSlice';
+  selectSelectedGstin,
+  setSelectedGstin,
+} from 'state/gstins/gstinsSlice';
 
 import { getSelectedTenant } from 'state/tenants/tenantsSlice';
 import { LOGOUT_LINK } from 'app/config';
@@ -38,7 +38,7 @@ function SecondaryCustomerTopMenu() {
               {' '}
               {itm.text}
             </NavLink>
-          ))}
+            ))}
         </nav>
       </div>
     </div>
@@ -46,16 +46,16 @@ function SecondaryCustomerTopMenu() {
 }
 
 interface CustomerTopMenuProps {
-  companies: any[]
+  gstins: any[]
 }
 
-export default function CustomerTopMenu({ companies }:CustomerTopMenuProps) {
+export default function CustomerTopMenu({ gstins }:CustomerTopMenuProps) {
   const dispatch = useAppDispatch();
   const selectedWorkspace = useSelector(getSelectedTenant);
 
   const userFullName = useMemo(() => getAuthFullNameFromLocal(), []);
 
-  const selectedCompany = useSelector(selectSelectedCompany);
+  const selectedGstin = useSelector(selectSelectedGstin);
 
   const profileItems = useMemo(() => [
     {
@@ -77,7 +77,7 @@ export default function CustomerTopMenu({ companies }:CustomerTopMenuProps) {
       icon: 'fa-solid fa-house-laptop',
     },
     {
-      divider: true,
+      divider: false,
     },
     {
       itemTitle: 'Logout',
@@ -87,91 +87,96 @@ export default function CustomerTopMenu({ companies }:CustomerTopMenuProps) {
     },
   ], [selectedWorkspace]);
 
-  const setSelectedCompanyOption = (e) => {
-    const companyId = e.value;
-    if (companies) {
-      const selectedComp = companies.find((i) => i.id === companyId);
-      dispatch(setSelectedCompany(selectedComp ? selectedComp.id : null));
+  const setSelectedGstinOption = (e) => {
+    const gstinId = e.value;
+    if (gstins) {
+      const selectedComp = gstins.find((i) => i.id === gstinId);
+      dispatch(setSelectedGstin(selectedComp ? selectedComp.id : null));
     }
   };
 
   return (
     <div className="fixed-top" id="customer-top-menu">
-      <nav className="navbar navbar-expand-md navbar-dark bg-color-purple-dark">
-        <div className="container-fluid d-flex flex-wrap">
-          <NavLink to="/" className="navbar-brand d-md-none d-lg-block d-lg-none d-xl-block">
-            <img src={logo} alt="Finkraft" width={90} />
+      <nav className="navbar navbar-expand-md bg-white topHeader">
+        <div className="container-fluid d-flex">
+          <NavLink to="/" className="navbar-brand d-lg-block d-xl-block">
+            <img src={logo} alt="Finkraft" width={120} />
           </NavLink>
-          <button
-            className="navbar-toggler"
-            type="button"
-            data-bs-toggle="collapse"
-            data-bs-target="#navbarNavDropdown"
-            aria-controls="navbarNavDropdown"
-            aria-expanded="false"
-            aria-label=""
-          >
-            <span className="navbar-toggler-icon" />
-          </button>
-          <div className="collapse navbar-collapse d-flex-inline flex-wrap justify-content-between align-items-center" id="navbarNavDropdown">
-            <ul className="navbar-nav mr-auto">
-              <li className="nav-item">
-                <NavLink to="/customer/dashboard" className="nav-link">
-                  Home
-                </NavLink>
-              </li>
-              <li className="nav-item">
-                <NavLink to="/customer/reconciliation" className="nav-link">
-                  Reconciliation
-                </NavLink>
-              </li>
-              <li className="nav-item">
-                <NavLink to="/customer/admin" className="nav-link">
-                  Admin
-                </NavLink>
-              </li>
-              <li className="nav-item">
-                <NavLink to="/customer/library" className="nav-link">
-                  Library
-                </NavLink>
-              </li>
-              <li className="nav-item">
-                <NavLink to="/customer/demo" className="nav-link">
-                  Demo
-                </NavLink>
-              </li>
-            </ul>
-            <ul className="navbar-nav mr-auto ">
+          <ul className="navbar-nav mr-auto topRight">
 
-              <li className="d-flex justify-content-between align-items-center mx-2 my-2">
-                <NavLink to="/customer/notifications" className="btn btn-primary p-1 m-0 bg-color-purple-dark border-4 border-white position-relative rounded-pill">
-                  <i className="fa-solid fa-bell m-1" />
-                  <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                    0
-                    <span className="visually-hidden">unread messages</span>
-                  </span>
-                </NavLink>
-              </li>
+            <li className="d-flex justify-content-between align-items-center mx-2 my-2 notificationIcon">
+              <NavLink to="/customer/notifications" className="btn btn-primary p-1 m-0 bg-color-purple-dark border-4 border-white position-relative rounded-pill menuIcon">
+                <i className="fa-solid fa-bell m-1" />
+                <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                  0
+                  <span className="visually-hidden">unread messages</span>
+                </span>
+              </NavLink>
+            </li>
 
-              {/* Companies */}
+            {/*
               <CustomerTopMenuSelect
-                options={companies.map((i) => ({ value: i.id, label: i.name }))}
-                mark="fa-solid fa-building"
-                placeholder="Companies"
-                noOptionsMessage={() => 'No Companies available'}
-                onChange={setSelectedCompanyOption}
-                value={selectedCompany}
+                  options={gstins.map((i) => ({ value: i.id, label: i.name }))}
+                  mark="fa-solid fa-building"
+                  placeholder="Gstins"
+                  noOptionsMessage={() => 'No Gstins available'}
+                  onChange={setSelectedGstinOption}
+                  value={selectedGstin}
               />
+            */}
 
-              {/* Profile */}
-              <CustomerTopMenuDropDown
-                id="dropdown05"
-                mark="fa-solid fa-user"
-                title={userFullName ?? ''}
-                items={profileItems}
-              />
+            {/* Profile */}
+            <CustomerTopMenuDropDown
+              id="dropdown05"
+              mark="fa-solid fa-user"
+              title={userFullName ?? ''}
+              items={profileItems}
+            />
 
-            </ul>
+          </ul>
+          <div className="topMenu">
+            <button
+              className="navbar-toggler closeIcon"
+              type="button"
+              data-bs-toggle="collapse"
+              data-bs-target="#navbarNavDropdown"
+              aria-controls="navbarNavDropdown"
+              aria-expanded="false"
+              aria-label=""
+            >
+              <span />
+              <span />
+              <span />
+            </button>
+            <div className="collapse navbar-collapse d-flex-inline flex-wrap justify-content-between align-items-center" id="navbarNavDropdown">
+              <ul className="navbar-nav mr-auto">
+                <li className="nav-item">
+                  <NavLink to="/customer/dashboard" className="nav-link">
+                    Home
+                  </NavLink>
+                </li>
+                <li className="nav-item">
+                  <NavLink to="/customer/reconciliation" className="nav-link">
+                    Reconciliation
+                  </NavLink>
+                </li>
+                <li className="nav-item">
+                  <NavLink to="/customer/admin" className="nav-link">
+                    Admin
+                  </NavLink>
+                </li>
+                <li className="nav-item">
+                  <NavLink to="/customer/library" className="nav-link">
+                    Library
+                  </NavLink>
+                </li>
+                <li className="nav-item">
+                  <NavLink to="/customer/demo" className="nav-link">
+                    Demo
+                  </NavLink>
+                </li>
+              </ul>
+            </div>
           </div>
         </div>
       </nav>

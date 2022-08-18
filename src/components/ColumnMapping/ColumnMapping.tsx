@@ -105,7 +105,7 @@ export default function ColumnMapping({ fileType, id }: Type) {
       '',
       '',
     ],
-    'Company Code': [
+    'Gstin Code': [
       '7680',
       '7680',
       '7680',
@@ -170,7 +170,7 @@ export default function ColumnMapping({ fileType, id }: Type) {
       '',
       '',
     ],
-    'Company Description': [
+    'Gstin Description': [
       'Boston Scientific India Private Limited',
       'Boston Scientific India Private Limited',
       'Boston Scientific India Private Limited',

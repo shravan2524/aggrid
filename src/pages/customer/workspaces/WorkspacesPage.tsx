@@ -22,9 +22,9 @@ import { TenantAGGridType, TenantType } from 'services/tenantsAPIService';
 import { useSelector } from 'react-redux';
 import { ICellRendererParams } from 'ag-grid-community';
 import {
-  setSelectedCompany,
+  setSelectedGstin,
   isLoadingSelector,
-} from 'state/companies/companiesSlice';
+} from 'state/gstins/gstinsSlice';
 import classNames from 'classnames';
 import { AggridPagination } from 'components/AggridPagination';
 import NewTenantModal from './NewTenantModal';
@@ -48,10 +48,10 @@ function ActionsRenderer({
 }: ActionsRendererProps) {
   const activeTenant = useSelector(getSelectedTenant);
   return (
-    <div className="d-flex justify-content-evenly align-items-center w-100 h-100">
+    <div className="d-flex btn-group align-items-center w-100 h-100">
       <button
         type="button"
-        className="btn btn-sm btn-light"
+        className="btn btn-sm btn-primary"
         onClick={(e) => onEditClickCallback(e, params)}
       >
         <i className="fa-solid fa-pen-to-square" />
@@ -69,7 +69,7 @@ function ActionsRenderer({
           Select
         </button>
       ) : (
-        <button type="button" className="btn btn-sm btn-light text-success">
+        <button type="button" className="btn btn-sm btn-success">
           <i className="fa-solid fa-circle-check" />
           {' '}
           Active
@@ -85,7 +85,7 @@ function CustomActionsToolPanel(onRefreshCallback, isFetchLoading) {
       <div className="row p-2 gap-2 m-1">
         <button
           type="button"
-          className="btn btn-sm btn-danger px-4 d-flex gap-2 align-items-center justify-content-center flex-wrap"
+          className="btn btn-sm btn-success px-4 d-flex gap-2 align-items-center justify-content-center flex-wrap"
           onClick={() => showModal('newTenantModal')}
         >
           <i className="fa-solid fa-circle-plus" />
@@ -93,7 +93,7 @@ function CustomActionsToolPanel(onRefreshCallback, isFetchLoading) {
         </button>
         <button
           type="button"
-          className="btn btn-sm btn-info px-4 d-flex gap-2 align-items-center justify-content-center flex-wrap"
+          className="btn btn-sm btn-info px-4 d-flex gap-2 align-items-center justify-content-center flex-wrap refreshBtn"
           onClick={onRefreshCallback}
         >
           <i
@@ -136,7 +136,7 @@ export default function WorkspacesPage() {
     // console.log(selectedWorkspace);
     if (params.data) {
       if (params.data.id) {
-        dispatch(setSelectedCompany(null));
+        dispatch(setSelectedGstin(null));
         dispatch(setSelectedTenant(params.data.id));
       }
     }
@@ -227,7 +227,6 @@ export default function WorkspacesPage() {
           toolPanel: 'agFiltersToolPanel',
         },
       ],
-      defaultToolPanel: 'customActionsTool',
     }),
     [isFetchLoading],
   );

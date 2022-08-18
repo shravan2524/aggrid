@@ -14,7 +14,7 @@ function ClickableStatusBarComponent(props: any, onBtExport) {
     <div className="ag-status-name-value">
       <button
         onClick={onBtExport}
-        className="btn btn-outline-success btn-sm"
+        className="btn btn-success btn-sm"
         type="button"
       >
         <i className="fas fa-sign-out-alt" />
@@ -36,7 +36,20 @@ function generateRowsAndGroups(rows) {
         if (string.toLowerCase().includes('date')) {
             return 'agDateColumnFilter';
         }
-        if (string.toLowerCase().includes('amount') || string.toLowerCase().includes('total')) {
+        if (string.toLowerCase().includes('amount')
+            || string.toLowerCase().includes('total')
+            || string.toLowerCase().includes('id')
+            || string.toLowerCase().includes('tenantId')
+            || string.toLowerCase().includes('sgst_2A')
+            || string.toLowerCase().includes('sgst_2B')
+            || string.toLowerCase().includes('sgst_PR')
+            || string.toLowerCase().includes('similarityScore')
+            || string.toLowerCase().includes('igst_2A')
+            || string.toLowerCase().includes('igst_2B')
+            || string.toLowerCase().includes('igst_PR')
+            || string.toLowerCase().includes('id_2B')
+            || string.toLowerCase().includes('id_PR')
+            || string.toLowerCase().includes('id_2A')) {
             return 'agNumberColumnFilter';
         }
 
@@ -62,7 +75,7 @@ export default function ReconciliationPage() {
   const gridRef = useRef<any>();
   const { height } = useWindowDimensions();
   const containerStyle = useMemo(
-    () => ({ width: '100%', height: `${height}px`, minHeight: '600px' }),
+    () => ({ width: '100%', height: '77vh' }),
     [height],
   );
 
@@ -146,7 +159,6 @@ export default function ReconciliationPage() {
                     toolPanel: 'agFiltersToolPanel',
                 },
             ],
-            defaultToolPanel: 'customActionsTool',
         }),
         [],
     );

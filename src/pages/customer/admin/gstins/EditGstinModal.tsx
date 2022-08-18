@@ -8,38 +8,38 @@ import { useAppDispatch } from 'app/hooks';
 import CustomButton from 'components/CustomButton';
 import { getSelectedTenant } from 'state/tenants/tenantsSlice';
 import {
-  fetchCompanies,
-  getCompanies,
+  fetchGstins,
+  getGstins,
   isPutLoadingSelector,
-  updateCompanyRequest,
-} from 'state/companies/companiesSlice';
+  updateGstinRequest,
+} from 'state/gstins/gstinsSlice';
 import { hideModal, onModalHidden } from 'app/utils/Modal';
-import { CompaniesType } from 'services/companiesAPIService';
+import { GstinsType } from 'services/gstinsAPIService';
 import { validGSTINRule, yupEmptyCharsRule } from 'app/utils/YupRules';
 
-interface EditCompanyFormProps {
+interface EditGstinFormProps {
   name: string;
-  parent: number | undefined;
+  panId: number | undefined;
   gstin: string | undefined;
 }
 
-interface EditCompanyModalProps {
-  companyData: CompaniesType | null;
+interface EditGstinModalProps {
+  gstinData: GstinsType | null;
 }
-export default function EditCompanyModal({
-  companyData,
-}: EditCompanyModalProps) {
+export default function EditGstinModal({
+  gstinData,
+}: EditGstinModalProps) {
   const dispatch = useAppDispatch();
   const isLoading = useSelector(isPutLoadingSelector);
   const selectedCustomer = useSelector(getSelectedTenant);
-  const companySelector = useSelector(getCompanies);
+  const gstinSelector = useSelector(getGstins);
 
-  const modalId = useMemo(() => 'editCompanyModal', []);
+  const modalId = useMemo(() => 'editgstinModal', []);
 
   const schema = yup
     .object({
       name: yup.string().required('Title is a required field').test(yupEmptyCharsRule),
-      parent: yup.string(),
+      panId: yup.string(),
       gstin: yup.string().test(validGSTINRule),
     })
     .required();
@@ -49,24 +49,24 @@ export default function EditCompanyModal({
     handleSubmit,
     reset,
     formState: { errors },
-  } = useForm<EditCompanyFormProps>({
+  } = useForm<EditGstinFormProps>({
     resolver: yupResolver(schema),
   });
 
   const onModalClose = useCallback(() => {
     onModalHidden(modalId, () => {
-      dispatch(fetchCompanies());
+      dispatch(fetchGstins());
     });
   }, []);
 
-  const onSubmit = ({ name, parent, gstin }: EditCompanyFormProps) => {
+  const onSubmit = ({ name, panId, gstin }: EditGstinFormProps) => {
     const payload: any = {
       data: {
         name,
-        parent: Number(parent),
+        panId: Number(panId),
         customer_id: Number(selectedCustomer?.id),
       },
-      id: companyData?.id,
+      id: gstinData?.id,
     };
 
     if (gstin !== '') {
@@ -74,7 +74,7 @@ export default function EditCompanyModal({
         payload.data.gstin = gstin;
       }
     }
-    dispatch(updateCompanyRequest({ ...payload }));
+    dispatch(updateGstinRequest({ ...payload }));
   };
 
   useEffect(() => {
@@ -82,15 +82,15 @@ export default function EditCompanyModal({
   }, [isLoading]);
 
   useEffect(() => {
-    const parentCom = companySelector.find(
-      (i) => i.parent === companyData?.parent,
+    const parentCom = gstinSelector.find(
+      (i) => i.panId === gstinData?.panId,
     );
     reset({
-      name: companyData?.name,
-      parent: parentCom?.parent,
-      gstin: companyData?.gstin,
+      name: gstinData?.name,
+      panId: parentCom?.panId,
+      gstin: gstinData?.gstin,
     });
-  }, [companyData]);
+  }, [gstinData]);
 
   useEffect(() => {
     onModalClose();
@@ -108,7 +108,7 @@ export default function EditCompanyModal({
           <form onSubmit={handleSubmit(onSubmit)}>
             <div className="modal-header">
               <h5 className="modal-title" id={`new${modalId}Label`}>
-                Edit Company
+                Edit Gstin
               </h5>
               <button
                 type="button"
@@ -120,30 +120,30 @@ export default function EditCompanyModal({
             <div className="modal-body">
               <div className="mb-3">
                 <label htmlFor="customer" className="col-form-label">
-                  Parent:
+                  Pan:
                 </label>
                 <select
-                  {...register('parent')}
+                  {...register('panId')}
                   className={classNames([
                     'form-select form-select-sm',
-                    { 'is-invalid': errors.parent },
+                    { 'is-invalid': errors.panId },
                   ])}
                 >
-                  <option value="">Please select Parent Company ...</option>
-                  {companySelector
-                  && companySelector.map((option) => (
-                    (companyData && option.name !== companyData.name)
+                  <option value="">Please select Pan ...</option>
+                  {gstinSelector
+                  && gstinSelector.map((option) => (
+                    (gstinData && option.name !== gstinData.name)
                     ? <option key={option.id} value={option.id}>{option.name}</option>
                     : null
                  ))}
                 </select>
 
-                {errors.parent && (
+                {errors.panId && (
                   <div
                     id="validationTitleFeedback"
                     className="invalid-feedback"
                   >
-                    <p>{errors.parent?.message}</p>
+                    <p>{errors.panId?.message}</p>
                   </div>
                 )}
               </div>
@@ -158,7 +158,7 @@ export default function EditCompanyModal({
                     'form-control form-control-sm',
                     { 'is-invalid': errors.name },
                   ])}
-                  placeholder="Enter Company name ..."
+                  placeholder="Enter Gstin name ..."
                 />
                 {errors.name && (
                   <div

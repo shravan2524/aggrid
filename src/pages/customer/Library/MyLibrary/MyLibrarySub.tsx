@@ -4,6 +4,8 @@ import React, {
 import { AgGridReact } from 'ag-grid-react';
 import 'ag-grid-enterprise';
 import { ColDef, GridReadyEvent, ICellRendererParams } from 'ag-grid-community';
+import { AgColums } from 'components/Library/Ag-gridColumn';
+import { getFilterContent } from 'services/filtersAPIService';
 
 function ClickableStatusBarComponent(props: any, onBtExport) {
   return (
@@ -28,26 +30,31 @@ export default function MyLibraryDetailCellRenderer({
   api,
 }: ICellRendererParams) {
   const gridRef = useRef<any>();
-
+  const [rowData, setRowData] = useState<any>();
   const gridStyle = useMemo(() => ({ height: '600px', width: '90%' }), []);
 
   // default Columns settings
-  const [columnDefs, setColumnDefs] = useState([]);
+  const [columnDefs, setColumnDefs] = useState(AgColums);
   const defaultColDef = useMemo<ColDef>(
     () => ({
       flex: 1,
       minWidth: 250,
       sortable: true,
-      filter: true,
       floatingFilter: true,
       enableRowGroup: true,
       enableValue: true,
+      filter: 'agTextColumnFilter',
+      editable: false,
     }),
     [],
   );
 
   // rows
-  const onGridReady = useCallback((params: GridReadyEvent) => {}, [data]);
+  const onGridReady = useCallback((params: GridReadyEvent) => {
+    getFilterContent(data?.id).then((datas:any) => {
+      setRowData(datas.rows);
+    });
+  }, [data]);
 
   // export button
   const onBtExport = useCallback(() => {
@@ -75,6 +82,7 @@ export default function MyLibraryDetailCellRenderer({
       <div style={gridStyle} className="ag-theme-alpine py-2">
         <AgGridReact
           ref={gridRef}
+          rowData={rowData}
           columnDefs={columnDefs}
           defaultColDef={defaultColDef}
           onGridReady={onGridReady}
@@ -82,8 +90,6 @@ export default function MyLibraryDetailCellRenderer({
           rowGroupPanelShow="always"
           paginationPageSize={10}
           statusBar={statusBar}
-          cacheBlockSize={10}
-          serverSideStoreType="partial"
           pagination
         />
       </div>

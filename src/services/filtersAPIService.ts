@@ -6,6 +6,13 @@ interface Filter {
   modelName?: string;
 }
 
+interface Contact {
+  email: string,
+  firstName?: string,
+  lastName?: string,
+  fullName?: string,
+}
+
 export interface Filters {
   createdAt?: string;
   updatedAt?: string;
@@ -17,6 +24,8 @@ export interface Filters {
   createdBy?: string;
   updatedBy?: string;
   filter?: Filter;
+  filterId?:number;
+  sharedBy:Contact
 }
 
 export async function fetchFilterData(): Promise<Filters[]> {

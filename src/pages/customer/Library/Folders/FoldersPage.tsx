@@ -12,29 +12,40 @@ import PageWrapper from 'components/PageWrapper';
 import { ICellRendererParams } from 'ag-grid-community';
 import { agGridDateFormatter } from 'app/utils/Helpers';
 import 'components/Library/style.scss';
-import { fetchFoldersData, Folders } from 'services/FolderAPIService';
+import { deleteFoldersData, fetchFoldersData, Folders } from 'services/FolderAPIService';
 import classNames from 'classnames';
+import toast from 'react-hot-toast';
 import SaveFolderModal from 'components/Library/CreateFolder';
+import FolderFiltersDetailCellRenderer from './FolderFiltersSuAg';
 
 const moduleTitle = 'Folders';
 
 type ActionsRendererProps = {
   params: ICellRendererParams;
   onEditClickCallback: (params: ICellRendererParams) => void;
+  onDeleteClickCallback: (params: ICellRendererParams) => void;
 };
 
 function ActionsRenderer({
   params,
   onEditClickCallback,
+  onDeleteClickCallback,
 }: ActionsRendererProps) {
   return (
     <div className="d-flex justify-content-around align-items-center w-100 h-100">
       <button
         type="button"
         onClick={() => onEditClickCallback(params)}
-        className="btn btn-sm btn-light text-success"
+        className="btn btn-sm btn-primary text-success"
       >
         <i className="fa-solid fa-pen-to-square" />
+      </button>
+      <button
+        onClick={() => onDeleteClickCallback(params)}
+        type="button"
+        className="btn btn-sm btn-danger"
+      >
+        <i className="fas fa-trash" />
       </button>
     </div>
   );
@@ -47,7 +58,7 @@ function CustomActionsToolPanel(isLoading, onRefreshCallback) {
         <button
           type="button"
           onClick={() => showModal('saveFolderModal')}
-          className="btn btn-sm btn-danger px-4 d-flex gap-2 align-items-center justify-content-center flex-wrap"
+          className="btn btn-sm btn-success px-4 d-flex gap-2 align-items-center justify-content-center flex-wrap"
         >
           <i className="fas fa-folder-plus" />
           Create Folder
@@ -56,7 +67,7 @@ function CustomActionsToolPanel(isLoading, onRefreshCallback) {
         <button
           type="button"
           onClick={onRefreshCallback}
-          className="btn btn-sm btn-info px-4 d-flex gap-2 align-items-center justify-content-center flex-wrap"
+          className="btn btn-sm px-4 d-flex gap-2 align-items-center justify-content-center flex-wrap refreshBtn"
         >
           <i
             className={classNames([
@@ -80,13 +91,10 @@ function FoldersPage() {
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const containerStyle = useMemo(
-    () => ({
-      width: '100%',
-      height: `${height}px`,
-      minHeight: '600px',
-    }),
-    [height, width],
+    () => ({ width: '100%', height: '77vh' }),
+    [],
   );
+  const gridStyle = useMemo(() => ({ height: '100%', width: '100%' }), []);
 
   const onfetchData = () => {
     setIsLoading(true);
@@ -99,6 +107,15 @@ function FoldersPage() {
         setIsLoading(false);
       });
   };
+
+  const onDeleteClickCallback = useCallback((params) => {
+    if (window.confirm(`${params.data?.title} File Will be deleted`)) {
+      deleteFoldersData(params.data?.id).then(() => {
+        toast.success('Folder Deleted');
+        onfetchData();
+      });
+    }
+  }, []);
 
   const onModalHide = useCallback(() => {
     onModalHidden('saveFolderModal', () => {
@@ -121,6 +138,7 @@ function FoldersPage() {
       <ActionsRenderer
         params={params}
         onEditClickCallback={onEditClickCallback}
+        onDeleteClickCallback={onDeleteClickCallback}
       />
     ),
     [],
@@ -128,7 +146,7 @@ function FoldersPage() {
 
   const [columnDefs, setColumnDefs] = useState([
     {
-      headerName: 'Name',
+      headerName: 'Folder Name',
       field: 'title',
       filter: 'agTextColumnFilter',
       editable: false,
@@ -194,7 +212,6 @@ function FoldersPage() {
           toolPanel: 'agFiltersToolPanel',
         },
       ],
-      defaultToolPanel: 'customActionsTool',
     }),
     [isLoading],
   );
@@ -209,6 +226,7 @@ function FoldersPage() {
       editable: true,
       enablePivot: true,
       enableValue: true,
+      flex: 1,
     }),
     [],
   );
@@ -226,31 +244,40 @@ function FoldersPage() {
     if (gridRef.current?.api) {
       gridRef.current?.api.sizeColumnsToFit();
     }
-  }, [width]);
+  }, [width, height]);
+
+  // SUB AG-GRID
+  const detailCellRenderer = useMemo<any>(
+    () => FolderFiltersDetailCellRenderer,
+    [],
+  );
 
   return (
     <PageWrapper pageTitle={moduleTitle} icon="fas fa-folder-plus">
-      <div className=" ag-theme-alpine grid-container-style">
+      <div style={containerStyle}>
         <SaveFolderModal itemData={itemData} />
-        <AgGridReact
-          containerStyle={containerStyle}
-          ref={gridRef}
-          rowData={rowData}
-          columnDefs={columnDefs}
-          sideBar={sideBar}
-          // rowSelection="multiple"
-          rowDragManaged
-          rowDragMultiRow
-          rowGroupPanelShow="always"
-          defaultColDef={defaultColDef}
-          groupDisplayType="multipleColumns"
-          animateRows
-          onGridReady={onGridReady}
-          icons={icons}
-          pagination
-          onFirstDataRendered={onFirstDataRendered}
-          masterDetail
-        />
+        <div style={gridStyle} className="ag-theme-alpine">
+          <AgGridReact
+            ref={gridRef}
+            rowData={rowData}
+            columnDefs={columnDefs}
+            sideBar={sideBar}
+            rowDragManaged
+            rowDragMultiRow
+            rowGroupPanelShow="always"
+            defaultColDef={defaultColDef}
+            groupDisplayType="multipleColumns"
+            animateRows
+            onGridReady={onGridReady}
+            icons={icons}
+            pagination
+            detailCellRenderer={detailCellRenderer}
+            onFirstDataRendered={onFirstDataRendered}
+            masterDetail
+            detailRowHeight={600}
+            paginationPageSize={10}
+          />
+        </div>
       </div>
     </PageWrapper>
   );

@@ -6,8 +6,8 @@ import BaseFooter from 'parts/footer/BaseFooter';
 import {
   fetchTenants, getTenants, getSelectedTenant, setSelectedTenant,
 } from 'state/tenants/tenantsSlice';
-import { fetchCompanies } from 'state/companies/companiesSlice';
-import { useAppDispatch, useCompanies, useCustomerTopMenuHeightDimension } from 'app/hooks';
+import { fetchGstins } from 'state/gstins/gstinsSlice';
+import { useAppDispatch, useGstins, useCustomerTopMenuHeightDimension } from 'app/hooks';
 import { useSelector } from 'react-redux';
 import { isSecondaryMenuItemVisible } from 'state/settings/settingsSlice';
 import { readAll } from 'state/roles/slice';
@@ -17,7 +17,7 @@ export default function CustomerLayout() {
 
   const location = useLocation();
   const tenants = useSelector(getTenants);
-  const companies: any = useCompanies();
+  const gstins: any = useGstins();
   const selectedTenant = useSelector(getSelectedTenant);
   const [menuResponsiveClass, setMenuResponsiveClass] = useState<string>('');
   const topMenuHeight = useCustomerTopMenuHeightDimension();
@@ -29,7 +29,7 @@ export default function CustomerLayout() {
     dispatch(fetchTenants());
 
     // Fetch Roles ...
-    dispatch(readAll());
+    // dispatch(readAll());
   }, [dispatch]);
 
   useEffect(() => {
@@ -55,7 +55,7 @@ export default function CustomerLayout() {
   return (
     <>
       <header>
-        <CustomerTopMenu companies={companies} />
+        <CustomerTopMenu gstins={gstins} />
       </header>
       <main className={menuResponsiveClass}>
         <Outlet />

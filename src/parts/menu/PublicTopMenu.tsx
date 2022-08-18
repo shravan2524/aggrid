@@ -25,13 +25,13 @@ export function PublicTopMenu() {
     },
   ], []);
   return (
-    <nav className="navbar navbar-expand-md fixed-top navbar-dark bg-color-purple-dark">
+    <nav className="navbar navbar-expand-md fixed-top bg-white topHeader">
       <div className="container-fluid">
         <NavLink to="/" className="navbar-brand">
-          <img src={logo} alt="Finkraft" width={90} />
+          <img src={logo} alt="Finkraft" width={120} />
         </NavLink>
         <button
-          className="navbar-toggler"
+          className="navbar-toggler closeIcon"
           type="button"
           data-bs-toggle="collapse"
           data-bs-target="#navbarNavDropdown"
@@ -39,7 +39,9 @@ export function PublicTopMenu() {
           aria-expanded="false"
           aria-label=""
         >
-          <span className="navbar-toggler-icon" />
+          <span />
+          <span />
+          <span />
         </button>
         <div className="collapse navbar-collapse" id="navbarNavDropdown">
           <ul className="navbar-nav mr-auto">
@@ -48,11 +50,10 @@ export function PublicTopMenu() {
                 Home
               </NavLink>
             </li>
-
           </ul>
 
           <ShowOnAuth>
-            <ul className="navbar-nav ms-auto mb-2 mb-md-0">
+            <ul className="navbar-nav ms-auto mb-2 mb-md-0 topRight">
               <CustomerTopMenuDropDown
                 id="dropdown06"
                 title={userFullName ?? ''}

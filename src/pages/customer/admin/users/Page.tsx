@@ -93,7 +93,7 @@ function ActionsRenderer({
   }, [data, rows]);
 
   return (
-    <div className="d-flex justify-content-around align-items-center w-100 h-100">
+    <div className="d-flex btn-group align-items-center w-100 h-100">
       <Switch
         onChange={handleChange}
         checked={checked}
@@ -107,7 +107,7 @@ function ActionsRenderer({
 
       <button
         type="button"
-        className="btn btn-sm btn-light text-success"
+        className="btn btn-sm btn-primary"
         onClick={(e) => onEditClickCallback(params)}
       >
         <i className="fa-solid fa-pen-to-square" />
@@ -115,7 +115,7 @@ function ActionsRenderer({
       <button
         onClick={(e) => onDeleteUser(params)}
         type="button"
-        className="btn btn-sm btn-light text-danger"
+        className="btn btn-sm btn-danger"
       >
         <i className="fas fa-trash-alt" />
       </button>
@@ -129,7 +129,7 @@ function CustomActionsToolPanel(onRefreshCallback, isFetchLoading) {
       <div className="row p-2 gap-2 m-1">
         <button
           type="button"
-          className="btn btn-sm btn-danger px-4 d-flex gap-2 align-items-center justify-content-center flex-wrap"
+          className="btn btn-sm btn-success px-4 d-flex gap-2 align-items-center justify-content-center flex-wrap"
           onClick={() => showModal(modalIdentifier)}
         >
           <i className="fa-solid fa-circle-plus" />
@@ -140,7 +140,7 @@ function CustomActionsToolPanel(onRefreshCallback, isFetchLoading) {
 
         <button
           type="button"
-          className="btn btn-sm btn-info px-4 d-flex gap-2 align-items-center justify-content-center flex-wrap"
+          className="btn btn-sm btn-info px-4 d-flex gap-2 align-items-center justify-content-center flex-wrap refreshBtn"
           onClick={onRefreshCallback}
         >
           <i
@@ -211,8 +211,7 @@ function Page() {
   const containerStyle = useMemo(
     () => ({
       width: '100%',
-      height: `${height}px`,
-      minHeight: '600px',
+      height: '77vh',
     }),
     [height, width],
   );
@@ -258,6 +257,9 @@ function Page() {
   );
 
   const [columnDefs, setColumnDefs] = useState([
+    {
+      headerName: `${moduleTitle} Details`,
+      children: [
         {
           headerName: 'Name',
           field: 'fullName',
@@ -280,6 +282,7 @@ function Page() {
           headerName: 'Updated On',
           field: 'updatedAt',
           filter: 'agNumberColumnFilter',
+          cellClass: 'updateColumn',
           valueGetter: (params) => (agGridDateFormatter(params.data?.updatedAt)),
           editable: false,
         },
@@ -296,6 +299,8 @@ function Page() {
             return null;
           },
         },
+      ],
+    },
   ]);
 
   const icons = useMemo<{ [key: string]: Function | string }>(
@@ -330,7 +335,6 @@ function Page() {
           toolPanel: 'agFiltersToolPanel',
         },
       ],
-      defaultToolPanel: 'customActionsTool',
     }),
     [isFetchLoading],
   );

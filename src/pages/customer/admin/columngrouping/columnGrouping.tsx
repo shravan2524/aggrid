@@ -179,7 +179,7 @@ function Container1({ btnName, sendFunc }: Type) {
   const modalId = 'ColunGroup';
   return (
     <>
-      <Button variant="primary" className="btn btn-sm btn-danger px-4 d-flex gap-2 align-items-center justify-content-center" onClick={handleShow}>
+      <Button variant="primary" className="btn btn-sm btn-success px-4 d-flex gap-2 align-items-center justify-content-center" onClick={handleShow}>
         <i className="fa-solid fa-circle-plus" />
         {' '}
         {btnName}
@@ -219,7 +219,7 @@ function CustomActionsToolPanel(onRefreshCallback, isFetchLoading, sendFunc) {
         <Container1 btnName="Create Column Group" sendFunc={sendFunc} />
         <button
           type="button"
-          className="btn btn-sm btn-info"
+          className="btn btn-sm btn-info refreshBtn"
           onClick={onRefreshCallback}
         >
           <i className={classNames(['fa-solid', 'fa-rotate', { 'fa-spin': isFetchLoading }])} />
@@ -241,7 +241,7 @@ export default function columnGrouping() {
   const [totalPages, setTotalPage] = useState<number>(0);
   const [currentPage, setCurrentPage] = useState<number>(0);
   const containerStyle = useMemo(
-    () => ({ width: '100%', height: '600px' }),
+    () => ({ width: '100%', height: '77vh' }),
     [],
   );
   const gridStyle = useMemo(() => ({ height: '100%', width: '100%' }), []);
@@ -337,7 +337,6 @@ export default function columnGrouping() {
         toolPanel: 'agFiltersToolPanel',
       },
     ],
-    defaultToolPanel: 'customActionsTool',
   }), [isFetchLoading]);
 
   const defaultColDef = useMemo(() => ({

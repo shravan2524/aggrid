@@ -1,7 +1,8 @@
 import moment from 'moment';
-import { CompaniesAgGridType, CompaniesType } from 'services/companiesAPIService';
+import { GstinsAgGridType, GstinsType } from 'services/gstinsAPIService';
 import { TenantAGGridType, TenantType } from 'services/tenantsAPIService';
 import { FilesAgGridType, FilesType } from 'services/filesAPIService';
+import { PanAGGridType, PanType } from '../../services/pansAPIService';
 
 export function agGridRowDrag(params) {
   // only rows that are NOT groups should be draggable
@@ -12,15 +13,17 @@ export function agGridDateFormatter(params) {
   return moment(params).format('LLL');
 }
 
-export function agGridCompaniesDTO(companies: CompaniesType[]): CompaniesAgGridType[] {
-  return companies.map(({
+export function agGridGstinsDTO(gstins: GstinsType[]): GstinsAgGridType[] {
+  return gstins.map(({
     id,
+    panId,
     name,
     parent,
     tenantId,
     gstin,
   }) => ({
     id,
+    panId,
     name,
     parent,
     tenantId,
@@ -28,8 +31,8 @@ export function agGridCompaniesDTO(companies: CompaniesType[]): CompaniesAgGridT
   }));
 }
 
-export function agGridTenantsDTO(companies: TenantType[]): TenantAGGridType[] {
-  return companies.map(({
+export function agGridTenantsDTO(gstins: TenantType[]): TenantAGGridType[] {
+  return gstins.map(({
     id,
     title,
     createdAt,
@@ -92,4 +95,18 @@ export function DownloadFile(dataUrl?: string | null) {
     };
     req.send();
   }
+}
+
+export function agGridPansDTO(pans: PanType[]): PanAGGridType[] {
+  return pans.map(({
+                     id,
+                     pan,
+                     tenantId,
+                     title,
+                     }) => ({
+    id,
+    pan,
+    tenantId,
+    title,
+  }));
 }

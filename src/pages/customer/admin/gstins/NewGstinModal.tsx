@@ -8,31 +8,31 @@ import { useAppDispatch } from 'app/hooks';
 import CustomButton from 'components/CustomButton';
 import { getSelectedTenant } from 'state/tenants/tenantsSlice';
 import {
-    fetchCompanies,
-    getCompanies,
+    fetchGstins,
+    getGstins,
     isPostLoadingSelector,
-    newCompanyRequest,
-} from 'state/companies/companiesSlice';
+    newGstinRequest,
+} from 'state/gstins/gstinsSlice';
 import { hideModal, onModalHidden } from 'app/utils/Modal';
 import { validGSTINRule, yupEmptyCharsRule } from 'app/utils/YupRules';
 
-interface NewCompanyFormProps {
+interface NewGstinFormProps {
     name: string;
     gstin: string;
-    parent: number | undefined;
+    panId: number | undefined;
 }
 
-export default function NewCompanyModal() {
+export default function NewGstinModal() {
     const dispatch = useAppDispatch();
     const isLoading = useSelector(isPostLoadingSelector);
     const selectedCustomer = useSelector(getSelectedTenant);
-    const companySelector = useSelector(getCompanies);
+    const gstinSelector = useSelector(getGstins);
 
-    const modalId = 'newCompanyModal';
+    const modalId = 'newGstinModal';
 
     const schema = yup.object({
         name: yup.string().required('Title is a required field').test(yupEmptyCharsRule),
-        parent: yup.string(),
+        panId: yup.string(),
         gstin: yup.string().test(validGSTINRule),
     }).required();
 
@@ -41,22 +41,22 @@ export default function NewCompanyModal() {
         handleSubmit,
         reset,
         formState: { errors },
-    } = useForm<NewCompanyFormProps>({
+    } = useForm<NewGstinFormProps>({
         resolver: yupResolver(schema),
     });
 
     const onModalClose = useCallback(() => {
         onModalHidden(modalId, () => {
             reset({ name: '', gstin: '' });
-            dispatch(fetchCompanies());
+            dispatch(fetchGstins());
         });
     }, []);
 
-    const onSubmit = ({ name, parent, gstin }: NewCompanyFormProps) => {
+    const onSubmit = ({ name, panId, gstin }: NewGstinFormProps) => {
         const body: any = {
             name,
             customer_id: Number(selectedCustomer?.id),
-            parent: Number(parent),
+            panId: Number(panId),
         };
         if (gstin !== '') {
             if (gstin) {
@@ -64,7 +64,7 @@ export default function NewCompanyModal() {
             }
         }
 
-        dispatch(newCompanyRequest(body));
+        dispatch(newGstinRequest(body));
     };
 
     useEffect(() => {
@@ -81,25 +81,25 @@ export default function NewCompanyModal() {
           <div className="modal-content">
             <form onSubmit={handleSubmit(onSubmit)}>
               <div className="modal-header">
-                <h5 className="modal-title" id={`new${modalId}Label`}>New Company</h5>
+                <h5 className="modal-title" id={`new${modalId}Label`}>New Gstin</h5>
                 <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close" />
               </div>
               <div className="modal-body">
                 <div className="mb-3">
-                  <label htmlFor="parent" className="col-form-label">Parent:</label>
+                  <label htmlFor="panId" className="col-form-label">Pan:</label>
                   <select
-                    {...register('parent')}
-                    className={classNames(['form-select form-select-sm', { 'is-invalid': errors.parent }])}
+                    {...register('panId')}
+                    className={classNames(['form-select form-select-sm', { 'is-invalid': errors.panId }])}
                   >
-                    <option value="">Please select Parent Company ...</option>
-                    {companySelector && companySelector.map((option) => (
+                    <option value="">Please select Pan ...</option>
+                    {gstinSelector && gstinSelector.map((option) => (
                       <option key={option.id} value={option.id}>{option.name}</option>
                                     ))}
                   </select>
 
-                  {errors.parent && (
+                  {errors.panId && (
                     <div id="validationTitleFeedback" className="invalid-feedback">
-                      <p>{errors.parent?.message}</p>
+                      <p>{errors.panId?.message}</p>
                     </div>
                                 )}
                 </div>
@@ -110,7 +110,7 @@ export default function NewCompanyModal() {
                     {...register('name')}
                     id="title"
                     className={classNames(['form-control form-control-sm', { 'is-invalid': errors.name }])}
-                    placeholder="Enter Company name ..."
+                    placeholder="Enter Gstin name ..."
                   />
                   {errors.name && (
                     <div id="validationTitleFeedback" className="invalid-feedback">
@@ -124,7 +124,7 @@ export default function NewCompanyModal() {
                     {...register('gstin')}
                     id="gstin"
                     className={classNames(['form-control form-control-sm', { 'is-invalid': errors.gstin }])}
-                    placeholder="Enter Company GSTIN ..."
+                    placeholder="Enter Gstin GSTIN ..."
                   />
                   {errors.gstin && (
                     <div id="validationGstinFeedback" className="invalid-feedback">

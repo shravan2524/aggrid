@@ -4,83 +4,72 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup/dist/yup';
 import classNames from 'classnames';
 import CustomButton from 'components/CustomButton';
-import { CompaniesType } from 'services/companiesAPIService';
-import { CredentialsType, putCompanyCredentialsData } from 'services/credentialsAPIService';
+import { GstinsType } from 'services/gstinsAPIService';
+import { postGstinCredentialsData } from 'services/credentialsAPIService';
 import { toast } from 'react-hot-toast';
 import { hideModal } from 'app/utils/Modal';
 import { yupEmptyCharsRule } from 'app/utils/YupRules';
 
-interface CompanyEditFormProps {
+interface GstinNewFormProps {
   username: string;
   password: string;
-  current_password: string;
 }
 
-interface CompanyEditCredentialsFormProps {
-  companyData: CompaniesType | null;
-  companyCredentials: CredentialsType | null;
+interface GstinNewCredentialsFormProps {
+  gstinData: GstinsType | null;
   modalId: string;
 }
-export default function CompanyEditCredentialsForm({
-  modalId, companyData, companyCredentials,
-}: CompanyEditCredentialsFormProps) {
+
+export default function GstinNewCredentialsForm({ modalId, gstinData }: GstinNewCredentialsFormProps) {
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [currentPassword, setcurrentPassword] = useState('');
+
   const schema = yup.object({
     username: yup.string().required().test(yupEmptyCharsRule),
-    password: yup.string()
-    .required().test(yupEmptyCharsRule)
-    .test('passwords-match', 'Old and new password should not be same', (value) => (currentPassword !== value)),
-    current_password: yup.string().required().test(yupEmptyCharsRule),
+    password: yup.string().required().test(yupEmptyCharsRule),
   }).required();
 
   const {
     register,
-    handleSubmit,
     reset,
+    handleSubmit,
     formState: { errors },
-  } = useForm<CompanyEditFormProps>({
+  } = useForm<GstinNewFormProps>({
     resolver: yupResolver(schema),
   });
 
-  useEffect(() => {
-    if (companyCredentials) {
-      reset({ username: companyCredentials.credentials.username });
-    }
-  }, [companyCredentials]);
-
-  const onSubmit = ({ username, password, current_password }: CompanyEditFormProps) => {
+  const onSubmit = ({ username, password }: GstinNewFormProps) => {
     setIsLoading(true);
-    putCompanyCredentialsData(companyData?.id, companyCredentials?.id, { username, password, current_password })
+    postGstinCredentialsData(gstinData?.id, { username, password })
       .then((r) => {
-        console.log(r);
-        toast.success('Company credentials successfully updated.');
         setIsLoading(false);
+        toast.success('Gstin credentials successfully created.');
         hideModal(modalId);
-        reset({ current_password: '', password: '' });
-      })
-      .catch(() => {
-        toast.error('Wrong password.');
+      }).catch((e) => {
         setIsLoading(false);
+        toast.error(e.message);
       }).finally(() => {
         setIsLoading(false);
       });
   };
 
+  useEffect(() => {
+    reset({ password: '', username: '' });
+  }, [gstinData]);
+
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <div className="modal-header">
-        <h5 className="modal-title" id={`new${modalId}Label`}>Edit Company Credentials</h5>
+        <h5 className="modal-title" id={`new${modalId}Label`}>New Gstin Credentials</h5>
         <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close" />
       </div>
       <div className="modal-body">
         <div className="mb-3">
           <label htmlFor="customer" className="col-form-label">
-            Company:
-            {companyData?.name}
+            Gstin:
+            {' '}
+            {gstinData?.name}
           </label>
         </div>
-
         <div className="mb-3">
           <label htmlFor="username" className="col-form-label">Username:</label>
           <input
@@ -97,30 +86,13 @@ export default function CompanyEditCredentialsForm({
         </div>
 
         <div className="mb-3">
-          <label htmlFor="current_password" className="col-form-label">Current Password:</label>
-          <input
-            {...register('current_password')}
-            id="current_password"
-            type="current_password"
-            className={classNames(['form-control form-control-sm', { 'is-invalid': errors.current_password }])}
-            placeholder="Enter Credentials current password ..."
-            onChange={(e) => setcurrentPassword(e.target.value)}
-          />
-          {errors.current_password && (
-            <div id="validationCurrentPasswordFeedback" className="invalid-feedback">
-              <p>{errors.current_password?.message}</p>
-            </div>
-          )}
-        </div>
-
-        <div className="mb-3">
-          <label htmlFor="password" className="col-form-label">New Password:</label>
+          <label htmlFor="password" className="col-form-label">Password:</label>
           <input
             {...register('password')}
             id="password"
             type="password"
             className={classNames(['form-control form-control-sm', { 'is-invalid': errors.password }])}
-            placeholder="Enter Credentials new password ..."
+            placeholder="Enter Credentials password ..."
           />
           {errors.password && (
             <div id="validationTitleFeedback" className="invalid-feedback">
@@ -139,7 +111,7 @@ export default function CompanyEditCredentialsForm({
           isSubmit
           className="btn btn-sm btn-primary"
         >
-          Update Company Credentials
+          New Gstin Credentials
         </CustomButton>
       </div>
     </form>

@@ -62,11 +62,11 @@ function FilterTitle({
     resolver: yupResolver(schema),
   });
 
-  const onSubmit = ({ title }: Filter) => {
+const onSubmit = ({ title }: Filter) => {
     const datas = {
       settings: filterSetting.settings,
       title,
-      modelName: filterSetting.modelName,
+      modelName: filterSetting.modelName === '2A' ? 'GSTR2AFileContent' : filterSetting.modelName === '2B' ? 'GSTR2BFileContent' : `${filterSetting.modelName}FileContent`,
       modelId: filterSetting.modelId,
     };
 

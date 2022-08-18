@@ -1,39 +1,51 @@
 import React, {
+    FormEventHandler,
     useEffect, useMemo, useRef,
 } from 'react';
 import bootstrap from 'bootstrap/dist/js/bootstrap.bundle';
+import classNames from 'classnames';
+import CustomButton from './CustomButton';
 
 interface ModalProps {
-    children: React.ReactElement,
+    children?: React.ReactNode | number | string | boolean,
+    extraHeader?: React.ReactNode | number | string | boolean,
+    extraFooter?: React.ReactNode | number | string | boolean,
     title: string,
     show?: boolean,
+    isScrollable?: boolean,
+    isLoading?: boolean,
     onClose?: () => void,
+    large?: boolean,
+    handleSubmit?: FormEventHandler | undefined,
     onShow?: () => void,
     closeButtonText?: string,
-    onOkButtonClick?: (e: React.MouseEvent<HTMLButtonElement> | undefined) => void,
+    onOkButtonClick?: (e?: React.MouseEvent<HTMLButtonElement>) => void,
     okButtonText?: string
 }
 
-let modal:bootstrap.Modal | null = null;
+const modal:Record<string, bootstrap.Modal> = {};
 
 function Modal({
                    children,
                    title,
-                   show,
-                   onClose,
-                   onShow,
-                   closeButtonText,
                    onOkButtonClick,
+                   show,
+                   isScrollable,
+                   onClose,
+                   handleSubmit,
+                   large,
+                   onShow,
+                   isLoading,
+                   closeButtonText,
                    okButtonText,
-    }: ModalProps) {
+                   extraHeader,
+                   extraFooter,
+               }: ModalProps) {
     const modalRef = useRef<bootstrap.Modal>();
-
-    const modalId = useMemo(() => Math.floor(Math.random() * 1000), []);
+    const modalId = useMemo(() => `modal${title.replace(/\s/g, '')}`, [title]);
 
     useEffect(() => {
-        if (!modal) {
-            modal = new bootstrap.Modal(modalRef.current);
-        }
+        modal[modalId] = new bootstrap.Modal(modalRef.current);
 
         modalRef.current?.addEventListener('hidden.bs.modal', () => {
             show = false;
@@ -47,14 +59,20 @@ function Modal({
                 onShow();
             }
         });
+
+        return () => {
+            modal[modalId] = null;
+
+            delete modal[modalId];
+        };
     }, []);
 
     useEffect(() => {
-        if (modal) {
+        if (modal[modalId]) {
             if (show) {
-                modal.show(modalRef.current);
+                modal[modalId].show(modalRef.current);
             } else {
-                modal.hide();
+                modal[modalId].hide();
             }
         }
     }, [show]);
@@ -63,23 +81,28 @@ function Modal({
       <div
         ref={modalRef}
         className="modal fade"
-        id={`modal${modalId}`}
-        aria-labelledby={`modal${modalId}Label`}
+        id={modalId}
+        aria-labelledby={`${modalId}Label`}
         aria-hidden="true"
       >
-        <div className="modal-dialog">
+        <div className={classNames(['modal-dialog', 'modal-dialog-centered', { 'modal-dialog-scrollable': isScrollable }, { 'modal-xl': large }])}>
           <div className="modal-content">
-            <div className="modal-header">
-              <h5 className="modal-title" id={`modal${modalId}Label`}>{title}</h5>
-              <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close" />
-            </div>
-            <div className="modal-body">
-              {children}
-            </div>
-            <div className="modal-footer">
-              {closeButtonText && (<button type="button" className="btn btn-secondary" data-bs-dismiss="modal">{closeButtonText}</button>)}
-              {okButtonText && (<button type="button" className="btn btn-primary" onClick={onOkButtonClick}>{okButtonText}</button>)}
-            </div>
+            <form onSubmit={handleSubmit}>
+              <div className="modal-header">
+                <h5 className="modal-title" id={`${modalId}Label`}>{title}</h5>
+                <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close" />
+              </div>
+              {extraHeader && (<div className="modal-header">{extraHeader}</div>)}
+              <div className="modal-body">
+                {children}
+              </div>
+              {extraFooter && (<div className="modal-footer">{extraFooter}</div>)}
+              <div className="modal-footer">
+                {closeButtonText && (<button type="button" className="btn btn-sm btn-secondary" data-bs-dismiss="modal">{closeButtonText}</button>)}
+                {(okButtonText && !handleSubmit) && (<button type="button" className="btn btn-sm btn-primary" onClick={onOkButtonClick}>{okButtonText}</button>)}
+                {handleSubmit && (<CustomButton isLoading={isLoading} isSubmit className="btn btn-sm btn-primary">{okButtonText}</CustomButton>)}
+              </div>
+            </form>
           </div>
         </div>
       </div>
@@ -87,8 +110,15 @@ function Modal({
 }
 
 Modal.defaultProps = {
+    children: undefined,
+    extraHeader: undefined,
+    handleSubmit: undefined,
+    extraFooter: undefined,
     show: false,
+    isLoading: false,
+    isScrollable: false,
     onClose: null,
+    large: false,
     onShow: null,
     closeButtonText: null,
     onOkButtonClick: null,

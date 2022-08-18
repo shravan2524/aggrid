@@ -19,6 +19,7 @@ import { onModalHidden, showModal } from 'app/utils/Modal';
 import toast from 'react-hot-toast';
 import PageWrapper from 'components/PageWrapper';
 import EditFilterPopup from 'components/Library/OnEditFilter';
+import MoveFilterPopup from 'components/Library/MoveFilter';
 import MyLibraryDetailCellRenderer from './MyLibrarySub';
 
 type ActionsRendererProps = {
@@ -26,6 +27,7 @@ type ActionsRendererProps = {
   onDeleteFilter: (params: ICellRendererParams) => void;
   onShareClickCallback: (params: ICellRendererParams) => void;
   onEditClickCallback: (params: ICellRendererParams) => void;
+  onMoveClickCallback: (params: ICellRendererParams) => void;
 };
 
 function ActionsRenderer({
@@ -33,20 +35,21 @@ function ActionsRenderer({
   onDeleteFilter,
   onShareClickCallback,
   onEditClickCallback,
+  onMoveClickCallback,
 }: ActionsRendererProps) {
   return (
-    <div className="d-flex justify-content-around align-items-center w-100 h-100">
+    <div className="d-flex btn-group align-items-center w-100 h-100">
       <button
         onClick={(e) => onEditClickCallback(params)}
         type="button"
-        className="btn btn-sm btn-light"
+        className="btn btn-sm btn-primary"
       >
         <i className="fa-solid fa-pen-to-square" />
       </button>
       <button
         onClick={(e) => onShareClickCallback(params)}
         type="button"
-        className="btn btn-sm btn-light"
+        className="btn btn-sm btn-info"
       >
         <i className="fas fa-user-plus" />
       </button>
@@ -57,7 +60,11 @@ function ActionsRenderer({
       >
         <i className="fas fa-trash" />
       </button>
-      <button type="button" className="btn btn-sm btn-primary">
+      <button
+        onClick={(e) => onMoveClickCallback(params)}
+        type="button"
+        className="btn btn-sm btn-primary"
+      >
         <i className="fas fa-angle-double-right" />
         {' '}
         Move
@@ -72,13 +79,12 @@ function MyLibraryPage() {
   const gridRef = useRef<any>();
   const { height, width } = useWindowDimensions();
   const [itemData, setItemData] = useState<Filters | null>(null);
-  const [editFilter, setEditFilter] = useState<Filters | null>(null);
 
   const containerStyle = useMemo(
-    () => ({ width: '100%', height: '100vh' }),
+    () => ({ width: '100%', height: '77vh' }),
     [],
   );
-  const gridStyle = useMemo(() => ({ height: '600px', width: '100%' }), []);
+  const gridStyle = useMemo(() => ({ height: '100%', width: '100%' }), []);
   const [rowData, setRowData] = useState<any>();
 
   const onfetchData = () => {
@@ -93,8 +99,13 @@ function MyLibraryPage() {
   }, []);
 
   const onEditClickCallback = useCallback((params) => {
-    setEditFilter(params.data);
+    setItemData(params.data);
     showModal('editFilterPopup');
+  }, []);
+
+  const onMoveClickCallback = useCallback((params) => {
+    setItemData(params.data);
+    showModal('moveFilterPopup');
   }, []);
 
   const onDeleteFilter = useCallback((params) => {
@@ -115,7 +126,7 @@ function MyLibraryPage() {
 
   const [columnDefs, setColumnDefs] = useState([
     {
-      headerName: 'Name',
+      headerName: 'File Name',
       field: 'title',
       filter: 'agTextColumnFilter',
       editable: false,
@@ -150,6 +161,7 @@ function MyLibraryPage() {
           onDeleteFilter={onDeleteFilter}
           onShareClickCallback={onShareClickCallback}
           onEditClickCallback={onEditClickCallback}
+          onMoveClickCallback={onMoveClickCallback}
         />
       ),
       editable: false,
@@ -183,7 +195,6 @@ function MyLibraryPage() {
           toolPanel: 'agFiltersToolPanel',
         },
       ],
-      defaultToolPanel: 'customActionsTool',
     }),
     [],
   );
@@ -198,6 +209,7 @@ function MyLibraryPage() {
       editable: true,
       enablePivot: true,
       enableValue: true,
+      flex: 1,
     }),
     [],
   );
@@ -226,7 +238,8 @@ function MyLibraryPage() {
   return (
     <PageWrapper pageTitle={moduleTitle} icon="fas fa-folder-open">
       <div style={containerStyle}>
-        <EditFilterPopup editFilter={editFilter} onfetchData={onfetchData} />
+        <MoveFilterPopup params={itemData} />
+        <EditFilterPopup editFilter={itemData} onfetchData={onfetchData} />
         <ShareDataModal itemData={itemData} shared={false} />
         <div style={gridStyle} className="ag-theme-alpine">
           <AgGridReact

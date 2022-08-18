@@ -308,7 +308,7 @@ export default function DemoPage() {
 		console.log(index, array, element);
 	});
     const containerStyle = useMemo(
-        () => ({ width: '100%', height: '600px' }),
+        () => ({ width: '100%', height: '82vh' }),
         [],
     );
     const gridStyle = useMemo(() => ({ height: '100%', width: '100%' }), []);
@@ -803,7 +803,6 @@ export default function DemoPage() {
                 toolPanel: CustomStatsToolPanel,
             },
         ],
-        defaultToolPanel: 'customStats',
     }), []);
 
     const detailCellRenderer = useMemo(() => DetailCellRenderer, []);

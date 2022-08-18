@@ -5,7 +5,7 @@
 	--ag-header-cell-hover-background-color: rgb(80, 40, 140);
 	--ag-header-cell-moving-background-color: rgb(80, 40, 140); 
   } */
-  .ag-theme-alpine .ag-header {
+  /*.ag-theme-alpine .ag-header {
 	font-family: cursive;
   }
   .ag-theme-alpine .ag-header-group-cell {
@@ -17,9 +17,9 @@
   }
   .my-css-class:nth-child(odd) {
 	background-color: #e4800f;
-  }
+  }*/
   .my-css-class:nth-child(even) {
-	background-color: #928dff;
+	/*background-color: #928dff; border-left: 1px solid #accbec;*/
   }
   .test-grid {
 	height: 1px;

@@ -82,7 +82,6 @@ export default function ReconciliationGstr2BPage() {
           toolPanel: 'agFiltersToolPanel',
         },
       ],
-      defaultToolPanel: 'customActionsTool',
     }),
     [],
   );

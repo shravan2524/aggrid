@@ -19,6 +19,8 @@ interface AGGridType {
   id: number;
   title: string;
   modelName?: string;
+  owner?:string;
+  filterId:number | undefined;
 }
 
 function agGridDTO(rows: Array<Filters>): Array<AGGridType> {
@@ -28,6 +30,8 @@ function agGridDTO(rows: Array<Filters>): Array<AGGridType> {
     modelName: item?.filter?.modelName,
     updatedAt: item.updatedAt,
     createdAt: item.createdAt,
+    owner: item.sharedBy?.fullName,
+    filterId: item.filterId,
   }));
 }
 
@@ -36,30 +40,34 @@ const moduleTitle = 'Shared';
 function SharedWithMe() {
   const gridRef = useRef<any>();
   const { height, width } = useWindowDimensions();
-  const [itemData, setItemData] = useState<Filters | null>(null);
 
   const containerStyle = useMemo(
-    () => ({ width: '100%', height: '100vh' }),
+    () => ({ width: '100%', height: '77vh' }),
     [],
   );
-  const gridStyle = useMemo(() => ({ height: '600px', width: '100%' }), []);
+  const gridStyle = useMemo(() => ({ height: '100%', width: '100%' }), []);
 
   const [rowData, setRowData] = useState<any>();
 
   const onModalHide = useCallback(() => {
     onModalHidden('shareDataModal', () => {
-      setItemData(null);
       fetchSharedFilterData();
     });
   }, []);
 
   const [columnDefs, setColumnDefs] = useState([
     {
-      headerName: 'Name',
+      headerName: 'File Name',
       field: 'title',
       filter: 'agTextColumnFilter',
       editable: false,
       cellRenderer: 'agGroupCellRenderer',
+    },
+    {
+      headerName: 'Person',
+      field: 'owner',
+      filter: 'agTextColumnFilter',
+      editable: false,
     },
     {
       headerName: 'Model Name',
@@ -102,7 +110,6 @@ function SharedWithMe() {
           toolPanel: 'agFiltersToolPanel',
         },
       ],
-      defaultToolPanel: 'customActionsTool',
     }),
     [],
   );
@@ -117,6 +124,7 @@ function SharedWithMe() {
       editable: true,
       enablePivot: true,
       enableValue: true,
+      flex: 1,
     }),
     [],
   );
@@ -164,7 +172,7 @@ function SharedWithMe() {
             pagination
             masterDetail
             detailCellRenderer={detailCellRenderer}
-            detailRowHeight={600}
+            detailRowHeight={300}
             paginationPageSize={10}
           />
         </div>
