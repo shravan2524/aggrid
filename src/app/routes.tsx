@@ -60,10 +60,10 @@ const routes: any = [
         path: '/',
         element: <Suspense fallback={<Loader />}><SignInIndexPage /></Suspense>,
       },
-	  {
-		path: 'demo',
-		element: <Suspense fallback={<Loader />}><DemoHomeIndexPage /></Suspense>,
-	  },
+      {
+        path: 'demo',
+        element: <Suspense fallback={<Loader />}><DemoHomeIndexPage /></Suspense>,
+      },
     ],
   },
 
@@ -265,8 +265,6 @@ const routes: any = [
             path: 'profile',
             element: <Suspense fallback={<Loader />}><ProfileIndexPage /></Suspense>,
           },
-
-          
         ],
       },
     ],
