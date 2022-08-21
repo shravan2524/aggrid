@@ -39,8 +39,20 @@
 	margin-bottom: 5px;
   }
   .ag-header-row.ag-header-row-column{
-	/* background-color: #46ffcb; */
+	background-color: rgb(26, 95, 107) !important;
+	color: white;
   }
   .my-css-class:nth-child(odd) > .ag-header-cell.ag-header-cell-sortable.ag-focus-managed{
 	background-color: black;
   }
+  .ag-header-group-cell-label{
+	font-size: 2rem;
+	color: rgb(26, 95, 107);
+  }
+.ag-row-odd{
+	background-color: rgb(235, 252, 255) !important;
+}
+
+.ag-row-even{
+	background-color: rgb(180, 228, 234) !important;
+}
