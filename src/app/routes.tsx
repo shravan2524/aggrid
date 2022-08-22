@@ -65,8 +65,7 @@ const routes: any = [
         element: <Suspense fallback={<Loader />}><DemoHomeIndexPage /></Suspense>,
       },
     ],
-  },1
-
+  },
   {
     path: '/qr-helper',
     element: (<Suspense fallback={<Loader />}><QRHelper /></Suspense>),
