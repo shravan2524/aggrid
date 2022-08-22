@@ -29,8 +29,8 @@ import {
 } from 'ag-grid-community';
 import GenderRenderer from './genderRenderer';
 
-const agGridData = require('./data.json');
-// const agGridData = require('./Q1_Travel_Booking_Matched_with_Invoice_and_2A_f1000.json');
+// const agGridData = require('./data.json');
+const agGridData = require('./Q1_Travel_Booking_Matched_with_Invoice_and_2A_f1000.json');
 
 interface IRow {
   value: number | string;
@@ -209,713 +209,713 @@ export default function DemoPage() {
     const gridStyle = useMemo(() => ({ height: '100%', width: '100%' }), []);
     const [rowData, setRowData] = useState<any>();
 
-    // const [columnDefs, setColumnDefs] = useState([
-    //     // Airline Details
-    //     {
-    //       field: '',
-    //       // eslint-disable-next-line react/no-unstable-nested-components
-    //       cellRenderer: (params) => (
-    //         <div aria-hidden="true" onClick={() => OnExpand(params)}>
-    //           <i className="fa fa-arrow-down" />
-    //         </div>
-    //       ),
-    //       editable: false,
-    //       filter: false,
-    //       width: 40,
-    //       minWidth: 40,
-    //       maxWidth: 40,
-    //     },
-    //     {
-    //         headerName: 'Airline Details',
-    //         headerClass: 'my-css-class',
-    //         children: [
-    //             {
-    //                 field: 'Airline Name',
-    //                 rowDrag,
-    //                 filter: 'agTextColumnFilter',
-    //                 cellRenderer: 'agGroupCellRenderer',
-    //                 cellRendererSelector: (params) => {
-    //             const type = params.data['Airline Name'];
-    //             // console.log(type, params.data);
-    //             if (typeof (type) === 'object') {
-    //                 return {
-    //                     component: 'agSparklineCellRenderer',
-    //                     params: {
-    //                         sparklineOptions: {
-    //                             type: 'column',
-    //                             label: {
-    //                                 enabled: true,
-    //                                 placement: 'outsideEnd',
-    //                                 fontFamily: 'Arial, Helvetica, sans-serif',
-    //                             },
-    //                             highlightStyle: {
-    //                                 strokeWidth: 10,
-    //                             },
-    //                             padding: {
-    //                                 // top: 15,
-    //                                 // bottom: 15,
-    //                             },
-    //                             formatter: columnFormatter,
-    //                         },
-    //                     },
-    //                 };
-    //             }
-    //         },
-    //                 chartDataType: 'category',
-    //             },
-    //             {
-    //                 field: 'Type',
-    //                 columnGroupShow: 'open',
-    //                 rowDrag,
-    //                 filter: 'agTextColumnFilter',
-    //                 cellRenderer: 'agGroupCellRenderer',
-    //         cellRendererSelector: (params) => {
-    //             const type = params.data['Type'];
-    //             // console.log(type, params.data);
-    //             if (typeof (type) === 'object') {
-    //                 return {
-    //                     component: 'agSparklineCellRenderer',
-    //                     params: {
-    //                         sparklineOptions: {
-    //                             type: 'column',
-    //                             label: {
-    //                                 enabled: true,
-    //                                 placement: 'outsideEnd',
-    //                                 fontFamily: 'Arial, Helvetica, sans-serif',
-    //                             },
-    //                             highlightStyle: {
-    //                                 strokeWidth: 10,
-    //                             },
-    //                             padding: {
-    //                                 // top: 15,
-    //                                 // bottom: 15,
-    //                             },
-    //                             formatter: columnFormatter,
-    //                         },
-    //                     },
-    //                 };
-    //             }
-    //         },
-    //                 chartDataType: 'category',
-    //             },
-    //             {
-    //                 field: 'Name as per GST Portal - Booking',
-    //                 rowDrag,
-    //                 columnGroupShow: 'open',
-    //                 filter: 'agTextColumnFilter',
-    //                 cellRenderer: 'agGroupCellRenderer',
-    //         cellRendererSelector: (params) => {
-    //             const type = params.data['Name as per GST Portal - Booking'];
-    //             // console.log(type, params.data);
-    //             if (typeof (type) === 'object') {
-    //                 return {
-    //                     component: 'agSparklineCellRenderer',
-    //                     params: {
-    //                         sparklineOptions: {
-    //                             type: 'column',
-    //                             label: {
-    //                                 enabled: true,
-    //                                 placement: 'outsideEnd',
-    //                                 fontFamily: 'Arial, Helvetica, sans-serif',
-    //                             },
-    //                             highlightStyle: {
-    //                                 strokeWidth: 10,
-    //                             },
-    //                             padding: {
-    //                                 // top: 15,
-    //                                 // bottom: 15,
-    //                             },
-    //                             formatter: columnFormatter,
-    //                         },
-    //                     },
-    //                 };
-    //             }
-    //         },
-    //                 chartDataType: 'category',
-    //             },
-    //         ],
-    //     },
-
-    //     // Invoice
-    //     {
-    //         headerName: 'Invoice Details',
-    //         headerClass: 'my-css-class',
-    //         children: [
-    //             {
-    //                 field: 'Invoice Number - Invoice',
-    //                 rowDrag,
-    //                 filter: 'agTextColumnFilter',
-    //                 cellRenderer: 'agGroupCellRenderer',
-    //         cellRendererSelector: (params) => {
-    //             const type = params.data.name;
-    //             // console.log(type, params.data);
-    //             if (typeof (type) === 'object') {
-    //                 return {
-    //                     component: 'agSparklineCellRenderer',
-    //                     params: {
-    //                         sparklineOptions: {
-    //                             type: 'column',
-    //                             label: {
-    //                                 enabled: true,
-    //                                 placement: 'outsideEnd',
-    //                                 fontFamily: 'Arial, Helvetica, sans-serif',
-    //                             },
-    //                             highlightStyle: {
-    //                                 strokeWidth: 0,
-    //                             },
-    //                             padding: {
-    //                                 top: 15,
-    //                                 bottom: 15,
-    //                             },
-    //                             formatter: columnFormatter,
-    //                         },
-    //                     },
-    //                 };
-    //             }
-    //         },
-    //             },
-    //             {
-    //                 field: 'Invoice Date - Invoice',
-    //                 rowDrag,
-    //                 columnGroupShow: 'open',
-    //                 filter: 'agDateColumnFilter',
-    //                 cellRenderer: 'agGroupCellRenderer',
-    //         cellRendererSelector: (params) => {
-    //             const type = params.data.name;
-    //             // console.log(type, params.data);
-    //             if (typeof (type) === 'object') {
-    //                 return {
-    //                     component: 'agSparklineCellRenderer',
-    //                     params: {
-    //                         sparklineOptions: {
-    //                             type: 'column',
-    //                             label: {
-    //                                 enabled: true,
-    //                                 placement: 'outsideEnd',
-    //                                 fontFamily: 'Arial, Helvetica, sans-serif',
-    //                             },
-    //                             highlightStyle: {
-    //                                 strokeWidth: 0,
-    //                             },
-    //                             padding: {
-    //                                 top: 15,
-    //                                 bottom: 15,
-    //                             },
-    //                             formatter: columnFormatter,
-    //                         },
-    //                     },
-    //                 };
-    //             }
-    //         },
-    //             },
-    //             {
-    //                 field: 'Customer GSTIN - Invoice',
-    //                 rowDrag,
-    //                 filter: 'agTextColumnFilter',
-    //                 columnGroupShow: 'open',
-    //             },
-    //             {
-    //                 field: 'Name as per GST portal - Invoice',
-    //                 rowDrag,
-    //                 filter: 'agTextColumnFilter',
-    //                 columnGroupShow: 'open',
-    //             },
-    //             {
-    //                 field: 'Supplier GSTIN - Invoice',
-    //                 rowDrag,
-    //                 filter: 'agTextColumnFilter',
-    //                 columnGroupShow: 'open',
-    //             },
-    //             {
-    //                 field: 'Invoice Number - 2A',
-    //                 rowDrag,
-    //                 filter: 'agTextColumnFilter',
-    //                 columnGroupShow: 'open',
-    //             },
-    //             {
-    //                 field: 'Invoice Date - 2A',
-    //                 rowDrag,
-    //                 filter: 'agDateColumnFilter',
-    //                 columnGroupShow: 'open',
-    //             },
-    //             {
-    //                 field: 'Taxable - Invoice',
-    //                 rowDrag,
-    //                 filter: 'agNumberColumnFilter',
-    //                 allowedAggFuncs: ['sum', 'min', 'max'],
-    //                 columnGroupShow: 'open',
-    //                 // cellStyle: params => params.value > 5780 ? { color: 'green' } : { color: 'red' }
-    //             },
-    //             {
-    //                 field: 'CGST - Invoice',
-    //                 rowDrag,
-    //                 filter: 'agNumberColumnFilter',
-    //                 allowedAggFuncs: ['sum', 'min', 'max'],
-    //                 columnGroupShow: 'open',
-    //                 cellRendererSelector: (params) => {
-    //                   const genderDetails = {
-    //                     component: GenderRenderer,
-    //                     params: { params },
-    //                   };
-    //                   return genderDetails;
-    //                 },
-    //             },
-    //             {
-    //                 field: 'SGST - Invoice',
-    //                 rowDrag,
-    //                 columnGroupShow: 'open',
-    //                 filter: 'agNumberColumnFilter',
-    //                 allowedAggFuncs: ['sum', 'min', 'max'],
-    //                 cellRenderer: 'agSparklineCellRenderer',
-    //   cellRendererParams: {
-    //     sparklineOptions: {
-    //       type: 'line',
-    //       line: {
-    //         stroke: 'rgb(120, 120, 178)',
-    //         strokeWidth: 2,
-    //       },
-    //       padding: {
-    //         top: 5,
-    //         bottom: 5,
-    //       },
-    //       highlightStyle: {
-    //         size: 7,
-    //         fill: 'rgb(120, 120, 178)',
-    //         strokeWidth: 0,
-    //       },
-    //     } as LineSparklineOptions,
-    //                 },
-    //             },
-    //             {
-    //                 field: 'IGST - Invoice',
-    //                 rowDrag,
-    //                 columnGroupShow: 'open',
-    //                 filter: 'agNumberColumnFilter',
-    //                 allowedAggFuncs: ['sum', 'min', 'max'],
-    //                 cellRenderer: 'agSparklineCellRenderer',
-    //   cellRendererParams: {
-    //     sparklineOptions: {
-    //       type: 'bar',
-    //       fill: '#5470c6',
-    //       stroke: '#91cc75',
-    //       highlightStyle: {
-    //         fill: '#fac858',
-    //       },
-    //       valueAxisDomain: [0, 1],
-    //       paddingOuter: 0,
-    //       padding: {
-    //         top: 0,
-    //         bottom: 0,
-    //       },
-    //       axis: {
-    //         strokeWidth: 0,
-    //       },
-    //     } as BarSparklineOptions,
-    //   },
-    //             },
-    //             {
-    //                 field: 'Total GST - Invoice',
-    //                 rowDrag,
-    //                 columnGroupShow: 'open',
-    //                 filter: 'agNumberColumnFilter',
-    //                 allowedAggFuncs: ['sum', 'min', 'max'],
-    //                 cellStyle: (params) => params.value > 150 ? { 'background-color': 'green' } : { 'background-color': 'red' }
-    //             },
-    //             {
-    //                 field: 'Invoice link clickable 1',
-    //                 rowDrag,
-    //                 columnGroupShow: 'open',
-    //                 filter: 'agTextColumnFilter',
-    //             },
-    //             {
-    //                 field: 'Invoice link clickable 2',
-    //                 rowDrag,
-    //                 columnGroupShow: 'open',
-    //                 filter: 'agTextColumnFilter',
-    //             },
-    //             {
-    //                 field: 'Invoice Status',
-    //                 rowDrag,
-    //                 columnGroupShow: 'open',
-    //                 filter: 'agTextColumnFilter',
-    //                 chartDataType: 'category',
-    //             },
-    //             {
-    //                 field: 'Total Amount - Invoice',
-    //                 rowDrag,
-    //                 filter: 'agNumberColumnFilter',
-    //                 allowedAggFuncs: ['sum', 'min', 'max'],
-    //                 headerTooltip: 'The Total Invoice Amount',
-    //                 columnGroupShow: 'open',
-    //                 enableValue: true,
-    //                 suppressMenu: true,
-    //                 chartDataType: 'series',
-    //                 aggFunc: 'sum',
-    //             },
-    //             {
-    //                 field: 'Document Type - Invoice',
-    //                 rowDrag,
-    //                 filter: 'agTextColumnFilter',
-    //                 columnGroupShow: 'open',
-    //             },
-    //             {
-    //                 field: 'Invoice link',
-    //                 rowDrag,
-    //                 filter: 'agTextColumnFilter',
-    //                 editable: false,
-    //                 columnGroupShow: 'open',
-    //                 cellRenderer: 'agGroupCellRenderer',
-    //             },
-    //         ],
-    //     },
-
-    //     // Agency Details
-    //     {
-    //         headerName: 'Agency Details',
-    //         headerClass: 'my-css-class',
-    //         children: [
-    //             {
-    //                 field: 'Agency Invoice Number',
-    //                 rowDrag,
-    //                 filter: 'agTextColumnFilter',
-    //             },
-    //             {
-    //                 field: 'Agency Name',
-    //                 rowDrag,
-    //                 filter: 'agTextColumnFilter',
-    //                 enableValue: true,
-    //                 suppressMenu: true,
-    //                 chartDataType: 'category',
-    //             },
-    //             {
-    //                 field: 'Agency CGST - Booking',
-    //                 rowDrag,
-    //                 filter: 'agTextColumnFilter',
-    //             },
-    //             {
-    //                 field: 'Agency IGST - Booking',
-    //                 rowDrag,
-    //                 filter: 'agTextColumnFilter',
-    //             },
-    //             {
-    //                 field: 'Agency SGST - Booking',
-    //                 rowDrag,
-    //                 filter: 'agTextColumnFilter',
-    //             },
-    //         ],
-    //     },
-
-    //     // Transaction
-    //     {
-    //         headerName: 'Transaction Details',
-    //         headerClass: 'my-css-class',
-    //         children: [
-    //             {
-    //                 field: 'Transaction Amount',
-    //                 rowDrag,
-    //                 filter: 'agNumberColumnFilter',
-    //                 allowedAggFuncs: ['sum', 'min', 'max'],
-    //                 headerTooltip: 'The Transaction Amount',
-    //                 enableValue: true,
-    //                 suppressMenu: true,
-    //                 chartDataType: 'series',
-
-    //                 aggFunc: 'sum',
-    //             },
-    //             {
-    //                 field: 'Transaction Type',
-    //                 rowDrag,
-    //                 filter: 'agTextColumnFilter',
-    //                 chartDataType: 'category',
-
-    //             },
-    //             {
-    //                 field: 'Transaction Date',
-    //                 rowDrag,
-    //                 filter: 'agDateColumnFilter',
-    //             },
-    //         ],
-    //     },
-
-    //     // Customer
-    //     {
-    //         headerName: 'Customer Details',
-    //         headerClass: 'my-css-class',
-    //         children: [
-    //             {
-    //                 field: 'Customer Name - Booking',
-    //                 rowDrag,
-    //                 filter: 'agTextColumnFilter',
-    //             },
-    //             {
-    //                 field: 'Customer GSTIN - Booking',
-    //                 rowDrag,
-    //                 filter: 'agTextColumnFilter',
-    //             },
-    //             {
-    //                 field: 'Verify Customer GSTIN',
-    //                 rowDrag,
-    //                 filter: 'agTextColumnFilter',
-    //             },
-    //             {
-    //                 field: 'Customer GSTIN - 2A',
-    //                 rowDrag,
-    //                 filter: 'agTextColumnFilter',
-    //             },
-    //         ],
-    //     },
-
-    //     // 2A
-    //     {
-    //         headerName: '2A Details',
-    //         children: [
-    //             {
-    //                 field: 'Name as per GST portal - 2A',
-    //                 rowDrag,
-    //                 filter: 'agTextColumnFilter',
-    //             },
-    //             {
-    //                 field: 'Supplier GSTIN - 2A',
-    //                 rowDrag,
-    //                 filter: 'agTextColumnFilter',
-    //             },
-
-    //             {
-    //                 field: 'Taxable - 2A',
-    //                 rowDrag,
-    //                 filter: 'agNumberColumnFilter',
-    //                 allowedAggFuncs: ['sum', 'min', 'max'],
-    //             },
-    //             {
-    //                 field: 'CGST - 2A',
-    //                 rowDrag,
-    //                 filter: 'agNumberColumnFilter',
-    //                 allowedAggFuncs: ['sum', 'min', 'max'],
-    //             },
-    //             {
-    //                 field: 'SGST - 2A',
-    //                 rowDrag,
-    //                 filter: 'agNumberColumnFilter',
-    //                 allowedAggFuncs: ['sum', 'min', 'max'],
-    //             },
-    //             {
-    //                 field: 'IGST - 2A',
-    //                 rowDrag,
-    //                 filter: 'agNumberColumnFilter',
-    //                 allowedAggFuncs: ['sum', 'min', 'max'],
-    //             },
-    //             {
-    //                 field: 'Total GST - 2A',
-    //                 rowDrag,
-    //                 filter: 'agNumberColumnFilter',
-    //                 allowedAggFuncs: ['sum', 'min', 'max'],
-    //             },
-    //             {
-    //                 field: '2A Status',
-    //                 rowDrag,
-    //                 filter: 'agTextColumnFilter',
-    //                 chartDataType: 'category',
-    //             },
-    //         ],
-    //     },
-
-    //     // Traveller
-    //     {
-    //         headerName: 'Traveller Details',
-    //         children: [
-    //             {
-    //                 field: 'Traveller Name',
-    //                 rowDrag,
-    //                 filter: 'agTextColumnFilter',
-    //             },
-    //             {
-    //                 field: 'Class',
-    //                 rowDrag,
-    //                 filter: 'agTextColumnFilter',
-    //             },
-    //             {
-    //                 field: 'a.t1.Traveller Name',
-    //                 rowDrag,
-    //                 filter: 'agTextColumnFilter',
-    //             },
-    //             {
-    //                 field: 'First Name',
-    //                 rowDrag,
-    //                 filter: 'agTextColumnFilter',
-    //             },
-    //             {
-    //                 field: 'Last Name',
-    //                 rowDrag,
-    //                 filter: 'agTextColumnFilter',
-    //             },
-    //             {
-    //                 field: 'Location',
-    //                 rowDrag,
-    //                 filter: 'agTextColumnFilter',
-    //                 chartDataType: 'category',
-    //             },
-    //         ],
-    //     },
-
-    //     // Other
-    //     {
-    //         headerName: 'Other Details',
-    //         children: [
-    //             {
-    //                 field: 'Delay in days',
-    //                 rowDrag,
-    //                 filter: 'agNumberColumnFilter',
-    //                 allowedAggFuncs: ['sum', 'min', 'max'],
-    //             },
-    //             {
-    //                 field: 'Workspace',
-    //                 rowDrag: true,
-    //                 filter: 'agTextColumnFilter',
-    //             },
-    //             {
-    //                 field: 'Ticket Number',
-    //                 rowDrag,
-    //                 filter: 'agTextColumnFilter',
-    //             },
-    //             {
-    //                 field: 'PNR',
-    //                 rowDrag,
-    //                 filter: 'agTextColumnFilter',
-    //             },
-    //             {
-    //                 field: 'Domestic/International',
-    //                 rowDrag,
-    //                 filter: 'agTextColumnFilter',
-    //             },
-    //             {
-    //                 field: 'Origin',
-    //                 rowDrag,
-    //                 filter: 'agTextColumnFilter',
-    //             },
-    //             {
-    //                 field: 'Ticket/PNR',
-    //                 rowDrag,
-    //                 filter: 'agTextColumnFilter',
-    //             },
-    //             {
-    //                 field: 'Booking GST',
-    //                 rowDrag,
-    //                 filter: 'agNumberColumnFilter',
-    //                 allowedAggFuncs: ['sum', 'min', 'max'],
-    //             },
-    //             {
-    //                 field: 'GST Difference',
-    //                 rowDrag,
-    //                 filter: 'agNumberColumnFilter',
-    //                 allowedAggFuncs: ['sum', 'min', 'max'],
-    //             },
-    //             {
-    //                 field: 'Data Source',
-    //                 rowDrag,
-    //                 filter: 'agTextColumnFilter',
-    //             },
-    //         ],
-    //     },
-    // ]);
-
-	const [columnDefs, setColumnDefs] = useState([
-		{
-            headerName: '2A',
+    const [columnDefs, setColumnDefs] = useState([
+        // Airline Details
+        {
+          field: '',
+          // eslint-disable-next-line react/no-unstable-nested-components
+          cellRenderer: (params) => (
+            <div aria-hidden="true" onClick={() => OnExpand(params)}>
+              <i className="fa fa-arrow-down" />
+            </div>
+          ),
+          editable: false,
+          filter: false,
+          width: 40,
+          minWidth: 40,
+          maxWidth: 40,
+        },
+        {
+            headerName: 'Airline Details',
             headerClass: 'my-css-class',
             children: [
-				{ field : '2A - Buyer GSTIN'},
-				{ field : '2A - Seller GSTIN'},
-				{ field : '2A - IGST'},
-				{ field : '2A - CGST'},
+                {
+                    field: 'Airline Name',
+                    rowDrag,
+                    filter: 'agTextColumnFilter',
+                    cellRenderer: 'agGroupCellRenderer',
+                    cellRendererSelector: (params) => {
+                const type = params.data['Airline Name'];
+                // console.log(type, params.data);
+                if (typeof (type) === 'object') {
+                    return {
+                        component: 'agSparklineCellRenderer',
+                        params: {
+                            sparklineOptions: {
+                                type: 'column',
+                                label: {
+                                    enabled: true,
+                                    placement: 'outsideEnd',
+                                    fontFamily: 'Arial, Helvetica, sans-serif',
+                                },
+                                highlightStyle: {
+                                    strokeWidth: 10,
+                                },
+                                padding: {
+                                    // top: 15,
+                                    // bottom: 15,
+                                },
+                                formatter: columnFormatter,
+                            },
+                        },
+                    };
+                }
+            },
+                    chartDataType: 'category',
+                },
+                {
+                    field: 'Type',
+                    columnGroupShow: 'open',
+                    rowDrag,
+                    filter: 'agTextColumnFilter',
+                    cellRenderer: 'agGroupCellRenderer',
+            cellRendererSelector: (params) => {
+                const type = params.data['Type'];
+                // console.log(type, params.data);
+                if (typeof (type) === 'object') {
+                    return {
+                        component: 'agSparklineCellRenderer',
+                        params: {
+                            sparklineOptions: {
+                                type: 'column',
+                                label: {
+                                    enabled: true,
+                                    placement: 'outsideEnd',
+                                    fontFamily: 'Arial, Helvetica, sans-serif',
+                                },
+                                highlightStyle: {
+                                    strokeWidth: 10,
+                                },
+                                padding: {
+                                    // top: 15,
+                                    // bottom: 15,
+                                },
+                                formatter: columnFormatter,
+                            },
+                        },
+                    };
+                }
+            },
+                    chartDataType: 'category',
+                },
+                {
+                    field: 'Name as per GST Portal - Booking',
+                    rowDrag,
+                    columnGroupShow: 'open',
+                    filter: 'agTextColumnFilter',
+                    cellRenderer: 'agGroupCellRenderer',
+            cellRendererSelector: (params) => {
+                const type = params.data['Name as per GST Portal - Booking'];
+                // console.log(type, params.data);
+                if (typeof (type) === 'object') {
+                    return {
+                        component: 'agSparklineCellRenderer',
+                        params: {
+                            sparklineOptions: {
+                                type: 'column',
+                                label: {
+                                    enabled: true,
+                                    placement: 'outsideEnd',
+                                    fontFamily: 'Arial, Helvetica, sans-serif',
+                                },
+                                highlightStyle: {
+                                    strokeWidth: 10,
+                                },
+                                padding: {
+                                    // top: 15,
+                                    // bottom: 15,
+                                },
+                                formatter: columnFormatter,
+                            },
+                        },
+                    };
+                }
+            },
+                    chartDataType: 'category',
+                },
+            ],
+        },
 
-			]
-		},
-		{
-            headerName: '2B',
+        // Invoice
+        {
+            headerName: 'Invoice Details',
             headerClass: 'my-css-class',
             children: [
-				{ field : '2B - Buyer GSTIN'},
-				{ field : '2B - Seller GSTIN'},
-				{ field : '2B - IGST'},
-				{ field : '2B - CGST'},
+                {
+                    field: 'Invoice Number - Invoice',
+                    rowDrag,
+                    filter: 'agTextColumnFilter',
+                    cellRenderer: 'agGroupCellRenderer',
+            cellRendererSelector: (params) => {
+                const type = params.data.name;
+                // console.log(type, params.data);
+                if (typeof (type) === 'object') {
+                    return {
+                        component: 'agSparklineCellRenderer',
+                        params: {
+                            sparklineOptions: {
+                                type: 'column',
+                                label: {
+                                    enabled: true,
+                                    placement: 'outsideEnd',
+                                    fontFamily: 'Arial, Helvetica, sans-serif',
+                                },
+                                highlightStyle: {
+                                    strokeWidth: 0,
+                                },
+                                padding: {
+                                    top: 15,
+                                    bottom: 15,
+                                },
+                                formatter: columnFormatter,
+                            },
+                        },
+                    };
+                }
+            },
+                },
+                {
+                    field: 'Invoice Date - Invoice',
+                    rowDrag,
+                    columnGroupShow: 'open',
+                    filter: 'agDateColumnFilter',
+                    cellRenderer: 'agGroupCellRenderer',
+            cellRendererSelector: (params) => {
+                const type = params.data.name;
+                // console.log(type, params.data);
+                if (typeof (type) === 'object') {
+                    return {
+                        component: 'agSparklineCellRenderer',
+                        params: {
+                            sparklineOptions: {
+                                type: 'column',
+                                label: {
+                                    enabled: true,
+                                    placement: 'outsideEnd',
+                                    fontFamily: 'Arial, Helvetica, sans-serif',
+                                },
+                                highlightStyle: {
+                                    strokeWidth: 0,
+                                },
+                                padding: {
+                                    top: 15,
+                                    bottom: 15,
+                                },
+                                formatter: columnFormatter,
+                            },
+                        },
+                    };
+                }
+            },
+                },
+                {
+                    field: 'Customer GSTIN - Invoice',
+                    rowDrag,
+                    filter: 'agTextColumnFilter',
+                    columnGroupShow: 'open',
+                },
+                {
+                    field: 'Name as per GST portal - Invoice',
+                    rowDrag,
+                    filter: 'agTextColumnFilter',
+                    columnGroupShow: 'open',
+                },
+                {
+                    field: 'Supplier GSTIN - Invoice',
+                    rowDrag,
+                    filter: 'agTextColumnFilter',
+                    columnGroupShow: 'open',
+                },
+                {
+                    field: 'Invoice Number - 2A',
+                    rowDrag,
+                    filter: 'agTextColumnFilter',
+                    columnGroupShow: 'open',
+                },
+                {
+                    field: 'Invoice Date - 2A',
+                    rowDrag,
+                    filter: 'agDateColumnFilter',
+                    columnGroupShow: 'open',
+                },
+                {
+                    field: 'Taxable - Invoice',
+                    rowDrag,
+                    filter: 'agNumberColumnFilter',
+                    allowedAggFuncs: ['sum', 'min', 'max'],
+                    columnGroupShow: 'open',
+                    // cellStyle: params => params.value > 5780 ? { color: 'green' } : { color: 'red' }
+                },
+                {
+                    field: 'CGST - Invoice',
+                    rowDrag,
+                    filter: 'agNumberColumnFilter',
+                    allowedAggFuncs: ['sum', 'min', 'max'],
+                    columnGroupShow: 'open',
+                    cellRendererSelector: (params) => {
+                      const genderDetails = {
+                        component: GenderRenderer,
+                        params: { params },
+                      };
+                      return genderDetails;
+                    },
+                },
+                {
+                    field: 'SGST - Invoice',
+                    rowDrag,
+                    columnGroupShow: 'open',
+                    filter: 'agNumberColumnFilter',
+                    allowedAggFuncs: ['sum', 'min', 'max'],
+                    cellRenderer: 'agSparklineCellRenderer',
+      cellRendererParams: {
+        sparklineOptions: {
+          type: 'line',
+          line: {
+            stroke: 'rgb(120, 120, 178)',
+            strokeWidth: 2,
+          },
+          padding: {
+            top: 5,
+            bottom: 5,
+          },
+          highlightStyle: {
+            size: 7,
+            fill: 'rgb(120, 120, 178)',
+            strokeWidth: 0,
+          },
+        } as LineSparklineOptions,
+                    },
+                },
+                {
+                    field: 'IGST - Invoice',
+                    rowDrag,
+                    columnGroupShow: 'open',
+                    filter: 'agNumberColumnFilter',
+                    allowedAggFuncs: ['sum', 'min', 'max'],
+                    cellRenderer: 'agSparklineCellRenderer',
+      cellRendererParams: {
+        sparklineOptions: {
+          type: 'bar',
+          fill: '#5470c6',
+          stroke: '#91cc75',
+          highlightStyle: {
+            fill: '#fac858',
+          },
+          valueAxisDomain: [0, 1],
+          paddingOuter: 0,
+          padding: {
+            top: 0,
+            bottom: 0,
+          },
+          axis: {
+            strokeWidth: 0,
+          },
+        } as BarSparklineOptions,
+      },
+                },
+                {
+                    field: 'Total GST - Invoice',
+                    rowDrag,
+                    columnGroupShow: 'open',
+                    filter: 'agNumberColumnFilter',
+                    allowedAggFuncs: ['sum', 'min', 'max'],
+                    cellStyle: (params) => params.value > 150 ? { 'background-color': 'green' } : { 'background-color': 'red' }
+                },
+                {
+                    field: 'Invoice link clickable 1',
+                    rowDrag,
+                    columnGroupShow: 'open',
+                    filter: 'agTextColumnFilter',
+                },
+                {
+                    field: 'Invoice link clickable 2',
+                    rowDrag,
+                    columnGroupShow: 'open',
+                    filter: 'agTextColumnFilter',
+                },
+                {
+                    field: 'Invoice Status',
+                    rowDrag,
+                    columnGroupShow: 'open',
+                    filter: 'agTextColumnFilter',
+                    chartDataType: 'category',
+                },
+                {
+                    field: 'Total Amount - Invoice',
+                    rowDrag,
+                    filter: 'agNumberColumnFilter',
+                    allowedAggFuncs: ['sum', 'min', 'max'],
+                    headerTooltip: 'The Total Invoice Amount',
+                    columnGroupShow: 'open',
+                    enableValue: true,
+                    suppressMenu: true,
+                    chartDataType: 'series',
+                    aggFunc: 'sum',
+                },
+                {
+                    field: 'Document Type - Invoice',
+                    rowDrag,
+                    filter: 'agTextColumnFilter',
+                    columnGroupShow: 'open',
+                },
+                {
+                    field: 'Invoice link',
+                    rowDrag,
+                    filter: 'agTextColumnFilter',
+                    editable: false,
+                    columnGroupShow: 'open',
+                    cellRenderer: 'agGroupCellRenderer',
+                },
+            ],
+        },
 
-			]
-		},
-		{
-            headerName: 'PR',
+        // Agency Details
+        {
+            headerName: 'Agency Details',
             headerClass: 'my-css-class',
             children: [
-				{ field : 'PR - Buyer GSTIN'},
-				{ field : 'PR - Seller GSTIN'},
-				{ field : 'PR - IGST'},
-				{ field : 'PR - CGST'},
+                {
+                    field: 'Agency Invoice Number',
+                    rowDrag,
+                    filter: 'agTextColumnFilter',
+                },
+                {
+                    field: 'Agency Name',
+                    rowDrag,
+                    filter: 'agTextColumnFilter',
+                    enableValue: true,
+                    suppressMenu: true,
+                    chartDataType: 'category',
+                },
+                {
+                    field: 'Agency CGST - Booking',
+                    rowDrag,
+                    filter: 'agTextColumnFilter',
+                },
+                {
+                    field: 'Agency IGST - Booking',
+                    rowDrag,
+                    filter: 'agTextColumnFilter',
+                },
+                {
+                    field: 'Agency SGST - Booking',
+                    rowDrag,
+                    filter: 'agTextColumnFilter',
+                },
+            ],
+        },
 
-			]
-		},
-	])
-
-	const [columnDefs1, setColumnDefs1] = useState([
-		{
-            headerName: 'Buyer',
+        // Transaction
+        {
+            headerName: 'Transaction Details',
             headerClass: 'my-css-class',
             children: [
-				{ field : '2A - Buyer GSTIN', },
-				{ field : '2B - Buyer GSTIN',},
-				{ field : 'QR - Buyer GSTIN', },
-				{ field : 'OCR - Buyer GSTIN',},
+                {
+                    field: 'Transaction Amount',
+                    rowDrag,
+                    filter: 'agNumberColumnFilter',
+                    allowedAggFuncs: ['sum', 'min', 'max'],
+                    headerTooltip: 'The Transaction Amount',
+                    enableValue: true,
+                    suppressMenu: true,
+                    chartDataType: 'series',
 
-			]
-		},
-		{
-            headerName: 'Vendor',
+                    aggFunc: 'sum',
+                },
+                {
+                    field: 'Transaction Type',
+                    rowDrag,
+                    filter: 'agTextColumnFilter',
+                    chartDataType: 'category',
+
+                },
+                {
+                    field: 'Transaction Date',
+                    rowDrag,
+                    filter: 'agDateColumnFilter',
+                },
+            ],
+        },
+
+        // Customer
+        {
+            headerName: 'Customer Details',
             headerClass: 'my-css-class',
             children: [
-				{ field : '2A - Seller GSTIN'},
-				{ field : '2B - Seller GSTIN'},
-				{ field : 'QR - Seller GSTIN'},
-				{ field : 'OCR - Seller GSTIN'},
-			]
-		},
-		{
-            headerName: 'Difference/MisMatch',
-            headerClass: 'my-css-class',
-            children: [
-				{ field : '2A vs PR - Total GST Difference',cellStyle: (params) => {
-					if(params.value >0 ){
-						return {"background-color" : 'green'}
-					}
-					else if(params.value <0){
-						return {"background-color" : 'red'}
-					}
-				}},
-				{ field : '2A vs PR - Invoice Date Mismatch',cellStyle: (params) => {
-					if(params.value === "Match" ){
-						return {"background-color" : 'green'}
-					}
-					else {
-						return {"background-color" : 'red'}
-					}
-				}},
-				{ field : '2A vs QR - Invoice Date Mismatch',cellStyle: (params) => {
-					if(params.value === "Match" ){
-						return {"background-color" : 'green'}
-					}
-					else{
-						return {"background-color" : 'red'}
-					}
-				}},
-				{ field : '2A vs PR - Invoice Date Mismatch',cellStyle: (params) => {
-					if(params.value === "Match" ){
-						return {"background-color" : 'green'}
-					}
-					else{
-						return {"background-color" : 'red'}
-					}
-				}},
-			]
-		},
+                {
+                    field: 'Customer Name - Booking',
+                    rowDrag,
+                    filter: 'agTextColumnFilter',
+                },
+                {
+                    field: 'Customer GSTIN - Booking',
+                    rowDrag,
+                    filter: 'agTextColumnFilter',
+                },
+                {
+                    field: 'Verify Customer GSTIN',
+                    rowDrag,
+                    filter: 'agTextColumnFilter',
+                },
+                {
+                    field: 'Customer GSTIN - 2A',
+                    rowDrag,
+                    filter: 'agTextColumnFilter',
+                },
+            ],
+        },
 
-	])
+        // 2A
+        {
+            headerName: '2A Details',
+            children: [
+                {
+                    field: 'Name as per GST portal - 2A',
+                    rowDrag,
+                    filter: 'agTextColumnFilter',
+                },
+                {
+                    field: 'Supplier GSTIN - 2A',
+                    rowDrag,
+                    filter: 'agTextColumnFilter',
+                },
+
+                {
+                    field: 'Taxable - 2A',
+                    rowDrag,
+                    filter: 'agNumberColumnFilter',
+                    allowedAggFuncs: ['sum', 'min', 'max'],
+                },
+                {
+                    field: 'CGST - 2A',
+                    rowDrag,
+                    filter: 'agNumberColumnFilter',
+                    allowedAggFuncs: ['sum', 'min', 'max'],
+                },
+                {
+                    field: 'SGST - 2A',
+                    rowDrag,
+                    filter: 'agNumberColumnFilter',
+                    allowedAggFuncs: ['sum', 'min', 'max'],
+                },
+                {
+                    field: 'IGST - 2A',
+                    rowDrag,
+                    filter: 'agNumberColumnFilter',
+                    allowedAggFuncs: ['sum', 'min', 'max'],
+                },
+                {
+                    field: 'Total GST - 2A',
+                    rowDrag,
+                    filter: 'agNumberColumnFilter',
+                    allowedAggFuncs: ['sum', 'min', 'max'],
+                },
+                {
+                    field: '2A Status',
+                    rowDrag,
+                    filter: 'agTextColumnFilter',
+                    chartDataType: 'category',
+                },
+            ],
+        },
+
+        // Traveller
+        {
+            headerName: 'Traveller Details',
+            children: [
+                {
+                    field: 'Traveller Name',
+                    rowDrag,
+                    filter: 'agTextColumnFilter',
+                },
+                {
+                    field: 'Class',
+                    rowDrag,
+                    filter: 'agTextColumnFilter',
+                },
+                {
+                    field: 'a.t1.Traveller Name',
+                    rowDrag,
+                    filter: 'agTextColumnFilter',
+                },
+                {
+                    field: 'First Name',
+                    rowDrag,
+                    filter: 'agTextColumnFilter',
+                },
+                {
+                    field: 'Last Name',
+                    rowDrag,
+                    filter: 'agTextColumnFilter',
+                },
+                {
+                    field: 'Location',
+                    rowDrag,
+                    filter: 'agTextColumnFilter',
+                    chartDataType: 'category',
+                },
+            ],
+        },
+
+        // Other
+        {
+            headerName: 'Other Details',
+            children: [
+                {
+                    field: 'Delay in days',
+                    rowDrag,
+                    filter: 'agNumberColumnFilter',
+                    allowedAggFuncs: ['sum', 'min', 'max'],
+                },
+                {
+                    field: 'Workspace',
+                    rowDrag: true,
+                    filter: 'agTextColumnFilter',
+                },
+                {
+                    field: 'Ticket Number',
+                    rowDrag,
+                    filter: 'agTextColumnFilter',
+                },
+                {
+                    field: 'PNR',
+                    rowDrag,
+                    filter: 'agTextColumnFilter',
+                },
+                {
+                    field: 'Domestic/International',
+                    rowDrag,
+                    filter: 'agTextColumnFilter',
+                },
+                {
+                    field: 'Origin',
+                    rowDrag,
+                    filter: 'agTextColumnFilter',
+                },
+                {
+                    field: 'Ticket/PNR',
+                    rowDrag,
+                    filter: 'agTextColumnFilter',
+                },
+                {
+                    field: 'Booking GST',
+                    rowDrag,
+                    filter: 'agNumberColumnFilter',
+                    allowedAggFuncs: ['sum', 'min', 'max'],
+                },
+                {
+                    field: 'GST Difference',
+                    rowDrag,
+                    filter: 'agNumberColumnFilter',
+                    allowedAggFuncs: ['sum', 'min', 'max'],
+                },
+                {
+                    field: 'Data Source',
+                    rowDrag,
+                    filter: 'agTextColumnFilter',
+                },
+            ],
+        },
+    ]);
+
+	// const [columnDefs, setColumnDefs] = useState([
+	// 	{
+  //           headerName: '2A',
+  //           headerClass: 'my-css-class',
+  //           children: [
+	// 			{ field : '2A - Buyer GSTIN'},
+	// 			{ field : '2A - Seller GSTIN'},
+	// 			{ field : '2A - IGST'},
+	// 			{ field : '2A - CGST'},
+
+	// 		]
+	// 	},
+	// 	{
+  //           headerName: '2B',
+  //           headerClass: 'my-css-class',
+  //           children: [
+	// 			{ field : '2B - Buyer GSTIN'},
+	// 			{ field : '2B - Seller GSTIN'},
+	// 			{ field : '2B - IGST'},
+	// 			{ field : '2B - CGST'},
+
+	// 		]
+	// 	},
+	// 	{
+  //           headerName: 'PR',
+  //           headerClass: 'my-css-class',
+  //           children: [
+	// 			{ field : 'PR - Buyer GSTIN'},
+	// 			{ field : 'PR - Seller GSTIN'},
+	// 			{ field : 'PR - IGST'},
+	// 			{ field : 'PR - CGST'},
+
+	// 		]
+	// 	},
+	// ])
+
+	// const [columnDefs1, setColumnDefs1] = useState([
+	// 	{
+  //           headerName: 'Buyer',
+  //           headerClass: 'my-css-class',
+  //           children: [
+	// 			{ field : '2A - Buyer GSTIN', },
+	// 			{ field : '2B - Buyer GSTIN',},
+	// 			{ field : 'QR - Buyer GSTIN', },
+	// 			{ field : 'OCR - Buyer GSTIN',},
+
+	// 		]
+	// 	},
+	// 	{
+  //           headerName: 'Vendor',
+  //           headerClass: 'my-css-class',
+  //           children: [
+	// 			{ field : '2A - Seller GSTIN'},
+	// 			{ field : '2B - Seller GSTIN'},
+	// 			{ field : 'QR - Seller GSTIN'},
+	// 			{ field : 'OCR - Seller GSTIN'},
+	// 		]
+	// 	},
+	// 	{
+  //           headerName: 'Difference/MisMatch',
+  //           headerClass: 'my-css-class',
+  //           children: [
+	// 			{ field : '2A vs PR - Total GST Difference',cellStyle: (params) => {
+	// 				if(params.value >0 ){
+	// 					return {"background-color" : 'green'}
+	// 				}
+	// 				else if(params.value <0){
+	// 					return {"background-color" : 'red'}
+	// 				}
+	// 			}},
+	// 			{ field : '2A vs PR - Invoice Date Mismatch',cellStyle: (params) => {
+	// 				if(params.value === "Match" ){
+	// 					return {"background-color" : 'green'}
+	// 				}
+	// 				else {
+	// 					return {"background-color" : 'red'}
+	// 				}
+	// 			}},
+	// 			{ field : '2A vs QR - Invoice Date Mismatch',cellStyle: (params) => {
+	// 				if(params.value === "Match" ){
+	// 					return {"background-color" : 'green'}
+	// 				}
+	// 				else{
+	// 					return {"background-color" : 'red'}
+	// 				}
+	// 			}},
+	// 			{ field : '2A vs PR - Invoice Date Mismatch',cellStyle: (params) => {
+	// 				if(params.value === "Match" ){
+	// 					return {"background-color" : 'green'}
+	// 				}
+	// 				else{
+	// 					return {"background-color" : 'red'}
+	// 				}
+	// 			}},
+	// 		]
+	// 	},
+
+	// ])
     const onBtExport = useCallback(() => {
         gridRef.current!.api.exportDataAsExcel();
       }, []);
@@ -979,7 +979,7 @@ export default function DemoPage() {
 		function onclick1(){
 			if(c==0){
 				c=1;
-				setcolumns(columnDefs1);
+				// setcolumns(columnDefs1);
 		}
 		else{
 			c=0;

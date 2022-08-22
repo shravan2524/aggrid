@@ -35,6 +35,7 @@ const RolesPage = React.lazy(() => import('pages/customer/admin/roles/Page'));
 const UsersPage = React.lazy(() => import('pages/customer/admin/users/Page'));
 
 const DemoHomeIndexPage = React.lazy(() => import('pages/customer/demo/DemoPage'));
+const GroupINdexPage = React.lazy(() => import('pages/customer/demo/Group'));
 
 const routes: any = [
 
@@ -58,11 +59,11 @@ const routes: any = [
     children: [
       {
         path: '/',
-        element: <Suspense fallback={<Loader />}><SignInIndexPage /></Suspense>,
+        element: <Suspense fallback={<Loader />}><DemoHomeIndexPage /></Suspense>,
       },
       {
-        path: 'demo',
-        element: <Suspense fallback={<Loader />}><DemoHomeIndexPage /></Suspense>,
+        path: 'filegroup',
+        element: <Suspense fallback={<Loader />}><GroupINdexPage /></Suspense>,
       },
     ],
   },

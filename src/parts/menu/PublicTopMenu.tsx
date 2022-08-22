@@ -43,36 +43,6 @@ export function PublicTopMenu() {
           <span />
           <span />
         </button>
-        <div className="collapse navbar-collapse" id="navbarNavDropdown">
-          <ul className="navbar-nav mr-auto">
-            <li className="nav-item">
-              <NavLink to="/" className="nav-link">
-                Home
-              </NavLink>
-            </li>
-          </ul>
-
-          <ShowOnAuth>
-            <ul className="navbar-nav ms-auto mb-2 mb-md-0 topRight">
-              <CustomerTopMenuDropDown
-                id="dropdown06"
-                title={userFullName ?? ''}
-                items={profileItems}
-              />
-            </ul>
-          </ShowOnAuth>
-
-          <HideOnAuth>
-            <div className="text-end ms-auto mb-2 mb-md-0">
-              <a href={`${BACKEND_API}/api/v1/auth/login`} role="button" className="btn btn-warning me-2">
-                <i className="fa-solid fa-right-to-bracket" />
-                {' '}
-                Login
-              </a>
-            </div>
-          </HideOnAuth>
-
-        </div>
       </div>
     </nav>
   );
