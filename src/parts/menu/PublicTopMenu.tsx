@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React, { useMemo } from 'react';
 import { NavLink } from 'react-router-dom';
 import { BACKEND_API } from 'app/config';
@@ -39,9 +40,6 @@ export function PublicTopMenu() {
           aria-expanded="false"
           aria-label=""
         >
-          <span />
-          <span />
-          <span />
         </button>
       </div>
     </nav>

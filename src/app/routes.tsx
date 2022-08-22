@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { Navigate } from 'react-router-dom';
 import React, { Suspense } from 'react';
 import Loader from 'components/Loader';
