@@ -5,6 +5,8 @@ export default (props: ICellRendererParams) => {
 	const dat = props.value - props.data["Taxable - Invoice"];
 	let col = "green";
 	if(dat<0)col="red";
+
+  
 	console.log(dat);
   return (
     <span>
