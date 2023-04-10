@@ -8,7 +8,7 @@ export default function PublicLayout() {
   return (
     <>
       <header>
-        <PublicTopMenu />
+        {/* <PublicTopMenu /> */}
       </header>
       <main>
         <Outlet />

@@ -35,7 +35,6 @@ import GenderRenderer from './genderRenderer';
 // const agGridData = require('./data.json');
 const agGridData = require('./Q1_Travel_Booking_Matched_with_Invoice_and_2A_f1000.json');
 
-
 interface IRow {
     value: number | string;
     type: 'age' | 'gender' | 'mood';
